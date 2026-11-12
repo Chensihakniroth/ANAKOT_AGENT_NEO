@@ -124,6 +124,15 @@
   src: url('./fonts/JetBrainsMono-Italic.woff2') format('woff2');
 }
 
+/* Rostex — the Anakot display face for the empty-chat wordmark (`.wordmark`). */
+@font-face {
+  font-family: 'Rostex';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/Rostex-Regular.ttf') format('truetype');
+}
+
 @theme inline {
   --color-background: var(--dt-background);
   --color-foreground: var(--dt-foreground);
@@ -2020,8 +2029,8 @@ body.guest-pointer-lock :is(webview, iframe) {
    something a class-merge or a missed scan can quietly drop, leaving the
    wordmark rendered in body text. */
 .wordmark {
-  font-family: 'Collapse', var(--font-sans);
-  font-weight: 700;
+  font-family: 'Rostex', 'Collapse', var(--font-sans);
+  font-weight: 400;
   line-height: 0.9;
   text-transform: uppercase;
   letter-spacing: 0.08em;

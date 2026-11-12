@@ -1,0 +1,72 @@
+{
+  "project": "Anakot Agent rebrand \u2014 master assets",
+  "source": "User-provided 512x512 transparent logo reference",
+  "notes": [
+    "Chrome master preserves the supplied artwork exactly, scaled and centered on a transparent 1024x1024 canvas.",
+    "SVG logo masters are self-contained SVG wrappers with embedded PNG/mask data. They preserve appearance but are not editable vector path artwork.",
+    "Monochrome black/white variants preserve the exact alpha silhouette; they intentionally do not reproduce chrome reflections.",
+    "Brand name was not supplied, so the banner is mark-only."
+  ],
+  "files": [
+    {
+      "path": "assets/logo-chrome-master.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "faithful chrome; embedded PNG"
+    },
+    {
+      "path": "assets/logo-chrome-master.png",
+      "dimensions": "1024x1024",
+      "format": "PNG RGBA",
+      "variant": "faithful chrome on transparent canvas"
+    },
+    {
+      "path": "assets/nous-girl-black.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "black silhouette; embedded alpha mask"
+    },
+    {
+      "path": "assets/nous-girl-white.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "white silhouette; embedded alpha mask"
+    },
+    {
+      "path": "assets/backgrounds/squircle-light.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "white rounded-square plate"
+    },
+    {
+      "path": "assets/backgrounds/squircle-dark.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "#0D1117 rounded-square plate"
+    },
+    {
+      "path": "assets/backgrounds/squircle-mac-light.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "white macOS-style plate"
+    },
+    {
+      "path": "assets/backgrounds/squircle-mac-dark.svg",
+      "dimensions": "1024x1024",
+      "format": "SVG",
+      "variant": "#0D1117 macOS-style plate"
+    },
+    {
+      "path": "assets/dmg-volume.png",
+      "dimensions": "1024x1024",
+      "format": "PNG RGBA",
+      "variant": "chrome mark on dark volume disk"
+    },
+    {
+      "path": "assets/banner.png",
+      "dimensions": "1600x400",
+      "format": "PNG RGB",
+      "variant": "mark-only dark banner"
+    }
+  ]
+}
