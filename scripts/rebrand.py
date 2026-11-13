@@ -95,6 +95,10 @@ SKIP_DIRS = {
 SKIP_PATHS = (
     "brand/",                      # the rebrand's own inputs (protect list, manifest, masters)
     "scripts/rebrand.py",          # this script rewrites text; never itself
+    # The porting ledger names upstream ("Hermes-specific", `hermes_*` renames) as DATA about the
+    # relationship between the two trees. Rewriting it produces "Anakot-specific" and
+    # "anakot_* -> anakot_*", i.e. it destroys the meaning it exists to record.
+    "UPSTREAM_PORTING.md",
     "plugins/anakot-achievements/dashboard/dist/",
     "plugins/kanban/dashboard/dist/",
     "apps/desktop/release/",
