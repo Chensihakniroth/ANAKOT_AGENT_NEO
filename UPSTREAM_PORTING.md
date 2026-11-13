@@ -218,19 +218,68 @@ re-applied.
 
 ## Sync procedure (regenerate, then re-apply)
 
-Because the histories are unrelated, updating is a **regenerate**, not a merge:
+Because the histories are unrelated, updating is a **regenerate**, not a merge. Nine steps, in order;
+the numbers are load-bearing (a lock resolved before the rebrand is wrong, a carry applied before
+`--verify` hides a broken transform).
+
+**Step 1 — pick the target.** A release tag (`v2026.9.24` is the newest) or a specific upstream
+commit. Record it in the scan line of the porting log before touching anything.
+
+**Step 2 — fresh tree.** A worktree at that ref, cleaned hard. `-x` matters: `git clean -fd` keeps
+ignored paths (`data/`, `node_modules`), and an ignored leftover inside a directory the rebrand
+renames makes the rename collide — the transform now aborts on that, but a clean tree avoids it.
 
 ```bash
-git tag backup/pre-update                        # safety point
-git fetch upstream
-git checkout -b update/vNEXT upstream/main       # start from fresh upstream
-# restore everything fork-only: the rebrand tooling AND this ledger (upstream has neither)
-git checkout backup/pre-update -- scripts/rebrand.py brand/ anakot_rebrand_masters/ UPSTREAM_PORTING.md
-python scripts/rebrand.py --apply
-python scripts/rebrand.py --verify               # gate: protected strings + asset hashes
-git cherry-pick <the fork-local commits above>   # re-apply Anakot's own work
-scripts/run_tests.sh                             # prove it
+git tag backup/pre-update
+git fetch upstream --tags
+git worktree add --detach ../anakot-trial <upstream-ref>
+cd ../anakot-trial && git clean -fdxq
 ```
+
+**Step 3 — restore the fork's own files.** Upstream has none of these, and `--verify` needs them:
+
+| Restore | Why |
+|---|---|
+| `brand/` | protected strings, asset snapshot, manifest — the rebrand's inputs |
+| `anakot_rebrand_masters/` | source art |
+| `scripts/rebrand.py` | the transform itself |
+| `UPSTREAM_PORTING.md` | this ledger |
+| `scripts/ci/check_exclusive_plugins.py` | the exclusive-plugin guard script |
+| `plugins/free-model-suite/`, `apps/desktop/src/plugins/free-model-suite/` | fork-only plugin (both halves) |
+
+```bash
+git checkout backup/pre-update -- brand/ anakot_rebrand_masters/ scripts/rebrand.py \
+  UPSTREAM_PORTING.md scripts/ci/check_exclusive_plugins.py \
+  plugins/free-model-suite/ apps/desktop/src/plugins/free-model-suite/
+```
+
+**Step 4 — transform.** `python scripts/rebrand.py --apply` (~90 s, ~25.5k files).
+
+**Step 5 — gate.** `python scripts/rebrand.py --verify` must print `VERIFY: PASS`. It now fails on
+any pending content rewrite, path rename, brand drift or asset mismatch — not just asset hashes.
+
+**Step 6 — re-lock.** Both lockfiles are deliberately never text-rewritten (`SKIP_FILES`), so they
+still name upstream while `pyproject.toml` / `package.json` name Anakot. `--verify` cannot see this;
+only a re-resolve fixes it:
+
+```bash
+anakot pm lock          # uv.lock: name = "hermes-agent" -> "anakot-agent"
+pnpm install            # pnpm-lock.yaml: @hermes/* -> @anakot/*  (NOT --frozen-lockfile)
+```
+
+**Step 7 — re-apply only what the transform did NOT already do.** Most fork commits are *subsumed*:
+the text rewrite reproduces the build-path fixes, the metadata repoint, the protected identifiers,
+and the rebrand tooling comes from step 3. Verified against `9d94f822`: what genuinely needs
+re-applying is small — the exclusive-plugin guard's registration in `scripts/check` (the guard
+script alone is not wired), plus any ruff/lint findings the fork had cleared that upstream still has.
+Port the behaviour; do not replay the 15 commits blindly.
+
+**Step 8 — prove it.** `scripts/rebrand.py --verify`, `scripts/check`, then
+`scripts/run_tests.sh` compared against the host baseline recorded in the porting log (10 known
+failures on Windows). A regenerate is green when it adds nothing to that set.
+
+**Step 9 — land.** Commit on the branch, push, review the diff, fast-forward `main`, then update this
+ledger: the new scan head, the rows you ported, and the new baseline.
 
 **Never do this in the live checkout.** `D:\School\PROJECT\anakot-agent-v2` is the running Anakot
 install, so `git switch` there is refused (it would mix module versions inside the live process).
@@ -282,6 +331,30 @@ both trees as a conflict, and `--allow-unrelated-histories` scales the conflict 
     Windows `0o438`, and `mybot` vs `mybot.bat` wrapper naming.
 - Verified working in the worktree: `scripts/rebrand.py --check` (24,555 files, 1,486 protected
   occurrences, 0 drift) and `scripts/run_tests.sh` end to end.
+
+### 2026-11-13 — flow dry-run on a real upstream tree (`9d94f822`); three transform bugs fixed
+
+Ran steps 2–5 of the procedure above on a throwaway worktree at upstream head. The rebrand produced
+25,528 files with 28,305 protected occurrences and left three defects, each of which made a broken
+tree look green:
+
+- **`hermes-ink` was in `SKIP_NAMES`**, which exempted the whole directory from the text rewrite.
+  The package shipped as `"name": "@hermes/ink"` while the workspace depended on `@anakot/ink`, so
+  the TUI workspace resolved nothing. It is a *path* to keep, not contents: split into
+  `KEEP_PATH_NAMES`, honoured by `rename_paths` only.
+- **Five brand fonts had no snapshot copy** (SaintCarell/SaintCarellClean/staravenue, in two dirs),
+  so `--verify` reported them missing on every fresh tree and `--apply` could not restore them.
+  Snapshotted + `--rebaseline` (40 files, 0 dropped).
+- **A rename collision was skipped with a print.** An ignored leftover inside the directory being
+  renamed (e.g. `anakot_cli/data/` surviving `git clean -fd`) left `hermes_cli/` *and* `anakot_cli/`
+  standing — and `--verify` still said PASS because it only checked asset hashes. `rename_paths` now
+  returns conflicts and the run aborts (exit 2); `--verify` fails on any pending rewrite, rename or
+  drift. `git clean -fdx` in step 2 is what avoids the collision in the first place.
+
+Verified after the fixes: clean upstream → 25,528 files → `--apply` → `--verify PASS`; a conflicted
+tree exits 2 instead of 0. Also confirmed the two steps the transform cannot do by itself: the
+lockfiles keep upstream identity until re-resolved (step 6), and `scripts/check` still needs the
+exclusive-plugin guard registration re-applied (step 7).
 
 ---
 
