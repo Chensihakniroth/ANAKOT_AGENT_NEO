@@ -116,6 +116,9 @@ _GUARDS = {
     "line-endings": ["scripts/ci/check_line_endings.py"],
     "lazy-deps": ["scripts/ci/check_lazy_deps_imports.py"],
     "profile-archives": ["scripts/ci/check_profile_archive_boundary.py"],
+    # Exclusive plugins ship with Anakot and have no upstream counterpart, so an
+    # incomplete one reaches every user with nothing to fail (see the script).
+    "exclusive-plugins": ["scripts/ci/check_exclusive_plugins.py"],
 }
 # Guards that judge a diff, not a tree: they get the same base/head as the ratchet
 # (the blob-size step of repo-guards.yml).
