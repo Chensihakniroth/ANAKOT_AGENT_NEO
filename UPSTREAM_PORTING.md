@@ -239,6 +239,7 @@ Work in a linked worktree instead, which shares one object store and costs no ex
 ```bash
 git worktree add ../anakot-agent-v2-update update/upstream-2026-11-13
 cd ../anakot-agent-v2-update          # regenerate, test, commit here
+python -m pm.build_env --source . --out .venv --group dev --group test   # ~350 MB, once
 git worktree remove ../anakot-agent-v2-update    # when done
 ```
 
@@ -262,9 +263,25 @@ both trees as a conflict, and `--allow-unrelated-histories` scales the conflict 
 - Scanned `eaac327f..upstream/main` = 2,546 commits (2,491 non-merge). Filtered 1,688 as noise,
   leaving 803 signal commits / 311 in tracked subsystems / 300 behavioural clusters; seeded the
   newest of each as `PENDING`.
-- Recorded the 14 fork-local commits and the fork-only surfaces so a regenerate cannot silently
+- Recorded the 15 fork-local commits and the fork-only surfaces so a regenerate cannot silently
   drop them.
 - **Not yet triaged:** every row in the tracking table.
+
+### 2026-11-13 — worktree env built; host baseline of failing tests recorded
+
+- `update/upstream-2026-11-13` lives in a linked worktree (`../anakot-agent-v2-update`) because the
+  live checkout is the running install and refuses `git switch`. Env:
+  `python -m pm.build_env --source . --out .venv --group dev --group test` (354 MB, Python 3.14.9).
+- **Pre-existing failures on this Windows host, identical on `main`.** Do not chase these as
+  regressions; they are the comparison baseline for a regenerate:
+  - `tests/ci/` — 6 failures + 1 collection error out of 49 files / 626 passing:
+    `test_js_tests_vitest_history`, `test_messaging_gated_selection`, `test_tag_builds_summary[True]`,
+    `test_prompt_surface`, `test_stable_release_graph`, `test_desktop_release_tag_admission`;
+    `test_e2e_upgrade_start_version` cannot even import (`import pwd`, POSIX-only module).
+  - `tests/anakot_cli/test_profiles.py` — 4 failures / 102 passing: POSIX file mode `0o600` vs
+    Windows `0o438`, and `mybot` vs `mybot.bat` wrapper naming.
+- Verified working in the worktree: `scripts/rebrand.py --check` (24,555 files, 1,486 protected
+  occurrences, 0 drift) and `scripts/run_tests.sh` end to end.
 
 ---
 
