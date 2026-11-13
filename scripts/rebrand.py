@@ -25,9 +25,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
+import shutil
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -165,6 +167,8 @@ def restore_assets(apply: bool) -> list[str]:
         for name in filenames:
             src = os.path.join(dirpath, name)
             rel = os.path.relpath(src, src_root)
+            if rel.replace("\\", "/") in GENERATED:
+                continue
             dst = os.path.join(REPO, rel)
             same = os.path.isfile(dst) and _sha(src) == _sha(dst)
             if not same:
@@ -184,6 +188,76 @@ def _sha(path: str) -> str:
     return h.hexdigest()
 
 
+def _generated_targets() -> set[str]:
+    """Paths owned by the icon generator (``scripts/generate_icons.py`` TARGETS).
+
+    Those files are rendered from the masters, so guarding their bytes would flag
+    every regeneration as drift — and ``--apply`` would then revert the brand to a
+    stale render, undoing the generator. The generator owns them, not this
+    snapshot. Loaded from the module rather than parsed: half the list comes from
+    ``appx_targets()``, which a static read would silently miss. If the module
+    cannot load (no resvg-py/Pillow), fall back to guarding everything."""
+    path = os.path.join(REPO, "scripts", "generate_icons.py")
+    if not os.path.isfile(path):
+        return set()
+    spec = importlib.util.spec_from_file_location("_generate_icons", path)
+    if spec is None or spec.loader is None:
+        return set()
+    module = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        return set()
+    return {entry[0] for entry in module.TARGETS}
+
+
+GENERATED = _generated_targets()
+
+
+def _snapshot_rels() -> list[str]:
+    """Brand-art paths the snapshot keeps (relative, posix), minus generator-owned
+    targets. The snapshot tree is the brand set: dropping a copy drops it."""
+    root = os.path.join(BRAND, "assets")
+    rels = []
+    for dirpath, _, filenames in os.walk(root):
+        for name in filenames:
+            rel = os.path.relpath(os.path.join(dirpath, name), root).replace("\\", "/")
+            if rel not in GENERATED:
+                rels.append(rel)
+    return sorted(rels)
+
+
+def rebaseline() -> tuple[int, int]:
+    """Re-snapshot the brand art from the tree and refresh the manifest hashes.
+
+    Run after deliberately changing brand art. The snapshot is the rebrand's
+    memory of what the brand looks like, so a stale one makes ``--apply`` revert
+    the tree to the previous art. A file whose copy was removed from the snapshot
+    is dropped from the manifest (that is how brand art is retired)."""
+    manifest_path = os.path.join(BRAND, "assets.manifest.json")
+    with open(manifest_path, encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    files = manifest["files"]
+    root = os.path.join(BRAND, "assets")
+    kept, dropped = 0, 0
+    for rel in _snapshot_rels():
+        src = os.path.join(REPO, rel.replace("/", os.sep))
+        snap = os.path.join(root, rel.replace("/", os.sep))
+        if os.path.isfile(src):
+            shutil.copyfile(src, snap)
+            files[rel] = {"bytes": os.path.getsize(src), "sha256": _sha(src)[:16]}
+            kept += 1
+        else:
+            os.remove(snap)
+            files.pop(rel, None)
+            dropped += 1
+    manifest["count"] = len(files)
+    with open(manifest_path, "w", encoding="utf-8") as fh:
+        json.dump(manifest, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+    return kept, dropped
+
+
 def verify_assets() -> list[str]:
     manifest_path = os.path.join(BRAND, "assets.manifest.json")
     if not os.path.isfile(manifest_path):
@@ -192,6 +266,8 @@ def verify_assets() -> list[str]:
         manifest = json.load(fh)["files"]
     bad = []
     for rel, meta in manifest.items():
+        if rel in GENERATED:
+            continue
         full = os.path.join(REPO, rel.replace("/", os.sep))
         if not os.path.isfile(full):
             bad.append(f"missing  {rel}")
@@ -205,8 +281,14 @@ def main() -> int:
     ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
     ap.add_argument("--check", action="store_true", help="report only (default)")
     ap.add_argument("--verify", action="store_true", help="gate on protected strings + asset hashes")
+    ap.add_argument("--rebaseline", action="store_true", help="re-snapshot brand art + refresh manifest hashes")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
+
+    if args.rebaseline:
+        kept, dropped = rebaseline()
+        print(f"[REBASELINE] {kept} brand files re-snapshotted, {dropped} dropped")
+        return 0
 
     rules = load_protected()
     files = walk_files()

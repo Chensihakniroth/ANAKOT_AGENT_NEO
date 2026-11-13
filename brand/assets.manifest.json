@@ -478,8 +478,8 @@
       "sha256": "c4429c41db2f1862"
     },
     "assets/banner.png": {
-      "bytes": 12333,
-      "sha256": "75e85ef6fecf5a62"
+      "bytes": 3112745,
+      "sha256": "3cc68cc2df276ebf"
     },
     "assets/dmg-volume.png": {
       "bytes": 285680,
@@ -494,12 +494,12 @@
       "sha256": "6c4968c1a46f1045"
     },
     "assets/nous-girl-black.svg": {
-      "bytes": 118169,
-      "sha256": "d105c5357560610b"
+      "bytes": 114241,
+      "sha256": "7798b8e400a454ee"
     },
     "assets/nous-girl-white.svg": {
-      "bytes": 139596,
-      "sha256": "d84d87421e321d94"
+      "bytes": 114241,
+      "sha256": "16172472f6552fe6"
     },
     "gateway/assets/telegram-botfather-threads-settings.jpg": {
       "bytes": 118213,
