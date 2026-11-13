@@ -56,3 +56,4 @@ hermes-ink                                                           # ui-tui/pa
 DEFAULT_NOUS_CLIENT_ID = "hermes-cli"                                # Portal OAuth client id (server-registered)
 product=hermes-agent                                                 # Portal request attribution tag
 hermes-client-v                                                      # Portal client tag prefix
+requires_hermes                                                      # plugin-catalog.json field the remote build emits; the reader must ask for THAT name
