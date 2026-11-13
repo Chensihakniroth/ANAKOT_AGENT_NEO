@@ -35,7 +35,7 @@ which fork-local work must survive it".
 | Upstream head at this scan | `9d94f822` (2026-11-13) |
 | Window since baseline | 2,546 commits (2,491 excluding merges) |
 | Upstream velocity | ~16.4k commits / 30 days |
-| Fork-local commits | 14 (listed below) |
+| Fork-local commits | 15 (listed below) |
 | Differing paths vs upstream head | 17,326 (798 added / 1,534 deleted / 11,805 modified / 3,189 renamed) |
 | Rebrand mechanism | `scripts/rebrand.py` (`--check` / `--apply` / `--verify` / `--rebaseline`) |
 
@@ -180,7 +180,7 @@ it has not been triaged yet.
 
 ## Fork-local commits (must survive every sync)
 
-These 14 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they are
+These 15 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they are
 re-applied.
 
 | SHA | Date | Subject | Why it exists |
@@ -199,6 +199,7 @@ re-applied.
 | `ce266c24` | 2026-11-13 | fix(catalog): read the compatibility field the catalog actually publishes | Remote-producer field name (`requires_hermes`) is protected |
 | `c5a437db` | 2026-11-13 | feat(desktop): port the Free Model Suite plugin (v1 -> v2) | Exclusive plugin desktop half recovered from v1 |
 | `8d1ab28d` | 2026-11-13 | test(guards): fail when an exclusive plugin ships incomplete or unreadable | Guard for the exclusive-plugin class |
+| `9b0cfdf2` | 2026-11-13 | docs(upstream): add the v2 porting ledger with a measured baseline | This file — restore it explicitly on every regenerate (upstream has no copy) |
 
 ---
 
@@ -223,12 +224,26 @@ Because the histories are unrelated, updating is a **regenerate**, not a merge:
 git tag backup/pre-update                        # safety point
 git fetch upstream
 git checkout -b update/vNEXT upstream/main       # start from fresh upstream
-git checkout backup/pre-update -- scripts/rebrand.py brand/ anakot_rebrand_masters/
+# restore everything fork-only: the rebrand tooling AND this ledger (upstream has neither)
+git checkout backup/pre-update -- scripts/rebrand.py brand/ anakot_rebrand_masters/ UPSTREAM_PORTING.md
 python scripts/rebrand.py --apply
 python scripts/rebrand.py --verify               # gate: protected strings + asset hashes
 git cherry-pick <the fork-local commits above>   # re-apply Anakot's own work
 scripts/run_tests.sh                             # prove it
 ```
+
+**Never do this in the live checkout.** `D:\School\PROJECT\anakot-agent-v2` is the running Anakot
+install, so `git switch` there is refused (it would mix module versions inside the live process).
+Work in a linked worktree instead, which shares one object store and costs no extra clone:
+
+```bash
+git worktree add ../anakot-agent-v2-update update/upstream-2026-11-13
+cd ../anakot-agent-v2-update          # regenerate, test, commit here
+git worktree remove ../anakot-agent-v2-update    # when done
+```
+
+`main` stays checked out and untouched in the live checkout; advance it only by fast-forward after
+the branch is verified.
 
 `git merge upstream/main` is **not** an option: with no merge base it treats every file present in
 both trees as a conflict, and `--allow-unrelated-histories` scales the conflict count with the tree.
