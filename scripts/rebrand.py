@@ -112,7 +112,13 @@ SKIP_PATHS = (
 SKIP_FILES = {"pnpm-lock.yaml", "uv.lock", "package-lock.json", "yarn.lock"}
 # On-disk compatibility markers: existing installs and built dists use these
 # exact names (frontend-common.mjs productOwners, freshness.mjs receipts).
-SKIP_NAMES = {".hermes-product", "hermes-build.json", ".hermes-stale", ".hermes-node-deps", "hermes-ink"}
+SKIP_NAMES = {".hermes-product", "hermes-build.json", ".hermes-stale", ".hermes-node-deps"}
+# Path names a rename must keep, while their CONTENTS are still ours to rewrite.
+# The vendored ink fork keeps its upstream folder name (``build:ink`` and the lockfile's
+# ``link:packages/hermes-ink`` point at it) but its package is ``@anakot/ink``. Keeping this in
+# SKIP_NAMES instead also exempted every file inside from the text rewrite, which left
+# ``"name": "@hermes/ink"`` while the workspace depended on ``@anakot/ink``.
+KEEP_PATH_NAMES = {"hermes-ink"}
 
 SUBSTITUTIONS = (("Hermes", "Anakot"), ("HERMES", "ANAKOT"), ("hermes", "anakot"))
 
@@ -180,9 +186,17 @@ def walk_files() -> list[str]:
     return out
 
 
-def rename_paths(apply: bool) -> list[tuple[str, str]]:
-    """Rename any path segment containing 'hermes', deepest first."""
+def rename_paths(apply: bool) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    """Rename any path segment containing 'hermes', deepest first.
+
+    Returns ``(changes, conflicts)``. A conflict is a rename whose target already exists — the
+    common cause is an ignored leftover (``node_modules``, ``data/``, ``.venv``) inside a directory
+    the rebrand wants to rename, because ``git clean -fd`` does not remove ignored paths. Skipping
+    those silently left BOTH trees in place (``hermes_cli/`` next to ``anakot_cli/``) and every
+    later step happily operated on a half-rebranded checkout, so the caller now aborts instead.
+    """
     changes: list[tuple[str, str]] = []
+    conflicts: list[tuple[str, str]] = []
     for dirpath, dirnames, filenames in os.walk(REPO, topdown=False):
         rel_dir = os.path.relpath(dirpath, REPO).replace("\\", "/")
         if rel_dir == ".":
@@ -194,20 +208,22 @@ def rename_paths(apply: bool) -> list[tuple[str, str]]:
             continue
         for name in filenames + dirnames:
             lower = name.lower()
-            if "hermes" not in lower or name in SKIP_FILES or name in SKIP_NAMES:
+            if "hermes" not in lower or name in SKIP_FILES or name in SKIP_NAMES or name in KEEP_PATH_NAMES:
                 continue
             new = name.replace("Hermes", "Anakot").replace("HERMES", "ANAKOT").replace("hermes", "anakot")
             if new == name:
                 continue
             src = os.path.join(dirpath, name)
             dst = os.path.join(dirpath, new)
-            changes.append((os.path.relpath(src, REPO), os.path.relpath(dst, REPO)))
+            rel_src = os.path.relpath(src, REPO)
+            rel_dst = os.path.relpath(dst, REPO)
+            if os.path.exists(dst):
+                conflicts.append((rel_src, rel_dst))
+                continue
+            changes.append((rel_src, rel_dst))
             if apply:
-                if os.path.exists(dst):
-                    print(f"  ! skip rename, target exists: {dst}")
-                    continue
                 os.rename(src, dst)
-    return changes
+    return changes, conflicts
 
 
 def restore_assets(apply: bool) -> list[str]:
@@ -329,24 +345,10 @@ def verify_assets() -> list[str]:
     return bad
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description="Re-apply the Anakot rebrand to a Hermes tree.")
-    ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
-    ap.add_argument("--check", action="store_true", help="report only (default)")
-    ap.add_argument("--verify", action="store_true", help="gate on protected strings + asset hashes")
-    ap.add_argument("--rebaseline", action="store_true", help="re-snapshot brand art + refresh manifest hashes")
-    ap.add_argument("--quiet", action="store_true")
-    args = ap.parse_args()
-
-    if args.rebaseline:
-        kept, dropped = rebaseline()
-        print(f"[REBASELINE] {kept} brand files re-snapshotted, {dropped} dropped")
-        return 0
-
-    rules = load_protected()
+def rewrite_tree(rules: list[tuple[str, re.Pattern]], apply: bool) -> tuple[list[str], int, int]:
+    """Rewrite every file's content. Returns (rewritten paths, files scanned, protected hits)."""
     files = walk_files()
-    rewritten, protected_total, path_changes = [], 0, []
-
+    rewritten, protected_total = [], 0
     for rel in files:
         full = os.path.join(REPO, rel.replace("/", os.sep))
         try:
@@ -369,32 +371,87 @@ def main() -> int:
         new_text, _ = rewrite_text(text, rules)
         if new_text != original:
             rewritten.append(rel)
-            if args.apply:
+            if apply:
                 with open(full, "w", encoding="utf-8", newline="") as fh:
                     fh.write(new_text)
+    return rewritten, len(files), protected_total
 
-    path_changes = rename_paths(apply=args.apply)
+
+def report(apply: bool, scanned: int, protected_total: int, rewritten: list[str],
+           path_changes: list[tuple[str, str]], path_conflicts: list[tuple[str, str]],
+           drifted: list[str], asset_bad: list[str]) -> None:
+    mode = "APPLY" if apply else "CHECK (dry run)"
+    print(f"[{mode}] {scanned} files scanned")
+    print(f"  protected occurrences : {protected_total}")
+    print(f"  content rewrites      : {len(rewritten)}")
+    print(f"  path renames          : {len(path_changes)}")
+    if path_conflicts:
+        print(f"  path rename CONFLICTS : {len(path_conflicts)}  (target already exists)")
+        for src, dst in path_conflicts[:8]:
+            print(f"      {src}  ->  {dst}")
+    print(f"  brand files drifted   : {len(drifted)}  ({'restored' if apply else 'would restore'})")
+    for d in drifted[:8]:
+        print(f"      {d}")
+    if asset_bad:
+        print(f"  asset manifest MISMATCH: {len(asset_bad)}")
+        for b in asset_bad[:8]:
+            print(f"      {b}")
+
+
+def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
+                    drifted: list[str], asset_bad: list[str]) -> list[str]:
+    """Every kind of pending work, as report lines. Empty means the tree is fully rebranded.
+
+    A gate that only looks at asset hashes passes a half-rebranded tree: a rename that collided
+    (``target exists``) leaves ``hermes_cli/`` standing while every brand file is intact, and the
+    next ``git add -A`` ships both trees. So any pending work fails the gate.
+    """
+    out: list[str] = []
+    for label, items in (
+        ("file(s) still need a content rewrite", rewritten),
+        ("path(s) still need a rename", [f"{s}  ->  {d}" for s, d in path_changes]),
+        ("brand file(s) still drifted", drifted),
+        ("asset manifest mismatch(es)", asset_bad),
+    ):
+        if items:
+            out.append(f"  {len(items)} {label}:")
+            out.extend(f"      {item}" for item in items[:8])
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Re-apply the Anakot rebrand to a Hermes tree.")
+    ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
+    ap.add_argument("--check", action="store_true", help="report only (default)")
+    ap.add_argument("--verify", action="store_true", help="gate on protected strings + asset hashes")
+    ap.add_argument("--rebaseline", action="store_true", help="re-snapshot brand art + refresh manifest hashes")
+    ap.add_argument("--quiet", action="store_true")
+    args = ap.parse_args()
+
+    if args.rebaseline:
+        kept, dropped = rebaseline()
+        print(f"[REBASELINE] {kept} brand files re-snapshotted, {dropped} dropped")
+        return 0
+
+    rewritten, scanned, protected_total = rewrite_tree(load_protected(), args.apply)
+    path_changes, path_conflicts = rename_paths(apply=args.apply)
     drifted = restore_assets(apply=args.apply)
     asset_bad = verify_assets()
 
     if not args.quiet:
-        mode = "APPLY" if args.apply else "CHECK (dry run)"
-        print(f"[{mode}] {len(files)} files scanned")
-        print(f"  protected occurrences : {protected_total}")
-        print(f"  content rewrites      : {len(rewritten)}")
-        print(f"  path renames          : {len(path_changes)}")
-        print(f"  brand files drifted   : {len(drifted)}  ({'restored' if args.apply else 'would restore'})")
-        for d in drifted[:8]:
-            print(f"      {d}")
-        if asset_bad:
-            print(f"  asset manifest MISMATCH: {len(asset_bad)}")
-            for b in asset_bad[:8]:
-                print(f"      {b}")
+        report(args.apply, scanned, protected_total, rewritten, path_changes, path_conflicts,
+               drifted, asset_bad)
+
+    if path_conflicts:
+        print("ABORT: a rename target already exists (an ignored leftover inside that directory).")
+        print("       Remove it and re-run; a half-renamed tree must never be committed.")
+        return 2
 
     if args.verify:
-        ok = not asset_bad
-        print("VERIFY:", "PASS" if ok else "FAIL")
-        return 0 if ok else 1
+        failures = verify_failures(rewritten, path_changes, drifted, asset_bad)
+        print("VERIFY:", "PASS" if not failures else "FAIL")
+        print("\n".join(failures))
+        return 0 if not failures else 1
     return 0
 
 
