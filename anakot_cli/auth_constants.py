@@ -57,7 +57,7 @@ DEFAULT_NOUS_INFERENCE_URL = "https://inference-api.nousresearch.com/v1"
 # exchange (``inference_base_url``); this literal is the fallback when that field is absent or fails
 # the host allowlist, because the paid host cross-refuses an anonymous JWT with a 400.
 DEFAULT_NOUS_WELCOME_URL = "https://welcome-api.nousresearch.com/v1"
-DEFAULT_NOUS_CLIENT_ID = "anakot-cli"
+DEFAULT_NOUS_CLIENT_ID = "hermes-cli"
 # On every guest minted since the welcome trial: True when the desktop's first install claimed it
 # (``anakot_cli.welcome_trial``), False for a connector mint. Absent = minted before the trial existed.
 WELCOME_CLAIM_FLAG = "welcome_claim"

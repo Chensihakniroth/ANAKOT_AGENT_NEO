@@ -2,7 +2,7 @@
 
 Every Anakot request to the Nous Portal (main loop, auxiliary client, fallback
 paths) must carry the same product-attribution tags, sent in OpenAI-compatible
-``extra_body['tags']``: ``["product=anakot-agent", "client=anakot-client-v<base_version>"]``.
+``extra_body['tags']``: ``["product=hermes-agent", "client=hermes-client-v<base_version>"]``.
 The value comes from the canonical runtime identity's base version so build
 provenance never leaks into this compatibility tag.
 """
@@ -71,9 +71,9 @@ def get_conversation_context() -> Optional[str]:
 
 
 def anakot_client_tag() -> str:
-    """``client=anakot-client-v<MAJOR>.<MINOR>.<PATCH>`` from canonical runtime identity."""
+    """``client=hermes-client-v<MAJOR>.<MINOR>.<PATCH>`` from canonical runtime identity."""
     from anakot_cli.version_info import get_version_info
-    return f"client=anakot-client-v{get_version_info().base_version}"
+    return f"client=hermes-client-v{get_version_info().base_version}"
 
 
 def conversation_tag(session_id: str) -> str:
@@ -88,7 +88,7 @@ def nous_portal_tags(session_id: str | None = None) -> list[str]:
     The ambient conversation context (lineage ROOT id) wins over the explicit
     ``session_id``, a fallback for callers outside any agent turn.
     """
-    tags = ["product=anakot-agent", anakot_client_tag()]
+    tags = ["product=hermes-agent", anakot_client_tag()]
     effective = get_conversation_context() or session_id
     if effective:
         tags.append(conversation_tag(effective))

@@ -47,3 +47,12 @@ hermes-ink                                                           # ui-tui/pa
 # a var some scripts set as ANAKOT_* while another reads HERMES_* silently reads "".
 (?-i:HERMES_[A-Z0-9_]+)                                             # HERMES_PYTHON, HERMES_INSTALL_ROOT, HERMES_NODE, HERMES_RUNTIME_DIR, HERMES_MINT_*
 (?-i:__HERMES_)                                                      # launcher template placeholders __HERMES_<KEY>__
+
+# --- 12. Server-registered identifiers (a remote service validates them) ---
+# The Nous Portal knows these strings SERVER-SIDE, so they are not ours to rename. Verified against
+# the live endpoint: POST /api/oauth/device/code with client_id=hermes-cli -> HTTP 200, with
+# client_id=anakot-cli -> HTTP 400, which is exactly how "Sign-in with Nous Portal did not finish"
+# appears to a user. A rename here is indistinguishable from a broken service.
+DEFAULT_NOUS_CLIENT_ID = "hermes-cli"                                # Portal OAuth client id (server-registered)
+product=hermes-agent                                                 # Portal request attribution tag
+hermes-client-v                                                      # Portal client tag prefix
