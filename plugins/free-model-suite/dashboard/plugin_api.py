@@ -113,7 +113,7 @@ async def probe(body: ProbeRequest, profile: Optional[str] = None) -> dict[str, 
                 client.chat.completions.create(**request),
                 timeout=timeout_s,
             )
-        except asyncio.TimeoutError as exc:
+        except TimeoutError as exc:
             raise HTTPException(status_code=504, detail=f"probe timed out after {timeout_s:.0f}s") from exc
         except httpx.ConnectError as exc:
             raise HTTPException(status_code=502, detail=f"cannot connect to provider: {exc}") from exc
