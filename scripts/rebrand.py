@@ -72,6 +72,16 @@ INSTALL_REPO_EDITS: dict[str, tuple[tuple[str, str], ...]] = {
         ("https://raw.githubusercontent.com/NousResearch/hermes-agent/{}/scripts/{}",
          f"https://raw.githubusercontent.com/{FORK}/{{}}/scripts/{{}}"),
     ),
+    # Project identity: package metadata (repository/issues/homepage). A sync restores
+    # upstream's own URLs, which would advertise a project that is not this one.
+    "package.json": (
+        ("github.com/NousResearch/Hermes-Agent", f"github.com/{FORK}"),
+        ("github.com/NousResearch/hermes-agent", f"github.com/{FORK}"),
+        ("github.com/NousResearch/Anakot-Agent", f"github.com/{FORK}"),
+    ),
+    "apps/desktop/package.json": (
+        ("github.com/NousResearch/hermes-agent", f"github.com/{FORK}"),
+    ),
 }
 
 SKIP_DIRS = {
