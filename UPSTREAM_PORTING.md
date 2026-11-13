@@ -356,6 +356,14 @@ tree exits 2 instead of 0. Also confirmed the two steps the transform cannot do 
 lockfiles keep upstream identity until re-resolved (step 6), and `scripts/check` still needs the
 exclusive-plugin guard registration re-applied (step 7).
 
+**Operational note — the line-endings pre-push guard can time out, and it is not a real failure.**
+`scripts/ci/check_line_endings.py` shells out to `git ls-files --eol -z` with a 120 s subprocess
+timeout; on this 24,769-file tree that call takes ~15 s idle but exceeded 120 s twice while a
+rebrand `--apply` was running in another worktree on the same disk. Both pushes were rejected with
+`FAILED: line-endings` and `subprocess.TimeoutExpired`, and the identical commit then passed all 18
+checks once the I/O settled. So: do not push while a rebrand or a test run is hammering the disk,
+and treat a lone `line-endings` failure as contention until a quiet re-run says otherwise.
+
 ---
 
 ## Quick commands
