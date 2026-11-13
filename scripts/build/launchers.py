@@ -61,7 +61,7 @@ root="$(cd "$(dirname "$self")/.." && pwd)"
 PYTHON={shell_path(python)}
 REPO={shell_path(repo)}
 SITE={shell_path(site)}
-[ -x "$PYTHON" ] || {{ printf '%s\\n' 'Bundled interpreter missing; reinstall Hermes.' >&2; exit 2; }}
+[ -x "$PYTHON" ] || {{ printf '%s\\n' 'Bundled interpreter missing; reinstall Anakot.' >&2; exit 2; }}
 unset PYTHONPATH PYTHONHOME
 export PYTHONPATH="$REPO:$SITE"
 # PYTHONPATH cannot process .pth files (only site.addsitedir() can), and
@@ -69,7 +69,7 @@ export PYTHONPATH="$REPO:$SITE"
 # `import pywintypes` on Windows bundles; the win32 wrapper mirrors this
 # in launcher_wrapper.py). The -c bootstrap below runs addsitedir() on it.
 export HERMES_SITE="$SITE"
-export PYTHONPYCACHEPREFIX="${{PYTHONPYCACHEPREFIX:-${{XDG_CACHE_HOME:-$HOME/.cache}}/hermes-pycache}}"
+export PYTHONPYCACHEPREFIX="${{PYTHONPYCACHEPREFIX:-${{XDG_CACHE_HOME:-$HOME/.cache}}/anakot-pycache}}"
 {extra}exec "$PYTHON" -P -c {shlex.quote(code)} "$@"
 '''
 
@@ -83,7 +83,7 @@ def write_launchers(root: Path, entries: dict[str, str], *, python: str,
     windows = target.startswith("win32")
     for name, entry in entries.items():
         if windows:
-            with tempfile.TemporaryDirectory(prefix="hermes-mint-") as temp:
+            with tempfile.TemporaryDirectory(prefix="anakot-mint-") as temp:
                 wrapper = Path(temp) / "wrapper.py"
                 wrapper.write_text(render_wrapper(entry, f"../{repo}", f"../{site}"), encoding="utf-8")
                 module, func = entry.split(":", 1)

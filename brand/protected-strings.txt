@@ -1,0 +1,44 @@
+# Protected strings — NEVER rewritten by rebrand.py
+# Everything here is a live wire to a Hermes service, an on-disk compatibility
+# marker, or someone else's repo. Rewriting any of these breaks something real.
+# Format: <regex>  # why
+#
+# --- 1. Docs / API / install endpoints (378 hits) ---
+hermes-agent\.nousresearch\.com                                     # docs, model-catalog.json, skills-index.json, plugin-catalog.json, install.sh/ps1
+# --- 2. Upstream repo identity (813 hits) ---
+NousResearch/hermes-agent                                            # repo refs, catalog submissions, git origin, blob links
+NousResearch/hermes-agent-core                                       # CODEOWNERS team handles
+github:NousResearch/hermes-agent                                     # catalog source specifier
+git@github\.com:NousResearch/hermes-agent                            # ssh remote spelling
+# --- 3. On-disk compatibility markers (7 hits) ---
+\.hermes-product                                                     # build output ownership marker (existing dists)
+hermes-build\.json                                                   # per-product build receipt
+\.hermes-stale                                                       # stale-bundle marker
+\.hermes-node-deps                                                   # node dependency receipt
+# --- 4. Third-party attribution ---
+hermes-achievements                                                  # PCinkusz/hermes-achievements (MIT) attribution
+# --- 5. Env vars / globals external tooling reads (48 hits) ---
+__HERMES_PLUGIN_SDK__                                                # browser global third-party plugin dashboards expect
+HERMES_PYTHON                                                        # build wrapper contract
+HERMES_INSTALL_ROOT                                                  # build wrapper contract
+# --- 6. Internal UI class names asserted by tests/snapshots ---
+hermes-kanban                                                        # CSS class prefix used by kanban UI + tests
+
+# --- 7. Runtime protocol names the plugin SDK/bridge define (renaming breaks plugins) ---
+__HERMES_PLUGINS__                                                   # browser global: installed plugin set
+__HERMES_SESSION_TOKEN__                                             # browser global: dashboard session token
+X-Hermes-Session-Token                                               # HTTP header the dashboard/plugin bridge sends
+hermes_session_at                                                    # cookie name read by plugin dashboards
+# --- 8. Vendored / compiled third-party bundles (never text-rewrite a dist artifact) ---
+hermes-achievement-                                                  # download filename in the vendored achievements bundle
+
+# --- 9. Build-product owner strings embedded in on-disk markers ---
+hermes-frontend-product                                             # productOwner written into .hermes-product (existing dists)
+# --- 10. Vendored ink fork keeps its upstream folder name ---
+hermes-ink                                                           # ui-tui/packages/hermes-ink (dir + build:ink path); package name is @anakot/ink
+
+# --- 11. Build-time env-var contracts (internal, user-invisible, upstream-managed) ---
+# Renaming these buys nothing a user can see and risks a HALF-renamed contract:
+# a var some scripts set as ANAKOT_* while another reads HERMES_* silently reads "".
+(?-i:HERMES_[A-Z0-9_]+)                                             # HERMES_PYTHON, HERMES_INSTALL_ROOT, HERMES_NODE, HERMES_RUNTIME_DIR, HERMES_MINT_*
+(?-i:__HERMES_)                                                      # launcher template placeholders __HERMES_<KEY>__
