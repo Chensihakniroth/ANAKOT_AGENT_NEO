@@ -35,6 +35,45 @@ import sys
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BRAND = os.path.join(REPO, "brand")
 
+# ─── install-path repoint ───────────────────────────────────────────────────
+# These four files decide where a NEW machine installs from. Upstream's defaults
+# point at Hermes, so without this a fresh install clones and runs upstream —
+# the rebrand never gets a chance to apply. Applied before the protect mask,
+# because the URLs being replaced are themselves protected upstream strings.
+#
+# File-scoped and surgical on purpose. The fork guards (install.sh's
+# `nousresearch/hermes-agent` grep, install.ps1's `$Origin -notmatch ...` regex)
+# MUST keep saying hermes-agent: they are how the scripts recognise "this is not
+# the official repo, so publish no release and follow the branch". Repoint one
+# and a fresh install goes looking for a release on a repo that has none, then
+# stops. The docs/catalog/plugin URLs also stay upstream: those are live services
+# this fork still uses.
+FORK = "Chensihakniroth/ANAKOT_AGENT_NEO"
+INSTALL_REPO_EDITS: dict[str, tuple[tuple[str, str], ...]] = {
+    "scripts/install.sh": (
+        ("https://github.com/NousResearch/hermes-agent.git", f"https://github.com/{FORK}.git"),
+        ("https://api.github.com/repos/NousResearch/hermes-agent/releases/latest",
+         f"https://api.github.com/repos/{FORK}/releases/latest"),
+        ("https://github.com/NousResearch/hermes-agent/releases/latest",
+         f"https://github.com/{FORK}/releases/latest"),
+    ),
+    "scripts/install.ps1": (
+        ('else { "https://github.com/NousResearch/hermes-agent.git" }', f'else {{ "https://github.com/{FORK}.git" }}'),
+        ("https://api.github.com/repos/NousResearch/hermes-agent/releases/latest",
+         f"https://api.github.com/repos/{FORK}/releases/latest"),
+        ("https://github.com/NousResearch/hermes-agent/releases/latest",
+         f"https://github.com/{FORK}/releases/latest"),
+    ),
+    "scripts/install.cmd": (
+        ("https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.cmd",
+         f"https://raw.githubusercontent.com/{FORK}/main/scripts/install.cmd"),
+    ),
+    "apps/bootstrap-installer/src-tauri/src/install_script.rs": (
+        ("https://raw.githubusercontent.com/NousResearch/hermes-agent/{}/scripts/{}",
+         f"https://raw.githubusercontent.com/{FORK}/{{}}/scripts/{{}}"),
+    ),
+}
+
 SKIP_DIRS = {
     ".git", "node_modules", ".venv", "venv", ".cache",
     "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache",
@@ -67,7 +106,7 @@ SUBSTITUTIONS = (("Hermes", "Anakot"), ("HERMES", "ANAKOT"), ("hermes", "anakot"
 def load_protected(path: str | None = None) -> list[tuple[str, re.Pattern]]:
     path = path or os.path.join(BRAND, "protected-strings.txt")
     rules = []
-    with open(path, encoding="utf-8") as fh:
+    with open(path, encoding="utf-8-sig") as fh:
         for line in fh:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -235,7 +274,7 @@ def rebaseline() -> tuple[int, int]:
     the tree to the previous art. A file whose copy was removed from the snapshot
     is dropped from the manifest (that is how brand art is retired)."""
     manifest_path = os.path.join(BRAND, "assets.manifest.json")
-    with open(manifest_path, encoding="utf-8") as fh:
+    with open(manifest_path, encoding="utf-8-sig") as fh:
         manifest = json.load(fh)
     files = manifest["files"]
     root = os.path.join(BRAND, "assets")
@@ -262,7 +301,7 @@ def verify_assets() -> list[str]:
     manifest_path = os.path.join(BRAND, "assets.manifest.json")
     if not os.path.isfile(manifest_path):
         return []
-    with open(manifest_path, encoding="utf-8") as fh:
+    with open(manifest_path, encoding="utf-8-sig") as fh:
         manifest = json.load(fh)["files"]
     bad = []
     for rel, meta in manifest.items():
@@ -307,11 +346,14 @@ def main() -> int:
             text = raw.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        if "hermes" not in text.lower():
+        original = text
+        for old, new in INSTALL_REPO_EDITS.get(rel, ()):
+            text = text.replace(old, new)
+        if "hermes" not in text.lower() and text == original:
             continue
         protected_total += count_protected(text, rules)
         new_text, _ = rewrite_text(text, rules)
-        if new_text != text:
+        if new_text != original:
             rewritten.append(rel)
             if args.apply:
                 with open(full, "w", encoding="utf-8", newline="") as fh:

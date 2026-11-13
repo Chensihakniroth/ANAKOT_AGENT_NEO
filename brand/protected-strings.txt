@@ -6,10 +6,15 @@
 # --- 1. Docs / API / install endpoints (378 hits) ---
 hermes-agent\.nousresearch\.com                                     # docs, model-catalog.json, skills-index.json, plugin-catalog.json, install.sh/ps1
 # --- 2. Upstream repo identity (813 hits) ---
-NousResearch/hermes-agent                                            # repo refs, catalog submissions, git origin, blob links
-NousResearch/hermes-agent-core                                       # CODEOWNERS team handles
-github:NousResearch/hermes-agent                                     # catalog source specifier
-git@github\.com:NousResearch/hermes-agent                            # ssh remote spelling
+# Case-INsensitive on purpose: several live wires lowercase the URL before comparing
+# (install.sh's fork guard, Docker image refs, the skills-hub prefix), so the lowercase
+# spelling is just as load-bearing as the capitalised one. A case-sensitive rule here let
+# `nousresearch/anakot-agent` through and renamed 95 occurrences into a repo/image/prefix
+# that does not exist.
+(?i:NousResearch/hermes-agent)                                       # repo refs, catalog submissions, git origin, blob links, docker image, skills-hub prefix, install.sh fork guard
+(?i:NousResearch/hermes-agent-core)                                  # CODEOWNERS team handles
+(?i:github:NousResearch/hermes-agent)                                # catalog source specifier
+(?i:git@github\.com:NousResearch/hermes-agent)                       # ssh remote spelling
 # --- 3. On-disk compatibility markers (7 hits) ---
 \.hermes-product                                                     # build output ownership marker (existing dists)
 hermes-build\.json                                                   # per-product build receipt
