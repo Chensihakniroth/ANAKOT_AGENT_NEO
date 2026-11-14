@@ -8,13 +8,15 @@
 #   scripts/dev-install.sh --seed-home            # copy the live profile's config.yaml + .env
 #   scripts/dev-install.sh --run                  # launch the CLI against the dev home when done
 #   scripts/dev-install.sh --run-desktop          # JS deps, then build and open the desktop app
-#   scripts/dev-install.sh --shortcut            # a Desktop icon that launches this dev build
+#   scripts/dev-install.sh --shortcut             # a Desktop icon that launches this dev build
+#   scripts/dev-install.sh --pack                 # JS deps, then package the desktop app (no launch)
 #
 # Why this exists. A regenerated fork tree cannot be set up the documented way:
-#   * `pm.build_env` fails on it. pm rewrites the workspace manifest with `workspace.members` and a
-#     `sources` entry, and uv then judges the seeded lock stale ("The lockfile at `uv.lock` needs to
-#     be updated"), even though `uv lock` produces no diff. Building straight from the repo lock
-#     (`uv sync --locked --all-packages --group dev --group test`) is the path that works.
+#   * Lockfiles are exempt from the rebrand, so the tree arrives with each uv lock still naming the
+#     upstream project and uv refuses every strict entry point -- pm's runtime staging,
+#     `pm.build_env`, the desktop pack, the test bootstrap -- with a message that names no lock.
+#     This script re-points them first (scripts/fix_lock_identity.py), then builds straight from the
+#     repo lock (`uv sync --locked --all-packages --group dev --group test`).
 #   * The JS tree declares `engines.node >= 26`. A system Node 22 aborts with
 #     ERR_PNPM_UNSUPPORTED_ENGINE before pnpm reads anything, and on Windows the newer interpreter
 #     has to be put on PATH in the MSYS spelling or bash silently keeps the old one.
@@ -32,10 +34,11 @@ SEED_HOME=0
 RUN_CLI=0
 RUN_DESKTOP=0
 SHORTCUT=0
+PACK=0
 FULL_CLONE=0
 
 usage() {
-    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
@@ -49,6 +52,7 @@ while [ $# -gt 0 ]; do
         --run)       RUN_CLI=1; shift ;;
         --run-desktop) RUN_DESKTOP=1; WITH_JS=1; shift ;;
         --shortcut)  SHORTCUT=1; WITH_JS=1; shift ;;
+        --pack)      PACK=1; WITH_JS=1; shift ;;
         --full)      FULL_CLONE=1; shift ;;
         -h|--help)   usage 0 ;;
         *)           echo "unknown argument: $1" >&2; usage 2 ;;
@@ -288,6 +292,29 @@ if [ "$SHORTCUT" = 1 ]; then
         [ -n "${ANAKOT_SHORTCUT_DIR:-}" ] && ps_args+=(-OutDir "$(win "$ANAKOT_SHORTCUT_DIR")")
         powershell.exe "${ps_args[@]}" \
             || warn "could not create the Desktop shortcut (the .cmd launcher above still works)"
+    fi
+fi
+
+if [ "$PACK" = 1 ]; then
+    # The repo's own pack step. Its first stage prepares a pm runtime, which is exactly what the stale
+    # lock used to refuse, so the fix above is why this can run at all. --build-only stops short of
+    # launching, which keeps it safe on a machine that already has the app open.
+    say "packaging the desktop app (the first build takes a few minutes)"
+    ( cd "$DIR" && "$ANAKOT_BIN" desktop --build-only ) \
+        || die "the desktop pack failed (re-run it: cd \"$DIR\" && \"$ANAKOT_BIN\" desktop --build-only)"
+    # Name the artifact, not just the directory: --build-only prints it too, but a user reading a
+    # scrollback should be handed the one path that matters.
+    artifact=""
+    for candidate in "$DIR/apps/desktop/release/win-unpacked/Anakot.exe" \
+                     "$DIR/apps/desktop/release/linux-unpacked/anakot" \
+                     "$DIR/apps/desktop/release/mac"*/*.app; do
+        if [ -e "$candidate" ]; then artifact="$candidate"; break; fi
+    done
+    if [ -n "$artifact" ]; then
+        say "packaged app: $artifact"
+        say "start it with ANAKOT_HOME=\"$DEV_HOME\" \"$artifact\""
+    else
+        warn "the pack finished but no artifact was found under $DIR/apps/desktop/release"
     fi
 fi
 

@@ -18,12 +18,14 @@
     .\scripts\dev-install.ps1 -Run
     .\scripts\dev-install.ps1 -Dir D:\anakot-dev -Ref update/upstream-2026-11-14 -Js -SeedHome
     .\scripts\dev-install.ps1 -Desktop      # install JS deps, then build and open the desktop app
+    .\scripts\dev-install.ps1 -Pack         # install JS deps, then package the desktop app (no launch)
 #>
 [CmdletBinding()]
 param(
     [switch]$Run,
     [switch]$Desktop,
     [switch]$Shortcut,
+    [switch]$Pack,
     [switch]$Js,
     [switch]$SeedHome,
     [string]$Dir,
@@ -71,6 +73,7 @@ if ($HomePath) { $bashArgs += @('--home', $HomePath) }
 if ($Js)       { $bashArgs += '--js' }
 if ($Desktop)  { $bashArgs += '--run-desktop' }
 if ($Shortcut) { $bashArgs += '--shortcut' }
+if ($Pack)     { $bashArgs += '--pack' }
 if ($SeedHome) { $bashArgs += '--seed-home' }
 if ($Run)      { $bashArgs += '--run' }
 

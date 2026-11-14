@@ -573,9 +573,13 @@ CRLF, then on the tree: the gate passes, and the runner's own bootstrap now buil
 generation where it previously died at the lock in 4 s. `scripts/dev-install.sh` runs the same fix
 before its `uv sync`, so a dev tree self-heals.
 
-**Still open.** Nothing from the regenerate itself. What remains untested end to end is the desktop
-*pack* path (`anakot desktop --build-only`), which the lock fix should have unblocked but which has
-not been run since.
+**Desktop pack unblocked, and it was the same lock.** With the name re-pointed, the repo's own pack
+step runs: `anakot desktop --build-only` produced `apps/desktop/release/win-unpacked/Anakot.exe`
+(246 MB; 424 MB tree) in 6m6s, where it previously died at its Python-deps stage. Launching the
+binary reached the single-instance lock because the live app was open -- which is what a working
+build does, not a stub. It emits the *unpacked* app only; a distributable installer remains the
+release pipeline's target. `scripts/dev-install.sh --pack` (`-Pack` in the wrapper) now runs it and
+prints the artifact path, so the dev install no longer ends by telling the user to type a command.
 
 ## Quick commands
 
