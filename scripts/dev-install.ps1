@@ -23,6 +23,7 @@
 param(
     [switch]$Run,
     [switch]$Desktop,
+    [switch]$Shortcut,
     [switch]$Js,
     [switch]$SeedHome,
     [string]$Dir,
@@ -69,6 +70,7 @@ if ($Dir)      { $bashArgs += @('--dir',  $Dir) }
 if ($HomePath) { $bashArgs += @('--home', $HomePath) }
 if ($Js)       { $bashArgs += '--js' }
 if ($Desktop)  { $bashArgs += '--run-desktop' }
+if ($Shortcut) { $bashArgs += '--shortcut' }
 if ($SeedHome) { $bashArgs += '--seed-home' }
 if ($Run)      { $bashArgs += '--run' }
 

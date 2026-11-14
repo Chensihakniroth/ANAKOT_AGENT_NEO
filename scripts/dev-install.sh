@@ -8,6 +8,7 @@
 #   scripts/dev-install.sh --seed-home            # copy the live profile's config.yaml + .env
 #   scripts/dev-install.sh --run                  # launch the CLI against the dev home when done
 #   scripts/dev-install.sh --run-desktop          # JS deps, then build and open the desktop app
+#   scripts/dev-install.sh --shortcut            # a Desktop icon that launches this dev build
 #
 # Why this exists. A regenerated fork tree cannot be set up the documented way:
 #   * `pm.build_env` fails on it. pm rewrites the workspace manifest with `workspace.members` and a
@@ -30,10 +31,11 @@ WITH_JS=0
 SEED_HOME=0
 RUN_CLI=0
 RUN_DESKTOP=0
+SHORTCUT=0
 FULL_CLONE=0
 
 usage() {
-    sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
@@ -46,6 +48,7 @@ while [ $# -gt 0 ]; do
         --seed-home) SEED_HOME=1; shift ;;
         --run)       RUN_CLI=1; shift ;;
         --run-desktop) RUN_DESKTOP=1; WITH_JS=1; shift ;;
+        --shortcut)  SHORTCUT=1; WITH_JS=1; shift ;;
         --full)      FULL_CLONE=1; shift ;;
         -h|--help)   usage 0 ;;
         *)           echo "unknown argument: $1" >&2; usage 2 ;;
@@ -251,6 +254,33 @@ else
     printf '    (or hot-reloading: %s -C apps/desktop dev)\n' "$PNPM"
     printf '    (window says "Gateway starting (deadline)"? ANAKOT_HOME="%s" "%s" gateway status)\n' \
         "$DEV_HOME" "$ANAKOT_BIN"
+fi
+
+if [ "$SHORTCUT" = 1 ]; then
+    if [ "$is_windows" != 1 ]; then
+        warn "--shortcut is Windows-only; on this host launch with: ANAKOT_HOME=\"$DEV_HOME\" \"$ANAKOT_BIN\" desktop"
+    else
+        # A .lnk cannot carry environment, and this app needs ANAKOT_HOME (a launch-only key read from
+        # its own process env, never from a .env) plus the bundled Node/pnpm. So the shortcut points at
+        # a .cmd that sets all three, then starts the app: an icon that needs no typing and no shell.
+        win() { cygpath -w "$1" 2>/dev/null || printf '%s' "$1"; }
+        path_pre="$(win "$node_bin")"
+        [ -n "$pnpm_msys" ] && path_pre="$path_pre;$(win "$pnpm_msys")"
+        launcher="$DIR/anakot-dev.cmd"
+        {
+            printf '@echo off\r\n'
+            printf 'set "ANAKOT_HOME=%s"\r\n' "$(win "$DEV_HOME")"
+            printf 'set "PATH=%s;%%PATH%%"\r\n' "$path_pre"
+            printf 'cd /d "%s"\r\n' "$(win "$DIR")"
+            printf '%s -C apps/desktop start\r\n' "$PNPM"
+        } > "$launcher"
+        say "launcher written: $launcher"
+        ps_args=(-NoProfile -ExecutionPolicy Bypass -File "$(win "$DIR/scripts/dev-desktop-shortcut.ps1")"
+                 -CmdPath "$(win "$launcher")")
+        [ -n "${ANAKOT_SHORTCUT_DIR:-}" ] && ps_args+=(-OutDir "$(win "$ANAKOT_SHORTCUT_DIR")")
+        powershell.exe "${ps_args[@]}" \
+            || warn "could not create the Desktop shortcut (the .cmd launcher above still works)"
+    fi
 fi
 
 if [ "$RUN_DESKTOP" = 1 ]; then
