@@ -50,7 +50,7 @@ Containers: Pillow for multi-size .ico and .icns.
 
 Dependencies:
     Pillow and resvg-py are core runtime dependencies; run this file with a
-    Anakot runtime interpreter (scripts/generate-icons.mjs uses HERMES_PYTHON).
+    Anakot runtime interpreter (scripts/generate-icons.mjs uses ANAKOT_PYTHON).
 
 Outputs (99 files):
   assets/icon-master.svg                              generated light master
@@ -109,7 +109,7 @@ try:
 except ImportError:
     sys.exit(
         "resvg-py is missing: run the generator with a Anakot runtime interpreter\n"
-        "  (HERMES_PYTHON=<anakot venv python> node scripts/generate-icons.mjs)"
+        "  (ANAKOT_PYTHON=<anakot venv python> node scripts/generate-icons.mjs)"
     )
 
 # Copy of anakot_cli.update_channel._CANARY_TAG_RE: builders run this renderer
@@ -316,15 +316,48 @@ class IconArt:
         self.master_dark_small = compose_svg(self, "white", "squircle-dark.svg", badge=False)
 
 
-def girl_path(art: IconArt, girl: str) -> str:
-    """The girl `<path>` element with editor metadata stripped (resvg rejects
-    undeclared inkscape/sodipodi prefixes)."""
+def girl_extent(art: IconArt, girl: str) -> float:
+    """Edge length of the girl SVG's own coordinate space. Square masters today,
+    but read from the file so a master exported on a different grid still scales
+    correctly (the vector master is 5487.0615, a raster export is 1024)."""
+    root = re.search(r"<svg\b[^>]*>", art.girls[girl].read_text(encoding="utf-8-sig"))
+    assert root, f"no <svg> root in {art.girls[girl].name}"
+    box = re.search(
+        r'viewBox="\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+-]+)', root.group(0)
+    )
+    if box:
+        return float(box.group(1))
+    width = re.search(r'width="([\d.]+)', root.group(0))
+    return float(width.group(1)) if width else GIRL_VIEWBOX
+
+
+def girl_is_raster(art: IconArt, girl: str) -> bool:
+    """True when the master carries no `<path>` — art exported as an embedded
+    `<image>`, which has no nodes to drag and no path to scale."""
+    return "<path" not in art.girls[girl].read_text(encoding="utf-8-sig")
+
+
+def girl_art(art: IconArt, girl: str) -> str:
+    """Girl art for the nested layer.
+
+    A vector master contributes its single `<path>` with editor metadata
+    stripped (resvg rejects undeclared inkscape/sodipodi prefixes), so it stays
+    crisp at every output size. A raster master has no path to carry, so its
+    whole inner content comes over verbatim — its own mask and `<image>` repaint
+    themselves at whatever size resvg is asked for."""
     if girl not in art.paths:
         src = art.girls[girl].read_text(encoding="utf-8-sig")
         m = re.search(r"<path\b.*?/>", src, re.DOTALL)
-        assert m, f"no <path> found in {art.girls[girl].name}"
-        path = re.sub(r'\s+(inkscape|sodipodi):[a-zA-Z-]+="[^"]*"', "", m.group(0))
-        art.paths[girl] = path
+        if m:
+            art.paths[girl] = re.sub(
+                r'\s+(inkscape|sodipodi):[a-zA-Z-]+="[^"]*"', "", m.group(0)
+            )
+        else:
+            root = re.search(r"<svg\b[^>]*>", src)
+            assert root, f"no <svg> root in {art.girls[girl].name}"
+            art.paths[girl] = src[
+                src.index(root.group(0)) + len(root.group(0)):src.rindex("</svg>")
+            ].strip()
     return art.paths[girl]
 
 
@@ -335,7 +368,7 @@ def girl_bbox(art: IconArt, girl: str) -> tuple[float, float, float, float]:
         data = resvg_py.svg_to_bytes(svg_path=str(art.girls[girl]), width=512, height=512)
         im = Image.open(io.BytesIO(data))
         bx, by, bx2, by2 = im.getchannel("A").point(lambda v: 255 if v > 0 else 0).getbbox()
-        s = GIRL_VIEWBOX / 512.0
+        s = girl_extent(art, girl) / 512.0
         art.bboxes[girl] = (bx * s, by * s, (bx2 - bx) * s, (by2 - by) * s)
     return art.bboxes[girl]
 
@@ -351,7 +384,7 @@ def girl_layer(
     return (
         f'<svg x="{x}" y="{y}" width="{w}" height="{h}" viewBox="{bx} {by} {bw} {bh}" '
         f'preserveAspectRatio="{align} meet">\n'
-        f"    {girl_path(art, girl)}\n"
+        f"    {girl_art(art, girl)}\n"
         "  </svg>"
     )
 
@@ -465,10 +498,11 @@ def portrait_layer(art: IconArt, girl: str, bg: str, join_bottom: float) -> ET.E
     _, y, portrait_width, portrait_height = box
     _, by, bw, bh = girl_bbox(art, girl)
     scale = min(portrait_width / bw, portrait_height / bh)
-    drag_bottom_nodes(
-        portrait[0], cutoff=by + bh * 0.97, band=bh * 0.02,
-        distance=max(0.0, join_bottom - (y + portrait_height)) / scale,
-    )
+    if not girl_is_raster(art, girl):
+        drag_bottom_nodes(
+            portrait[0], cutoff=by + bh * 0.97, band=bh * 0.02,
+            distance=max(0.0, join_bottom - (y + portrait_height)) / scale,
+        )
     # Keep the fitted viewBox fixed, but let edited nodes reach into the border.
     portrait.set("overflow", "visible")
     return portrait

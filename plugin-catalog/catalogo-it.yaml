@@ -7,7 +7,7 @@ description: "The official Anakot plugin catalog in a native page (sidebar entry
 maintainer: Lazzdaycod
 tier: community
 category: desktop
-requires_hermes: ">=0.21.6"
+requires_anakot: ">=0.21.6"
 docs_url: https://github.com/Lazzdaycod/anakot-lang-it/tree/main/plugins/catalogo-it
 version: "1.0.0"
 platforms: []

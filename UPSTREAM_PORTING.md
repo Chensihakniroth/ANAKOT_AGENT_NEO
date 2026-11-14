@@ -472,6 +472,33 @@ standing in) and bootstrap (`--dir` + `--ref`, shallow clone by default; a dev i
 it does not need upstream's 16k commits). Measured on this host: a fresh shallow clone plus a full
 Python env in 49 s. It is fork-authored, so the computed carry list picks it up on its own next cycle.
 
+**The brand layer a regenerate cannot carry (found by running the dev build).** The carry list
+restores paths upstream never tracked. It cannot restore a fork's edits **inside** upstream-tracked
+files: those paths exist upstream, so the carry list skips them and upstream's version wins. Measured
+across both trees (24,755 paths compared, rebrand reversed before comparing): 21,550 identical, 4
+rename-only, 3,201 with a real content difference — and of those, 2,307 are simply upstream moving on
+since the fork's baseline while **246 are files the fork edited deliberately**. The discriminator is
+the fork's baseline commit, not the target: a file the fork inherits unchanged is upstream's problem,
+a file whose bytes differ from `eaac327f:<path>` is the fork's own work.
+
+Two of the 246 showed up immediately in the dev desktop — this is what "the font never changed" and
+"the logo is still the Hermes girl" actually were:
+
+- `apps/desktop/src/styles.css` — the `@font-face` for Rostex plus the `.wordmark` family (13 lines
+  total). The brand font files were present and byte-perfect the whole time; nothing referenced them.
+- `scripts/generate_icons.py` — the fork's copy reads the fork's own single-path girl art. Upstream's
+  asserts `no <path> found in nous-girl-black.svg`, so the icons cannot be rendered at all with it,
+  and every icon/logo target stays upstream art. Note `brand/assets.manifest.json` cannot catch this:
+  generator-owned paths are excluded from **both** `restore_assets` and `verify_assets` by design, so
+  a missing render is invisible to the gate.
+
+95 of the 246 are brand art (15 `brand-ui` + 80 `generated-art`) and are restored verbatim in this
+branch, along with the fork's generator. The other 151 are code and config the fork edited — build
+scripts, installers, CI workflows, agent files — where upstream has *also* moved on, so a blind
+restore would revert upstream work and a blind keep would drop the fork's. Those need a three-way
+merge (`base` = the file at `eaac327f` rebranded, `ours` = the fork, `theirs` = this tree) and are
+outstanding.
+
 ---
 
 ## Quick commands
