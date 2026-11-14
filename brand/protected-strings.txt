@@ -42,11 +42,12 @@ hermes-frontend-product                                             # productOwn
 # --- 10. Vendored ink fork keeps its upstream folder name ---
 hermes-ink                                                           # ui-tui/packages/hermes-ink (dir + build:ink path); package name is @anakot/ink
 
-# --- 11. Build-time env-var contracts (internal, user-invisible, upstream-managed) ---
-# Renaming these buys nothing a user can see and risks a HALF-renamed contract:
-# a var some scripts set as ANAKOT_* while another reads HERMES_* silently reads "".
-(?-i:HERMES_[A-Z0-9_]+)                                             # HERMES_PYTHON, HERMES_INSTALL_ROOT, HERMES_NODE, HERMES_RUNTIME_DIR, HERMES_MINT_*
-(?-i:__HERMES_)                                                      # launcher template placeholders __HERMES_<KEY>__
+# --- 11. Env-var names are part of the brand: they rename with everything else ---
+# The rewrite is tree-wide, so the writer and the reader always agree. Protecting a
+# subset is what CREATES the half-renamed contract, and the old rule did exactly that:
+# scripts/build/launchers.py wrote HERMES_RUNTIME_DIR while the app read
+# ANAKOT_RUNTIME_DIR, so both silently fell back to a default. Nothing in this family is
+# a server-side contract -- those are section 12.
 
 # --- 12. Server-registered identifiers (a remote service validates them) ---
 # The Nous Portal knows these strings SERVER-SIDE, so they are not ours to rename. Verified against
