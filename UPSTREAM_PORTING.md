@@ -406,11 +406,8 @@ system Node 22 aborts with `ERR_PNPM_UNSUPPORTED_ENGINE` before reading anything
    `HERMES_INSTALL_ROOT`), and the Portal OAuth client id.
 2. **`--verify` cannot see a missing file.** A tree that had lost ~570 renamed modules passed
    `VERIFY: PASS`, because the gate only looks for *pending* work (renames to do, rewrites to
-   apply, asset drift) and never asks whether an expected path exists at all. **Fixed this cycle:**
-   `verify_completeness()` now asks the git index for every path and fails on any that exists
-   neither under its old nor its new name. Proven red (hid `anakot_state.py` → `VERIFY: FAIL`
-   naming it) and green (healthy tree → no such line), so a lost file can no longer pass a gate
-   that only ever asked "is work still pending?".
+   apply, asset drift) and never asks whether an expected path exists at all. A completeness leg —
+   every index path either present or renamed-present — would have caught it.
 3. **Rename collisions come from *ignored* files, not just untracked ones.** The abort fires when a
    rename target exists; `anakot_cli/data/` and a `__pycache__` were enough, and they are invisible
    to `git status`. Cleaning a worktree for a re-run must remove ignored files **and** the empty
@@ -433,6 +430,21 @@ ANAKOT_HOME=<copy-of-a-real-profile> anakot -z "say hi" --cli
 ```
 
 A "no API keys or providers found" answer means the *brand surface*, not the model, is broken.
+
+**Gates.** 18 of 20 `scripts/check` guards pass. The two ratchet guards are **not measurable for a
+regenerate**, and that is a property of the base rather than of the tree:
+
+- `blob-size --base 422ad18618` reports four blobs over the 500 KiB limit —
+  `assets/banner.png`, `brand/assets/assets/banner.png`,
+  `apps/desktop/public/ds-assets/filler-bg0.jpg` and its snapshot copy. Every one is byte-identical
+  to the same path on `main` (`git rev-parse <ref>:<path>` agrees), so merging this branch adds no
+  new blob object: there is nothing to compress and nothing to allowlist. Measuring against upstream
+  simply makes the fork's own brand art look new.
+- `health --base 422ad18618` exceeds its own internal 900 s budget over a 16k-path delta and cannot
+  finish on this host.
+
+Both need a per-change base (an ordinary PR) to mean anything. For a whole-tree regenerate, record
+them as unmeasurable — never as passed, and not as failed either.
 
 **Environment findings.** A full system drive disguises itself as `curl: (23) client returned ERROR
 on write` while pm bootstraps uv; `uv cache clean` reclaimed 5.6 GB. `run_tests.sh` on this version
