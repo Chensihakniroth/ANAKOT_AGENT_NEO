@@ -458,7 +458,19 @@ them as unmeasurable — never as passed, and not as failed either.
 
 **Environment findings.** A full system drive disguises itself as `curl: (23) client returned ERROR
 on write` while pm bootstraps uv; `uv cache clean` reclaimed 5.6 GB. `run_tests.sh` on this version
-honours **`HERMES_PYTHON`** (protected), not `ANAKOT_PYTHON`.
+honours **`HERMES_PYTHON`** (protected), not `ANAKOT_PYTHON`, and the per-file cap variable it reads
+is `ANAKOT_TEST_FILE_TIMEOUT`.
+
+**New this cycle — `scripts/dev-install.sh`.** A regenerated tree cannot be set up the documented way
+(`pm.build_env` refuses it, and the JS tree wants Node ≥ 26 that PATH rarely has), and the resulting
+build must not be pointed at the live profile. This script encodes both: build with
+`uv sync --locked --all-packages --group dev --group test` from the repo lock, reuse a staged uv when
+none is on PATH, optionally install JS deps with the bundled Node through the MSYS PATH spelling,
+create an isolated dev home (optionally seeded by copying — never moving — the live config), and
+verify the brand home actually resolves before handing over. Two modes: in-place (the tree you are
+standing in) and bootstrap (`--dir` + `--ref`, shallow clone by default; a dev install runs the tree,
+it does not need upstream's 16k commits). Measured on this host: a fresh shallow clone plus a full
+Python env in 49 s. It is fork-authored, so the computed carry list picks it up on its own next cycle.
 
 ---
 
