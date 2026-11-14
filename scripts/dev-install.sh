@@ -140,7 +140,7 @@ say "uv: $("$UV_BIN" --version 2>/dev/null || echo "$UV_BIN")"
 # desktop pack, the test bootstrap) with a message that never mentions a lock. Harmless -- and a
 # no-op -- on a tree whose locks already agree.
 if [ -f "$DIR/scripts/fix_lock_identity.py" ]; then
-    ( cd "$DIR" && "$UV_BIN" run --no-project python scripts/fix_lock_identity.py ) \
+    ( cd "$DIR" && "$UV_BIN" run --no-project python scripts/fix_lock_identity.py --uv "$UV_BIN" ) \
         || die "scripts/fix_lock_identity.py could not make the locks agree with their manifests"
 fi
 say "building the Python environment (uv sync --locked --all-packages --group dev --group test)"

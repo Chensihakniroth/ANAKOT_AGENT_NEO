@@ -27,7 +27,9 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -72,16 +74,40 @@ def root_entry(text: str) -> tuple[int, int, str] | None:
     return None
 
 
-def _verify(directory: Path) -> tuple[bool, str]:
+def uv_executable(explicit: str | None = None) -> str | None:
+    """Locate uv: an explicit path, then PATH, then Anakot's staged tool directories.
+
+    A bare ``"uv"`` is not enough. The dev installer discovers a *staged* uv that is not on PATH
+    and hands it over; and on Windows CreateProcess only tries ``uv`` and ``uv.exe`` for a bare
+    name (no PATHEXT search), so the call dies with WinError 2 on a machine where `uv` works in
+    the shell -- the lock then looks stale rather than unfindable.
+    """
+    if explicit:
+        # A caller may hand over a path (what the dev installer resolves) or a bare name.
+        return explicit if Path(explicit).exists() else shutil.which(explicit)
+    found = shutil.which("uv")
+    if found:
+        return found
+    exe = "uv.exe" if os.name == "nt" else "uv"
+    roots = [Path(os.environ["LOCALAPPDATA"]) / "anakot" / "tools"] if os.environ.get("LOCALAPPDATA") else []
+    roots.append(Path.home() / ".anakot" / "tools")
+    for root in roots:
+        for candidate in sorted(root.glob("uv-*")):
+            if (candidate / exe).exists():
+                return str(candidate / exe)
+    return None
+
+
+def _verify(directory: Path, uv: str) -> tuple[bool, str]:
     """Ask uv whether the lock is current. Offline first: online re-downloads direct-URL
     wheels, so one unreachable asset would report a correct lock as stale."""
     for args in (["lock", "--check", "--offline"], ["lock", "--check"]):
         try:
-            result = subprocess.run(["uv", *args], cwd=directory, capture_output=True,
+            result = subprocess.run([uv, *args], cwd=directory, capture_output=True,
                                     text=True, encoding="utf-8", errors="replace", timeout=600,
                                     check=False)
         except (OSError, subprocess.TimeoutExpired) as exc:
-            return False, f"could not run uv: {exc}"
+            return False, f"could not run {uv!r}: {exc}"
         if result.returncode == 0:
             return True, "uv lock --check: current"
     return False, (result.stderr or result.stdout).strip().splitlines()[-1] if (result.stderr or result.stdout) else "stale"
@@ -129,6 +155,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("root", nargs="?", default=".", help="checkout root (default: cwd)")
     parser.add_argument("--check", action="store_true", help="report stale locks, change nothing")
+    parser.add_argument("--uv", metavar="PATH", dest="uv_path",
+                        help="uv executable to verify with (default: PATH, then Anakot's staged tools)")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -136,6 +164,13 @@ def main() -> int:
     if not projects:
         print("no uv project (pyproject.toml beside uv.lock) found", file=sys.stderr)
         return 1
+
+    uv = uv_executable(args.uv_path)
+    if uv is None:
+        print(f"uv not found{f' at {args.uv_path!r}' if args.uv_path else ''}: pass --uv, or put uv on "
+              "PATH (uv is what decides whether a lock is current)", file=sys.stderr)
+        return 1
+    print(f"  uv: {uv}")
 
     if args.check:
         for lock, current, wanted in stale_locks(root):
@@ -147,7 +182,7 @@ def main() -> int:
 
     failed = 0
     for _manifest, lock in projects:
-        ok, detail = _verify(lock.parent)
+        ok, detail = _verify(lock.parent, uv)
         print(f"  {lock.relative_to(root).as_posix()}: {'OK' if ok else 'STILL STALE'} -- {detail}")
         failed += 0 if ok else 1
 

@@ -13,6 +13,7 @@ rules without needing uv, a network, or a resolved graph.
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -88,3 +89,25 @@ def test_an_unreadable_lock_is_reported_not_skipped(tmp_path: Path) -> None:
     (tmp_path / "uv.lock").write_text('version = 1\nrevision = 3\n', encoding="utf-8")
     stale = _module().stale_locks(tmp_path)
     assert [(p.name, current) for p, current, _ in stale] == [("uv.lock", "<no project entry>")]
+
+
+def test_uv_is_discovered_in_anakots_staged_tools(tmp_path: Path, monkeypatch) -> None:
+    """The dev installer resolves a *staged* uv that is not on PATH and hands it over.
+
+    Measured failure this pins: calling a bare "uv" raised WinError 2 on a machine where `uv`
+    works in the shell, because Windows' CreateProcess tries only ``uv``/``uv.exe`` for a bare
+    name. The lock then looks stale rather than unfindable.
+    """
+    exe = "uv.exe" if os.name == "nt" else "uv"
+    staged = tmp_path / ".anakot" / "tools" / f"uv-9.9.9-{exe}" / exe
+    staged.parent.mkdir(parents=True)
+    staged.write_text("", encoding="utf-8")
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.delenv("LOCALAPPDATA", raising=False)
+    monkeypatch.setenv("PATH", str(tmp_path / "no-tools-here"))
+    assert _module().uv_executable() == str(staged)
+
+
+def test_an_explicit_uv_that_does_not_exist_is_not_silently_replaced(tmp_path: Path) -> None:
+    assert _module().uv_executable(str(tmp_path / "missing" / "uv")) is None
