@@ -53,6 +53,16 @@ say()  { printf '\033[36m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[33m[!]\033[0m %s\n' "$*" >&2; }
 die()  { printf '\033[31m[x]\033[0m %s\n' "$*" >&2; exit 1; }
 
+# git is not only how the tree arrives: pyproject pins a real git source (`misaki`), so `uv sync`
+# needs the binary too and a source tarball would not get past it. Say that here, with the install
+# line, rather than letting a missing git surface as a resolver error that reads like a bad pin.
+command -v git >/dev/null 2>&1 || die "git is required — the tree pins a git dependency, not just the clone.
+    Debian/Ubuntu:  sudo apt update && sudo apt install -y git
+    Fedora/RHEL:    sudo dnf install -y git
+    Arch:           sudo pacman -S git
+    Alpine:         sudo apk add git
+    Windows:        winget install --id Git.Git    (also provides the bash this script runs in)"
+
 is_windows=0
 case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) is_windows=1 ;; esac
 
