@@ -7,6 +7,7 @@
 #   scripts/dev-install.sh --js                   # also install JS deps (desktop app, dashboard)
 #   scripts/dev-install.sh --seed-home            # copy the live profile's config.yaml + .env
 #   scripts/dev-install.sh --run                  # launch the CLI against the dev home when done
+#   scripts/dev-install.sh --run-desktop          # JS deps, then build and open the desktop app
 #
 # Why this exists. A regenerated fork tree cannot be set up the documented way:
 #   * `pm.build_env` fails on it. pm rewrites the workspace manifest with `workspace.members` and a
@@ -28,10 +29,11 @@ DEV_HOME="${ANAKOT_DEV_HOME:-}"
 WITH_JS=0
 SEED_HOME=0
 RUN_CLI=0
+RUN_DESKTOP=0
 FULL_CLONE=0
 
 usage() {
-    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
@@ -43,6 +45,7 @@ while [ $# -gt 0 ]; do
         --js)        WITH_JS=1; shift ;;
         --seed-home) SEED_HOME=1; shift ;;
         --run)       RUN_CLI=1; shift ;;
+        --run-desktop) RUN_DESKTOP=1; WITH_JS=1; shift ;;
         --full)      FULL_CLONE=1; shift ;;
         -h|--help)   usage 0 ;;
         *)           echo "unknown argument: $1" >&2; usage 2 ;;
@@ -141,8 +144,10 @@ fi
 
 # ─── 3. JS dependencies (optional) ───────────────────────────────────────────
 if [ "$WITH_JS" = 1 ]; then
-    node_bin=""
     tools_msys="$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"
+
+    node_bin=""
+    node_msys=""
     for candidate in "$tools_msys"/node-*-win32-x64; do
         if [ -x "$candidate/node.exe" ] || [ -x "$candidate/bin/node" ]; then
             node_bin="$candidate"
@@ -150,15 +155,40 @@ if [ "$WITH_JS" = 1 ]; then
         fi
     done
     if [ -n "$node_bin" ]; then
-        export PATH="$(to_msys_path "$node_bin"):$PATH"
+        node_msys="$(to_msys_path "$node_bin")"
+        export PATH="$node_msys:$PATH"
     fi
+
+    # Anakot bundles pnpm the same way it bundles node, and the bundled version is the one the
+    # lockfile was written with. A machine that already has the app therefore needs no separate
+    # pnpm install -- which is the difference between this working on a fresh VM and dying with
+    # "pnpm: not recognized".
+    pnpm_msys=""
+    for candidate in "$tools_msys"/pnpm-* \
+                     "$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/node"; do
+        if [ -x "$candidate/pnpm.exe" ] || [ -x "$candidate/pnpm" ] || [ -x "$candidate/pnpm.cmd" ]; then
+            pnpm_msys="$(to_msys_path "$candidate")"
+            export PATH="$pnpm_msys:$PATH"
+            break
+        fi
+    done
+
     have_node="$(node --version 2>/dev/null || echo none)"
     say "JS deps with node $have_node"
     case "$have_node" in
         v26.*|v[3-9][0-9].*) : ;;
         *) warn "package.json requires node >= 26; pnpm install will abort before reading anything" ;;
     esac
-    pnpm install
+
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM="pnpm"
+    elif command -v corepack >/dev/null 2>&1; then
+        PNPM="corepack pnpm"   # corepack ships with Node, so even a bare install can get here
+    else
+        die "pnpm not found and no corepack to stand in. Install it with: npm install -g pnpm"
+    fi
+    say "package manager: $PNPM"
+    $PNPM install
 fi
 
 # ─── 4. an isolated dev home ─────────────────────────────────────────────────
@@ -200,7 +230,15 @@ else
     printf '\n'
     say "or open the desktop app with:"
     # The script's own PATH export does not survive into your shell, and the JS tree needs >= 26.
-    printf '    cd "%s" && PATH="%s:$PATH" pnpm -C apps/desktop start\n' "$DIR" "$node_bin"
+    js_prefix="$node_msys"
+    [ -n "$pnpm_msys" ] && js_prefix="${js_prefix:+$js_prefix:}$pnpm_msys"
+    printf '    cd "%s" && PATH="%s:$PATH" %s -C apps/desktop start\n' "$DIR" "$js_prefix" "$PNPM"
+    printf '    (or hot-reloading: %s -C apps/desktop dev)\n' "$PNPM"
+fi
+
+if [ "$RUN_DESKTOP" = 1 ]; then
+    say "building and opening the desktop app (first build takes a few minutes)"
+    exec $PNPM -C apps/desktop start
 fi
 
 if [ "$RUN_CLI" = 1 ]; then

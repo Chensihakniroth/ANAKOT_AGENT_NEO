@@ -11,10 +11,12 @@
 .EXAMPLE
     .\scripts\dev-install.ps1 -Run
     .\scripts\dev-install.ps1 -Dir D:\anakot-dev -Ref update/upstream-2026-11-14 -Js -SeedHome
+    .\scripts\dev-install.ps1 -Desktop      # install JS deps, then build and open the desktop app
 #>
 [CmdletBinding()]
 param(
     [switch]$Run,
+    [switch]$Desktop,
     [switch]$Js,
     [switch]$SeedHome,
     [string]$Dir,
@@ -60,6 +62,7 @@ if ($Ref)      { $bashArgs += @('--ref',  $Ref) }
 if ($Dir)      { $bashArgs += @('--dir',  $Dir) }
 if ($HomePath) { $bashArgs += @('--home', $HomePath) }
 if ($Js)       { $bashArgs += '--js' }
+if ($Desktop)  { $bashArgs += '--run-desktop' }
 if ($SeedHome) { $bashArgs += '--seed-home' }
 if ($Run)      { $bashArgs += '--run' }
 
