@@ -30,6 +30,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -398,8 +399,34 @@ def report(apply: bool, scanned: int, protected_total: int, rewritten: list[str]
             print(f"      {b}")
 
 
+def verify_completeness(path_changes: list[tuple[str, str]]) -> list[str]:
+    """Index paths that are neither on disk nor on disk under their rebranded name.
+
+    The other three legs all ask "is work still pending?", so a file that was *lost* passes every
+    one of them: no rewrite is owed, no rename is owed, no asset drifted. That is not theoretical
+    -- a tree missing 570 renamed modules once reported ``VERIFY: PASS``. Only asking the index
+    catches it, so a lost file and a rename that quietly never happened both fail here.
+    """
+    pending_src = {src for src, _ in path_changes}
+    try:
+        listed = subprocess.run(
+            ["git", "ls-files", "-z"], cwd=REPO, capture_output=True, text=True, check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return []  # not a checkout (a plain tree copy): completeness is undefined, not failed
+    missing = []
+    for rel in filter(None, listed.split("\0")):
+        if rel in pending_src or os.path.exists(os.path.join(REPO, rel.replace("/", os.sep))):
+            continue
+        rebranded = "/".join(re.sub(r"hermes", "anakot", part) for part in rel.split("/"))
+        if rebranded != rel and os.path.exists(os.path.join(REPO, rebranded.replace("/", os.sep))):
+            continue
+        missing.append(rel)
+    return missing
+
+
 def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
-                    drifted: list[str], asset_bad: list[str]) -> list[str]:
+                    drifted: list[str], asset_bad: list[str], missing: list[str]) -> list[str]:
     """Every kind of pending work, as report lines. Empty means the tree is fully rebranded.
 
     A gate that only looks at asset hashes passes a half-rebranded tree: a rename that collided
@@ -412,6 +439,7 @@ def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
         ("path(s) still need a rename", [f"{s}  ->  {d}" for s, d in path_changes]),
         ("brand file(s) still drifted", drifted),
         ("asset manifest mismatch(es)", asset_bad),
+        ("file(s) in the index with neither the old nor the new path on disk", missing),
     ):
         if items:
             out.append(f"  {len(items)} {label}:")
@@ -448,7 +476,8 @@ def main() -> int:
         return 2
 
     if args.verify:
-        failures = verify_failures(rewritten, path_changes, drifted, asset_bad)
+        failures = verify_failures(rewritten, path_changes, drifted, asset_bad,
+                                  verify_completeness(path_changes))
         print("VERIFY:", "PASS" if not failures else "FAIL")
         print("\n".join(failures))
         return 0 if not failures else 1

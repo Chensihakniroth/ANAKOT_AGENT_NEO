@@ -364,6 +364,80 @@ rebrand `--apply` was running in another worktree on the same disk. Both pushes 
 checks once the I/O settled. So: do not push while a rebrand or a test run is hammering the disk,
 and treat a lone `line-endings` failure as contention until a quiet re-run says otherwise.
 
+### 2026-11-14 — REGENERATED onto upstream `422ad18618` (latest main)
+
+**Target.** Upstream main `422ad18618` (2026-11-14), chosen over the newest *stable release* tag
+`v0.23.1` (2026-11-09): this fork's own content matches a 2026-11-11 commit most closely, so
+targeting the release tag would have moved the tree backwards and dropped ~1,100 files. `v0.23.1`
+is an ancestor of head, so head is a strict superset — verified, not assumed.
+
+**Carry list, computed not hand-written.** 1,204 fork paths had no counterpart in the target. Of
+those, 1,110 were files upstream *added* after the release and 7 were files upstream *deleted* —
+`plugins/observability/langfuse` and `plugins/spotify`, both moved into the plugin catalog.
+Restoring either set would have resurrected or duplicated upstream's own work, so the discriminator
+was whether upstream *ever* tracked the path. That leaves **87 genuinely fork-authored paths**.
+
+**Transform.** 25,775 files, 4,349 protected occurrences, 15,894 content rewrites, 576 path
+renames, 4 brand files restored from the snapshot → `VERIFY: PASS`. `ANAKOT_HOME` ends up in 3,165
+files and `HERMES_HOME` in 0; `anakot_cli`, `anakot_platform`, `anakot_yaml`, `anakot_state` all
+present.
+
+**Locks.** `uv.lock` passes the rename-only test: 18 `hermes` refs → 0, and `uv lock --check`
+resolves 355 packages with zero diff, so no re-resolve was needed. `pnpm-lock.yaml` needs a real
+re-resolve (names only, no version churn) because pnpm re-sorts keys, and it needs Node ≥ 26 — the
+system Node 22 aborts with `ERR_PNPM_UNSUPPORTED_ENGINE` before reading anything.
+
+#### Defects found this cycle — five, and the first is the important one
+
+1. **The protected-strings rule swallowed the whole env-var surface.** §11 protected
+   `(?-i:HERMES_[A-Z0-9_]+)` as "build-time env-var contracts". It was written to stop the script
+   double-renaming an already-renamed tree — a property of one invocation, not of the brand — and
+   it silently produced a tree with `HERMES_HOME` in 3,165 files and `ANAKOT_HOME` in none. A real
+   `anakot chat` against an explicit `ANAKOT_HOME` answered "no API keys or providers found",
+   because the home was ignored and the default was empty. v1's own tree has 0 files containing
+   `HERMES_HOME` and 3,051 containing `ANAKOT_HOME`, so the rule contradicted the tree it was
+   protecting. Fix (`50da217d28`): the family renames as a unit. The half-renamed contract it
+   feared was in fact something it caused — `scripts/build/launchers.py` wrote
+   `HERMES_RUNTIME_DIR` while the app read `ANAKOT_RUNTIME_DIR`, and both silently fell back to a
+   default (that straggler is fixed too; both sides now say `ANAKOT_RUNTIME_DIR`). Five narrow
+   entries stay protected because they are real external contracts: the dashboard/plugin browser
+   globals (`__HERMES_PLUGIN_SDK__`, `__HERMES_PLUGINS__`, `__HERMES_SESSION_TOKEN__`, set by
+   third-party plugin code we do not ship), the build wrapper vars (`HERMES_PYTHON`,
+   `HERMES_INSTALL_ROOT`), and the Portal OAuth client id.
+2. **`--verify` cannot see a missing file.** A tree that had lost ~570 renamed modules passed
+   `VERIFY: PASS`, because the gate only looks for *pending* work (renames to do, rewrites to
+   apply, asset drift) and never asks whether an expected path exists at all. **Fixed this cycle:**
+   `verify_completeness()` now asks the git index for every path and fails on any that exists
+   neither under its old nor its new name. Proven red (hid `anakot_state.py` → `VERIFY: FAIL`
+   naming it) and green (healthy tree → no such line), so a lost file can no longer pass a gate
+   that only ever asked "is work still pending?".
+3. **Rename collisions come from *ignored* files, not just untracked ones.** The abort fires when a
+   rename target exists; `anakot_cli/data/` and a `__pycache__` were enough, and they are invisible
+   to `git status`. Cleaning a worktree for a re-run must remove ignored files **and** the empty
+   directories they leave behind — deleting the files alone leaves the collision intact.
+4. **`pm.build_env` fails on a regenerated tree**, and so does anything that shells through it
+   (lefthook, `scripts/anakot-python`): it rewrites the workspace manifest with
+   `workspace.members`/`sources`, after which `uv sync --locked` judges the seeded core lock stale
+   even though `uv lock` yields zero diff. Building straight from the same lock
+   (`uv sync --locked --group dev --group test`) works, which is the workaround used here.
+5. **Trimmed, but recorded:** `rebrand-asset-update/` at repo root is a stray skill-reference file
+   the fork committed by mistake. Carried faithfully for now; a candidate for deletion.
+
+**The lesson worth carrying forward:** unit tests and CI cannot catch defect 1 — they passed on the
+broken tree, because a test that sets its own `ANAKOT_HOME` fixture and a test that reads the wrong
+variable look identical. Only smoke-testing the real entrypoint against an explicit
+`ANAKOT_HOME` did. Make that the last step of every regenerate:
+
+```bash
+ANAKOT_HOME=<copy-of-a-real-profile> anakot -z "say hi" --cli
+```
+
+A "no API keys or providers found" answer means the *brand surface*, not the model, is broken.
+
+**Environment findings.** A full system drive disguises itself as `curl: (23) client returned ERROR
+on write` while pm bootstraps uv; `uv cache clean` reclaimed 5.6 GB. `run_tests.sh` on this version
+honours **`HERMES_PYTHON`** (protected), not `ANAKOT_PYTHON`.
+
 ---
 
 ## Quick commands
