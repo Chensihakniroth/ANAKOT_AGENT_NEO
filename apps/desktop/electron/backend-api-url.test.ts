@@ -51,7 +51,7 @@ test('joinBackendApiUrl rejects absolute URLs smuggled as the path', () => {
   assert.throws(() => joinBackendApiUrl(LOCAL, 'https://attacker.example/'), /relative path/)
 })
 
-// The hermes:api handler routes the renderer path through these rewrites before
+// The anakot:api handler routes the renderer path through these rewrites before
 // fetchJsonForBackend joins it; whatever they emit must still be refused or on-origin.
 test('routed renderer paths never leave the backend origin once joined', async () => {
   const { pathForRegistryBackendRequest, resolveProfileApiRequest } = await import('./connection-config')

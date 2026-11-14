@@ -146,8 +146,8 @@ def test_every_authorization_name_is_refreshed_by_the_real_adapter_hooks(monkeyp
 def test_the_restart_child_env_keeps_the_value_and_its_marker(monkeypatch, tmp_path):
     """End-to-end over the real restart builder: the child must inherit both, or nothing refreshes.
 
-    ``hermes_cli/gateway_runtime_start.py`` builds the replacement daemon's environment with
-    ``served_profile_child_env``; if that step dropped or rewrote ``HERMES_BRIDGED_*``, the marker
+    ``anakot_cli/gateway_runtime_start.py`` builds the replacement daemon's environment with
+    ``served_profile_child_env``; if that step dropped or rewrote ``ANAKOT_BRIDGED_*``, the marker
     scheme would be correct in unit tests and dead in production.
     """
     from tools.environments.local import served_profile_child_env
@@ -155,10 +155,10 @@ def test_the_restart_child_env_keeps_the_value_and_its_marker(monkeypatch, tmp_p
     monkeypatch.setenv("TELEGRAM_REACTIONS", "false")
     monkeypatch.setenv(bridged_env_marker("TELEGRAM_REACTIONS"), bridged_env_digest("false"))
 
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
 
     child = served_profile_child_env(  # the launch profile's own restart: same home
-        base=dict(shared.os.environ), target_home=get_hermes_home(), inherit_credentials=False
+        base=dict(shared.os.environ), target_home=get_anakot_home(), inherit_credentials=False
     )
 
     assert child["TELEGRAM_REACTIONS"] == "false"
@@ -174,7 +174,7 @@ def test_the_restart_child_env_keeps_the_value_and_its_marker(monkeypatch, tmp_p
 
 def test_a_dotenv_value_survives_even_when_it_matches_the_bridge(monkeypatch):
     """#109032 holds when .env happens to hold the same string the bridge wrote earlier."""
-    from hermes_cli import env_loader
+    from anakot_cli import env_loader
 
     monkeypatch.setattr(env_loader, "_LOADED_DOTENV_KEYS", {"TELEGRAM_REACTIONS"}, raising=False)
     monkeypatch.setenv("TELEGRAM_REACTIONS", "false")

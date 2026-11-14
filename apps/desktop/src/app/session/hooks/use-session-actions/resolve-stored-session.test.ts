@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type * as HermesModule from '@/hermes'
-import { getSession } from '@/hermes'
+import type * as AnakotModule from '@/anakot'
+import { getSession } from '@/anakot'
 import { $activeGatewayProfile, $profiles } from '@/store/profile'
 import { $projectTree } from '@/store/projects'
 import { $cronSessions, $messagingSessions, $sessions, $unlistedSessionOwnerRows } from '@/store/session'
 import { $removedSessionIds, tombstoneSessions, untombstoneSessions } from '@/store/session-removal'
-import type { SessionInfo } from '@/types/hermes'
+import type { SessionInfo } from '@/types/anakot'
 
 import { cachedSessionRow, resolveStoredSession } from './utils'
 
-vi.mock('@/hermes', async importActual => ({
-  ...(await importActual<typeof HermesModule>()),
+vi.mock('@/anakot', async importActual => ({
+  ...(await importActual<typeof AnakotModule>()),
   getSession: vi.fn()
 }))
 

@@ -2,26 +2,26 @@
 sidebar_position: 3
 sidebar_label: "Git Worktrees"
 title: "Git Worktrees"
-description: "Run multiple Hermes agents safely on the same repository using git worktrees and isolated checkouts"
+description: "Run multiple Anakot agents safely on the same repository using git worktrees and isolated checkouts"
 ---
 
 # Git Worktrees
 
-Hermes Agent is often used on large, long‑lived repositories. When you want to:
+Anakot Agent is often used on large, long‑lived repositories. When you want to:
 
 - Run **multiple agents in parallel** on the same project, or
 - Keep experimental refactors isolated from your main branch,
 
 Git **worktrees** are the safest way to give each agent its own checkout without duplicating the entire repository.
 
-This page shows how to combine worktrees with Hermes so each session has a clean, isolated working directory.
+This page shows how to combine worktrees with Anakot so each session has a clean, isolated working directory.
 
-## Why Use Worktrees with Hermes?
+## Why Use Worktrees with Anakot?
 
-Hermes treats the **current working directory** as the project root:
+Anakot treats the **current working directory** as the project root:
 
-- CLI: the directory where you run `hermes` or `hermes chat`
-- Messaging gateways: the directory set by `terminal.cwd` in `~/.hermes/config.yaml`
+- CLI: the directory where you run `anakot` or `anakot chat`
+- Messaging gateways: the directory set by `terminal.cwd` in `~/.anakot/config.yaml`
 
 If you run multiple agents in the **same checkout**, their changes can interfere with each other:
 
@@ -46,14 +46,14 @@ interactive CLI session, run
 /worktree new my-experiment
 ```
 
-Hermes creates `.worktrees/my-experiment/` inside the repo (branch
-`hermes/my-experiment`, based on the freshly-fetched remote tip unless
+Anakot creates `.worktrees/my-experiment/` inside the repo (branch
+`anakot/my-experiment`, based on the freshly-fetched remote tip unless
 `worktree_sync: false`), and retargets the session's terminal and file tools
-into it — no restart needed. Omit the name to get a random `hermes-<id>`
+into it — no restart needed. Omit the name to get a random `anakot-<id>`
 tree. `/worktree` alone shows the active tree; `/worktree list` lists all of
 them. On exit a clean, pushed tree is removed; a tree with uncommitted changes
 or unpushed commits triggers the same keep / archive / remove question as
-`hermes -w`.
+`anakot -w`.
 
 ### Manually with git
 
@@ -64,24 +64,24 @@ From your main repository (containing `.git/`), create a new worktree for a feat
 cd /path/to/your/repo
 
 # Create a new branch and worktree in ../repo-feature
-git worktree add ../repo-feature feature/hermes-experiment
+git worktree add ../repo-feature feature/anakot-experiment
 ```
 
 This creates:
 
 - A new directory: `../repo-feature`
-- A new branch: `feature/hermes-experiment` checked out in that directory
+- A new branch: `feature/anakot-experiment` checked out in that directory
 
-Now you can `cd` into the new worktree and run Hermes there:
+Now you can `cd` into the new worktree and run Anakot there:
 
 ```bash
 cd ../repo-feature
 
-# Start Hermes in the worktree
-hermes
+# Start Anakot in the worktree
+anakot
 ```
 
-Hermes will:
+Anakot will:
 
 - See `../repo-feature` as the project root.
 - Use that directory for context files, code edits, and tools.
@@ -94,8 +94,8 @@ You can create multiple worktrees, each with its own branch:
 ```bash
 cd /path/to/your/repo
 
-git worktree add ../repo-experiment-a feature/hermes-a
-git worktree add ../repo-experiment-b feature/hermes-b
+git worktree add ../repo-experiment-a feature/anakot-a
+git worktree add ../repo-experiment-b feature/anakot-b
 ```
 
 In separate terminals:
@@ -103,16 +103,16 @@ In separate terminals:
 ```bash
 # Terminal 1
 cd ../repo-experiment-a
-hermes
+anakot
 
 # Terminal 2
 cd ../repo-experiment-b
-hermes
+anakot
 ```
 
-Each Hermes process:
+Each Anakot process:
 
-- Works on its own branch (`feature/hermes-a` vs `feature/hermes-b`).
+- Works on its own branch (`feature/anakot-a` vs `feature/anakot-b`).
 - Writes checkpoints under a different shadow repo hash (derived from the worktree path).
 - Can use `/rollback` independently without affecting the other.
 
@@ -142,55 +142,55 @@ Notes:
 
 - `git worktree remove` will refuse to remove a worktree with uncommitted changes unless you force it.
 - Removing a worktree does **not** automatically delete the branch; you can delete or keep the branch using normal `git branch` commands.
-- Hermes checkpoint data under `~/.hermes/checkpoints/` is not automatically pruned when you remove a worktree, but it is usually very small.
+- Anakot checkpoint data under `~/.anakot/checkpoints/` is not automatically pruned when you remove a worktree, but it is usually very small.
 
 ## Best Practices
 
-- **One worktree per Hermes experiment**
+- **One worktree per Anakot experiment**
   - Create a dedicated branch/worktree for each substantial change.
   - This keeps diffs focused and PRs small and reviewable.
 - **Name branches after the experiment**
-  - e.g. `feature/hermes-checkpoints-docs`, `feature/hermes-refactor-tests`.
+  - e.g. `feature/anakot-checkpoints-docs`, `feature/anakot-refactor-tests`.
 - **Commit frequently**
   - Use git commits for high‑level milestones.
   - Use [checkpoints and /rollback](./checkpoints-and-rollback.md) as a safety net for tool‑driven edits in between.
-- **Avoid running Hermes from the bare repo root when using worktrees**
+- **Avoid running Anakot from the bare repo root when using worktrees**
   - Prefer the worktree directories instead, so each agent has a clear scope.
 
-## Using `hermes -w` (Automatic Worktree Mode)
+## Using `anakot -w` (Automatic Worktree Mode)
 
-Hermes has a built‑in `-w` flag that **automatically creates a disposable git worktree** with its own branch. You don't need to set up worktrees manually — just `cd` into your repo and run:
+Anakot has a built‑in `-w` flag that **automatically creates a disposable git worktree** with its own branch. You don't need to set up worktrees manually — just `cd` into your repo and run:
 
 ```bash
 cd /path/to/your/repo
-hermes -w
+anakot -w
 ```
 
-Hermes will:
+Anakot will:
 
 - Create a temporary worktree under `.worktrees/` inside your repo.
-- Check out an isolated branch (e.g. `hermes/hermes-<hash>`).
+- Check out an isolated branch (e.g. `anakot/anakot-<hash>`).
 - Run the full CLI session inside that worktree.
 
-Hermes checks the worktree out without running the repository's own git configuration: its hooks, `core.fsmonitor` and clean/smudge filters are off for that checkout, as they are for the worktrees Hermes creates for kanban tasks and subagents. A repository that stores files through Git LFS gets pointer files there; run `git lfs pull` inside the worktree if the session needs their contents.
+Anakot checks the worktree out without running the repository's own git configuration: its hooks, `core.fsmonitor` and clean/smudge filters are off for that checkout, as they are for the worktrees Anakot creates for kanban tasks and subagents. A repository that stores files through Git LFS gets pointer files there; run `git lfs pull` inside the worktree if the session needs their contents.
 
 This is the easiest way to get worktree isolation. You can also combine it with a single query:
 
 ```bash
-hermes -w -z "Fix issue #123"
+anakot -w -z "Fix issue #123"
 ```
 
-For parallel agents, open multiple terminals and run `hermes -w` in each — every invocation gets its own worktree and branch automatically.
+For parallel agents, open multiple terminals and run `anakot -w` in each — every invocation gets its own worktree and branch automatically.
 
 ### Leaving a session with unfinished work
 
-When an interactive `hermes -w` session (classic CLI or `--tui`) exits and its
-worktree has uncommitted changes or unpushed commits, Hermes asks:
+When an interactive `anakot -w` session (classic CLI or `--tui`) exits and its
+worktree has uncommitted changes or unpushed commits, Anakot asks:
 
 - **Keep the worktree** (default, also what Enter/Esc picks) — nothing changes.
 - **Archive and remove it** — the full working state is archived (see below)
   and the tree is removed before the session finishes exiting, so a large tree
-  is never cut short; Hermes prints the `hermes worktree restore` command. If
+  is never cut short; Anakot prints the `anakot worktree restore` command. If
   the archive fails, the tree is kept.
 - **Remove it and discard the changes** — only when you pick it explicitly.
 
@@ -200,17 +200,17 @@ later. A clean tree whose commits are pushed is removed without asking.
 
 ## Stale worktree sweep and restore
 
-Every repository Hermes creates a worktree in (`hermes -w`, `/worktree new`,
+Every repository Anakot creates a worktree in (`anakot -w`, `/worktree new`,
 subagent worktree isolation, the desktop app's git pane) is recorded in
-`<HERMES_HOME>/worktree_repos.json` for the active profile. At `hermes -w`
-startup and every 6 hours from the cron ticker, Hermes sweeps each of those
+`<ANAKOT_HOME>/worktree_repos.json` for the active profile. At `anakot -w`
+startup and every 6 hours from the cron ticker, Anakot sweeps each of those
 repositories' `.worktrees/`:
 
 | Tree | Decision |
 |---|---|
-| Idle past its tier (`hermes-*`/`subagent-*` 24 h, named trees 72 h), clean and merged or pushed | removed |
+| Idle past its tier (`anakot-*`/`subagent-*` 24 h, named trees 72 h), clean and merged or pushed | removed |
 | Idle past its tier with uncommitted changes or unpushed commits | **archived, then removed** |
-| A live hermes lock owner, or any live process whose cwd (Linux: or an open file) is inside | never touched |
+| A live anakot lock owner, or any live process whose cwd (Linux: or an open file) is inside | never touched |
 | File, `HEAD` or reflog activity younger than its tier (a deleted file counts through its folder) | never touched |
 | Kanban task trees (`t_<hex>`) | never touched (the Kanban GC owns them) |
 | Any submodule: a gitlink in the index, or a submodule repository kept under the tree's `modules/` (even after `git submodule deinit`) | kept (`keep-submodule-work`: an archive records only the submodule pointer). A clean merged tree is removed only if its submodules were never initialized |
@@ -226,7 +226,7 @@ The same checks run on clean merged trees, and every dirty check counts files
 that `status.showUntrackedFiles=no` would hide and skip-worktree /
 assume-unchanged files whose bytes differ from the index.
 
-An archive is a commit stored at `refs/hermes/archive/<tree>` holding the
+An archive is a commit stored at `refs/anakot/archive/<tree>` holding the
 tree's `HEAD`, staged changes, unstaged changes and untracked files (files your
 `.gitignore` excludes, such as `node_modules/` or `.venv/`, are not captured).
 It is built with a temporary index, so the tree itself is never modified; if
@@ -241,10 +241,10 @@ branch that exists on a remote (an open PR) is kept; otherwise the archive
 holds its commits and the local branch is deleted.
 
 ```bash
-hermes worktree list                 # trees plus archives (name, age, branch, reason)
-hermes worktree prune --dry-run      # every archive/remove/skip decision and why; changes nothing
-hermes worktree restore lane-x       # recreate .worktrees/lane-x with its branch, staged and untracked files
-hermes worktree restore lane-x --path ../lane-x-review
+anakot worktree list                 # trees plus archives (name, age, branch, reason)
+anakot worktree prune --dry-run      # every archive/remove/skip decision and why; changes nothing
+anakot worktree restore lane-x       # recreate .worktrees/lane-x with its branch, staged and untracked files
+anakot worktree restore lane-x --path ../lane-x-review
 ```
 
 Restore puts the branch back when it is missing or still points at the
@@ -273,7 +273,7 @@ or edits is archived and removed with its branch kept for the parent to merge.
 
 ## Putting It All Together
 
-- Use **git worktrees** to give each Hermes session its own clean checkout.
+- Use **git worktrees** to give each Anakot session its own clean checkout.
 - Use **branches** to capture the high‑level history of your experiments.
 - Use **checkpoints + `/rollback`** to recover from mistakes inside each worktree.
 

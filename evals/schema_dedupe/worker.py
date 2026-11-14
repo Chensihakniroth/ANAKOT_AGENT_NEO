@@ -6,7 +6,7 @@ Env: SDD_INFERENCE_URL + SDD_INFERENCE_KEY (any OpenAI-compatible endpoint), SDD
 Exit 3 = infra/config error (never scored).
 
 The arms differ only in schema text. memory, skill_manage, search_files and terminal are the real tools
-against a temp HERMES_HOME and workspace. manage_connections is stubbed at the registry handler: the real
+against a temp ANAKOT_HOME and workspace. manage_connections is stubbed at the registry handler: the real
 target normalisation and action validation from the arm's tree run first (so a wrong-side call is refused
 with the real message), then a canned settled result is returned. Scores come from the stores, the
 workspace and the recorded calls, never from model prose alone.
@@ -33,7 +33,7 @@ if not (INFER_URL and INFER_KEY):
 for var in list(os.environ):
     if var.endswith(("_API_KEY", "_TOKEN")):
         os.environ.pop(var, None)
-os.environ.pop("HERMES_PROFILE", None)
+os.environ.pop("ANAKOT_PROFILE", None)
 
 HARNESS = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HARNESS, "..", "core_tool_deferral"))
@@ -42,14 +42,14 @@ from sandbox import isolate_host
 # The arm name must not reach the model: the workspace path is in the prompt, and an early run of this
 # harness with "base"/"pr" in the path saw two byte-identical schemas behave differently.
 tmp_root = tempfile.mkdtemp(prefix="sdd-cell-")
-hermes_home = os.path.join(tmp_root, ".hermes")
+anakot_home = os.path.join(tmp_root, ".anakot")
 workspace = os.path.join(tmp_root, "ws")
-os.makedirs(hermes_home)
+os.makedirs(anakot_home)
 os.makedirs(workspace)
-isolate_host(tmp_root, hermes_home)
-with open(os.path.join(hermes_home, "config.yaml"), "w", encoding="utf-8") as f:
+isolate_host(tmp_root, anakot_home)
+with open(os.path.join(anakot_home, "config.yaml"), "w", encoding="utf-8") as f:
     f.write(f"model:\n  provider: custom\n  base_url: {INFER_URL}\n  model: {MODEL}\n")
-os.environ["HERMES_HOME"] = hermes_home
+os.environ["ANAKOT_HOME"] = anakot_home
 # A model that reads "the user works inside tmux" starts one: keep its server on a socket inside the cell.
 os.environ["TMUX_TMPDIR"] = tmp_root
 os.environ.pop("TMUX", None)
@@ -66,7 +66,7 @@ def free_port():
 
 PORT = free_port()
 DELIM = "\n§\n"
-MEM_DIR = os.path.join(hermes_home, "memories")
+MEM_DIR = os.path.join(anakot_home, "memories")
 
 # Durable entries every memory task must leave in place.
 CANARIES = ["Postgres 16", "ruff", "tmux"]
@@ -382,7 +382,7 @@ def grade():  # health: allow CC -- one flat oracle per task; splitting it hides
         return (1.0 if user_ok and mem_ok else 0.5 if user_ok or mem_ok else 0.0), notes
     if TASK_ID == "mem_procedure_to_skill":
         in_skill = False
-        for root, _, files in os.walk(os.path.join(hermes_home, "skills")):
+        for root, _, files in os.walk(os.path.join(anakot_home, "skills")):
             in_skill = in_skill or any("purge" in read(os.path.join(root, fn)) for fn in files)
         in_memory = "purge" in memory or "purge" in user
         notes.append(f"in_skill={in_skill} in_memory={in_memory}")

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { projectPendingConnection } from '@/app/session/hooks/use-session-actions/restore-pending-connection'
 import type { ConnectionRequest } from '@/store/connection-request'
-import type { SessionMessage } from '@/types/hermes'
+import type { SessionMessage } from '@/types/anakot'
 
 import { toChatMessages } from './hydration'
 import type { ChatMessage } from './types'

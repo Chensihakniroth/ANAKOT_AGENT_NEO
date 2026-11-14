@@ -7,16 +7,16 @@ import pytest
 import tui_gateway.server as srv
 from tui_gateway import methods_groups, owner_forward
 
-MEMBERS = [{"member_id": "default", "profile": "default", "handle": "hermes"},
+MEMBERS = [{"member_id": "default", "profile": "default", "handle": "anakot"},
            {"member_id": "ops", "profile": "ops", "handle": "ops"}]
 
 
 @pytest.fixture
 def home(tmp_path, monkeypatch):
-    path = tmp_path / ".hermes"
+    path = tmp_path / ".anakot"
     (path / "profiles" / "ops").mkdir(parents=True)
     (path / "profiles" / "ops" / "config.yaml").write_text("{}\n")
-    monkeypatch.setenv("HERMES_HOME", str(path))
+    monkeypatch.setenv("ANAKOT_HOME", str(path))
     methods_groups.stop_hosted_room_service(timeout=1.0)
     methods_groups.start_hosted_room_service()
     yield path
@@ -28,7 +28,7 @@ ENDPOINT = object()
 
 def _discovery(monkeypatch, *states):
     """Gateway discovery answers the given states in turn (the last one repeats)."""
-    from hermes_cli import gateway_runtime
+    from anakot_cli import gateway_runtime
     seen = list(states)
 
     def discover(home, *, timeout=2.0):
@@ -81,7 +81,7 @@ def test_a_forwarded_room_state_keeps_the_full_rate_poll(home, owner):
 
 
 def test_owner_refusal_is_returned_not_run_locally(home, monkeypatch):
-    from hermes_cli.gateway_client import GatewayRPCError
+    from anakot_cli.gateway_client import GatewayRPCError
     _discovery(monkeypatch, "ready")
 
     def refuse(*_args):
@@ -106,7 +106,7 @@ def test_owner_refusal_is_returned_not_run_locally(home, monkeypatch):
     ("profile", "groups.stop", 4000, None),
 ])
 def test_only_sends_refused_before_forwarding_are_marked_unsent(home, monkeypatch, failure, method, code, data):
-    from hermes_cli.gateway_client import GatewayRPCError
+    from anakot_cli.gateway_client import GatewayRPCError
     from tui_gateway import methods_groups_forward
 
     monkeypatch.setattr(methods_groups_forward, "_standalone_holder", lambda _: "gateway")
@@ -171,7 +171,7 @@ def test_a_starting_gateway_is_waited_for_and_nothing_lands_locally(home, owner,
 def test_a_named_profile_gateway_never_hides_the_standalone_rooms(home, owner, monkeypatch):
     _discovery(monkeypatch, "absent")  # Desktop on its own first
     srv._methods["groups.create"](1, {"room_id": "room-desk", "name": "Desk", "members": MEMBERS})
-    _discovery(monkeypatch, "ready")  # then `hermes -p ops gateway` serves the selected profile
+    _discovery(monkeypatch, "ready")  # then `anakot -p ops gateway` serves the selected profile
 
     listed = srv._methods["groups.list"](2, {"profile": "ops"})["result"]["rooms"]
     state = srv._methods["groups.state"](3, {"profile": "ops", "room_id": "room-desk"})

@@ -1,7 +1,7 @@
 """Do sibling subagents read each other's prompt cache? Real delegate_task children, one tree.
 
   SC_TREE=<tree> SC_URL=... SC_KEY=... SC_PROVIDER=... SC_API_MODE=... SC_MODEL=... python worker.py <arm> <out.jsonl>
-A real parent AIAgent in a temp HERMES_HOME calls the real ``delegate_task`` three times, one after
+A real parent AIAgent in a temp ANAKOT_HOME calls the real ``delegate_task`` three times, one after
 another: child A, child B with different context, child C with A's context. Each child does a small
 real task with real tools and must follow an instruction that is given only in its context. Per-call
 prompt and cache-read tokens come from the agent's own usage accounting.
@@ -13,13 +13,13 @@ ARM, OUT = sys.argv[1], sys.argv[2]
 TREE, URL, KEY = os.environ["SC_TREE"], os.environ["SC_URL"], os.environ.pop("SC_KEY")
 PROVIDER, API_MODE, MODEL = os.environ["SC_PROVIDER"], os.environ["SC_API_MODE"], os.environ["SC_MODEL"]
 for var in list(os.environ):
-    if var.endswith(("_API_KEY", "_TOKEN")) or var.startswith(("HERMES_", "TERMINAL_")):
+    if var.endswith(("_API_KEY", "_TOKEN")) or var.startswith(("ANAKOT_", "TERMINAL_")):
         os.environ.pop(var, None)
 sys.path.insert(0, os.path.join(TREE, "evals", "core_tool_deferral"))
 from sandbox import isolate_host
 
 root = tempfile.mkdtemp(prefix=f"sc-{ARM}-")
-home, ws = os.path.join(root, ".hermes"), os.path.join(root, "ws")
+home, ws = os.path.join(root, ".anakot"), os.path.join(root, "ws")
 os.makedirs(home); os.makedirs(ws)
 isolate_host(root, home)
 NONCE = uuid.uuid4().hex[:10]
@@ -27,20 +27,20 @@ with open(os.path.join(home, "config.yaml"), "w") as f:
     f.write("delegation:\n  max_iterations: 14\n  max_concurrent_children: 10\n")
 # A per-run SOUL line keeps every other live session's cache entries out of this run.
 with open(os.path.join(home, "SOUL.md"), "w") as f:
-    f.write(f"You are Hermes. Probe run {NONCE}.\n")
+    f.write(f"You are Anakot. Probe run {NONCE}.\n")
 # A repo-shaped workspace: the child prompt carries its AGENTS.md, as in real in-repo delegation.
 with open(os.path.join(ws, "AGENTS.md"), "w") as f:
     f.write(open(os.path.join(TREE, "AGENTS.md")).read())
 for name, n in (("alpha", 4127), ("beta", 9310), ("gamma", 5586)):
     with open(os.path.join(ws, f"{name}.txt"), "w") as f:
         f.write(f"The {name} number is {n}.\n")
-os.environ["HERMES_HOME"] = home
+os.environ["ANAKOT_HOME"] = home
 os.environ["TERMINAL_CWD"] = ws
 os.chdir(ws)
 sys.path.insert(0, TREE)
 
 import agent.turn_response_check as trc
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 from run_agent import AIAgent
 from tools.delegate_tool import delegate_task
 

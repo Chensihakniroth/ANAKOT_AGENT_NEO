@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime, timedelta, timezone, UTC
 from typing import TYPE_CHECKING, Optional
 
-from hermes_state_ids import new_session_id
+from anakot_state_ids import new_session_id
 
 if TYPE_CHECKING:
     from gateway.session import SessionEntry, SessionSource
@@ -57,7 +57,7 @@ def is_delegate_child_row(row: dict) -> bool:
     ``_reset_from`` is a /new continuation of the chat whose config picked up the marker (#109073), and
     one carrying ``CHAT_ADOPTED_MARKER`` was chosen by the user; both stay routable (same rule as peer
     recovery's ``_DELEGATE_CHILD_EXCLUSION_SQL``)."""
-    from hermes_state_sessions import _parse_model_config
+    from anakot_state_sessions import _parse_model_config
     config = _parse_model_config(row.get("model_config"))
     return (bool(config.get("_delegate_from")) and "_reset_from" not in config
             and not config.get(CHAT_ADOPTED_MARKER))
@@ -65,7 +65,7 @@ def is_delegate_child_row(row: dict) -> bool:
 
 def auto_continue_freshness_window() -> float:
     """Resume-scheduler freshness window; stale automation never discards the transcript."""
-    raw = os.environ.get("HERMES_AUTO_CONTINUE_FRESHNESS")
+    raw = os.environ.get("ANAKOT_AUTO_CONTINUE_FRESHNESS")
     try:
         return float(raw) if raw else float(_AUTO_CONTINUE_FRESHNESS_SECS_DEFAULT)
     except (TypeError, ValueError):
@@ -131,8 +131,8 @@ class SessionLifecycleMixin:
             return None
         import sqlite3
 
-        from hermes_state_local import local_receipt
-        from hermes_state_runtime import RuntimeStoreError
+        from anakot_state_local import local_receipt
+        from anakot_state_runtime import RuntimeStoreError
         try:
             receipt = local_receipt(db, str(origin.chat_id))
             if receipt.get("route") != entry.session_key:
@@ -155,7 +155,7 @@ class SessionLifecycleMixin:
         import json
         import sqlite3
 
-        from hermes_state_local import API_BINDING_PREFIX
+        from anakot_state_local import API_BINDING_PREFIX
         try:
             with db._read_ctx() as conn:
                 saved = conn.execute("SELECT value FROM state_meta WHERE key=?",

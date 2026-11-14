@@ -2,7 +2,7 @@
 import asyncio
 import logging
 
-from hermes_state_runtime import RuntimeStoreError
+from anakot_state_runtime import RuntimeStoreError
 
 logger = logging.getLogger("gateway.relay.adapter")
 

@@ -15,13 +15,13 @@ import {
   $currentServiceTier,
   getComposerModelSelection
 } from '@/store/session'
-import type { SessionCreateResponse } from '@/types/hermes'
+import type { SessionCreateResponse } from '@/types/anakot'
 
 type RequestGateway = <T>(method: string, params?: Record<string, unknown>) => Promise<T>
 
 /** A backend predating a `session.create` field rejects the whole create at
  *  admission (`tui_gateway/contracts/registry.py::validate_params`, code 4000,
- *  handler never runs) — e.g. a Hermes Cloud backend behind a Desktop that
+ *  handler never runs) — e.g. a Anakot Cloud backend behind a Desktop that
  *  updates from main (#128971). Each field below is safe to drop for them:
  *  - `cwd_explicit` (#122899): those backends always honoured the client `cwd`.
  *  - `service_tier` (Ultrafast): `fast` still rides, so they get Priority.

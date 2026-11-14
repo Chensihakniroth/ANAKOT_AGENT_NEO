@@ -3,8 +3,8 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type * as HermesApi from '@/hermes'
-import type { CronJob, SessionInfo } from '@/hermes'
+import type * as AnakotApi from '@/anakot'
+import type { CronJob, SessionInfo } from '@/anakot'
 import { queryClient } from '@/lib/query-client'
 import { $cronFocusJobId, $cronJobs, setCronFocusJobId, setCronJobs } from '@/store/cron'
 import { notifyCronChanged, setChangeEventsAvailable } from '@/store/live-sync'
@@ -15,8 +15,8 @@ const getCronJobRuns = vi.fn()
 const getCronJobs = vi.fn()
 const triggerCronJob = vi.fn()
 
-vi.mock('@/hermes', async importOriginal => ({
-  ...(await importOriginal<typeof HermesApi>()),
+vi.mock('@/anakot', async importOriginal => ({
+  ...(await importOriginal<typeof AnakotApi>()),
   getCronJobRuns: (jobId: string) => getCronJobRuns(jobId),
   getCronJobs: (profile?: string) => getCronJobs(profile),
   triggerCronJob: (jobId: string) => triggerCronJob(jobId)

@@ -8,7 +8,7 @@ Three edges of the fail-closed multi-profile host (review of #111620):
   its own credential after a concurrent first secondary flips ``get_secret`` to fail closed
   (``_MULTIPLEX_ACTIVE`` is consulted on every read; the scope decision is made once at entry);
 * releasing a runtime scope is per-reset best-effort: a failing terminal reset must not leave the
-  previous profile's secrets / HERMES_HOME installed for the next body in that context.
+  previous profile's secrets / ANAKOT_HOME installed for the next body in that context.
 """
 
 from __future__ import annotations
@@ -28,15 +28,15 @@ ENV_VAL = "systemd-injected-0003"
 
 @pytest.fixture
 def two_homes(tmp_path, monkeypatch):
-    root = tmp_path / "hermes_home"
+    root = tmp_path / "anakot_home"
     b = root / "profiles" / "b"
     b.mkdir(parents=True)
     (root / ".env").write_text(f"A_ONLY_TOKEN={A_VAL}\n", encoding="utf-8")
     (b / ".env").write_text(f"B_ONLY_TOKEN={B_VAL}\nSHARED_TOKEN=b-dotenv-stale\n", encoding="utf-8")
-    monkeypatch.setenv("HERMES_HOME", str(root))
+    monkeypatch.setenv("ANAKOT_HOME", str(root))
     monkeypatch.setenv("A_ONLY_TOKEN", A_VAL)
     monkeypatch.setenv("INJECTED_TOKEN", ENV_VAL)  # systemd / op run credential injection, no file
-    monkeypatch.setattr(server, "_hermes_home", root)
+    monkeypatch.setattr(server, "_anakot_home", root)
     monkeypatch.setattr(server, "_served_profile_homes", set())
     monkeypatch.setattr(lpp, "_snapshot", None)
     monkeypatch.setattr("agent.secret_scope._MULTIPLEX_ACTIVE", False)
@@ -45,9 +45,9 @@ def two_homes(tmp_path, monkeypatch):
 
 def test_send_keeps_external_source_value_over_raw_dotenv(two_homes, monkeypatch):
     """B's ``.env`` and B's secret manager both define SHARED_TOKEN; the installed scope (manager
-    wins) survives ``_load_hermes_env`` for the routed ``send``."""
-    from hermes_cli import env_loader
-    from hermes_cli.send_cmd import _load_hermes_env
+    wins) survives ``_load_anakot_env`` for the routed ``send``."""
+    from anakot_cli import env_loader
+    from anakot_cli.send_cmd import _load_anakot_env
 
     _root, b = two_homes
     # B's secret manager already hydrated for this process (a hydrated home is not re-pulled).
@@ -57,7 +57,7 @@ def test_send_keeps_external_source_value_over_raw_dotenv(two_homes, monkeypatch
     with server._session_profile_runtime_scope({"profile_home": str(b)}):
         from agent.secret_scope import current_secret_scope, get_secret
         assert get_secret("SHARED_TOKEN") == "b-manager-fresh"
-        _load_hermes_env()
+        _load_anakot_env()
         assert get_secret("SHARED_TOKEN") == "b-manager-fresh"
         assert current_secret_scope()["B_ONLY_TOKEN"] == B_VAL
 
@@ -92,7 +92,7 @@ def test_launch_body_survives_first_secondary_activation(two_homes):
 def test_launch_body_survives_first_secondary_activation_on_the_dashboard(two_homes, monkeypatch):
     pytest.importorskip("fastapi")
     from agent.secret_scope import get_secret
-    from hermes_cli import web_server_profiles as wsp
+    from anakot_cli import web_server_profiles as wsp
 
     _root, b = two_homes
     monkeypatch.setattr(wsp, "_resolve_profile_dir", lambda name: b)
@@ -120,12 +120,12 @@ def test_release_unbinds_home_secrets_and_terminal_together(two_homes, monkeypat
     """Release is one reset of one value: no piece of B (its terminal policy above all) can outlive
     the others on this thread, whichever reset helper a caller has patched."""
     from agent.secret_scope import current_secret_scope
-    from hermes_constants import get_hermes_home_override
+    from anakot_constants import get_anakot_home_override
     from tools import terminal_scope
 
     root, b = two_homes
     scopes = server._profile_runtime_scope_tokens(str(b))
-    assert current_secret_scope() is not None and get_hermes_home_override() == str(b)
+    assert current_secret_scope() is not None and get_anakot_home_override() == str(b)
     assert terminal_scope.get_terminal_scope() is not None
 
     def exploding(_token):
@@ -135,5 +135,5 @@ def test_release_unbinds_home_secrets_and_terminal_together(two_homes, monkeypat
     server._release_build_profile_scopes(scopes)
     assert terminal_scope.get_terminal_scope() is None
     assert current_secret_scope() is None
-    assert get_hermes_home_override() is None
-    assert Path(server._hermes_home) == root
+    assert get_anakot_home_override() is None
+    assert Path(server._anakot_home) == root

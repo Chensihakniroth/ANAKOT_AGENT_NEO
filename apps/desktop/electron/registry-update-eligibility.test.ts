@@ -1,5 +1,5 @@
 /**
- * "Update all instances" never runs `hermes update` against a Hermes Cloud
+ * "Update all instances" never runs `anakot update` against a Anakot Cloud
  * agent, however it was saved: as a Cloud connection or as a plain URL remote.
  */
 

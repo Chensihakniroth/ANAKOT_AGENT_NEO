@@ -16,7 +16,7 @@ import {
   type WebAccessMode,
   type WebAccessStartProgress,
   type WebAccessStatus
-} from '@/hermes'
+} from '@/anakot'
 import { useViewedInterval } from '@/hooks/use-viewed-interval'
 import { useI18n } from '@/i18n'
 import type { WebAccessTranslations } from '@/i18n/types_gateway_host'
@@ -31,7 +31,7 @@ import { ListRow, Pill, SectionHeading, SettingsContent, SettingsSection, Settin
 
 const RESTART_POLL_MS = 1500
 const RESTART_TIMEOUT_MS = 90_000
-// `hermes config set webapp.*` and a gateway restarted elsewhere change the status behind the pane's
+// `anakot config set webapp.*` and a gateway restarted elsewhere change the status behind the pane's
 // back: re-read it when the window regains focus or comes back into view, and on a slow poll while
 // it is visible (react-query pauses the interval in the background).
 const STATUS_POLL_MS = 10_000
@@ -406,7 +406,7 @@ function WhereRow({ lanUrl, locked, mode, onMode, onPublicUrl, port, publicUrl, 
             className={`${CONTROL_TEXT} mt-3 max-w-sm`}
             disabled={locked}
             onChange={event => onPublicUrl(event.target.value)}
-            placeholder="https://hermes.example.com"
+            placeholder="https://anakot.example.com"
             value={publicUrl}
           />
         )

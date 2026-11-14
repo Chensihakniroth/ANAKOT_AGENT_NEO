@@ -1,7 +1,7 @@
-import type { ShellExecResponse } from '@hermes/shared/gateway-types'
-import { hasInterpolation, INTERPOLATION_RE } from '@hermes/shared/interpolation'
-import { looksLikeSlashCommand, parseSlashCommand } from '@hermes/shared/slash'
-import { completionToApplyOnSubmit } from '@hermes/shared/slash-input'
+import type { ShellExecResponse } from '@anakot/shared/gateway-types'
+import { hasInterpolation, INTERPOLATION_RE } from '@anakot/shared/interpolation'
+import { looksLikeSlashCommand, parseSlashCommand } from '@anakot/shared/slash'
+import { completionToApplyOnSubmit } from '@anakot/shared/slash-input'
 import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { TYPING_IDLE_MS } from '../config/timing.js'

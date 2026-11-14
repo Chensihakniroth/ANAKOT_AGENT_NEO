@@ -99,10 +99,10 @@ once resumed, do that one step in the new owner's trees; a freeze that also stop
 watcher lets the resumed pnpm write for up to one poll (250 ms) before it is killed; and a
 process pnpm started that left its tree (daemonized) is not killed; nor is pnpm when
 node-deps, its relay and the watcher are all SIGKILLed at once (`pkill -9 node`), and it
-keeps writing into whatever tree the next owner certifies. `hermes update`, or
+keeps writing into whatever tree the next owner certifies. `anakot update`, or
 deleting `node_modules`, repairs a tree left that way. A live owner is waited for at most
 10 minutes; then the run fails. Downloads retry with pnpm's defaults, except for a source
-launch (`hermes --tui`, the dashboard), which retries once unless the user set a count
+launch (`anakot --tui`, the dashboard), which retries once unless the user set a count
 where pnpm 12 reads one (`pnpm_config_fetch_retries`, or `fetchRetries` in pnpm's
 `config.yaml` or `pnpm-workspace.yaml`; pnpm 12 ignores `fetch-retries` in an npmrc and
 `npm_config_fetch_retries`), so an unreachable registry fails it in about 10 s instead of 70 s.
@@ -211,7 +211,7 @@ alone does not prove that the latest build succeeded.
 
 Existing arbitrary output directories require the builder's `.hermes-product`
 marker. Files, symlinks, and source directories are rejected. The exact pnpm
-destinations (`ui-tui/dist`, `hermes_cli/web_dist`, `apps/desktop/dist`, and
+destinations (`ui-tui/dist`, `anakot_cli/web_dist`, `apps/desktop/dist`, and
 `apps/desktop/build/native-deps`) remain rebuildable without a prior marker.
 Other in-tree products live beneath `.build/` or `apps/desktop/build/products/`.
 `frontend-common.mjs` classifies these destinations independently of which source
@@ -226,7 +226,7 @@ The web builder reads `web/public/` beneath it and requires `favicon.ico`.
 The desktop builder reads `apps/desktop/public/` beneath it and requires
 `apple-touch-icon.png`.
 
-Run the generator with a Hermes runtime Python (Pillow and resvg-py are core
+Run the generator with a Anakot runtime Python (Pillow and resvg-py are core
 dependencies):
 
 ```sh
@@ -278,7 +278,7 @@ pnpm --dir apps/desktop run build
 | Command | Output | Preparation outside the product compiler |
 |---|---|---|
 | TUI build | `ui-tui/dist/entry.js` | Existing installed workspace dependencies |
-| Web build | `hermes_cli/web_dist/` | npm `prebuild` prepares icons |
+| Web build | `anakot_cli/web_dist/` | npm `prebuild` prepares icons |
 | Desktop build | `apps/desktop/dist/` | Icons, root-install assertion, install stamp, and native-dependency staging |
 
 Compositions prepare icons once and pass `pnpm run build --icons /prepared/root`
@@ -334,7 +334,7 @@ uses `python -m pm.build_env --prune-cache --cache PATH`; add `--ci` only when t
 cache will not be packaged for offline installation.
 
 Native bundle staging keeps its HOME and PM state temporary, but not its uv
-cache. `scripts.bundles.stage --cache PATH` (or `hermes pm bundle --cache PATH`)
+cache. `scripts.bundles.stage --cache PATH` (or `anakot pm bundle --cache PATH`)
 selects the persistent cache explicitly. Direct staging also accepts the
 provider's `UV_CACHE_DIR`; otherwise it uses the output parent's `.uv-cache`.
 The PM runtime and application dependency builds receive this same cache.
@@ -381,7 +381,7 @@ All supplied filesystem input paths must be absolute and exist. `repo` and
 |---|---|---|
 | `project` | Yes | `pyproject.toml` with static project metadata and `[project.scripts]` |
 | `code` | Yes | Prepared source tree, or installed code root for reference placement |
-| `repo` | Yes | Code/resource location beneath `OUT`, such as `hermes-agent`, `.`, or `share/hermes-agent` |
+| `repo` | Yes | Code/resource location beneath `OUT`, such as `anakot-agent`, `.`, or `share/anakot-agent` |
 | `placement` | Yes | `contained`, `fixed`, or `references` |
 | `target` | Yes | `linux-x64`, `linux-arm64`, `darwin-x64`, `darwin-arm64`, `win32-x64`, `win32-arm64`, or `linux-arm64-bionic` |
 | `python` | Yes | Prepared target interpreter file |
@@ -422,7 +422,7 @@ match the supplied PM runtime. The assembler does not create that environment.
   from this map.
 
 Source-layout placement writes project distribution metadata without building
-a Hermes wheel. It also writes `site_packages/hermes-agent.pth` with a relative
+a Anakot wheel. It also writes `site_packages/anakot-agent.pth` with a relative
 code path. Source-layout placement therefore requires an output-owned dependency
 directory, including in `fixed` mode. Reference placement does not write this file.
 
@@ -432,7 +432,7 @@ runs the target interpreter and therefore needs a runnable native environment.
 A target label alone does not prove ABI compatibility.
 
 For copied frontends, the assembler places TUI files at
-`OUT/repo/hermes_cli/tui_dist/`, web files at `OUT/repo/hermes_cli/web_dist/`
+`OUT/repo/anakot_cli/tui_dist/`, web files at `OUT/repo/anakot_cli/web_dist/`
 and Webapp files at `OUT/repo/apps/desktop/dist-webapp/`. Reference placement
 links TUI at `OUT/ui-tui`, web at `OUT/repo/web_dist` and the Webapp at
 `OUT/repo/webapp_dist`, and records their environment bindings.

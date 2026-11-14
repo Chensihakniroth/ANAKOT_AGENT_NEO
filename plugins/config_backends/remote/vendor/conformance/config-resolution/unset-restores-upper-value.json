@@ -7,7 +7,7 @@
       "kind": "global",
       "values": {
         "model": {
-          "default": "hermes-3"
+          "default": "anakot-3"
         }
       },
       "locks": []
@@ -16,7 +16,7 @@
       "kind": "tenant",
       "values": {
         "model": {
-          "default": "hermes-4-405b"
+          "default": "anakot-4-405b"
         }
       },
       "locks": []
@@ -44,7 +44,7 @@
   "expect": {
     "effective": {
       "model": {
-        "default": "hermes-4-405b",
+        "default": "anakot-4-405b",
         "provider": "nous"
       }
     },

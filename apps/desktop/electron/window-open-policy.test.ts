@@ -2,47 +2,47 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import {
-  HERMES_HUB_FALLBACK_ORIGIN,
-  HERMES_HUB_ORIGIN,
-  isHermesHubClipboardWrite,
-  isHermesHubExternalUrl,
-  isHermesHubOrigin
+  ANAKOT_HUB_FALLBACK_ORIGIN,
+  ANAKOT_HUB_ORIGIN,
+  isAnakotHubClipboardWrite,
+  isAnakotHubExternalUrl,
+  isAnakotHubOrigin
 } from './hub-iframe-policy'
 import { createWindowOpenHandler, describeDeniedUrl } from './window-open-policy'
 
 describe('hub-iframe-policy predicates', () => {
   it('admits exactly the two hub origins and nothing else', () => {
-    expect(isHermesHubOrigin(HERMES_HUB_ORIGIN)).toBe(true)
-    expect(isHermesHubOrigin(HERMES_HUB_FALLBACK_ORIGIN)).toBe(true)
+    expect(isAnakotHubOrigin(ANAKOT_HUB_ORIGIN)).toBe(true)
+    expect(isAnakotHubOrigin(ANAKOT_HUB_FALLBACK_ORIGIN)).toBe(true)
 
     // Opaque sandboxed frames, data URLs, look-alikes, and absent origins
     // never qualify.
-    expect(isHermesHubOrigin('null')).toBe(false)
-    expect(isHermesHubOrigin('')).toBe(false)
-    expect(isHermesHubOrigin(null)).toBe(false)
-    expect(isHermesHubOrigin(undefined)).toBe(false)
-    expect(isHermesHubOrigin('https://hermes-agent.nousresearch.com.evil.example')).toBe(false)
-    expect(isHermesHubOrigin('https://evil.example')).toBe(false)
-    expect(isHermesHubOrigin('file://')).toBe(false)
+    expect(isAnakotHubOrigin('null')).toBe(false)
+    expect(isAnakotHubOrigin('')).toBe(false)
+    expect(isAnakotHubOrigin(null)).toBe(false)
+    expect(isAnakotHubOrigin(undefined)).toBe(false)
+    expect(isAnakotHubOrigin('https://hermes-agent.nousresearch.com.evil.example')).toBe(false)
+    expect(isAnakotHubOrigin('https://evil.example')).toBe(false)
+    expect(isAnakotHubOrigin('file://')).toBe(false)
   })
 
   it('delegates only http/https/mailto external URLs', () => {
-    expect(isHermesHubExternalUrl('https://github.com/NousResearch/hermes-agent')).toBe(true)
-    expect(isHermesHubExternalUrl('http://example.com/docs')).toBe(true)
-    expect(isHermesHubExternalUrl('mailto:support@example.com')).toBe(true)
+    expect(isAnakotHubExternalUrl('https://github.com/NousResearch/hermes-agent')).toBe(true)
+    expect(isAnakotHubExternalUrl('http://example.com/docs')).toBe(true)
+    expect(isAnakotHubExternalUrl('mailto:support@example.com')).toBe(true)
 
-    expect(isHermesHubExternalUrl('file:///etc/passwd')).toBe(false)
-    expect(isHermesHubExternalUrl('javascript:alert(1)')).toBe(false)
-    expect(isHermesHubExternalUrl('hermes://internal')).toBe(false)
-    expect(isHermesHubExternalUrl('not a url')).toBe(false)
+    expect(isAnakotHubExternalUrl('file:///etc/passwd')).toBe(false)
+    expect(isAnakotHubExternalUrl('javascript:alert(1)')).toBe(false)
+    expect(isAnakotHubExternalUrl('anakot://internal')).toBe(false)
+    expect(isAnakotHubExternalUrl('not a url')).toBe(false)
   })
 
   it('grants clipboard-write to hub origins only', () => {
-    expect(isHermesHubClipboardWrite(HERMES_HUB_ORIGIN)).toBe(true)
-    expect(isHermesHubClipboardWrite(HERMES_HUB_FALLBACK_ORIGIN)).toBe(true)
-    expect(isHermesHubClipboardWrite('null')).toBe(false)
-    expect(isHermesHubClipboardWrite('https://artifact-preview.invalid')).toBe(false)
-    expect(isHermesHubClipboardWrite(null)).toBe(false)
+    expect(isAnakotHubClipboardWrite(ANAKOT_HUB_ORIGIN)).toBe(true)
+    expect(isAnakotHubClipboardWrite(ANAKOT_HUB_FALLBACK_ORIGIN)).toBe(true)
+    expect(isAnakotHubClipboardWrite('null')).toBe(false)
+    expect(isAnakotHubClipboardWrite('https://artifact-preview.invalid')).toBe(false)
+    expect(isAnakotHubClipboardWrite(null)).toBe(false)
   })
 })
 
@@ -65,7 +65,7 @@ describe('createWindowOpenHandler trusted-hub delegation', () => {
     const openExternalUrl = vi.fn()
 
     const handler = createWindowOpenHandler(undefined, {
-      getOpenerOrigin: () => HERMES_HUB_ORIGIN,
+      getOpenerOrigin: () => ANAKOT_HUB_ORIGIN,
       openExternalUrl
     })
 
@@ -77,7 +77,7 @@ describe('createWindowOpenHandler trusted-hub delegation', () => {
     const openExternalUrl = vi.fn()
 
     const handler = createWindowOpenHandler(undefined, {
-      getOpenerOrigin: () => HERMES_HUB_FALLBACK_ORIGIN,
+      getOpenerOrigin: () => ANAKOT_HUB_FALLBACK_ORIGIN,
       openExternalUrl
     })
 
@@ -89,7 +89,7 @@ describe('createWindowOpenHandler trusted-hub delegation', () => {
     const openExternalUrl = vi.fn()
 
     const handler = createWindowOpenHandler(undefined, {
-      getOpenerOrigin: () => HERMES_HUB_ORIGIN,
+      getOpenerOrigin: () => ANAKOT_HUB_ORIGIN,
       openExternalUrl
     })
 
@@ -127,7 +127,7 @@ describe('createWindowOpenHandler trusted-hub delegation', () => {
     expect(openExternalUrl).not.toHaveBeenCalled()
 
     const throwingOpen = createWindowOpenHandler(undefined, {
-      getOpenerOrigin: () => HERMES_HUB_ORIGIN,
+      getOpenerOrigin: () => ANAKOT_HUB_ORIGIN,
       openExternalUrl
     })
 
@@ -141,7 +141,7 @@ describe('createWindowOpenHandler trusted-hub delegation', () => {
       () => {
         throw new Error('log failed')
       },
-      { getOpenerOrigin: () => HERMES_HUB_ORIGIN, openExternalUrl }
+      { getOpenerOrigin: () => ANAKOT_HUB_ORIGIN, openExternalUrl }
     )
 
     expect(handler(baseDetails)).toEqual({ action: 'deny' })

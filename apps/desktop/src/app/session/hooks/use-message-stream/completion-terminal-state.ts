@@ -1,4 +1,4 @@
-import type { PersistedTurn } from '@hermes/shared'
+import type { PersistedTurn } from '@anakot/shared'
 
 import type { ErrorSurface } from '@/lib/error-surface'
 

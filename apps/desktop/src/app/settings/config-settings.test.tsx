@@ -15,22 +15,22 @@ import type { ConfigSettings as ConfigSettingsType } from './config-settings'
 // writable one; narrow the import back so tests can drive it.
 const scopeProfileMock = $settingsRequestProfile as unknown as { set: (value: string) => void }
 
-const getHermesConfigRecord = vi.fn()
-const getHermesConfigSchema = vi.fn()
-const saveHermesConfig = vi.fn()
+const getAnakotConfigRecord = vi.fn()
+const getAnakotConfigSchema = vi.fn()
+const saveAnakotConfig = vi.fn()
 const getElevenLabsVoices = vi.fn()
 
 // Keep the real read-origin helpers (WeakMap peek/bind) live: the shared
 // config hook reaches them through the barrel, and a bare mock would throw.
-vi.mock('@/hermes', async () => ({
+vi.mock('@/anakot', async () => ({
   ...(await vi.importActual<typeof ConfigApi>('@/api/config')),
   // use-config-record folds the scope into its cache key via the barrel; the
   // real one is a pure string fold, mirrored here for the string scopes this
   // suite passes.
   profileScopeKey: (scope?: unknown) => (typeof scope === 'string' && scope.trim()) || 'default',
-  getHermesConfigRecord: (profile?: string) => getHermesConfigRecord(profile),
-  getHermesConfigSchema: () => getHermesConfigSchema(),
-  saveHermesConfig: (config: unknown, profile?: string) => saveHermesConfig(config, profile),
+  getAnakotConfigRecord: (profile?: string) => getAnakotConfigRecord(profile),
+  getAnakotConfigSchema: () => getAnakotConfigSchema(),
+  saveAnakotConfig: (config: unknown, profile?: string) => saveAnakotConfig(config, profile),
   getElevenLabsVoices: () => getElevenLabsVoices(),
   setApiRequestProfile: () => {}
 }))
@@ -73,8 +73,8 @@ beforeAll(async () => {
 beforeEach(() => {
   scopeProfileMock.set('default')
   getElevenLabsVoices.mockResolvedValue({ available: false })
-  getHermesConfigSchema.mockResolvedValue({ fields: {} })
-  saveHermesConfig.mockResolvedValue({ ok: true })
+  getAnakotConfigSchema.mockResolvedValue({ fields: {} })
+  saveAnakotConfig.mockResolvedValue({ ok: true })
 })
 
 afterEach(() => {
@@ -99,7 +99,7 @@ function renderConfigSettings(activeSectionId = 'safety') {
 
 describe('ConfigSettings autosave', () => {
   it('sends a later revert instead of diffing it away against the stale page-load baseline', async () => {
-    getHermesConfigRecord.mockResolvedValue({ checkpoints: { enabled: false }, other: 'untouched' })
+    getAnakotConfigRecord.mockResolvedValue({ checkpoints: { enabled: false }, other: 'untouched' })
 
     vi.useFakeTimers({ shouldAdvanceTime: true })
 
@@ -112,19 +112,19 @@ describe('ConfigSettings autosave', () => {
       toggle.click()
       await vi.advanceTimersByTimeAsync(700)
 
-      await vi.waitFor(() => expect(saveHermesConfig).toHaveBeenCalledTimes(1))
-      expect(saveHermesConfig.mock.calls[0][0]).toEqual({ checkpoints: { enabled: true } })
+      await vi.waitFor(() => expect(saveAnakotConfig).toHaveBeenCalledTimes(1))
+      expect(saveAnakotConfig.mock.calls[0][0]).toEqual({ checkpoints: { enabled: true } })
 
       // Revert: flip it back to its original value and let autosave fire again.
       toggle.click()
       await vi.advanceTimersByTimeAsync(700)
 
-      await vi.waitFor(() => expect(saveHermesConfig).toHaveBeenCalledTimes(2))
+      await vi.waitFor(() => expect(saveAnakotConfig).toHaveBeenCalledTimes(2))
       // Must still explicitly send the reverted value — diffing against the
       // never-advanced page-load baseline would produce an empty patch here
       // (the field is back to its original value) and leave disk stuck at
       // `enabled: true` from the first save.
-      expect(saveHermesConfig.mock.calls[1][0]).toEqual({ checkpoints: { enabled: false } })
+      expect(saveAnakotConfig.mock.calls[1][0]).toEqual({ checkpoints: { enabled: false } })
     } finally {
       vi.useRealTimers()
     }
@@ -136,19 +136,19 @@ describe('ConfigSettings autosave', () => {
     // the write — a read scoped to B with a write that falls back to the
     // ambient (launch) profile is exactly the silent cross-profile write.
     scopeProfileMock.set('nash')
-    getHermesConfigRecord.mockResolvedValue({ checkpoints: { enabled: false } })
+    getAnakotConfigRecord.mockResolvedValue({ checkpoints: { enabled: false } })
 
     vi.useFakeTimers({ shouldAdvanceTime: true })
 
     try {
       renderConfigSettings()
 
-      await vi.waitFor(() => expect(getHermesConfigRecord).toHaveBeenCalledWith('nash'))
+      await vi.waitFor(() => expect(getAnakotConfigRecord).toHaveBeenCalledWith('nash'))
 
       ;(await screen.findByRole('switch')).click()
       await vi.advanceTimersByTimeAsync(700)
 
-      await vi.waitFor(() => expect(saveHermesConfig).toHaveBeenCalledWith({ checkpoints: { enabled: true } }, 'nash'))
+      await vi.waitFor(() => expect(saveAnakotConfig).toHaveBeenCalledWith({ checkpoints: { enabled: true } }, 'nash'))
     } finally {
       vi.useRealTimers()
     }
@@ -156,8 +156,8 @@ describe('ConfigSettings autosave', () => {
 
   it("Settings → Voice shows and drives Desktop read-aloud, apart from the profile's voice.auto_tts", async () => {
     await setAutoSpeakReplies(true)
-    getHermesConfigRecord.mockResolvedValue({ voice: { auto_tts: false } })
-    getHermesConfigSchema.mockResolvedValue({ fields: { 'voice.auto_tts': { type: 'boolean' } } })
+    getAnakotConfigRecord.mockResolvedValue({ voice: { auto_tts: false } })
+    getAnakotConfigSchema.mockResolvedValue({ fields: { 'voice.auto_tts': { type: 'boolean' } } })
 
     renderConfigSettings('voice')
 
@@ -170,7 +170,7 @@ describe('ConfigSettings autosave', () => {
 
     // The profile setting (possibly another profile's) never moves the Desktop switch.
     ;(await screen.findByRole('switch', { name: 'Read Responses Aloud' })).click()
-    await vi.waitFor(() => expect(saveHermesConfig).toHaveBeenCalled())
+    await vi.waitFor(() => expect(saveAnakotConfig).toHaveBeenCalled())
     expect($autoSpeakReplies.get()).toBe(false)
   })
 })

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SanitizedInput } from '@/components/ui/sanitized-input'
-import type { HermesGitBranch } from '@/global'
+import type { AnakotGitBranch } from '@/global'
 import { useI18n } from '@/i18n'
 import type { GitOwnerRoute } from '@/lib/desktop-git'
 import { isSubmitEnter } from '@/lib/ime'
@@ -49,7 +49,7 @@ interface BranchActionCopy {
   branchTrackRemote: string
 }
 
-const branchActionLabel = (branch: HermesGitBranch, copy: BranchActionCopy) => {
+const branchActionLabel = (branch: AnakotGitBranch, copy: BranchActionCopy) => {
   if (branch.checkedOut) {
     return copy.branchOpenExisting
   }
@@ -84,7 +84,7 @@ export function WorktreeDialog() {
   const [name, setName] = useState('')
   const [pending, setPending] = useState(false)
   const [convertMode, setConvertMode] = useState(false)
-  const [branches, setBranches] = useState<HermesGitBranch[]>([])
+  const [branches, setBranches] = useState<AnakotGitBranch[]>([])
   const [branchesLoading, setBranchesLoading] = useState(false)
   const [selectedBase, setSelectedBase] = useState('')
   // The repo that the dialog targets. It is seeded from the resolved intent.
@@ -198,7 +198,7 @@ export function WorktreeDialog() {
     }
   }
 
-  const convert = async (branch: HermesGitBranch) => {
+  const convert = async (branch: AnakotGitBranch) => {
     if (pending || !repoPath || !branch) {
       return
     }

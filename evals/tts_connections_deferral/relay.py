@@ -5,7 +5,7 @@
 
 Listens on a unix socket that the battery binds into each bubblewrap sandbox. Forwards
 ``/v1/...`` requests to the Nous inference host over TLS and adds the agent key itself (read
-fresh from ``$HERMES_HOME/auth.json`` per request), so the key never enters a cell. Anything
+fresh from ``$ANAKOT_HOME/auth.json`` per request), so the key never enters a cell. Anything
 else is refused. One JSON line per request goes to the log: that file is the record of every
 outbound call a battery made.
 """
@@ -21,7 +21,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 SOCK, LOG = sys.argv[1], sys.argv[2]
-AUTH = Path(os.environ.get("HERMES_HOME") or Path.home() / ".hermes") / "auth.json"
+AUTH = Path(os.environ.get("ANAKOT_HOME") or Path.home() / ".anakot") / "auth.json"
 _HOP = {"host", "authorization", "connection", "proxy-connection", "keep-alive", "content-length", "transfer-encoding"}
 _lock = threading.Lock()
 

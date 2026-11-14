@@ -6,9 +6,9 @@ import time
 import pytest
 import psutil
 
-from hermes_cli.process_identity import worker_birth
-from hermes_state import SessionDB
-from hermes_state_runtime import RuntimeStoreError
+from anakot_cli.process_identity import worker_birth
+from anakot_state import SessionDB
+from anakot_state_runtime import RuntimeStoreError
 from tools import async_delegation as ledger
 
 

@@ -59,7 +59,7 @@ function fixture() {
   put(join(app, 'index.html'), '<html><div id="app"></div><script type="module" src="/src/index.js"></script></html>')
   put(join(app, 'src/index.js'), 'document.getElementById("app").textContent = "built renderer"')
   put(join(app, 'electron/entry.ts'), "await import('./main')")
-  put(join(app, 'electron/main.ts'), 'console.log(JSON.stringify({ stamp: __HERMES_INSTALL_STAMP__, identity: __HERMES_PRODUCT_IDENTITY__ }))')
+  put(join(app, 'electron/main.ts'), 'console.log(JSON.stringify({ stamp: __ANAKOT_INSTALL_STAMP__, identity: __ANAKOT_PRODUCT_IDENTITY__ }))')
   put(join(app, 'electron/preload.ts'), 'globalThis.fixturePreload = "compiled preload"')
   put(join(app, 'electron/preview-guest-preload-entry.ts'), 'globalThis.fixtureGuestPreload = "compiled guest preload"')
   cpSync(join(repo, 'apps/desktop/product-identity.cjs'), join(app, 'product-identity.cjs'))
@@ -131,7 +131,7 @@ test('desktop compiler consumes explicit immutable inputs, replaces variants, an
   put(input.stamp, JSON.stringify({ schemaVersion: 1, payload: 'bundled', updateMechanism: 'microsoft-store', commit: 'b'.repeat(40), tag: null }))
   // Ambient variant/tag must not override explicit stamp inputs or cached CJS identity.
   execFileSync(process.execPath, [join(repo, 'scripts/build/desktop.mjs'), ...Object.entries(input).flatMap(([key, value]) => [`--${key === 'nativeDeps' ? 'native-deps' : key}`, value])], {
-    cwd: tmpdir(), env: { ...process.env, PATH: '', HERMES_DESKTOP_VARIANT: 'light', HERMES_PAYLOAD_TAG: 'v1.0.0+canary.20260911T000000Z' }, stdio: 'pipe',
+    cwd: tmpdir(), env: { ...process.env, PATH: '', ANAKOT_DESKTOP_VARIANT: 'light', ANAKOT_PAYLOAD_TAG: 'v1.0.0+canary.20260911T000000Z' }, stdio: 'pipe',
   })
   expect(run().identity.store).toBe(true)
   expect(run().identity.light).toBe(false)
@@ -224,7 +224,7 @@ test('a stamp-only change reuses the renderer bytes and rebakes only main/preloa
   const { productCurrent } = await import('../scripts/build/freshness.mjs')
   const input = fixture()
   expect((await buildDesktop(input)).reusedRenderer).toBe(false)
-  const renderer = () => files(input.out).filter(([name]) => !/electron-|preload|hermes-build\.json/.test(name))
+  const renderer = () => files(input.out).filter(([name]) => !/electron-|preload|anakot-build\.json/.test(name))
   const before = renderer()
   put(input.stamp, JSON.stringify({ ...JSON.parse(readFileSync(input.stamp, 'utf8')), commit: 'c'.repeat(40) }))
   expect(productCurrent({ ...input, product: 'desktop' })).toBe(false)
@@ -307,7 +307,7 @@ test('a desktop build that another build restamps mid-compile still publishes, a
   const { buildDesktop } = await import('../scripts/build/desktop.mjs')
   const input = fixture()
   const raced = { ...JSON.parse(readFileSync(input.stamp, 'utf8')), builtAt: '2027-03-03T00:00:00.000Z' }
-  // The issue's actual shape: a second `hermes desktop` runs write-build-stamp.mjs
+  // The issue's actual shape: a second `anakot desktop` runs write-build-stamp.mjs
   // while this build is compiling, so recordProduct() re-hashes a stamp whose only
   // difference is the build clock. Provenance racing in must still fail the build.
   put(join(input.source, 'apps/desktop/vite.config.mjs'), `
@@ -347,7 +347,7 @@ test('the pre-build gate still notices a restamp, so packaging cannot ship a bun
   const restamped = { ...JSON.parse(readFileSync(input.stamp, 'utf8')), builtAt: '2027-04-04T00:00:00.000Z' }
   put(input.stamp, JSON.stringify(restamped))
   expect(productCurrent({ ...input, product: 'desktop' })).toBe(false)
-  // And rebuilding restores agreement, which is what the next `hermes desktop` does.
+  // And rebuilding restores agreement, which is what the next `anakot desktop` does.
   await buildDesktop(input)
   expect(productCurrent({ ...input, product: 'desktop' })).toBe(true)
   const rebaked = readFileSync(join(input.out, 'electron-main.mjs'), 'utf8')

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Battery runner + readout for the tool-schema dedupe A/B.
 
-    SDD_BASE_TREE=<checkout of the base SHA> SDD_PR_TREE=<checkout of the PR SHA> SDD_PYTHON=<hermes env python> \\
+    SDD_BASE_TREE=<checkout of the base SHA> SDD_PR_TREE=<checkout of the PR SHA> SDD_PYTHON=<anakot env python> \\
     python3 run.py <model> <reps> [--parallel=N] [--only=task1,task2]
     python3 run.py --report
 
 Inference: SDD_INFERENCE_URL + SDD_INFERENCE_KEY, or (default) the Nous Portal agent key read fresh from
-$HERMES_HOME/auth.json for every cell. Read-only: the harness never refreshes or copies the OAuth grant.
+$ANAKOT_HOME/auth.json for every cell. Read-only: the harness never refreshes or copies the OAuth grant.
 Resume-safe per (model, task, arm, rep); errored cells score 0 and stay in the denominator; exit 3 (no model
 turn) is infra and is never written.
 """
@@ -29,7 +29,7 @@ ARMS = ("base", "pr")
 def _inference_env():
     env = dict(os.environ)
     if not env.get("SDD_INFERENCE_KEY"):
-        home = Path(os.environ.get("HERMES_HOME") or Path.home() / ".hermes")
+        home = Path(os.environ.get("ANAKOT_HOME") or Path.home() / ".anakot")
         nous = json.loads((home / "auth.json").read_text())["providers"]["nous"]
         env["SDD_INFERENCE_URL"], env["SDD_INFERENCE_KEY"] = nous["inference_base_url"], nous["agent_key"]
     return env

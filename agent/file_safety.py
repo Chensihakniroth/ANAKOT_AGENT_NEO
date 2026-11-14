@@ -16,51 +16,51 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
-from hermes_cli.home_data_layout import SECRET_CACHE_STORES
-from hermes_platform.host.facts import os_family
+from anakot_cli.home_data_layout import SECRET_CACHE_STORES
+from anakot_platform.host.facts import os_family
 
 
 def _constants_path(getter_name: str) -> Path:
-    """Call ``hermes_constants.<getter_name>()`` (local import avoids cycles); ``~/.hermes`` on any failure."""
+    """Call ``anakot_constants.<getter_name>()`` (local import avoids cycles); ``~/.anakot`` on any failure."""
     try:
-        import hermes_constants
+        import anakot_constants
 
-        return getattr(hermes_constants, getter_name)()
+        return getattr(anakot_constants, getter_name)()
     except Exception:
-        return Path(os.path.expanduser("~/.hermes"))
+        return Path(os.path.expanduser("~/.anakot"))
 
 
-def _hermes_home_path() -> Path:
-    """Active HERMES_HOME (profile-aware). Tests monkeypatch this name."""
-    return _constants_path("get_hermes_home")
+def _anakot_home_path() -> Path:
+    """Active ANAKOT_HOME (profile-aware). Tests monkeypatch this name."""
+    return _constants_path("get_anakot_home")
 
 
-def _hermes_root_path() -> Path:
-    """Hermes root dir (parent of any profile, never per-profile)."""
-    return _constants_path("get_default_hermes_root")
+def _anakot_root_path() -> Path:
+    """Anakot root dir (parent of any profile, never per-profile)."""
+    return _constants_path("get_default_anakot_root")
 
 
-def _hermes_dirs() -> list[Path]:
-    """Resolved active HERMES_HOME and global root, deduplicated.
+def _anakot_dirs() -> list[Path]:
+    """Resolved active ANAKOT_HOME and global root, deduplicated.
 
     Both are checked so credential stores at <root>/... stay guarded when
-    running under a profile (HERMES_HOME = <root>/profiles/<name>).
+    running under a profile (ANAKOT_HOME = <root>/profiles/<name>).
     """
-    return list(dict.fromkeys(_resolve_each((_hermes_home_path(), _hermes_root_path()))))
+    return list(dict.fromkeys(_resolve_each((_anakot_home_path(), _anakot_root_path()))))
 
 
 def _profile_homes() -> list[Path]:
     """Resolved ``<root>/profiles/<name>`` homes, active or not."""
     with suppress(OSError):
-        return _resolve_each(p for p in (_hermes_root_path() / "profiles").iterdir() if p.is_dir())
+        return _resolve_each(p for p in (_anakot_root_path() / "profiles").iterdir() if p.is_dir())
     return []
 
 
 def _credential_store_dirs() -> list[Path]:
-    """``_hermes_dirs()`` plus every named profile home. A sibling profile's auth.json,
+    """``_anakot_dirs()`` plus every named profile home. A sibling profile's auth.json,
     .env or mcp-tokens/ is as much a credential store as the active one's, but the agent
     has no business reading or rewriting it from this profile (#37617, #46411)."""
-    return list(dict.fromkeys([*_hermes_dirs(), *_profile_homes()]))
+    return list(dict.fromkeys([*_anakot_dirs(), *_profile_homes()]))
 
 
 def _resolve_each(paths) -> list[Path]:
@@ -113,7 +113,7 @@ def _resolve_target(path: str) -> Optional[Path]:
 def _guard_homes(path: str = "") -> set[str]:
     """Every home the write guards must cover. Process ``~`` alone is wrong whenever the
     process HOME is not the OS user's real home — ``TERMINAL_HOME_MODE=profile``,
-    containers, and spawned workers pin ``HOME`` to ``{HERMES_HOME}/home``, which leaves
+    containers, and spawned workers pin ``HOME`` to ``{ANAKOT_HOME}/home``, which leaves
     the real home's credential paths unguarded against absolute-path writes while file
     tools happily write there (and ``_expand_tilde`` may route ``~`` to yet another
     home). Deny/approval lists are built over the union: process home, real home,
@@ -121,7 +121,7 @@ def _guard_homes(path: str = "") -> set[str]:
     account's home, which joins the set so ``~root/.ssh/authorized_keys`` stays denied."""
     homes = {os.path.expanduser("~")}
     with suppress(Exception):
-        from hermes_constants import get_real_home, get_subprocess_home, _profile_home_path
+        from anakot_constants import get_real_home, get_subprocess_home, _profile_home_path
 
         for candidate in (get_real_home(), get_subprocess_home(), _profile_home_path()):
             if candidate:
@@ -175,7 +175,7 @@ def _homes_and_resolved(path: str) -> tuple[set[str], str]:
 #   * ``\\\\?\\GLOBALROOT...`` — re-entry into the NT namespace.
 #
 # Plain drive-letter extended-length paths (``\\\\?\\C:\\...``) stay ALLOWED:
-# they are a routine local form (see hermes_cli/windows_ssh_runtime.py) and
+# they are a routine local form (see anakot_cli/windows_ssh_runtime.py) and
 # carry no remote-auth trigger. Plain UNC shares (``\\\\server\\share``) are
 # also unchanged here — blocking ordinary UNC reads is a policy question,
 # not part of this namespace-bypass guard.
@@ -266,7 +266,7 @@ def build_write_denied_paths(home: str) -> set[str]:
         (".ssh", "authorized_keys"), (".ssh", "id_rsa"), (".ssh", "id_ed25519"),
         (".netrc",), (".pgpass",), (".npmrc",), (".pypirc",), (".git-credentials",),
     )
-    # Secret material under HERMES_HOME, on the active profile, every sibling profile
+    # Secret material under ANAKOT_HOME, on the active profile, every sibling profile
     # and the global root: overwriting the root .env leaks credentials across every profile that
     # inherits it, and the root Anthropic PKCE store is still read by default /
     # non-profile sessions when a profile is active. google_oauth.json is an OAuth
@@ -276,20 +276,20 @@ def build_write_denied_paths(home: str) -> set[str]:
     # deliberately NOT here: #45947 freed those control files on purpose
     # ("true containment belongs in Docker/remote backends and OS permissions,
     # not an expanding hardcoded denylist"). They stay read-denied, not write-denied.
-    hermes_files = (
+    anakot_files = (
         ".env", ".anthropic_oauth.json",
         os.path.join("auth", "google_oauth.json"),
         *SECRET_CACHE_STORES,
     )
     paths = [
         *(os.path.join(home, *f) for f in home_files),
-        *(str(base / f) for base in _credential_store_dirs() for f in hermes_files),
+        *(str(base / f) for base in _credential_store_dirs() for f in anakot_files),
         "/etc/sudoers", "/etc/passwd", "/etc/shadow",
     ]
     return {os.path.realpath(p) for p in paths}
 
 
-# Home-relative credential directories (POSIX paths). Also dropped from profile exports (hermes_cli.profiles).
+# Home-relative credential directories (POSIX paths). Also dropped from profile exports (anakot_cli.profiles).
 HOME_CREDENTIAL_DIRS = (".ssh", ".aws", ".gnupg", ".kube", ".docker", ".azure", ".config/gh", ".config/gcloud")
 
 
@@ -303,9 +303,9 @@ def build_write_denied_prefixes(home: str) -> list[str]:
 
 
 def get_safe_write_roots() -> set[str]:
-    """Resolved HERMES_WRITE_SAFE_ROOT paths (``os.pathsep``-separated list)."""
+    """Resolved ANAKOT_WRITE_SAFE_ROOT paths (``os.pathsep``-separated list)."""
     roots: set[str] = set()
-    for path in filter(None, os.getenv("HERMES_WRITE_SAFE_ROOT", "").split(os.pathsep)):
+    for path in filter(None, os.getenv("ANAKOT_WRITE_SAFE_ROOT", "").split(os.pathsep)):
         with suppress(OSError, ValueError):
             roots.add(os.path.realpath(os.path.expanduser(path)))
     return roots
@@ -322,7 +322,7 @@ def build_write_approval_paths(home: str) -> set[str]:
     return {os.path.realpath(os.path.join(home, ".ssh", "config"))}
 
 
-# HERMES_HOME / root subpaths that the agent's generic file tools must not
+# ANAKOT_HOME / root subpaths that the agent's generic file tools must not
 # rewrite. Session transcripts (state.db, sessions/) are application-owned
 # state whose rewrite can falsify history and break resume/compression;
 # mcp-tokens/, pairing/, vault/ (key + ciphertext side by side),
@@ -330,7 +330,7 @@ def build_write_approval_paths(home: str) -> set[str]:
 # browser credential and its grants to native apps) hold credential material.
 # Control files (auth.json, config.yaml, webhook_subscriptions.json) are
 # deliberately NOT here (#45947): read-denied, but the user may ask to edit them.
-_HERMES_PROTECTED_SUBPATHS = (
+_ANAKOT_PROTECTED_SUBPATHS = (
     "state.db", "sessions", "mcp-tokens", "pairing", "vault", "browser-profile", "webapp")
 
 
@@ -381,7 +381,7 @@ def _classify_resolved_write_denial(homes: set[str], resolved: str) -> Optional[
         return "credential"
 
     for base in _credential_store_dirs():
-        for sub in _HERMES_PROTECTED_SUBPATHS:
+        for sub in _ANAKOT_PROTECTED_SUBPATHS:
             with suppress(Exception):
                 if deny_path_under(resolved, os.path.realpath(os.path.join(str(base), sub))):
                     return "credential"
@@ -405,7 +405,7 @@ def get_write_denied_error(path: str, *, verb: str = "Write", entry: bool = Fals
     if denial == "safe_root":
         roots_display = os.pathsep.join(sorted(get_safe_write_roots()))
         return (
-            f"{verb} denied: '{path}' is outside HERMES_WRITE_SAFE_ROOT "
+            f"{verb} denied: '{path}' is outside ANAKOT_WRITE_SAFE_ROOT "
             f"({roots_display}). Unset the variable or add this path's directory prefix."
         )
     if denial == "nt_namespace":
@@ -429,32 +429,32 @@ _DID_SUFFIX = (
     " (Defense-in-depth — not a security boundary; the terminal tool can still bypass.)"
 )
 
-# Exact-file credential stores under HERMES_HOME / <root>. The agent never
+# Exact-file credential stores under ANAKOT_HOME / <root>. The agent never
 # needs these directly — provider tools consume them through internal channels.
 _CREDENTIAL_FILE_NAMES = (
     "auth.json", "auth.lock", ".anthropic_oauth.json", ".env", "webhook_subscriptions.json",
     os.path.join("auth", "google_oauth.json"), *SECRET_CACHE_STORES,
 )
 
-# Directory-prefix read denies under HERMES_HOME / <root>: (subdir, message for
+# Directory-prefix read denies under ANAKOT_HOME / <root>: (subdir, message for
 # the directory itself, message for a file inside). browser-profile/ is a copy
 # of the user's Cookies / Login Data — the same credential class as auth.json.
 _READ_DENIED_DIRS = (
     ("mcp-tokens",
-     "is the Hermes MCP token directory and cannot be read directly.",
-     "is a Hermes MCP token file and cannot be read directly."),
+     "is the Anakot MCP token directory and cannot be read directly.",
+     "is a Anakot MCP token file and cannot be read directly."),
     ("browser-profile",
-     "is the Hermes real-profile browser snapshot directory (copied cookies/logins) and cannot be read directly.",
-     "is inside the Hermes real-profile browser snapshot (copied cookies/logins) and cannot be read directly."),
+     "is the Anakot real-profile browser snapshot directory (copied cookies/logins) and cannot be read directly.",
+     "is inside the Anakot real-profile browser snapshot (copied cookies/logins) and cannot be read directly."),
     # vault.key + vault.json.enc sit side by side; key + ciphertext = plaintext, so the whole dir is one credential.
     ("vault",
-     "is the Hermes credential vault directory and cannot be read directly (secrets are filled server-side by browser_vault).",
-     "is inside the Hermes credential vault (encrypted secrets + local key) and cannot be read directly (browser_vault resolves them server-side)."),
+     "is the Anakot credential vault directory and cannot be read directly (secrets are filled server-side by browser_vault).",
+     "is inside the Anakot credential vault (encrypted secrets + local key) and cannot be read directly (browser_vault resolves them server-side)."),
     # session-token is the Webapp's browser credential (a bare token no redaction pattern masks); the
     # rest are its grants to native apps and its Web Access registration.
     ("webapp",
-     "is the Hermes Webapp sign-in directory and cannot be read directly.",
-     "is a Hermes Webapp sign-in file (the browser credential or its sign-in records) and cannot be read directly."),
+     "is the Anakot Webapp sign-in directory and cannot be read directly.",
+     "is a Anakot Webapp sign-in file (the browser credential or its sign-in records) and cannot be read directly."),
 )
 
 
@@ -496,11 +496,11 @@ def is_project_env_basename(name: str) -> bool:
 
 
 def get_read_block_error(path: str) -> Optional[str]:
-    """Return an error message when a read targets a denied Hermes path.
+    """Return an error message when a read targets a denied Anakot path.
 
     Blocked: device/fd/proc files that hang reads or leak process state (``/dev/zero``,
     ``/proc/<pid>/environ``; the literal path and the one it resolves to), internal skill-hub
-    caches (prompt-injection carriers), credential stores under HERMES_HOME, every profile home and
+    caches (prompt-injection carriers), credential stores under ANAKOT_HOME, every profile home and
     the global root (exact files, plus anything under ``mcp-tokens/``, ``browser-profile/``,
     ``vault/`` and ``webapp/``), and project-local ``.env`` files anywhere on disk (``.env.example`` is the documented-shape substitute).
 
@@ -520,27 +520,27 @@ def get_read_block_error(path: str) -> Optional[str]:
     local = local_drive_spelling(path)
     lexical = sandbox_lexical_path(local)
     resolved = Path(lexical) if lexical is not None else Path(local).expanduser().resolve()
-    hermes_dirs = _credential_store_dirs()
+    anakot_dirs = _credential_store_dirs()
     reason = None
     if is_blocked_device_path(os.path.expanduser(local)) or is_blocked_device_path(str(resolved)):
         reason = (
             "is a device or process file: reading it can hang or leak process state "
             "(environment, command line, memory layout)." + _DID_SUFFIX
         )
-    elif any(deny_path_under(resolved, hd / "skills" / ".hub") for hd in hermes_dirs):
+    elif any(deny_path_under(resolved, hd / "skills" / ".hub") for hd in anakot_dirs):
         reason = (
-            "is an internal Hermes cache file and cannot be read directly to prevent "
+            "is an internal Anakot cache file and cannot be read directly to prevent "
             "prompt injection. Use the skills_list or skill_view tools instead."
         )
-    elif any(deny_key(resolved) in map(deny_key, _resolve_each(hd / name for hd in hermes_dirs))
+    elif any(deny_key(resolved) in map(deny_key, _resolve_each(hd / name for hd in anakot_dirs))
              for name in _CREDENTIAL_FILE_NAMES):
         reason = (
-            "is a Hermes credential store and cannot be read directly. Provider tools "
+            "is a Anakot credential store and cannot be read directly. Provider tools "
             "consume these credentials through internal channels." + _DID_SUFFIX
         )
     else:
         for subdir, dir_msg, file_msg in _READ_DENIED_DIRS:
-            for blocked_dir in _resolve_each(hd / subdir for hd in hermes_dirs):
+            for blocked_dir in _resolve_each(hd / subdir for hd in anakot_dirs):
                 if deny_path_under(resolved, blocked_dir):
                     reason = (dir_msg if deny_key(resolved) == deny_key(blocked_dir) else file_msg) + _DID_SUFFIX
                     break
@@ -555,7 +555,7 @@ def get_read_block_error(path: str) -> Optional[str]:
 
 
 def raise_if_read_blocked(path: str) -> None:
-    """Raise ``ValueError`` if ``path`` is a denied Hermes read (see ``get_read_block_error``).
+    """Raise ``ValueError`` if ``path`` is a denied Anakot read (see ``get_read_block_error``).
 
     Shared chokepoint for provider input-loading sites (e.g. image-gen local
     paths). Best-effort: unexpected internal errors no-op rather than break
@@ -570,10 +570,10 @@ def raise_if_read_blocked(path: str) -> None:
 
 
 def _resolve_active_profile_name() -> str:
-    """Active profile name from HERMES_HOME: ``~/.hermes`` -> ``"default"``,
-    ``~/.hermes/profiles/X`` -> ``"X"``; ``"default"`` on any resolution failure."""
+    """Active profile name from ANAKOT_HOME: ``~/.anakot`` -> ``"default"``,
+    ``~/.anakot/profiles/X`` -> ``"X"``; ``"default"`` on any resolution failure."""
     try:
-        parts = _hermes_home_path().resolve().relative_to(_hermes_root_path().resolve() / "profiles").parts
+        parts = _anakot_home_path().resolve().relative_to(_anakot_root_path().resolve() / "profiles").parts
     except (OSError, RuntimeError, ValueError):
         return "default"
     return parts[0] if parts else "default"
@@ -581,7 +581,7 @@ def _resolve_active_profile_name() -> str:
 
 # --- Sandbox-mirror write guard ---
 # Non-local terminal backends bind a sandbox-local dir to the container's $HOME:
-#   <HERMES_HOME>/profiles/<name>/sandboxes/<backend>/<task>/home/.hermes/...
+#   <ANAKOT_HOME>/profiles/<name>/sandboxes/<backend>/<task>/home/.anakot/...
 # A host-side write there lands on a mirror the host never reads: silent success,
 # divergent copies. Path-shape-only detection, independent of the active profile;
 # the inner-container case (bind mount strips the prefix) is classify_container_mirror_target.
@@ -601,15 +601,15 @@ def _mirror_info(target: Path, mirror_root: Path, inner_path: str) -> dict:
 
 
 def classify_sandbox_mirror_target(path: str) -> Optional[dict]:
-    """Classify a write target as a sandbox-mirror of authoritative Hermes state: ``None``
+    """Classify a write target as a sandbox-mirror of authoritative Anakot state: ``None``
     for non-mirror paths, else ``target_path`` (resolved), ``mirror_root`` (the
-    ``…/home/.hermes`` prefix) and ``inner_path`` (what the agent meant on the host)."""
+    ``…/home/.anakot`` prefix) and ``inner_path`` (what the agent meant on the host)."""
     target = _resolve_target(path)
     parts = target.parts if target is not None else ()
-    # Need at least: sandboxes / <backend> / <task> / home / .hermes / <thing>; inner_idx = the .hermes part.
+    # Need at least: sandboxes / <backend> / <task> / home / .anakot / <thing>; inner_idx = the .anakot part.
     inner_idx = next(
         (i + 4 for i, part in enumerate(parts)
-         if part == "sandboxes" and i + 5 < len(parts) and parts[i + 3] == "home" and parts[i + 4] == ".hermes"),
+         if part == "sandboxes" and i + 5 < len(parts) and parts[i + 3] == "home" and parts[i + 4] == ".anakot"),
         None,
     )
     if inner_idx is None:
@@ -631,15 +631,15 @@ def get_sandbox_mirror_warning(path: str) -> Optional[str]:
     return _mirror_warning(
         classify_sandbox_mirror_target(path),
         "a per-task mirror created by a non-local terminal backend (docker/daytona/etc.). "
-        "Writes here land on a copy that the host Hermes process never reads — the "
-        "authoritative file is likely {inner_path!r} under the real HERMES_HOME.",
+        "Writes here land on a copy that the host Anakot process never reads — the "
+        "authoritative file is likely {inner_path!r} under the real ANAKOT_HOME.",
         "this guard after explicit user direction, retry the call",
     )
 
 
 def classify_container_mirror_target(path: str, mirror_prefix: str | None = None) -> Optional[dict]:
     """Classify a write target as a container-side sandbox mirror. Inside the container
-    the bind mount strips the ``sandboxes/`` prefix (the agent sees plain ``/root/.hermes/…``),
+    the bind mount strips the ``sandboxes/`` prefix (the agent sees plain ``/root/.anakot/…``),
     so the caller supplies ``mirror_prefix`` once it knows file tools run in a docker sandbox.
     ``None`` without a prefix or outside it, else ``target_path``/``mirror_root``/``inner_path``."""
     target, mirror = _resolve_target(path), _resolve_target(mirror_prefix) if mirror_prefix else None
@@ -652,8 +652,8 @@ def get_container_mirror_warning(path: str, mirror_prefix: str | None = None) ->
     """Model-facing soft-guard warning when ``path`` lands in the container's mirror, else ``None``."""
     return _mirror_warning(
         classify_container_mirror_target(path, mirror_prefix),
-        "the container's bind-mounted home — a per-task mirror that the host Hermes "
+        "the container's bind-mounted home — a per-task mirror that the host Anakot "
         "process never reads. The authoritative file is {inner_path!r} under "
-        "the real HERMES_HOME.",
+        "the real ANAKOT_HOME.",
         "after explicit user direction, retry",
     )

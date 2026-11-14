@@ -1,4 +1,4 @@
-import type { McpTestResult } from '@/hermes'
+import type { McpTestResult } from '@/anakot'
 
 // ---------------------------------------------------------------------------
 // Shared MCP probe cache for the MCP surfaces: a probe is a REAL

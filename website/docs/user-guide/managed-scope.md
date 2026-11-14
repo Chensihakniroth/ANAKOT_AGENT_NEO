@@ -13,7 +13,7 @@ shared API base URL, or `security.redact_secrets: true` across every user on a
 machine.
 
 When a managed scope is present, the values it specifies win over the user's
-`~/.hermes/config.yaml`, `~/.hermes/.env`, and even the shell environment — for
+`~/.anakot/config.yaml`, `~/.anakot/.env`, and even the shell environment — for
 exactly the keys it pins. Everything else stays fully user-controlled.
 
 :::note Different from a package-manager–locked install
@@ -25,12 +25,12 @@ rather than locking the whole config. The two are independent and can coexist.
 
 ## Where it lives
 
-Managed scope is read from a system-level directory, default `/etc/hermes`:
+Managed scope is read from a system-level directory, default `/etc/anakot`:
 
 ```text
-/etc/hermes/
-├── config.yaml     # managed config layer (wins over ~/.hermes/config.yaml)
-└── .env            # managed env layer (wins over ~/.hermes/.env + shell)
+/etc/anakot/
+├── config.yaml     # managed config layer (wins over ~/.anakot/config.yaml)
+└── .env            # managed env layer (wins over ~/.anakot/.env + shell)
 ```
 
 The directory and files are owned by `root` (directory mode `0755`, files
@@ -44,35 +44,35 @@ the feature.
 
 ### Relocating the directory
 
-The location can be relocated with the `HERMES_MANAGED_DIR` environment variable
+The location can be relocated with the `ANAKOT_MANAGED_DIR` environment variable
 (for containers or non-`/etc` deployments). This is a deployment/bootstrap path
-knob — like `HERMES_HOME` — set by the same administrator who owns the managed
-files. Hermes ignores the variable (in any letter case) in every `.env`, secret
+knob — like `ANAKOT_HOME` — set by the same administrator who owns the managed
+files. Anakot ignores the variable (in any letter case) in every `.env`, secret
 source and top-level `config.yaml` key, and logs a warning when it skips one: set
 it in the launch environment (service unit `Environment=`, container image), not
-in `~/.hermes/.env`. On NixOS, `services.hermes-agent.environment` is written to
-`$HERMES_HOME/.env`, so it can't carry this variable: use
-`systemd.services.hermes-agent.environment` (and
-`systemd.services.hermes-backend.environment` when the backend runs),
+in `~/.anakot/.env`. On NixOS, `services.anakot-agent.environment` is written to
+`$ANAKOT_HOME/.env`, so it can't carry this variable: use
+`systemd.services.anakot-agent.environment` (and
+`systemd.services.anakot-backend.environment` when the backend runs),
 `environment.variables` for interactive shells, or, in container mode, an `--env`
-entry in `services.hermes-agent.container.extraOptions` with the directory mounted
+entry in `services.anakot-agent.container.extraOptions` with the directory mounted
 through `container.extraVolumes`. The Home Manager module writes
-`services.hermes-agent.environment` to the same `.env`: set the variable on the
-user units instead, with `systemd.user.services.hermes-agent.Service.Environment`
-(and `hermes-backend`) on Linux, or
-`launchd.agents.hermes-agent.config.EnvironmentVariables` (and `hermes-backend`)
+`services.anakot-agent.environment` to the same `.env`: set the variable on the
+user units instead, with `systemd.user.services.anakot-agent.Service.Environment`
+(and `anakot-backend`) on Linux, or
+`launchd.agents.anakot-agent.config.EnvironmentVariables` (and `anakot-backend`)
 on macOS.
 
 ```bash
 # Point managed scope at a custom directory (set by IT / the deployment, not the user)
-export HERMES_MANAGED_DIR=/opt/org/hermes-policy
+export ANAKOT_MANAGED_DIR=/opt/org/anakot-policy
 ```
 
 :::warning
-A user who can set `HERMES_MANAGED_DIR` can repoint managed scope at a directory
+A user who can set `ANAKOT_MANAGED_DIR` can repoint managed scope at a directory
 they control, defeating it. In a real deployment this variable should be fixed
 by the administrator (e.g. baked into the service unit / container image), not
-left user-settable. `hermes doctor` reports the *resolved* managed directory so
+left user-settable. `anakot doctor` reports the *resolved* managed directory so
 a redirect is visible.
 :::
 
@@ -82,8 +82,8 @@ For the keys a managed layer specifies, the order is (highest wins):
 
 | Tier | config.yaml | .env |
 |---|---|---|
-| 1 | `/etc/hermes/config.yaml` (managed) | `/etc/hermes/.env` (managed) |
-| 2 | `~/.hermes/config.yaml` (user) | `~/.hermes/.env` (user) |
+| 1 | `/etc/anakot/config.yaml` (managed) | `/etc/anakot/.env` (managed) |
+| 2 | `~/.anakot/config.yaml` (user) | `~/.anakot/.env` (user) |
 | 3 | built-in defaults | pre-existing shell environment |
 
 Merging is **leaf-level**: pinning `model.default` does not freeze the rest of
@@ -107,33 +107,33 @@ to the specific keys the managed layer specifies.
 When the managed `config.yaml` pins a non-empty `terminal.backend`, a profile
 `.env` that exists but cannot be read (a sandbox launcher withholds it and
 passes the keys as environment) loads as absent with a warning; without that
-pin the read error still stops Hermes.
+pin the read error still stops Anakot.
 
 ## Seeing what's managed
 
 ```bash
-hermes config        # shows a header naming the managed source + the pinned keys
-hermes doctor        # reports the resolved managed dir + pinned key counts
+anakot config        # shows a header naming the managed source + the pinned keys
+anakot doctor        # reports the resolved managed dir + pinned key counts
 ```
 
-If you try to change a managed value, Hermes refuses and names the source:
+If you try to change a managed value, Anakot refuses and names the source:
 
 ```bash
-$ hermes config set model.default my/model
+$ anakot config set model.default my/model
 Cannot set 'model.default': it is managed by your administrator
-(/etc/hermes/config.yaml) and cannot be changed.
+(/etc/anakot/config.yaml) and cannot be changed.
 ```
 
-The same applies to managed secrets — `hermes config set` / setup will not write
+The same applies to managed secrets — `anakot config set` / setup will not write
 a user value for an env key pinned by the managed `.env`.
 
 ## Setting up a managed scope (administrators)
 
 ```bash
-sudo mkdir -p /etc/hermes
+sudo mkdir -p /etc/anakot
 
 # Pin some config values for every user on this machine
-sudo tee /etc/hermes/config.yaml >/dev/null <<'YAML'
+sudo tee /etc/anakot/config.yaml >/dev/null <<'YAML'
 model:
   provider: nous
 security:
@@ -141,22 +141,22 @@ security:
 YAML
 
 # Optionally pin a shared, non-sensitive env value
-sudo tee /etc/hermes/.env >/dev/null <<'ENV'
+sudo tee /etc/anakot/.env >/dev/null <<'ENV'
 OPENAI_API_BASE=https://inference.example.com/v1
 ENV
 
-sudo chmod 0755 /etc/hermes
-sudo chmod 0644 /etc/hermes/config.yaml /etc/hermes/.env
+sudo chmod 0755 /etc/anakot
+sudo chmod 0644 /etc/anakot/config.yaml /etc/anakot/.env
 ```
 
-Changes take effect on the next Hermes start (a malformed managed file is logged
+Changes take effect on the next Anakot start (a malformed managed file is logged
 loudly and ignored — it never blocks startup, but the admin should check
-`hermes doctor` to confirm the policy is being applied).
+`anakot doctor` to confirm the policy is being applied).
 
 ## Security model and limitations (v1)
 
 - **Enforcement is filesystem permissions only.** If a user has write access to
-  the managed directory (or runs Hermes as `root`), managed scope is advisory.
+  the managed directory (or runs Anakot as `root`), managed scope is advisory.
 - **The managed `.env` is world-readable** (`0644`), so any local user can read
   secrets pushed through it. Use it for shared, non-sensitive values (an org API
   base URL, feature defaults) rather than high-sensitivity secrets.

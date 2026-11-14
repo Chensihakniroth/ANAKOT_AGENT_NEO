@@ -66,7 +66,7 @@ def test_store_root_reads_executing_trees_canonical_install_stamp(tmp_path, monk
     (package / "install-stamp.json").write_text(json.dumps({"runtimeDir": str(runtime)}))
     monkeypatch.setattr(paths, "repo_root", lambda: project)
     monkeypatch.setenv("HERMES_INSTALL_ROOT", str(package))
-    monkeypatch.delenv("HERMES_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("ANAKOT_RUNTIME_DIR", raising=False)
 
     assert environments.store_root(project) == runtime
 

@@ -18,23 +18,23 @@ export function within(root, candidate) {
 
 /**
  * The launch environment for an isolated desktop smoke: inherited display/toolchain
- * variables minus credentials, driver activation, and every HERMES_* override.
+ * variables minus credentials, driver activation, and every ANAKOT_* override.
  * @param {NodeJS.ProcessEnv} inherited
  * @param {string} home
  * @param {string} userData
- * @returns {Record<string, string> & {HOME: string, USERPROFILE: string, HERMES_HOME: string,
- *   HERMES_DESKTOP_USER_DATA_DIR: string, XDG_CONFIG_HOME: string, XDG_DATA_HOME: string, XDG_CACHE_HOME: string}}
+ * @returns {Record<string, string> & {HOME: string, USERPROFILE: string, ANAKOT_HOME: string,
+ *   ANAKOT_DESKTOP_USER_DATA_DIR: string, XDG_CONFIG_HOME: string, XDG_DATA_HOME: string, XDG_CACHE_HOME: string}}
  */
 export function smokeEnvironment(inherited, home, userData) {
   /** @type {Record<string, string>} */
   const clean = {};
-  const keepHermes = new Set(['HERMES_TEST_INSTALL_REF', 'HERMES_TEST_INSTALL_REPO']);
+  const keepAnakot = new Set(['ANAKOT_TEST_INSTALL_REF', 'ANAKOT_TEST_INSTALL_REPO']);
   for (const [key, value] of Object.entries(inherited)) {
     const name = key.toUpperCase();
     if (!value || /(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)/.test(name)
         || /^(?:PYTHON|VIRTUAL_ENV|CONDA|NODE_|NPM_|ELECTRON_|VITE_|UV_|PM_)/.test(name)
         || /^(?:OPENAI|ANTHROPIC|OPENROUTER|OLLAMA|GEMINI|GROQ|XAI)_/.test(name)
-        || (name.startsWith('HERMES_') && !keepHermes.has(name))
+        || (name.startsWith('ANAKOT_') && !keepAnakot.has(name))
         || ['INIT_CWD', 'TERMINAL_CWD', 'LD_PRELOAD', 'DYLD_INSERT_LIBRARIES', 'SSH_AUTH_SOCK', 'SSH_ASKPASS', 'GIT_ASKPASS'].includes(name)) {
       continue;
     }
@@ -46,13 +46,13 @@ export function smokeEnvironment(inherited, home, userData) {
     XDG_CONFIG_HOME: path.join(home, '.desktop-smoke-home', '.config'),
     XDG_DATA_HOME: path.join(home, '.desktop-smoke-home', '.local', 'share'),
     XDG_CACHE_HOME: path.join(home, '.desktop-smoke-home', '.cache'),
-    HERMES_HOME: home, HERMES_DESKTOP_USER_DATA_DIR: userData,
+    ANAKOT_HOME: home, ANAKOT_DESKTOP_USER_DATA_DIR: userData,
     // Chromium puts ProcessSingleton's Unix socket below TMPDIR. Deep CI
     // workspaces exceed sockaddr_un.sun_path before Electron reaches ready.
     TEMP: electronTemp, TMP: electronTemp, TMPDIR: electronTemp,
     // app.close() cannot answer a native modal. This bypasses confirmation only;
     // normal backend teardown and the driver's process-exit checks still run.
-    HERMES_DESKTOP_SKIP_QUIT_CONFIRM: '1',
+    ANAKOT_DESKTOP_SKIP_QUIT_CONFIRM: '1',
     APPDATA: path.join(home, '.desktop-smoke-home', 'AppData', 'Roaming'),
     LOCALAPPDATA: path.join(home, '.desktop-smoke-home', 'AppData', 'Local'),
   };
@@ -62,23 +62,23 @@ const UPDATE_WINDOW_STATE = ['connection.json', 'connections.json'];
 
 /**
  * Give the independently driven update window its own Electron instance route.
- * Copy only Hermes-owned connection contracts. Cloning Chromium's profile
+ * Copy only Anakot-owned connection contracts. Cloning Chromium's profile
  * carries browser locks and process state from the prior app into a supposedly
- * isolated launch. HERMES_HOME remains shared so the app updates the actual
+ * isolated launch. ANAKOT_HOME remains shared so the app updates the actual
  * installed runtime.
  *
  * @template {Record<string, string>} T
- * @param {T & {HERMES_DESKTOP_USER_DATA_DIR: string}} env
- * @returns {T & {HERMES_DESKTOP_USER_DATA_DIR: string}}
+ * @param {T & {ANAKOT_DESKTOP_USER_DATA_DIR: string}} env
+ * @returns {T & {ANAKOT_DESKTOP_USER_DATA_DIR: string}}
  */
 export function isolateUpdateWindowEnvironment(env) {
-  const source = env.HERMES_DESKTOP_USER_DATA_DIR;
+  const source = env.ANAKOT_DESKTOP_USER_DATA_DIR;
   const isolated = fs.mkdtempSync(path.join(path.dirname(source), `${path.basename(source)}-app-update-`));
   for (const filename of UPDATE_WINDOW_STATE) {
     const from = path.join(source, filename);
     if (fs.existsSync(from)) fs.copyFileSync(from, path.join(isolated, filename));
   }
-  return { ...env, HERMES_DESKTOP_USER_DATA_DIR: isolated };
+  return { ...env, ANAKOT_DESKTOP_USER_DATA_DIR: isolated };
 }
 
 /**
@@ -98,9 +98,9 @@ export function isolatedElectronArgs(args, userData) {
 // it while removing driver activation, credentials and remote/backend overrides.
 /** @param {NodeJS.ProcessEnv} inherited @param {string} root @param {'source'|'bundled'} origin */
 export function updateWindowEnvironment(inherited, root, origin) {
-  const home = inherited.HERMES_HOME;
-  const userData = inherited.HERMES_DESKTOP_USER_DATA_DIR;
-  if (!home || !userData) throw new Error('Update chat requires isolated HERMES_HOME and HERMES_DESKTOP_USER_DATA_DIR');
+  const home = inherited.ANAKOT_HOME;
+  const userData = inherited.ANAKOT_DESKTOP_USER_DATA_DIR;
+  if (!home || !userData) throw new Error('Update chat requires isolated ANAKOT_HOME and ANAKOT_DESKTOP_USER_DATA_DIR');
   const env = smokeEnvironment(inherited, home, userData);
   // The detached source updater builds NEW in this environment too.
   for (const key of ['GITHUB_SHA', 'GITHUB_REF', 'GITHUB_REF_NAME', 'GITHUB_HEAD_REF', 'GITHUB_BASE_REF']) {
@@ -125,9 +125,9 @@ export function updateWindowEnvironment(inherited, root, origin) {
       }
       env.HERMES_PYTHON_SRC_ROOT = editableRoot;
     }
-    for (const key of ['HERMES_DESKTOP_PYTHON', 'HERMES_DESKTOP_HERMES', 'HERMES_DESKTOP_HERMES_ROOT']) {
+    for (const key of ['ANAKOT_DESKTOP_PYTHON', 'ANAKOT_DESKTOP_ANAKOT', 'ANAKOT_DESKTOP_ANAKOT_ROOT']) {
       if (inherited[key]) {
-        if (!path.isAbsolute(inherited[key]) || (key !== 'HERMES_DESKTOP_PYTHON' && !within(root, inherited[key]))) throw new Error(`Captured ${key} escapes the installed source`);
+        if (!path.isAbsolute(inherited[key]) || (key !== 'ANAKOT_DESKTOP_PYTHON' && !within(root, inherited[key]))) throw new Error(`Captured ${key} escapes the installed source`);
         fs.accessSync(inherited[key]);
         env[key] = inherited[key];
       }

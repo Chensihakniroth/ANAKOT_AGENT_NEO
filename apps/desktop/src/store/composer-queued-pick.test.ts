@@ -4,7 +4,7 @@ import { noteQueuedLaunchPick } from './composer-queued-pick'
 import { getComposerSelectionScope, setComposerSelectionOwner, setConnection } from './session'
 import { dropTilesForProfile, migrateTilesForProfile } from './session-states'
 
-const key = (profile: string) => `hermes.desktop.composer.queued-pick.registry.local.${profile}`
+const key = (profile: string) => `anakot.desktop.composer.queued-pick.registry.local.${profile}`
 
 function queueOn(profile: string) {
   setComposerSelectionOwner('local', profile)
@@ -38,7 +38,7 @@ describe('a queued launch pick follows its profile', () => {
     queueOn('work')
     setConnection({ baseUrl: 'https://box', mode: 'remote', profile: 'work' } as never)
     noteQueuedLaunchPick('s1', { model: 'm', provider: 'p' }, getComposerSelectionScope())
-    const remote = `hermes.desktop.composer.queued-pick${getComposerSelectionScope()}`
+    const remote = `anakot.desktop.composer.queued-pick${getComposerSelectionScope()}`
     expect(window.localStorage.getItem(remote)).not.toBeNull()
     dropTilesForProfile('work')
     expect([window.localStorage.getItem(remote), window.localStorage.getItem(key('work'))]).toEqual([
@@ -55,7 +55,7 @@ describe('a queued launch pick follows its profile', () => {
     dropTilesForProfile('work', { connectionId: '', profile: 'work' })
     expect([
       window.localStorage.getItem(key('work')),
-      window.localStorage.getItem('hermes.desktop.composer.queued-pick.registry.box.work')
+      window.localStorage.getItem('anakot.desktop.composer.queued-pick.registry.box.work')
     ]).toEqual([null, expect.any(String)])
   })
 })

@@ -4,7 +4,7 @@
 // the Artifacts page renders — including links injected by tool payloads — so
 // the fetch is attacker-influenced, not user-chosen. `isFetchableHttpUrl`
 // (electron/link-title-url.ts) only gates the scheme; this module refuses the
-// *destinations* a title GET must never touch, mirroring the classes Hermes'
+// *destinations* a title GET must never touch, mirroring the classes Anakot'
 // own `tools/url_safety.py` blocks for agent fetches: private, loopback,
 // link-local, CGNAT, cloud-metadata and reserved ranges, plus token-bearing
 // URLs whose GET would consume a one-time link.

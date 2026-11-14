@@ -1,6 +1,6 @@
 """Backend boot handshake contract, Python side (issue class C5).
 
-The Desktop spawns ``hermes serve`` with stdout piped and learns the port ONLY from
+The Desktop spawns ``anakot serve`` with stdout piped and learns the port ONLY from
 the READY sentinel on stdout (``apps/desktop/electron/backend-ready.ts``); the Ink
 TUI spawns ``tui_gateway.entry`` and treats stdout as a pure JSON-RPC stream whose
 first frame is ``gateway.ready``. Both break the same way — the sentinel/frame goes
@@ -43,7 +43,7 @@ from tests.e2e.core.parity._helpers import build_parity_home, kill_tagged, start
 # ONLY for teardown: orphans reparented to init (the exact failure this suite
 # hunts) sit outside the pytest subtree, and kill_tagged() signals nothing but
 # PIDs carrying this run's unique PARITY_TREE_TAG. Children run with a tmp
-# HOME/HERMES_HOME (asserted in ParityHome.env), so no real state is reachable.
+# HOME/ANAKOT_HOME (asserted in ParityHome.env), so no real state is reachable.
 pytestmark = [
     pytest.mark.skipif(not sys.platform.startswith("linux"), reason="process-tree cleanup uses /proc"),
     pytest.mark.live_system_guard_bypass,

@@ -1,8 +1,8 @@
 name: proof-run
-repo: https://github.com/raffieeey/hermes-proof-run
+repo: https://github.com/raffieeey/anakot-proof-run
 sha: 36f3f4111b6d8cd5cf67d53eaf54e62148fcf3ca
 subdir: proof-run
-description: "Capture demonstrated actions, check exact arguments and session-bound observations before reuse, and stop on unproven replay evidence. Local operator-controlled contracts and rebind; no model or network calls. Hermes Agent Plugin Hackathon entry."
+description: "Capture demonstrated actions, check exact arguments and session-bound observations before reuse, and stop on unproven replay evidence. Local operator-controlled contracts and rebind; no model or network calls. Anakot Agent Plugin Hackathon entry."
 maintainer: raffieeey
 tier: community
 category: automation

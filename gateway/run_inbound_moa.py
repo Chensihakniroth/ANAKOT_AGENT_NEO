@@ -19,8 +19,8 @@ class GatewayInboundMoaMixin:
         # /moa is one-shot sugar only: run a single prompt through the default MoA preset, then
         # restore the prior model. To *switch* to a MoA preset for the session, pick it from the
         # model picker (MoA presets surface as a virtual "Mixture of Agents" provider).
-        from hermes_cli.moa_config import moa_usage, normalize_moa_config
-        from hermes_cli.config import load_config
+        from anakot_cli.moa_config import moa_usage, normalize_moa_config
+        from anakot_cli.config import load_config
 
         moa_payload = event.get_command_args().strip()
         if not moa_payload:

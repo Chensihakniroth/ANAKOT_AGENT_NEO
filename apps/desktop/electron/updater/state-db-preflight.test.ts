@@ -13,7 +13,7 @@ import { preflightStateDb, stateDbPreflightTimeoutMs } from './state-db-prefligh
 test('the desktop preflight publishes committed WAL rows before its caller can stop the backend', async (): Promise<void> => {
   const home: string = fs.mkdtempSync(path.join(os.tmpdir(), 'desktop-db-'))
   const python: string = process.env.HERMES_PYTHON || 'python3'
-  const script: string = fileURLToPath(new URL('../../../../hermes_cli/backup_sqlite.py', import.meta.url))
+  const script: string = fileURLToPath(new URL('../../../../anakot_cli/backup_sqlite.py', import.meta.url))
 
   const child = spawn(
     python,
@@ -91,12 +91,12 @@ test('a managed installation runs the snapshot through the installation launcher
   const home: string = fs.mkdtempSync(path.join(os.tmpdir(), 'managed-preflight-'))
   const shims: string = fs.mkdtempSync(path.join(os.tmpdir(), 'launcher-shim-'))
   const python: string = process.env.HERMES_PYTHON || 'python3'
-  const script: string = fileURLToPath(new URL('../../../../hermes_cli/backup_sqlite.py', import.meta.url))
+  const script: string = fileURLToPath(new URL('../../../../anakot_cli/backup_sqlite.py', import.meta.url))
 
-  // Stand-in for the installation launcher under `.hermes/bin`: it must accept
-  // exactly what the runtime passes it — `--run-module hermes_cli.backup_sqlite
+  // Stand-in for the installation launcher under `.anakot/bin`: it must accept
+  // exactly what the runtime passes it — `--run-module anakot_cli.backup_sqlite
   // <home>` — and publish the snapshot like the real launcher does.
-  const shim: string = path.join(shims, process.platform === 'win32' ? 'hermes.cmd' : 'hermes')
+  const shim: string = path.join(shims, process.platform === 'win32' ? 'anakot.cmd' : 'anakot')
   fs.writeFileSync(
     shim,
     process.platform === 'win32'
@@ -151,7 +151,7 @@ test('an older selected checkout without the snapshot helper refuses before back
     await assert.rejects(async (): Promise<void> => {
       await preflightStateDb({
         python: process.env.HERMES_PYTHON || 'python3',
-        script: path.join(oldRoot, 'hermes_cli', 'backup_sqlite.py'),
+        script: path.join(oldRoot, 'anakot_cli', 'backup_sqlite.py'),
         home: oldRoot,
         log: (): void => {}
       })

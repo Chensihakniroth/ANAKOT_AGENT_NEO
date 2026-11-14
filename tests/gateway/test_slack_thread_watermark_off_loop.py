@@ -28,8 +28,8 @@ __all__ = ['_redirect_cache', 'adapter']  # imported pytest fixtures (``_redirec
 async def test_slack_thread_watermark_write_keeps_the_loop_ticking(adapter, tmp_path, monkeypatch):  # health: allow F811 -- pytest injects the imported adapter fixture by parameter name
     from gateway.config import GatewayConfig
     from gateway.session import SessionStore
-    from hermes_state import SessionDB
-    monkeypatch.setattr('hermes_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
+    from anakot_state import SessionDB
+    monkeypatch.setattr('anakot_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
     store = SessionStore(tmp_path / 'sessions', GatewayConfig())
     adapter.set_session_store(store)
     source = adapter._thread_session_source(CHANNEL_ID, THREAD, 'U_HUMAN', '', 'group')
@@ -82,7 +82,7 @@ async def test_slack_assistant_lifecycle_seed_writes_off_the_loop_thread(adapter
     """``assistant_thread_started`` / ``app_home_opened`` seed a DM route (a routing-index write)."""
     from gateway.config import GatewayConfig
     from gateway.session import SessionStore
-    monkeypatch.setattr('hermes_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
+    monkeypatch.setattr('anakot_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
     store = SessionStore(tmp_path / 'sessions', GatewayConfig())
     adapter.set_session_store(store)
     adapter._app.client.assistant_threads_setSuggestedPrompts = AsyncMock()

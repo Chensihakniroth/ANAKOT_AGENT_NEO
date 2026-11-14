@@ -2,8 +2,8 @@ name: ceo-pack
 repo: https://github.com/tradersurfer/ceo-layer
 sha: 806e71ae7a7e8136a98c190498ad35de0f806a14
 description: >-
-  CEO Pack — a CEO orchestration layer for Hermes. Brief, route, plan, assign,
-  call, verify, log, with Hermes as COO. One owner and one due date per task,
+  CEO Pack — a CEO orchestration layer for Anakot. Brief, route, plan, assign,
+  call, verify, log, with Anakot as COO. One owner and one due date per task,
   Type 1 / Type 2 decision gating, credential-safe tool calls, and owner
   approval for external actions. Free model default is Nemotron 3 Ultra free,
   with GLM Flash free fallback and paid Claude Sonnet 5.5 / Opus 5.5 overrides

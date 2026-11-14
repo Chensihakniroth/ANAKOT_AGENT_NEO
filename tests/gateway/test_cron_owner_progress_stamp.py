@@ -22,10 +22,10 @@ def test_owner_progress_reaches_the_firers_ledger_row(tmp_path, monkeypatch):
     from gateway.session_authority import SessionAuthority
     from gateway.session_contract import SessionRef
     from gateway.session_local_recovery import local_adapter_map
-    from hermes_state import SessionDB
-    from hermes_state_runtime import begin_runtime_epoch, claim_session_input, settle_session_input
+    from anakot_state import SessionDB
+    from anakot_state_runtime import begin_runtime_epoch, claim_session_input, settle_session_input
 
-    monkeypatch.setenv('HERMES_HOME', str(tmp_path))
+    monkeypatch.setenv('ANAKOT_HOME', str(tmp_path))
     monkeypatch.setattr(executions_mod, 'EXECUTIONS_FILE', tmp_path / 'cron' / 'executions.db')
     monkeypatch.setattr(jobs, 'get_job', lambda jid: {'id': jid, 'prompt': 'p', 'model': 'm'})
     monkeypatch.setattr(run, '_load_gateway_config', lambda: {'model': {}, 'platform_toolsets': {'cli': []}})
@@ -93,11 +93,11 @@ def test_owner_cron_run_binds_its_claim_fence(tmp_path, monkeypatch):
     from gateway.session_authority import SessionAuthority
     from gateway.session_contract import SessionRef
     from gateway.session_local_recovery import local_adapter_map
-    from hermes_scope import Fence, TurnScope, current_scope
-    from hermes_state import SessionDB
-    from hermes_state_runtime import begin_runtime_epoch, claim_session_input, settle_session_input
+    from anakot_scope import Fence, TurnScope, current_scope
+    from anakot_state import SessionDB
+    from anakot_state_runtime import begin_runtime_epoch, claim_session_input, settle_session_input
 
-    monkeypatch.setenv('HERMES_HOME', str(tmp_path))
+    monkeypatch.setenv('ANAKOT_HOME', str(tmp_path))
     monkeypatch.setattr(executions_mod, 'EXECUTIONS_FILE', tmp_path / 'cron' / 'executions.db')
     monkeypatch.setattr(jobs, 'get_job', lambda jid: {'id': jid, 'prompt': 'p', 'model': 'm'})
     monkeypatch.setattr(run, '_load_gateway_config', lambda: {'model': {}, 'platform_toolsets': {'cli': []}})

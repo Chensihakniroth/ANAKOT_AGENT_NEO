@@ -14,11 +14,11 @@ from tests.tools.test_delegate_resumable_pins import _DEAD_PID, _repo
 
 @pytest.mark.parametrize("path", ["boot", "reclaim"])
 def test_pins_persisted_for_a_dead_owner_include_a_tree_added_after_the_sweep_memo(tmp_path, path):
-    from hermes_constants import get_hermes_home
-    from hermes_state import SessionDB
+    from anakot_constants import get_anakot_home
+    from anakot_state import SessionDB
     from tools import delegate_tool_resumable as r
     repo = _repo(tmp_path / "repo")
-    db = get_hermes_home() / "state.db"
+    db = get_anakot_home() / "state.db"
     SessionDB(db_path=db).close()
     record = {"session_id": "s", "cwd": str(repo), "start_cwd": str(repo), "owners": ["p"],
               "worktrees_at_start": [os.path.realpath(repo)], "owner_pid": _DEAD_PID, "owner_started_at": 1.0}

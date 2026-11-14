@@ -63,7 +63,7 @@ beforeEach(() => {
     value: "stale-token",
     writable: true,
   });
-  Object.defineProperty(window, "__HERMES_AUTH_REQUIRED__", {
+  Object.defineProperty(window, "__ANAKOT_AUTH_REQUIRED__", {
     configurable: true,
     value: false,
     writable: true,

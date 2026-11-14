@@ -1,7 +1,7 @@
 import { PassThrough } from 'node:stream'
 
-import { renderSync } from '@hermes/ink'
-import type { GoalSnapshot } from '@hermes/shared/gateway-events'
+import { renderSync } from '@anakot/ink'
+import type { GoalSnapshot } from '@anakot/shared/gateway-events'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
 import { expect, it } from 'vitest'

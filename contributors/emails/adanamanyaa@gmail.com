@@ -1,2 +1,2 @@
 AlleyBo55
-# plugin-catalog: add hermes-chan
+# plugin-catalog: add anakot-chan

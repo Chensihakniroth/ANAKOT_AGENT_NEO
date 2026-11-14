@@ -1,7 +1,7 @@
 import { PassThrough } from 'stream'
 
-import { renderSync } from '@hermes/ink'
-import type { ImageRenderResult } from '@hermes/shared/gateway-events'
+import { renderSync } from '@anakot/ink'
+import type { ImageRenderResult } from '@anakot/shared/gateway-events'
 import React from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 

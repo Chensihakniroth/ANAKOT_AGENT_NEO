@@ -101,11 +101,11 @@ def _preflight_check_provider_key(job: dict, cfg: dict) -> Optional[str]:
         return None  # fail-open: never block on a preflight-internal error
 
     requested = job.get("provider") or cron_default_provider(cfg) or None
-    model = job.get("model") or cron_env_setting("HERMES_MODEL") or ""
+    model = job.get("model") or cron_env_setting("ANAKOT_MODEL") or ""
 
-    from hermes_cli.auth import AuthError, is_rate_limited_auth_error
+    from anakot_cli.auth import AuthError, is_rate_limited_auth_error
     try:
-        from hermes_cli.runtime_provider import resolve_runtime_provider
+        from anakot_cli.runtime_provider import resolve_runtime_provider
         kwargs = {"requested": requested, "target_model": model}
         if job.get("base_url"):
             kwargs["explicit_base_url"] = job.get("base_url")
@@ -117,8 +117,8 @@ def _preflight_check_provider_key(job: dict, cfg: dict) -> Optional[str]:
             return None
         return (
             f"provider credential missing: {exc} {_credential_store_scope_label()}. "
-            "Set the provider API key in .env (or `hermes setup`) for that home, or pin a "
-            "working provider via `hermes cron edit "
+            "Set the provider API key in .env (or `anakot setup`) for that home, or pin a "
+            "working provider via `anakot cron edit "
             f"{job.get('id')} --provider <p>`."
         )
     except Exception:
@@ -127,16 +127,16 @@ def _preflight_check_provider_key(job: dict, cfg: dict) -> Optional[str]:
 
 
 def _credential_store_scope_label() -> str:
-    """``[profile '<name>', HERMES_HOME <path>]`` for the home this preflight read credentials from.
+    """``[profile '<name>', ANAKOT_HOME <path>]`` for the home this preflight read credentials from.
 
     The verdict must name the store it judged: a scheduler process whose home differs from the
-    shell where "the same credential works" (Docker HOME vs HERMES_HOME, a multiplexed satellite
+    shell where "the same credential works" (Docker HOME vs ANAKOT_HOME, a multiplexed satellite
     profile, a gateway launched without the shell's env) otherwise reports a bare "No credentials
     stored" that cannot be told apart from a real login gap (#116213).
     """
-    from hermes_cli.profiles import get_active_profile_name
-    from hermes_constants import get_hermes_home
-    return f"[profile '{get_active_profile_name() or 'default'}', HERMES_HOME {get_hermes_home()}]"
+    from anakot_cli.profiles import get_active_profile_name
+    from anakot_constants import get_anakot_home
+    return f"[profile '{get_active_profile_name() or 'default'}', ANAKOT_HOME {get_anakot_home()}]"
 
 
 def _primary_profile_routes_for_current_home() -> list:
@@ -161,16 +161,16 @@ def _primary_route_tables_for_current_home():
     dispatch table from different reads. ``([], [])`` if this IS the primary home; ``([], None)``
     if the read fails — no route then lends the shared bot (fail closed)."""
     try:
-        from hermes_constants import get_default_hermes_root, get_hermes_home
-        primary_home = get_default_hermes_root()
-        current_home = _sched.Path(get_hermes_home())
+        from anakot_constants import get_default_anakot_root, get_anakot_home
+        primary_home = get_default_anakot_root()
+        current_home = _sched.Path(get_anakot_home())
         if (
             primary_home.expanduser().resolve(strict=False)
             == current_home.expanduser().resolve(strict=False)
         ):
             return [], []  # this IS the primary home — nothing to consult
 
-        from hermes_cli.profiles import profile_matches_home
+        from anakot_cli.profiles import profile_matches_home
         routes = _primary_routes(primary_home)
         return ([route for route in routes if route.enabled and profile_matches_home(route.profile)],
                 [route for route in routes if route.enabled and route.bot_profile is None])
@@ -182,7 +182,7 @@ def _primary_route_tables_for_current_home():
 def _primary_routes(primary_home) -> list:
     """Every ``profile_routes`` entry of the primary home, most-specific-first (dispatch order)."""
     # Same layers the primary gateway's own loader reads: routes pinned in the managed scope
-    # (/etc/hermes/config.yaml) never reached the raw user-file read (#121212), so preflight
+    # (/etc/anakot/config.yaml) never reached the raw user-file read (#121212), so preflight
     # false-blocked and routed delivery failed closed on centrally-managed installs.
     from gateway.config_loader import read_yaml_layers
     # The caller runs inside the SATELLITE's secret scope (the gateway drain walks satellites under
@@ -376,7 +376,7 @@ def _preflight_check_delivery(job: dict) -> Optional[str]:
             return (
                 f"delivery platform '{platform_name}' has no gateway "
                 "credentials configured (not connected). Configure it via "
-                "`hermes setup` or change the job's `deliver` target."
+                "`anakot setup` or change the job's `deliver` target."
             )
     return None
 
@@ -433,7 +433,7 @@ def _empty_requested_mcp_toolsets(job: dict, cfg: dict) -> Optional[str]:
     requested = [str(name) for name in (job.get("enabled_toolsets") or [])]
     if not requested:
         return None
-    from hermes_cli.tools_config import enabled_mcp_server_names
+    from anakot_cli.tools_config import enabled_mcp_server_names
     from toolsets import resolve_toolset
     from tools.mcp_tool_discovery import mcp_server_reconnecting
     missing = [name for name in requested

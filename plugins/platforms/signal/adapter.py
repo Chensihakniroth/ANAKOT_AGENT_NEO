@@ -458,7 +458,7 @@ class SignalAdapter(BasePlatformAdapter):
         reply_to_author = self._extract_quote_author(quote_data)
         attachments_data = data_message.get("attachments", [])
         media_urls, media_types = [], []
-        # The fetch copies a sender-chosen file into Hermes' cache (AAC is remuxed through ffmpeg): only the
+        # The fetch copies a sender-chosen file into Anakot' cache (AAC is remuxed through ffmpeg): only the
         # gateway's explicit True permits it (dm_allow_from misses pairing and global allowlists). signal-cli
         # has already stored it unless its daemon runs with --ignore-attachments. The text still dispatches so
         # the runner applies denial/pairing.

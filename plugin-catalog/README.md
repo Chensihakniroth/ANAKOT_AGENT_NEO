@@ -1,9 +1,9 @@
-# Hermes Plugin Catalog
+# Anakot Plugin Catalog
 
-Curated, Nous-approved Hermes plugins. Each YAML file in this directory
+Curated, Nous-approved Anakot plugins. Each YAML file in this directory
 (except `removed.yaml`) is one catalog entry, discoverable via
-`hermes plugins catalog` / `hermes plugins search` and installable with
-`hermes plugins install <name>`.
+`anakot plugins catalog` / `anakot plugins search` and installable with
+`anakot plugins install <name>`.
 
 ## Admission policy
 
@@ -12,7 +12,7 @@ meaningful:
 
 <!-- admission-rules:start (mirrored in website/docs/developer-guide/plugins/catalog-submission.md; tests/website/test_catalog_rules_mirror.py keeps them identical) -->
 1. **Human-merged gate.** Entries are added *only* via a PR to the
-   `hermes-agent` repository, reviewed and merged by a maintainer. There is
+   `anakot-agent` repository, reviewed and merged by a maintainer. There is
    no self-serve registry, no automated ingestion.
 2. **Exact SHA pins are mandatory.** Every entry pins a full 40-character
    commit SHA. Branches, tags, and short SHAs are rejected by the loader.
@@ -22,7 +22,7 @@ meaningful:
    remote `plugin.js` loaders). The exact SHA pin *is* the trust model; a
    self-updater lets an installed copy move to a commit nobody reviewed.
    Updates reach users only through a SHA-bump PR here plus
-   `hermes plugins update <name>`. Keep the updater in the standalone
+   `anakot plugins update <name>`. Keep the updater in the standalone
    distribution if you want one; strip it from the catalog build. Downloading
    a separate third-party tool pinned by checksum is not a self-updater; a
    maintainer allows such a file by repo, pinned sha and file hash in
@@ -33,7 +33,7 @@ meaningful:
 5. **Owner-or-major-contributor submissions, or a maintainer-curated sweep.**
    An entry may be submitted by the plugin repository's owner or a major
    contributor to it; drive-by submissions of third-party repos are declined.
-   Hermes maintainers may also add entries in batches from a reviewed sweep
+   Anakot maintainers may also add entries in batches from a reviewed sweep
    of community plugins (every pin validated and scanned at the pinned
    commit, self-updater and credential-store checks run, English-first UI).
    Authors of swept-in entries keep control: a PR from the owner adjusting
@@ -43,7 +43,7 @@ meaningful:
    (tools, hooks, middleware, env vars) must match what the plugin actually
    registers at the pinned commit. Validation fails the entry otherwise —
    undeclared capability creep is treated as a security issue.
-7. **The install scanner runs at admission.** `hermes plugins validate` includes
+7. **The install scanner runs at admission.** `anakot plugins validate` includes
    the `security scan` check: `dangerous` fails the entry; `caution` findings
    appear as warnings in the CI log and the reviewer reads them before merging.
    In exchange, installs at the pinned SHA accept `caution` without a prompt
@@ -55,35 +55,35 @@ meaningful:
    `Object.defineProperty(...prototype`), which reviewers check by hand (the
    lint does not); a bundled library setting fields on classes it declares
    itself (three.js and the like) is fine,
-   no `eval`/`new Function`, no `import()` of anything but `@hermes/plugin-sdk`
+   no `eval`/`new Function`, no `import()` of anything but `@anakot/plugin-sdk`
    / `react` (app bundle chunks, blob or http URLs included), no script-tag
    injection, no reaching into the app's internal stores or its own markup
    (querying `data-slot` / `data-tour` / `data-sidebar` / `data-testid`
    elements from `document`, or a `document.body` MutationObserver, to restyle,
-   hide, click or rewrite core UI). `hermes plugins validate` refuses these at
+   hide, click or rewrite core UI). `anakot plugins validate` refuses these at
    admission (`desktop surface` check) and warns, for the reviewer, on raw
-   `window.hermesDesktop` bridge calls and on the app's markup selected any
+   `window.anakotDesktop` bridge calls and on the app's markup selected any
    other way (`[data-slot]`, `[data-tree-*]` in CSS text or `closest()`); a
    plugin that needs a capability the SDK lacks asks for an SDK hook instead
    of patching around it.
-9. **No runtime overrides of Hermes core.** A listed plugin extends Hermes only
+9. **No runtime overrides of Anakot core.** A listed plugin extends Anakot only
    through public surfaces: hooks, middleware, provider profiles and the
    other `register_*` APIs, and Desktop SDK slots and routes. It must not
    replace, wrap or rebind core functions, methods, module attributes or
    private dicts in place (`AIAgent.<method> = ...`, `setattr(server, ...)`,
    `sys.modules[...]`, writes into a core module's tables). Two plugins
    patching the same seam silently break each other, and every core release
-   can break both. `hermes plugins validate` refuses these at admission (`no
+   can break both. `anakot plugins validate` refuses these at admission (`no
    core override` check), and warns (without failing) on each import of an
    undocumented core module and each call to a private method of a core
    object it is handed (`db._execute_write(...)`), by file and line. If the hook you need does not
    exist, open an issue describing it: we would rather add the seam than list
    a patch.
-10. **Dependency security policy is the plugin's.** Hermes's 3-day
-   `exclude-newer` release-age check covers Hermes's own dependencies only, at
-   the time Hermes locks them; a plugin's `python_dependencies` /
+10. **Dependency security policy is the plugin's.** Anakot's 3-day
+   `exclude-newer` release-age check covers Anakot's own dependencies only, at
+   the time Anakot locks them; a plugin's `python_dependencies` /
    `pyproject.toml` install under the plugin's policy (no age check), inside
-   Hermes's core constraints: Hermes's exact pins cannot move. Reviewers read the
+   Anakot's core constraints: Anakot's exact pins cannot move. Reviewers read the
    dependency list at the pinned SHA: bare floors (`>=X` with no upper bound)
    and floors on the newest release get a request for the oldest
    API-compatible floor plus an upper bound, and authors are strongly
@@ -91,26 +91,26 @@ meaningful:
    their CI) — see the developer guide's *Dependency security policy*. A
    recent floor alone is not grounds to hold an entry.
 
-11. **Credentials come through Hermes, never from files.** A plugin gets
-   secrets only through Hermes's routes. Its declared `requires_env` and
+11. **Credentials come through Anakot, never from files.** A plugin gets
+   secrets only through Anakot's routes. Its declared `requires_env` and
    `config_schema` secrets are read with `agent.secret_scope.get_secret(NAME)`,
    which honours the active profile (a bare `os.environ` read can pick up another
    profile's key under multiplexing). A subscription sign-in (Codex / ChatGPT
    today) is used only through `credentialed_provider_request` with
-   `requires_auth`, so Hermes attaches the token and the plugin never holds it. An
+   `requires_auth`, so Anakot attaches the token and the plugin never holds it. An
    OAuth client for a third-party API (the user's own Google Cloud client, for
    example) is declared under `oauth:` in `plugin.yaml`, signed in with
-   `hermes auth add <plugin>:<id>` and used through the same helper; Hermes
+   `anakot auth add <plugin>:<id>` and used through the same helper; Anakot
    stores and refreshes that token too. Its `authorize_url`, `token_url` and
-   `hosts` are `https` only, and its `hosts` belong to the API the scopes are for. A plugin never reads `.env` files, Hermes's `auth.json`, another tool's login (a
+   `hosts` are `https` only, and its `hosts` belong to the API the scopes are for. A plugin never reads `.env` files, Anakot's `auth.json`, another tool's login (a
    vendor CLI's token file, a browser profile, a keychain) or any other
    credential store directly, and never refreshes, rotates or writes OAuth tokens
-   or presents itself as another vendor's client. If Hermes has no route for a
-   credential a plugin needs, ask for one in a Hermes issue or PR; the plugin
+   or presents itself as another vendor's client. If Anakot has no route for a
+   credential a plugin needs, ask for one in a Anakot issue or PR; the plugin
    does not work around it.
 12. **Approvals and unattended runs are respected.** A plugin never routes around
-   Hermes's approval system: no auto-approving, no disabling guards, and no
-   spawning Hermes or shell children that inherit YOLO or non-interactive mode
+   Anakot's approval system: no auto-approving, no disabling guards, and no
+   spawning Anakot or shell children that inherit YOLO or non-interactive mode
    to run commands nobody approved. Anything that waits for a person (a prompt,
    an OAuth browser flow) fails cleanly or times out under cron, the messaging
    gateway and other unattended runs instead of hanging the agent.
@@ -123,17 +123,17 @@ meaningful:
 14. **Compatibility metadata is truthful.** `requires_hermes` is a SemVer floor
    (`">=0.21.5"`), never a CalVer date, and never newer than the current release.
    The entry's `requires_hermes` is enforced: an install by catalog name refuses
-   on a Hermes it rejects, and `hermes plugins update` keeps an installed plugin
-   at its current pin until Hermes is updated. Declare the same floor in
-   `plugin.yaml` as well, because older Hermes versions enforce only that one
+   on a Anakot it rejects, and `anakot plugins update` keeps an installed plugin
+   at its current pin until Anakot is updated. Declare the same floor in
+   `plugin.yaml` as well, because older Anakot versions enforce only that one
    (the loader skips the plugin when it does not match). A portable package
    (`plugin.json`) has no `requires_hermes` field, so the catalog entry's
    `requires_hermes` is its only floor: set one when the package needs a recent
-   Hermes (a server declaration key an older release ignores). `version` matches the
-   pinned code, and Python dependencies resolve under Hermes's core constraints
-   (`hermes plugins validate --install-deps` is what CI runs).
+   Anakot (a server declaration key an older release ignores). `version` matches the
+   pinned code, and Python dependencies resolve under Anakot's core constraints
+   (`anakot plugins validate --install-deps` is what CI runs).
 15. **No skins or forks of bundled plugins.** A change to a bundled plugin is a
-   PR against `hermes-agent`, not a competing listing, and vendor-lookalike skins
+   PR against `anakot-agent`, not a competing listing, and vendor-lookalike skins
    are not listed under Nous branding.
 16. **One listing per plugin lineage.** A fork of a listed community plugin is
    listed only when it is materially different from the original: a different
@@ -165,10 +165,10 @@ meaningful:
    `browser_vault` login backend (`ctx.register_login_backend`) is listed only at
    `tier: verified`, submitted from the password-manager vendor's own repository
    by that vendor, or at `tier: official` when Nous maintains it. Community-tier,
-   fork and third-party listings of a login backend are declined. Hermes enforces
+   fork and third-party listings of a login backend are declined. Anakot enforces
    the same rule when the plugin loads: a login backend is accepted only from a
-   plugin bundled with Hermes or installed from this catalog at `verified` or
-   `official` tier and at the reviewed pin, as recorded in Hermes's own install
+   plugin bundled with Anakot or installed from this catalog at `verified` or
+   `official` tier and at the reviewed pin, as recorded in Anakot's own install
    record (never a file inside the plugin). Local-directory, Git URL, `--ref`,
    `--allow-removed`, project and pip installs are refused, and no setting
    relaxes it.
@@ -229,18 +229,18 @@ capabilities:
 
 `tier` says who stands behind an entry. `official`: maintained by NousResearch.
 `verified`: verified by the Nous team to come from the company that makes what
-the plugin integrates into Hermes, and that company is well known or reputable.
+the plugin integrates into Anakot, and that company is well known or reputable.
 `community`: everything else. Only Nous maintainers set `official` or
 `verified`; a contributor PR that sets either is changed to `community` in
 review (maintainer review is the gate; no CI check inspects the tier value).
 
-`default: true` ships an entry to every Hermes home: it is installed at its pin
+`default: true` ships an entry to every Anakot home: it is installed at its pin
 and enabled at the end of every install (source installer, Desktop, Docker, Nix,
-Termux: on first start where the installer runs no Hermes code), again by
-`hermes update` for a default added since, and when a profile is created. Each
+Termux: on first start where the installer runs no Anakot code), again by
+`anakot update` for a default added since, and when a profile is created. Each
 home gets it once: a user who removes or disables it keeps that choice through
 every later update. Only `official` and `verified` entries may set it; the
-validator refuses it elsewhere and Hermes ignores it on any other tier. Homes
+validator refuses it elsewhere and Anakot ignores it on any other tier. Homes
 with `security.allow_lazy_installs: false` fetch nothing.
 
 `version`, `image`, `screenshots` and `readme` are cosmetic: none is parsed or

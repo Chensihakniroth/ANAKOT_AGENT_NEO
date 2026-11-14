@@ -41,7 +41,7 @@ def room_watch(tmp_path, monkeypatch):
     home.mkdir()
     (home / "config.yaml").write_text("display: {}\n")
     shared = tmp_path / "shared-state.db"
-    monkeypatch.setattr(server, "_hermes_home", str(home))
+    monkeypatch.setattr(server, "_anakot_home", str(home))
     monkeypatch.setattr(server, "_served_profile_homes", set())
     monkeypatch.setattr(server, "_cfg_cache", None)
     for name, value in (("_change_sigs", {}), ("_change_checked_at", {}), ("_change_broadcast_at", {}),

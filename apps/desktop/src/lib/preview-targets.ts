@@ -1,4 +1,4 @@
-import { fileUrlToNativePath } from '@hermes/shared'
+import { fileUrlToNativePath } from '@anakot/shared'
 
 import { isWindowsAbsolutePath } from '@/lib/path-compare'
 

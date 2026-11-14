@@ -2,7 +2,7 @@
 
 Validates a schema-text-only change (each rule stated once instead of in both the tool description and a
 parameter description) on the tools where losing a rule would cost the most. Real in-process `AIAgent`s
-from two plain checkouts (base = main, pr = the branch), one subprocess per cell with a temp `HERMES_HOME`,
+from two plain checkouts (base = main, pr = the branch), one subprocess per cell with a temp `ANAKOT_HOME`,
 host side effects sandboxed by `../core_tool_deferral/sandbox.py`.
 
 ## Tasks
@@ -36,12 +36,12 @@ file/terminal as competition.
 git worktree add .worktrees/main-snap origin/main
 export SDD_BASE_TREE=$PWD/.worktrees/main-snap SDD_PR_TREE=$PWD
 export SDD_PYTHON=<the install's committed env python>
-export SDD_RESULTS=$HERMES_HOME/cache/scratch/schema_dedupe
+export SDD_RESULTS=$ANAKOT_HOME/cache/scratch/schema_dedupe
 python3 evals/schema_dedupe/run.py anthropic/claude-fable-5.2 3 --parallel=8
 python3 evals/schema_dedupe/run.py --report
 ```
 
-Inference defaults to the Nous Portal agent key, read fresh from `$HERMES_HOME/auth.json` for every cell
+Inference defaults to the Nous Portal agent key, read fresh from `$ANAKOT_HOME/auth.json` for every cell
 (read-only). Set `SDD_INFERENCE_URL` + `SDD_INFERENCE_KEY` for any other OpenAI-compatible endpoint.
 Errored cells score 0 and stay in the denominator; exit 3 (no model turn, or a manage_connections call
 that bypassed the stub) is an infra failure and is never written.
@@ -57,8 +57,8 @@ that bypassed the stub) is an infra failure and is never written.
 - **A seeded memory entry about tmux makes models start tmux.** `TMUX_TMPDIR` points inside the cell, and
   every process still running from the cell directory is killed by PID at the end.
 - **A weak model can walk out of the workspace.** The sandbox moves HOME, it does not hide absolute paths:
-  three qwen cells read the operator's real `~/.hermes` (read-only commands). Run from a scratch root that
-  does not sit under the real Hermes home when that matters.
+  three qwen cells read the operator's real `~/.anakot` (read-only commands). Run from a scratch root that
+  does not sit under the real Anakot home when that matters.
 - **Dollar columns depend on provider cache warmth**, which depends on which arm's prefix was sent first
   and how recently. Compare tokens; treat dollars as the bill, not as an arm difference.
 

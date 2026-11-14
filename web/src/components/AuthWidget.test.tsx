@@ -69,7 +69,7 @@ describe("AuthWidget integration (real getAuthMe)", () => {
   function setupWindow(overrides: Partial<Window> = {}) {
     vi.stubGlobal("window", {
       __HERMES_SESSION_TOKEN__: undefined,
-      __HERMES_BASE_PATH__: "",
+      __ANAKOT_BASE_PATH__: "",
       location: { assign: vi.fn(), pathname: "/", search: "" },
       ...overrides,
     });

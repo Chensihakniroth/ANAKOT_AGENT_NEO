@@ -9,7 +9,7 @@ parent, having ended ``session_switch`` while children still ran, could not re-t
 thread.
 
 The create path already refuses to copy routing columns into a fork
-(``tests/hermes_state/test_delegate_child_routing_inheritance.py``, #92859/#116322), but
+(``tests/anakot_state/test_delegate_child_routing_inheritance.py``, #92859/#116322), but
 recovery had no equivalent guard, so a row that predates that fix — or any writer that set
 the columns, or a restored DB, whose values the sessions upsert preserves — keeps the
 poison live. Recovery is the last gate before user traffic is routed, so it defends the
@@ -29,7 +29,7 @@ import uuid
 
 import pytest
 
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 
 THREAD_ID = "54287"
 PEER = dict(

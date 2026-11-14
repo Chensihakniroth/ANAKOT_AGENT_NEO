@@ -1,7 +1,7 @@
 import { act, cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
-import { getHermesConfig } from '@/api/config'
+import { getAnakotConfig } from '@/api/config'
 import { $desktopBoot } from '@/store/boot'
 import { closeSecondaryGateways } from '@/store/gateway'
 import { $activeGatewayProfile, $profiles, invalidateProfileListFetches, refreshProfiles } from '@/store/profile'
@@ -59,7 +59,7 @@ afterEach(() => {
   $connection.set(null)
   vi.useRealTimers()
   ;(globalThis as { WebSocket: unknown }).WebSocket = originalWebSocket
-  delete (window as { hermesDesktop?: unknown }).hermesDesktop
+  delete (window as { anakotDesktop?: unknown }).anakotDesktop
 })
 
 it.each(['default', 'deleted-workspace'])(
@@ -127,7 +127,7 @@ it.each(['default', 'deleted-workspace'])(
 
     const unsubscribe = () => () => undefined
 
-    ;(window as { hermesDesktop?: unknown }).hermesDesktop = {
+    ;(window as { anakotDesktop?: unknown }).anakotDesktop = {
       api,
       getConnection: async () => connection,
       getGatewayWsUrl: async () => connection.wsUrl,
@@ -152,10 +152,10 @@ it.each(['default', 'deleted-workspace'])(
         onConnectionReady: () => undefined,
         onGatewayReady: () => undefined,
         refreshSessions: async () => undefined,
-        refreshHermesConfig: async () => {
+        refreshAnakotConfig: async () => {
           // Establish a successful authoritative roster, not an empty cache.
           await refreshProfiles()
-          await getHermesConfig($settingsRequestProfile.get()).catch(error => {
+          await getAnakotConfig($settingsRequestProfile.get()).catch(error => {
             configError = error
           })
         }

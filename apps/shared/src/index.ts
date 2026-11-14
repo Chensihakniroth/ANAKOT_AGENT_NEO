@@ -67,7 +67,7 @@ export { fileUrlToNativePath } from './file-url'
 export { compactNumber } from './format'
 export { type FuzzyMatch, fuzzyRank, fuzzyScore, fuzzyScoreMulti, type RankedItem } from './fuzzy'
 export * from './gateway-events'
-export { HERMES_CLOUD_MANAGED, isHermesCloudUrl } from './hermes-cloud'
+export { ANAKOT_CLOUD_MANAGED, isAnakotCloudUrl } from './anakot-cloud'
 export {
   applyDocumentLocale,
   type EndonymLocale,
@@ -137,7 +137,7 @@ export {
 export { randomUuid } from './session-http-mutations'
 export { skillInvocationText } from './skill-scaffold'
 export {
-  type HermesSkin,
+  type AnakotSkin,
   SKIN_BRANDING_TOKENS,
   SKIN_COLOR_TOKENS,
   type SkinBranding,
@@ -202,12 +202,12 @@ export { type UpdateDebt, updateDebt, type UpdateDebtReceipt, type UpdateDebtSte
 export { mergeUsage, usageFromTick, type UsageTickPayload } from './usage-tick'
 export {
   BROWSER_NATIVE_DIAL,
-  buildHermesWebSocketUrl,
+  buildAnakotWebSocketUrl,
   type GatewayAuthMode,
   GatewayReauthRequiredError,
   type GatewayWsConnection,
   type GatewayWsUrlResult,
-  type HermesWebSocketUrlOptions,
+  type AnakotWebSocketUrlOptions,
   isGatewayReauthRequired,
   normalizeBasePath,
   resolveGatewayWsUrl,

@@ -8,7 +8,7 @@ import {
   toggleFavoriteModel
 } from './favorite-models'
 
-const STORAGE_KEY = 'hermes.desktop.favorite-models'
+const STORAGE_KEY = 'anakot.desktop.favorite-models'
 
 beforeEach(() => {
   window.localStorage.clear()

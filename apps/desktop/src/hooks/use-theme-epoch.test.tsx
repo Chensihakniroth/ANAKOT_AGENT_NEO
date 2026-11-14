@@ -29,9 +29,9 @@ afterEach(async () => {
   localStorage.clear()
   root.style.cssText = originalStyle
   root.className = originalClass
-  delete root.dataset.hermesMode
-  delete root.dataset.hermesTheme
-  window.document.getElementById('hermes-desktop-custom-css')?.remove()
+  delete root.dataset.anakotMode
+  delete root.dataset.anakotTheme
+  window.document.getElementById('anakot-desktop-custom-css')?.remove()
   await flush()
 })
 
@@ -103,14 +103,14 @@ describe('theme repaint subscriptions', () => {
       () => root.style.removeProperty('--dt-base-size'),
       () => root.classList.toggle('dark'),
       () => {
-        root.dataset.hermesMode = 'dark'
+        root.dataset.anakotMode = 'dark'
       },
       () => {
-        root.dataset.hermesTheme = 'authored'
+        root.dataset.anakotTheme = 'authored'
       },
       // applyTheme uses these writes to announce customCSS-only edits too.
       () => {
-        root.dataset.hermesTheme = 'authored'
+        root.dataset.anakotTheme = 'authored'
       }
     ]
 
@@ -123,7 +123,7 @@ describe('theme repaint subscriptions', () => {
 
   it('keeps geometry-driven authored CSS observable without changing its consumers', async () => {
     const style = window.document.createElement('style')
-    style.id = 'hermes-desktop-custom-css'
+    style.id = 'anakot-desktop-custom-css'
     style.textContent = ':root { --author-width: var(--workspace-left); }'
     window.document.head.append(style)
     const repaint = vi.fn()
@@ -163,11 +163,11 @@ describe('theme repaint subscriptions', () => {
       }, [])
       useEffect(() => {
         paints({
-          skin: root.dataset.hermesTheme,
-          mode: root.dataset.hermesMode,
+          skin: root.dataset.anakotTheme,
+          mode: root.dataset.anakotMode,
           primary: root.style.getPropertyValue('--theme-primary'),
           font: root.style.getPropertyValue('--dt-font-sans'),
-          css: window.document.getElementById('hermes-desktop-custom-css')?.textContent
+          css: window.document.getElementById('anakot-desktop-custom-css')?.textContent
         })
       }, [epoch])
 
@@ -182,7 +182,7 @@ describe('theme repaint subscriptions', () => {
     )
     await flush()
     expect(paints).toHaveBeenLastCalledWith(
-      expect.objectContaining({ skin: root.dataset.hermesTheme, mode: root.dataset.hermesMode })
+      expect.objectContaining({ skin: root.dataset.anakotTheme, mode: root.dataset.anakotMode })
     )
 
     await act(async () => setTheme('everforest'))

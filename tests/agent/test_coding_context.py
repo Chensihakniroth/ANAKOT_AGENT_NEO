@@ -250,7 +250,7 @@ class TestRuntimeMode:
         home = tmp_path / "home"
         home.mkdir()
         (home / "config.yaml").write_text(json.dumps({"agent": {"coding_context": "auto"}}))
-        monkeypatch.setenv("HERMES_HOME", str(home))
+        monkeypatch.setenv("ANAKOT_HOME", str(home))
         mode = cc.resolve_runtime_mode(platform="cli", cwd=tmp_path, config={"agent": {"coding_context": "focus"}})
         assert mode.toolset_selection() == [cc.CODING_TOOLSET]
 
@@ -277,7 +277,7 @@ class TestEditFormatSteering:
         # editors) steer to replace, not neutral.
         for m in (
             "google/gemini-3-pro", "deepseek-v3.2", "qwen3-coder",
-            "moonshot/kimi-k2", "zai/glm-4.6", "nousresearch/hermes-4-405b",
+            "moonshot/kimi-k2", "zai/glm-4.6", "nousresearch/anakot-4-405b",
         ):
             assert cc._model_family(m) == "replace"
         # Unknown family and no model both fall through to neutral wording.

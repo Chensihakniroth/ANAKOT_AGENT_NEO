@@ -1,4 +1,4 @@
-import type { TranslationOverride } from '@hermes/shared/i18n'
+import type { TranslationOverride } from '@anakot/shared/i18n'
 
 import type { Translations } from './types'
 
@@ -10,7 +10,7 @@ export const jaLocalModels: TranslationOverride<Translations['settings']['localM
   serverRunning: '実行中',
   runtimeInstalled: 'llama.cpp ランタイムをインストール済み',
   runtimeInstalledDetail: (tag, backend) =>
-    `ビルド ${tag}、${backend} バックエンド。サーバーは Hermes が起動・管理します。`,
+    `ビルド ${tag}、${backend} バックエンド。サーバーは Anakot が起動・管理します。`,
   installTitle: 'ローカルランタイムをインストール',
   installDetail:
     'llama.cpp 推論エンジン（数百 MB）をダウンロードします。ダウンロードしたモデルはすべてこのマシン上で動作します——アカウント不要、データが外部に送られることはありません。',
@@ -53,7 +53,7 @@ export const jaLocalModels: TranslationOverride<Translations['settings']['localM
   updateDetail: (next, current) =>
     `新しい llama.cpp ビルド（${next}）をインストールできます——現在は ${current} です。ダウンロード中もモデルは引き続き使えます。`,
   updateSameBuildDetail: tag =>
-    `Hermes は llama.cpp ${tag} を実行に必要なファイル付きで提供するようになりました。更新するとエンジンを再ダウンロードします。ダウンロード中もモデルは引き続き使えます。`,
+    `Anakot は llama.cpp ${tag} を実行に必要なファイル付きで提供するようになりました。更新するとエンジンを再ダウンロードします。ダウンロード中もモデルは引き続き使えます。`,
   updateAction: 'エンジンを更新',
   updating: 'エンジンを更新中…',
   upToDateTitle: 'エンジンは最新です',

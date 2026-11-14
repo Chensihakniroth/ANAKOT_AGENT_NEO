@@ -5,7 +5,7 @@ on:
   # pushed ref (the ref this is dispatched on): `gh workflow run
   # desktop-bundle-smoke.yml --ref <test-branch> -f platform=win32 -f arch=x64
   # -f format=msix -f sha=<built commit> -f commit-build=true
-  # -f public-base=https://hermes-assets.nousresearch.com/`. No rebuild per test.
+  # -f public-base=https://anakot-assets.nousresearch.com/`. No rebuild per test.
   workflow_dispatch:
     inputs:
       platform: {required: true, type: string}
@@ -130,7 +130,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$SMOKE_ROOT/out"
-          product=HermesBundled
+          product=AnakotBundled
           if [ -n "${CHANNEL_BUILD:-}" ]; then
             test "$COMMIT_BUILD" = false
             test -z "$RELEASE_TAG"

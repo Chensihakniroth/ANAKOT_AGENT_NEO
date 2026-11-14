@@ -19,7 +19,7 @@ import urllib.request
 
 
 def backend(port):
-    from hermes_cli.web_server import app, start_server
+    from anakot_cli.web_server import app, start_server
     from tui_gateway import server as gw
 
     work = {}
@@ -137,7 +137,7 @@ memory:
 ''')
     env = {'PATH': os.environ.get('PATH', ''), 'HOME': str(home / 'user'), 'LANG': 'C.UTF-8'}
     (home / 'user').mkdir()
-    env.update(HERMES_HOME=str(home), HERMES_DASHBOARD_SESSION_TOKEN='lease-probe',
+    env.update(ANAKOT_HOME=str(home), ANAKOT_DASHBOARD_SESSION_TOKEN='lease-probe',
                PYTHONPATH=str(repo), OPENAI_API_KEY='probe-key')
     processes = []
     logs = []

@@ -17,12 +17,12 @@ from tests.gateway.test_status_model_truth import _runner_with_old_usage
 async def _multiplexed_secondary_profile(tmp_path, monkeypatch):
     from gateway import run
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".anakot"
     secondary = home / "profiles" / "secondary"
     secondary.mkdir(parents=True)
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
-    monkeypatch.setattr(run, "_hermes_home", home)
+    monkeypatch.setattr(run, "_anakot_home", home)
     (home / "config.yaml").write_text(json.dumps({"model": {"default": "launch-model", "provider": "openrouter"}}))
     (secondary / "config.yaml").write_text(json.dumps({"model": {"default": "secondary-model",
                                                                  "provider": "openrouter"}}))
@@ -67,9 +67,9 @@ async def _frozen_local_launch_policy(tmp_path, monkeypatch):
     from gateway.session_authority import initialize_session_authority
     from gateway.session_controls import AuthorityConnection
     from gateway.session_local import create_local_session
-    from hermes_state import AsyncSessionDB, SessionDB
-    monkeypatch.setattr(run, "_hermes_home", tmp_path)
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    from anakot_state import AsyncSessionDB, SessionDB
+    monkeypatch.setattr(run, "_anakot_home", tmp_path)
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     (tmp_path / "config.yaml").write_text(json.dumps({
         "model": {"provider": "custom", "default": "session-model", "base_url": "http://127.0.0.1:9/v1",
                   "api_key": "loopback-only"},

@@ -1,8 +1,8 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type * as HermesApi from '@/hermes'
-import { getActionStatus, runDebugShare, setApiRequestConnection, setApiRequestProfile } from '@/hermes'
+import type * as AnakotApi from '@/anakot'
+import { getActionStatus, runDebugShare, setApiRequestConnection, setApiRequestProfile } from '@/anakot'
 import { $desktopActionTasks } from '@/store/activity'
 import { $confirmRequest, settleConfirm } from '@/store/confirm'
 
@@ -22,8 +22,8 @@ function spawn(name: string) {
   return Promise.resolve({ name, ok: true, pid: 1000 + runs[name] })
 }
 
-vi.mock('@/hermes', async importOriginal => ({
-  ...(await importOriginal<typeof HermesApi>()),
+vi.mock('@/anakot', async importOriginal => ({
+  ...(await importOriginal<typeof AnakotApi>()),
   getActionStatus: vi.fn(async (name: string) => ({
     exit_code: running[name] ? null : 0,
     lines: [`${name} run ${runs[name]} output`],
@@ -111,9 +111,9 @@ describe('MaintenancePanel debug share', () => {
   // Profile shortcuts stay live behind the modal: the upload must publish the
   // logs of the profile the user confirmed for, not whichever is active later.
   it('uploads the profile that was active when the confirmation opened', async () => {
-    const actual = await vi.importActual<typeof HermesApi>('@/hermes')
+    const actual = await vi.importActual<typeof AnakotApi>('@/anakot')
     const api = vi.fn(async (_request: { connectionId?: string; path: string; profile?: string }) => ({ auto_delete_seconds: 21600, failures: [], ok: true, redacted: true, urls: {} }))
-    vi.stubGlobal('hermesDesktop', { api })
+    vi.stubGlobal('anakotDesktop', { api })
     vi.mocked(runDebugShare).mockImplementationOnce(actual.runDebugShare)
     setApiRequestConnection('gw-a')
     setApiRequestProfile('alpha')

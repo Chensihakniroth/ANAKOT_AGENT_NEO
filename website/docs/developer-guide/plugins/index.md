@@ -1,16 +1,16 @@
 ---
 sidebar_label: "Build a Plugin"
 slug: /developer-guide/plugins
-title: "Build a Hermes Plugin"
-description: "Step-by-step guide to building a complete Hermes plugin with tools, hooks, data files, and skills"
+title: "Build a Anakot Plugin"
+description: "Step-by-step guide to building a complete Anakot plugin with tools, hooks, data files, and skills"
 ---
 
-# Build a Hermes Plugin
+# Build a Anakot Plugin
 
-This guide walks through building a complete Hermes plugin from scratch. By the end you'll have a working plugin with multiple tools, lifecycle hooks, shipped data files, and a bundled skill — everything the plugin system supports.
+This guide walks through building a complete Anakot plugin from scratch. By the end you'll have a working plugin with multiple tools, lifecycle hooks, shipped data files, and a bundled skill — everything the plugin system supports.
 
 :::info Not sure which guide you need?
-Hermes has several distinct pluggable interfaces — some use Python `register_*` APIs, others are config-driven or drop-in directories. Use this map first:
+Anakot has several distinct pluggable interfaces — some use Python `register_*` APIs, others are config-driven or drop-in directories. Use this map first:
 
 | If you want to add… | Read |
 |---|---|
@@ -30,26 +30,26 @@ Hermes has several distinct pluggable interfaces — some use Python `register_*
 | A **secret-manager backend** (vault / password manager / OS keystore) | [Secret Source Plugins](../secret-source-plugin.md) |
 | A **dashboard OIDC/auth provider** | [Web Dashboard — custom providers](../../user-guide/features/web-dashboard.md#custom-providers) — `ctx.register_dashboard_auth_provider()` |
 | A **TTS backend** (any CLI — Piper, VoxCPM, Kokoro, voice cloning, …) | [TTS custom command providers](../../user-guide/features/tts.md#custom-command-providers) — config-driven, no Python needed |
-| An **STT backend** (custom whisper / ASR CLI) | [Voice Message Transcription](../../user-guide/features/tts.md#voice-message-transcription-stt) — set `HERMES_LOCAL_STT_COMMAND` to an argv-tokenized template |
+| An **STT backend** (custom whisper / ASR CLI) | [Voice Message Transcription](../../user-guide/features/tts.md#voice-message-transcription-stt) — set `ANAKOT_LOCAL_STT_COMMAND` to an argv-tokenized template |
 | **External tools via MCP** (filesystem, GitHub, Linear, any MCP server) | [MCP](../../user-guide/features/mcp.md) — declare `mcp_servers.<name>` in `config.yaml` |
-| **Gateway event hooks** (fire on startup, session events, commands) | [Event Hooks](../../user-guide/features/hooks.md#gateway-event-hooks) — drop `HOOK.yaml` + `handler.py` into `~/.hermes/hooks/<name>/` |
+| **Gateway event hooks** (fire on startup, session events, commands) | [Event Hooks](../../user-guide/features/hooks.md#gateway-event-hooks) — drop `HOOK.yaml` + `handler.py` into `~/.anakot/hooks/<name>/` |
 | **Shell hooks** (run a shell command on events) | [Shell Hooks](../../user-guide/features/hooks.md#shell-hooks) — declare under `hooks:` in `config.yaml` |
-| **Additional skill sources** (custom GitHub repos, private skill indexes) | [Skills](../../user-guide/features/skills.md) — `hermes skills tap add <repo>` · [Publishing a tap](../../user-guide/features/skills.md#publishing-a-custom-skill-tap) |
+| **Additional skill sources** (custom GitHub repos, private skill indexes) | [Skills](../../user-guide/features/skills.md) — `anakot skills tap add <repo>` · [Publishing a tap](../../user-guide/features/skills.md#publishing-a-custom-skill-tap) |
 | A first-class **core** inference provider (not a plugin) | [Adding Providers](../adding-providers.md) |
 
 See the full [Pluggable interfaces table](../../user-guide/features/plugins.md#pluggable-interfaces--where-to-go-for-each) for a consolidated view of every extension surface including config-driven (TTS, STT, MCP, shell hooks) and drop-in directory (gateway hooks) styles.
 :::
 
 :::caution Third-party-product plugins ship standalone — not into the core tree
-Plugins that integrate **someone else's product or project** — observability/metrics backends, vendor SaaS connectors, analytics dashboards, paid-service tie-ins — are built and distributed as **standalone plugin repos**, not merged into `NousResearch/hermes-agent`. Users install them into `~/.hermes/plugins/` or via a pip entry point; everything in this guide works the same way from a standalone repo. This is a coupling-and-maintenance decision (the core moves fast and we don't own your backend), not a quality bar — a plugin can be excellent and still belong in its own repo. Promote it in the Nous Research Discord `#plugins-skills-and-skins` channel. See [CONTRIBUTING.md](https://github.com/NousResearch/hermes-agent/blob/main/CONTRIBUTING.md) for the policy.
+Plugins that integrate **someone else's product or project** — observability/metrics backends, vendor SaaS connectors, analytics dashboards, paid-service tie-ins — are built and distributed as **standalone plugin repos**, not merged into `NousResearch/hermes-agent`. Users install them into `~/.anakot/plugins/` or via a pip entry point; everything in this guide works the same way from a standalone repo. This is a coupling-and-maintenance decision (the core moves fast and we don't own your backend), not a quality bar — a plugin can be excellent and still belong in its own repo. Promote it in the Nous Research Discord `#plugins-skills-and-skins` channel. See [CONTRIBUTING.md](https://github.com/NousResearch/hermes-agent/blob/main/CONTRIBUTING.md) for the policy.
 :::
 
 :::tip Already built in: check here before you hand-roll it
-Hermes already ships these for plugin authors:
+Anakot already ships these for plugin authors:
 
-- **Run the catalog check locally:** `hermes plugins validate /path/to/your-plugin --install-deps` runs the same check catalog CI runs. See [Submitting to the Plugin Catalog](./catalog-submission.md).
-- **Test your plugin in isolation:** `hermes plugins doctor [path-or-id]` runs the same discovery, manifest parser, `register(ctx)` and registries Hermes uses, with a temporary `HERMES_HOME`. See [Validate with Plugin Doctor](#validate-with-plugin-doctor).
-- **Keep state across updates:** `plugin_data_dir()` and `plugin_db()` give your plugin a data directory that survives `hermes plugins update` and `remove` and follows the active profile. See [Store durable state](#store-durable-state).
+- **Run the catalog check locally:** `anakot plugins validate /path/to/your-plugin --install-deps` runs the same check catalog CI runs. See [Submitting to the Plugin Catalog](./catalog-submission.md).
+- **Test your plugin in isolation:** `anakot plugins doctor [path-or-id]` runs the same discovery, manifest parser, `register(ctx)` and registries Anakot uses, with a temporary `ANAKOT_HOME`. See [Validate with Plugin Doctor](#validate-with-plugin-doctor).
+- **Keep state across updates:** `plugin_data_dir()` and `plugin_db()` give your plugin a data directory that survives `anakot plugins update` and `remove` and follows the active profile. See [Store durable state](#store-durable-state).
 - **Declare Python dependencies:** list them under `python_dependencies` in `plugin.yaml`, or in a `pyproject.toml` next to it. See [Python dependencies](#python-dependencies).
 - **Ship skills with your plugin:** register them with `ctx.register_skill()`. See [Bundle skills](#bundle-skills).
 - **Ask for privileged host surfaces:** declare them under `capabilities:` so users get a single consent screen. See [Declaring capabilities](#declaring-capabilities).
@@ -58,9 +58,9 @@ Hermes already ships these for plugin authors:
 
 ## Portable Agent Plugins v1 packages
 
-Hermes can also install and load directory packages that target the Agent
+Anakot can also install and load directory packages that target the Agent
 Plugins v1.0.0 format. This is a compatibility adapter for the portable
-components Hermes already owns. It does not replace native `plugin.yaml` plus
+components Anakot already owns. It does not replace native `plugin.yaml` plus
 `register(ctx)` plugins.
 
 ```text
@@ -76,9 +76,9 @@ my-portable-plugin/
 Install and activate a portable package through the normal workflow:
 
 ```bash
-hermes plugins install owner/repository --no-enable
-hermes plugins list
-hermes plugins enable <plugin-name>
+anakot plugins install owner/repository --no-enable
+anakot plugins list
+anakot plugins enable <plugin-name>
 ```
 
 Portable packages are disabled after installation unless you explicitly enable
@@ -99,15 +99,15 @@ name is a load-time conflict: a `config.yaml` server wins over a package, and th
 first-loaded package wins over the next; the loser is skipped with a warning
 naming both.
 
-Hermes validates `plugin.json`, Agent Skills frontmatter, fixed component
+Anakot validates `plugin.json`, Agent Skills frontmatter, fixed component
 locations, `mcp.json`, resolved paths, and symlink containment locally. It does
 not fetch JSON schemas while loading a package. A bad skill or MCP entry is
 skipped at its own boundary when valid sibling components can still load.
 `PLUGIN_ROOT` points to the resolved package root. `PLUGIN_DATA` points to a
-profile-scoped writable directory managed by Hermes.
+profile-scoped writable directory managed by Anakot.
 Values declared in portable MCP `env` are visible package data, not a secret
 storage mechanism. Do not place credentials in `mcp.json`.
-To pass a user's variable through to a stdio server (Hermes otherwise hands MCP
+To pass a user's variable through to a stdio server (Anakot otherwise hands MCP
 servers a filtered environment), declare it as `"NAME": "${NAME}"`. The value
 comes from the user's shell or profile `.env`; when the variable is unset (or
 empty), the entry is treated as if it weren't there: the server doesn't get the
@@ -115,7 +115,7 @@ literal `${NAME}`, and `NAME` keeps whatever value the server would have without
 that line (usually unset). Optional variables are safe to forward.
 
 The current portable subset supports stdio and Streamable HTTP MCP entries.
-Portable `streamable-http` entries are routed through Hermes' existing native
+Portable `streamable-http` entries are routed through Anakot' existing native
 remote MCP client (the same runtime that powers URL-based `mcp_servers`
 config), with the v1 boundary rules enforced: the URL must be absolute
 http(s) with no user information or fragment, plain HTTP is accepted only
@@ -123,9 +123,9 @@ for `localhost`/loopback hosts, and configured headers are never forwarded
 across a cross-origin redirect. Legacy `sse` entries are reported and
 skipped. Agent Plugins v1 does not define trust, permissions, provenance, or a
 sandbox. Enabling a package grants its instructions and local executable the
-same full-trust posture as other installed Hermes plugins.
+same full-trust posture as other installed Anakot plugins.
 
-A package can ask Hermes to gate one of its MCP servers, the same way a user's
+A package can ask Anakot to gate one of its MCP servers, the same way a user's
 `trust: untrusted` does in `config.yaml`. Use it for servers whose tools spend
 money, trade, send messages or change accounts, so the user approves each
 write-capable call instead of relying on the skill's instructions alone:
@@ -133,7 +133,7 @@ write-capable call instead of relying on the skill's instructions alone:
 ```json
 {
   "extensions": {
-    "com.nousresearch.hermes": {
+    "com.nousresearch.anakot": {
       "servers": {
         "trade": { "trust": "untrusted" }
       }
@@ -153,14 +153,14 @@ and spend limit (below) unless it sets its own. Other harnesses ignore this exte
 entry (see [Application declarations](./application-declarations.md)).
 
 A server whose tools spend money or credits can declare what each call costs
-and a budget per chat. Hermes then names the cost in the approval prompt along
+and a budget per chat. Anakot then names the cost in the approval prompt along
 with the chat's running total, and a call that would take the chat past
 `spend_limit` asks first even when the user has made the server trusted:
 
 ```json
 {
   "extensions": {
-    "com.nousresearch.hermes": {
+    "com.nousresearch.anakot": {
       "servers": {
         "renders": {
           "trust": "untrusted",
@@ -188,13 +188,13 @@ Costs are facts about the server, so they survive a user's same-name
 `config.yaml` entry (the way a user widens trust) unless that entry sets the
 key itself; the user's `spend_limit` wins, including `0` to turn it off.
 
-A long-running server can also declare a Hermes-specific tool-call `timeout`
+A long-running server can also declare a Anakot-specific tool-call `timeout`
 (in seconds) in `plugin.json`, without changing other servers' defaults:
 
 ```json
 {
   "extensions": {
-    "com.nousresearch.hermes": {
+    "com.nousresearch.anakot": {
       "servers": { "analysis": { "timeout": 1000 } }
     }
   }
@@ -209,16 +209,16 @@ extends the wait budget, not the cancellation or permission policy. Configure
 any server-internal analysis deadline separately and leave time for its result
 to reach the client. Other harnesses ignore this extension.
 
-A server entry key this Hermes does not know (one a newer release added) is
-ignored with a warning, which `hermes plugins validate` lists, and the package
+A server entry key this Anakot does not know (one a newer release added) is
+ignored with a warning, which `anakot plugins validate` lists, and the package
 still installs. Releases from before this rule reject the package instead, and a
 release that ignores a key may behave less safely than intended, so declare a new
 key together with a catalog `requires_hermes` floor. `plugin.json` has no
 `requires_hermes` field, so that catalog floor is a portable package's only one: an install by
-catalog name refuses on an older Hermes, and `hermes plugins update` keeps the
-installed pin until Hermes is updated.
+catalog name refuses on an older Anakot, and `anakot plugins update` keeps the
+installed pin until Anakot is updated.
 
-An explicit per-server MCP call budget also reaches Hermes' outer tool executor. A call
+An explicit per-server MCP call budget also reaches Anakot' outer tool executor. A call
 whose budget exceeds the shared concurrent-batch deadline becomes a sequential
 barrier, whether called directly or through tool search. It gets its own budget
 without extending unrelated tools in the same model response. Existing shorter
@@ -228,17 +228,17 @@ approval handling are unchanged.
 The [rendered specification](https://agent-plugins.org/specification) currently
 labels v1.0.0 a Working Draft, while the
 [versioned specification repository](https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md)
-records it as Published. Hermes keys behavior on the canonical v1.0.0 schema
+records it as Published. Anakot keys behavior on the canonical v1.0.0 schema
 identifiers and normative text, not either mutable status label. This is an
 explicit supported subset, not a claim of full Agent Plugins conformance.
 
 ## Native plugin compatibility contract
 
 Native `plugin.yaml` plus `register(ctx)` plugins are protected by behavior,
-not by one global plugin API number. Hermes does not expose a
+not by one global plugin API number. Anakot does not expose a
 `PLUGIN_API_VERSION`, require a manifest-wide `api:` match, or attach an API
 version to unrelated values. A plugin that uses a documented behavior should
-continue to work after a normal Hermes upgrade.
+continue to work after a normal Anakot upgrade.
 
 The compatibility rules are:
 
@@ -247,12 +247,12 @@ The compatibility rules are:
   keyword-only. Existing return fields are not removed or silently retyped.
 - **Hook payloads are keyword payloads.** New hook data is added as keyword
   fields, never by changing the meaning or position of an existing field.
-  Hermes inspects callback signatures: a legacy callback receives the fields it
+  Anakot inspects callback signatures: a legacy callback receives the fields it
   declares, while a callback with `**kwargs` receives the complete current
   payload. New plugins should accept `**kwargs` so they can opt into additive
   data without another signature change.
 - **Manifests are open to additions.** Unknown `plugin.yaml` fields are ignored.
-  Older Hermes releases can therefore load a plugin whose manifest contains
+  Older Anakot releases can therefore load a plugin whose manifest contains
   metadata introduced by a newer release, provided the plugin code itself uses
   supported runtime behavior.
 - **Provider interfaces grow through defaults.** New provider methods have a
@@ -270,10 +270,10 @@ The compatibility rules are:
 
 The contract covers documented surfaces only. Replacing or wrapping core
 functions, methods, module attributes or private tables at runtime (assigning
-`AIAgent.<method>`, `setattr` on a Hermes module, writing into
+`AIAgent.<method>`, `setattr` on a Anakot module, writing into
 `sys.modules` or a core dict) is not a supported extension point. It breaks
 whenever the internals move, and it collides with every other plugin patching
-the same seam. The plugin catalog refuses it at admission (`hermes plugins
+the same seam. The plugin catalog refuses it at admission (`anakot plugins
 validate`, `no core override` check). If a public hook you need is missing,
 open an issue describing it.
 
@@ -295,17 +295,17 @@ Removal after the window must include any migration needed for persisted data
 or resumable sessions. In practice, additive aliases and adapters are preferred
 to removal.
 
-Hermes enforces this contract with frozen external-plugin fixtures discovered
-from an isolated `HERMES_HOME`. Those tests load and invoke the plugin through
+Anakot enforces this contract with frozen external-plugin fixtures discovered
+from an isolated `ANAKOT_HOME`. Those tests load and invoke the plugin through
 `PluginManager`; they assert real registration and callback outcomes rather
 than internal symbol lists or source-code shape.
 
 ### Sep 2026 module decomposition: old import paths removed
 
-Hermes's internals were split into `<stem>_<topic>` sibling modules in Sep 2026 (PR #102117). **Internal
+Anakot's internals were split into `<stem>_<topic>` sibling modules in Sep 2026 (PR #102117). **Internal
 import paths were never part of the plugin contract** above. A temporary compatibility layer kept the old
 paths resolving until 2026-09-14; it has been removed, so a plugin that still imports an old path fails to
-load with an `ImportError` (the reason shows in `hermes plugins list`).
+load with an `ImportError` (the reason shows in `anakot plugins list`).
 
 To fix such a plugin, import the name from the module that defines it now, or better, use `ctx` and the
 documented ABCs instead of internals. The full old-to-new map is the
@@ -325,15 +325,15 @@ Plus a hook that logs every tool call, and a bundled skill file.
 Create a directory and continue with Step 2:
 
 ```bash
-mkdir -p ~/.hermes/plugins/calculator
-cd ~/.hermes/plugins/calculator
+mkdir -p ~/.anakot/plugins/calculator
+cd ~/.anakot/plugins/calculator
 ```
 
 ### Validate with Plugin Doctor
 
-`hermes plugins doctor [path-or-id]` runs the same directory discovery,
+`anakot plugins doctor [path-or-id]` runs the same directory discovery,
 manifest parser, namespaced import, `register(ctx)`, hook registry, and tool
-registry used by Hermes itself. It reports invalid hook names, callbacks that do
+registry used by Anakot itself. It reports invalid hook names, callbacks that do
 not accept `**kwargs`, registration failures, and drift between declared and
 registered tools/hooks. For a package with a `desktop/plugin.js`, it also warns
 when the Desktop app is running a stale copy of it (see
@@ -341,10 +341,10 @@ when the Desktop app is running a stale copy of it (see
 Pass `--ci` to exit non-zero on an error:
 
 ```bash
-hermes plugins doctor . --ci
+anakot plugins doctor . --ci
 ```
 
-Doctor uses a temporary `HERMES_HOME`, restores plugin registration state after
+Doctor uses a temporary `ANAKOT_HOME`, restores plugin registration state after
 the check, and blocks direct Python socket connections to catch accidental
 network access while registration runs. This is not a sandbox: plugin code still
 executes in-process with the current user's permissions and can spawn subprocesses,
@@ -365,13 +365,13 @@ provides_hooks:
   - post_tool_call
 ```
 
-This tells Hermes: "I'm a plugin called calculator, I provide tools and hooks." The `provides_tools` and `provides_hooks` fields are lists of what the plugin registers.
+This tells Anakot: "I'm a plugin called calculator, I provide tools and hooks." The `provides_tools` and `provides_hooks` fields are lists of what the plugin registers.
 
 List every tool your `register()` registers in `provides_tools`. The field does **not** decide whether a user-installed plugin's tools load: once the plugin is enabled, everything `register()` registers is available, declared or not. What it does drive:
 
-- **`hermes plugins validate`**: the "declared tools" check fails when the registered tools don't match the list, which blocks catalog admission.
+- **`anakot plugins validate`**: the "declared tools" check fails when the registered tools don't match the list, which blocks catalog admission.
 - **Catalog listing**: the "N tools" chips and tool-name search in the catalog and the dashboard/Desktop Plugins page.
-- **Dashboard auth hint**: only declared tools' availability checks are used to show "needs auth" and the `hermes auth <name>` command.
+- **Dashboard auth hint**: only declared tools' availability checks are used to show "needs auth" and the `anakot auth <name>` command.
 - **Bundled `kind: platform` plugins only**: the field is the switch that loads `tools.py` in CLI/TUI sessions while the adapter stays deferred. See [Outbound client tools](../adding-platform-adapters.md#outbound-client-tools-provides_tools).
 
 Optional fields you could add:
@@ -411,7 +411,7 @@ Known capability ids: `tools.override`, `llm.provider_override`,
 a turn, see [Plugin LLM Access](../plugin-llm-access.md#asking-the-sessions-own-agent-ctxside_question)),
 `llm.session_fork` (run a bounded background copy of the session's agent, see
 [Plugin LLM Access](../plugin-llm-access.md#forking-the-sessions-own-agent-ctxfork_session)),
-`gateway.platform_actions` (see `hermes_cli/plugin_capabilities.py` for the
+`gateway.platform_actions` (see `anakot_cli/plugin_capabilities.py` for the
 canonical registry). Unknown ids are ignored. The older per-capability
 config keys (`plugins.entries.<id>.allow_tool_override`, …) still work but
 are deprecated — declare capabilities instead so users get a single,
@@ -420,30 +420,30 @@ sandbox**: they gate host API surfaces, nothing more.
 
 **Pip-distributed plugins** have no `plugin.yaml` directory once installed,
 so declare capabilities in distribution metadata instead, via the companion
-`hermes_agent.plugin_capabilities` entry-point group. Each declaration is
+`anakot_agent.plugin_capabilities` entry-point group. Each declaration is
 named `<plugin-id>.<capability-id>` and points at the same object as your
-`hermes_agent.plugins` entry point:
+`anakot_agent.plugins` entry point:
 
 ```toml
-[project.entry-points."hermes_agent.plugins"]
+[project.entry-points."anakot_agent.plugins"]
 calculator = "my_pkg:register"
 
-[project.entry-points."hermes_agent.plugin_capabilities"]
+[project.entry-points."anakot_agent.plugin_capabilities"]
 "calculator.tools.override" = "my_pkg:register"
 ```
 
-Hermes reads these from installed metadata without importing your code, so
-`hermes plugins capabilities` and the consent flow stay accurate for pip
+Anakot reads these from installed metadata without importing your code, so
+`anakot plugins capabilities` and the consent flow stay accurate for pip
 installs.
 
 ### Use the user's Codex sign-in (core-made requests)
 
 A plugin that needs the user's ChatGPT / Codex subscription (minting an OpenAI
 Realtime client secret, calling a Codex backend endpoint) must **not** read,
-refresh or rewrite `~/.codex/auth.json` or Hermes's `auth.json`. Codex refresh
-tokens are single-use: a plugin that refreshes on its own races Hermes's locked
+refresh or rewrite `~/.codex/auth.json` or Anakot's `auth.json`. Codex refresh
+tokens are single-use: a plugin that refreshes on its own races Anakot's locked
 refresh, and the loser's rotation chain gets revoked, signing the user out.
-Ask Hermes to make the request instead. Hermes resolves the credential through
+Ask Anakot to make the request instead. Anakot resolves the credential through
 its own refresh path, attaches `Authorization` itself and returns only the
 response. Your code never sees the token.
 
@@ -460,7 +460,7 @@ Then call the public helper. It is a plain function, so dashboard plugins
 `register(ctx)` code:
 
 ```python
-from hermes_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
+from anakot_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
 
 def mint_client_secret(session: dict) -> dict:
     try:
@@ -483,7 +483,7 @@ returns a `ProviderResponse` (`status`, `headers`, `body`, `.text`, `.json()`).
 The rules:
 
 - **Declared plugins only.** The caller is the plugin whose file is on the call
-  stack. Hermes finds it under the plugins directory and reads its
+  stack. Anakot finds it under the plugins directory and reads its
   `plugin.yaml`. A plugin that does not list the provider in `requires_auth`,
   and code outside any installed plugin, gets `PermissionError`. Call the helper
   from your own function. Handing the bare helper to `run_in_executor` leaves no
@@ -496,13 +496,13 @@ The rules:
 - **No redirects.** A 3xx response comes back as-is and is never followed, so
   the header cannot reach a third host.
 - **Profile-scoped.** The credential is the active profile's Codex sign-in, the
-  same one chat uses (`hermes auth add openai-codex`, or the Codex sign-in in the
+  same one chat uses (`anakot auth add openai-codex`, or the Codex sign-in in the
   desktop app). When there is none you get `ProviderNotSignedIn`, whose message
   names the sign-in command.
 - Your own `headers` are sent too, except any that would replace the
-  `Authorization` (or account) headers Hermes attaches.
+  `Authorization` (or account) headers Anakot attaches.
 
-`requires_auth` appears in `hermes plugins show <name>` and at install time, and
+`requires_auth` appears in `anakot plugins show <name>` and at install time, and
 a catalog re-pin that adds it asks the user before updating. Like capabilities,
 this is consent and visibility. It is **not a sandbox**: in-process plugin code
 can still read any file the user can, and reviewers reject plugins that do.
@@ -511,15 +511,15 @@ can still read any file the user can, and reviewers reject plugins that do.
 `agent.account_usage.fetch_account_usage("openai-codex", read_only=True)`. It
 returns an `AccountUsageSnapshot` (plan, session/weekly windows with
 `used_percent` and `reset_at`) and never refreshes or rotates a credential.
-**Sign-out** belongs to Hermes, not to a plugin: point users at
-`hermes auth logout openai-codex` instead of deleting credential files.
+**Sign-out** belongs to Anakot, not to a plugin: point users at
+`anakot auth logout openai-codex` instead of deleting credential files.
 
 ### Use your own OAuth client (Google and other APIs)
 
 A plugin that calls a third-party API with the user's own OAuth client (a
 Google Cloud "Desktop app" client, for example) does not run the
 consent flow, store the refresh token or refresh it. Declare the client and
-Hermes owns the grant:
+Anakot owns the grant:
 
 ```yaml
 name: gemini-voice
@@ -540,28 +540,28 @@ oauth:
     authorize_params: {access_type: offline, prompt: consent}  # Google issues a refresh token only with these
 ```
 
-The user signs in once from a terminal with `hermes auth add gemini-voice:google`
+The user signs in once from a terminal with `anakot auth add gemini-voice:google`
 (the plugin's key, a colon, the entry's `id`). That is the same PKCE login the
 model-provider helper runs: a loopback redirect on `127.0.0.1`, with an SSH
-tunnel hint when Hermes runs on a remote host. If the IdP grants fewer scopes
-than declared, nothing is saved. `hermes auth status|refresh|logout
+tunnel hint when Anakot runs on a remote host. If the IdP grants fewer scopes
+than declared, nothing is saved. `anakot auth status|refresh|logout
 gemini-voice:google` show, refresh and remove the grant. It lives in the active
-profile's `auth.json`; Hermes refreshes it on use once less than two minutes
+profile's `auth.json`; Anakot refreshes it on use once less than two minutes
 remain and never starts a sign-in under the gateway or cron.
 
 The plugin calls the API through the same helper, with the entry's `id` as the
 provider:
 
 ```python
-from hermes_cli.auth_constants import AuthError
-from hermes_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
+from anakot_cli.auth_constants import AuthError
+from anakot_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
 
 def create_document(title: str) -> dict:
     try:
         resp = credentialed_provider_request(
             "google", "POST", "https://docs.googleapis.com/v1/documents", json={"title": title}, timeout=20)
     except ProviderNotSignedIn as exc:
-        return {"ok": False, "error": str(exc)}  # names `hermes auth add gemini-voice:google`
+        return {"ok": False, "error": str(exc)}  # names `anakot auth add gemini-voice:google`
     except AuthError as exc:
         return {"ok": False, "error": f"{exc.code}: {exc}"}
     return {"ok": resp.status < 300, "status": resp.status, "body": resp.json()}
@@ -570,18 +570,18 @@ def create_document(title: str) -> dict:
 The Codex rules above apply, plus:
 
 - **HTTPS only.** `authorize_url`, `token_url` and every `hosts` entry are
-  `https` (there is no loopback exception); `hermes plugins validate` and
+  `https` (there is no loopback exception); `anakot plugins validate` and
   catalog admission fail anything else.
 - **Declared hosts only.** The bearer goes to `https://<host>` (port 443) for
   the entry's `hosts`, matched exactly (no subdomains). Any other URL, `http`,
   or a URL with user info raises `PermissionError` before a request is made.
   A host outside the sign-in provider's domains is a warning reviewers check.
 - **Your own client variables.** `client_id_env` and `client_secret_env` name
-  the plugin's own variables; a variable Hermes itself uses (a provider API key,
-  a platform token) is refused, since Hermes sends these to `token_url`.
+  the plugin's own variables; a variable Anakot itself uses (a provider API key,
+  a platform token) is refused, since Anakot sends these to `token_url`.
 - **The plugin's own grant.** The grant is stored under the calling plugin's
   key, so another plugin declaring the same `id` cannot use it, and the plugin's
-  own entry wins over a Hermes sign-in of the same name.
+  own entry wins over a Anakot sign-in of the same name.
 - **The grant follows the declaration.** It remembers the entry it was made
   for: a plugin version that changes the token URL, hosts, scopes or client
   variables gets `ProviderNotSignedIn` until the user signs in again, and a
@@ -596,13 +596,13 @@ The Codex rules above apply, plus:
   network until the next sign-in. Errors reach the plugin without a traceback,
   chain or request object, so none leads back to the token, refresh token or
   client secret.
-- **Sign-in and removal.** `hermes auth add` prints which hosts get the code,
+- **Sign-in and removal.** `anakot auth add` prints which hosts get the code,
   the client secret and the token before opening the browser, and refuses to
-  run from the gateway, cron or an agent session. `hermes plugins remove` drops
-  the plugin's grants, and `hermes auth logout <plugin>:<id>` still works after
+  run from the gateway, cron or an agent session. `anakot plugins remove` drops
+  the plugin's grants, and `anakot auth logout <plugin>:<id>` still works after
   the plugin is gone.
 
-`hermes plugins validate` checks the `oauth:` block and that its client
+`anakot plugins validate` checks the `oauth:` block and that its client
 variables are declared, and warns when plugin code names the token URL. Like
 `requires_auth`, this is consent and visibility, not a sandbox.
 
@@ -612,7 +612,7 @@ variables are declared, and warns when plugin code names the token URL. Like
 optional; a manifest without `manifest_version` is a v1 manifest and stays
 fully supported forever. Unknown fields never break loading — they are ignored
 with a warning (forward compatibility), and a `manifest_version` newer than
-this Hermes understands still loads with a warning.
+this Anakot understands still loads with a warning.
 
 | Field | Type | Meaning |
 |---|---|---|
@@ -620,15 +620,15 @@ this Hermes understands still loads with a warning.
 | `api_version` | int | Runtime **plugin API generation** the plugin targets (ctx surface / hook signatures). Deliberately a separate axis from `manifest_version` — an `api_version: 1` plugin can use a v2 manifest. |
 | `requires_plugins` | list | Inter-plugin dependencies: `- id: other-plugin` with optional `version_range: ">=1.0,<2"`. **Advisory**: a missing dependency logs a clear warning but the plugin still loads — probe at runtime with `ctx.has_plugin("other-plugin")`. Load **order** honors these edges: when A requires B, B's `register()` runs before A's (topological sort, alphabetical tiebreak; cycles warn and fall back to alphabetical order). |
 | `python_dependencies` | list of str | Declared Python requirements (e.g. `"requests>=2.0,<3"`). Installation requests consent; enabling admits the candidate through PM with the existing core, extras, and enabled-plugin union. Successful preparation publishes the environment and configuration transactionally; failure preserves the previous selection and enabled set. Declining leaves the installed plugin disabled. Pin upper bounds. |
-| `python_runtime` | str | `external` — the plugin manages its own interpreter/venv (sidecar pattern); Hermes installs nothing and leaves any `pyproject.toml` alone. |
+| `python_runtime` | str | `external` — the plugin manages its own interpreter/venv (sidecar pattern); Anakot installs nothing and leaves any `pyproject.toml` alone. |
 | `config_schema` | mapping | JSON-schema-ish description of keys under `plugins.entries.<id>.settings`: `api_url: {type: str, default: "", description: "...", required: false}`. Validated at load; mismatches log actionable warnings naming the key and expected type — never load failures. Types: `str`, `int`, `float`, `bool`, `list`, `dict` (plus JSON-schema aliases) and `secret`. Also drives the settings form in the Desktop Plugins tab — see [Settings form in the Desktop](#settings-form-in-the-desktop). |
-| `config_keys` | list | Dotted paths in Hermes' own config sections that your code reads (e.g. `memory.retaindb`). Each path covers itself and everything below it, so `hermes config get/set` recognizes those keys instead of warning "not a recognized config key", but only while the plugin is active (enabled, or the selected `memory.provider`). A path must be at least two segments deep, and paths Hermes already defines are ignored, so a declaration never hides a typo elsewhere in the section. Settings for your plugin alone belong in `config_schema`; use this only for a core section your plugin reads. Portable `plugin.json` packages put it under `extensions."com.nousresearch.hermes".config_keys`. |
+| `config_keys` | list | Dotted paths in Anakot' own config sections that your code reads (e.g. `memory.retaindb`). Each path covers itself and everything below it, so `anakot config get/set` recognizes those keys instead of warning "not a recognized config key", but only while the plugin is active (enabled, or the selected `memory.provider`). A path must be at least two segments deep, and paths Anakot already defines are ignored, so a declaration never hides a typo elsewhere in the section. Settings for your plugin alone belong in `config_schema`; use this only for a core section your plugin reads. Portable `plugin.json` packages put it under `extensions."com.nousresearch.anakot".config_keys`. |
 | `license` | str | SPDX-style license id (e.g. `MIT`). |
 | `homepage` | str | Project URL. |
 | `tags` | list of str | Free-form discovery tags (e.g. `[gateway, telegram]`). |
 | `provides_locales` | list | Language pack declaration: ids (`- pl`) or `{id, endonym, rtl}` mappings whose `locales/<id>[.tui\|.desktop].yaml` the loader registers automatically — see [Ship a language pack](#ship-a-language-pack). |
-| `requires_auth` | list of str | Providers whose sign-in the plugin uses through Hermes (today: `openai-codex`). Required by `credentialed_provider_request`; shown at install and in `hermes plugins show`. See [Use the user's Codex sign-in](#use-the-users-codex-sign-in-core-made-requests). |
-| `oauth` | list of mappings | OAuth clients the plugin uses through Hermes: `id`, `authorize_url`, `token_url`, `scopes`, `client_id_env`, optional `client_secret_env`, `hosts`, optional `authorize_params`. Signed in with `hermes auth add <plugin>:<id>`, used through `credentialed_provider_request`. See [Use your own OAuth client](#use-your-own-oauth-client-google-and-other-apis). |
+| `requires_auth` | list of str | Providers whose sign-in the plugin uses through Anakot (today: `openai-codex`). Required by `credentialed_provider_request`; shown at install and in `anakot plugins show`. See [Use the user's Codex sign-in](#use-the-users-codex-sign-in-core-made-requests). |
+| `oauth` | list of mappings | OAuth clients the plugin uses through Anakot: `id`, `authorize_url`, `token_url`, `scopes`, `client_id_env`, optional `client_secret_env`, `hosts`, optional `authorize_params`. Signed in with `anakot auth add <plugin>:<id>`, used through `credentialed_provider_request`. See [Use your own OAuth client](#use-your-own-oauth-client-google-and-other-apis). |
 
 ```yaml
 # plugin.yaml — manifest v2 example
@@ -675,21 +675,21 @@ dependencies = [
 ]
 ```
 
-When both exist the `pyproject.toml` wins. What Hermes does with them:
+When both exist the `pyproject.toml` wins. What Anakot does with them:
 
 - **Install / enable** — PM resolves core, selected extras, and the enabled plugin union
-  across every profile sharing the dependency home, including custom `HERMES_HOME` roots.
+  across every profile sharing the dependency home, including custom `ANAKOT_HOME` roots.
   A new plugin is downloaded disabled; Python dependency consent precedes enablement.
   `pyproject.toml` takes precedence over `python_dependencies` and legacy `pip_dependencies`.
 - **Atomic publication** — PM prepares a fresh environment generation before publishing
   an enablement or an active plugin replacement. Resolution, download, or build failure
   preserves the previous environment and plugin selection; no existing plugin is sacrificed.
-- **Updates retain the union** — `hermes update` includes enabled plugins while preparing
-  its new generation. There is no post-update pip reinstall. `hermes plugins update` prepares
+- **Updates retain the union** — `anakot update` includes enabled plugins while preparing
+  its new generation. There is no post-update pip reinstall. `anakot plugins update` prepares
   active replacements before swapping their code and dependency generation together.
 - **Requirement hygiene** — malformed PEP 508 requirements are refused. Environment markers
-  remain intact for the target interpreter to evaluate. `hermes-agent` self-dependencies are
-  omitted because the checkout supplies Hermes. Direct-URL requirements are not managed;
+  remain intact for the target interpreter to evaluate. `anakot-agent` self-dependencies are
+  omitted because the checkout supplies Anakot. Direct-URL requirements are not managed;
   use a plugin-owned external runtime for them.
 - **`--no-deps`** downloads a new plugin without dependency consent and leaves it disabled,
   even with `--enable`. It cannot bypass PM admission when replacing an active plugin.
@@ -700,28 +700,28 @@ When both exist the `pyproject.toml` wins. What Hermes does with them:
   or dependency groups) counts as no declaration: no dependency question, and enabling or updating
   the plugin leaves the dependency environment as it is.
 - **`python_runtime: external`** keeps a sidecar's dependencies out of the shared union.
-  Hermes does not install that Python runtime or modify its declaration.
-- **Nothing to load is an error** — `hermes plugins validate` rejects `plugin.yaml` without
+  Anakot does not install that Python runtime or modify its declaration.
+- **Nothing to load is an error** — `anakot plugins validate` rejects `plugin.yaml` without
   `__init__.py`, `desktop/plugin.js`, or `plugin.json` beside it. Pip-layout packages need
   a directory-plugin wrapper.
 - `security.allow_lazy_installs: false` blocks on-demand acquisition. Explicit dependency
   consent and explicit enablement authorize PM preparation; discovery never installs.
 
-`HERMES_HOME/plugins/` survives `hermes update` and Desktop updates: the updater only rebuilds the
+`ANAKOT_HOME/plugins/` survives `anakot update` and Desktop updates: the updater only rebuilds the
 venv and the checkout, never the home directory.
 
 ### Dependency security policy
 
-Hermes checks the age of **its own** dependencies when it locks them: the checkout's
+Anakot checks the age of **its own** dependencies when it locks them: the checkout's
 `[tool.uv] exclude-newer = "3 days"` keeps any release younger than three days out of `uv.lock`,
 so a hijacked upload has time to be caught upstream before it reaches users. Users install from
 that vetted lock; their machines never re-check dates. **The check does not apply to your
-plugin's dependencies.** When Hermes resolves your plugin into its environment, Hermes's exact
-pins stay put, other packages Hermes uses may move within the ranges Hermes declares, and
+plugin's dependencies.** When Anakot resolves your plugin into its environment, Anakot's exact
+pins stay put, other packages Anakot uses may move within the ranges Anakot declares, and
 everything else follows your requirements, so a plugin can floor on a release published
-yesterday and install today. The plugin's author, not Hermes, is responsible for what that pulls
-in. A plugin that requires a different version of a package Hermes pins exactly fails to install
-until Hermes's pin moves.
+yesterday and install today. The plugin's author, not Anakot, is responsible for what that pulls
+in. A plugin that requires a different version of a package Anakot pins exactly fails to install
+until Anakot's pin moves.
 
 Set your own policy and hold yourself to it. Strongly recommended:
 
@@ -888,7 +888,7 @@ def unit_convert(args: dict, **kwargs) -> str:
 1. **Signature:** `def my_handler(args: dict, **kwargs) -> str`
 2. **Return:** Always a JSON string. Success and errors alike.
 3. **Never raise:** Catch all exceptions, return error JSON instead.
-4. **Accept `**kwargs`:** Hermes injects context keywords (`task_id`, `session_id`, `conversation_id`,
+4. **Accept `**kwargs`:** Anakot injects context keywords (`task_id`, `session_id`, `conversation_id`,
    `user_task`, `parent_agent`, ...) and only forwards the ones your signature names, so `def handler(args)`
    works; `**kwargs` is how you opt into the full, additively growing context.
    Inside a plugin's [session fork](../plugin-llm-access.md#forking-the-sessions-own-agent-ctxfork_session)
@@ -939,11 +939,11 @@ def register(ctx):
 - Called exactly once at startup
 - `ctx.register_tool()` puts your tool in the registry — the model sees it immediately
 - `ctx.register_hook()` subscribes to lifecycle events
-- `ctx.register_cli_command()` registers a CLI subcommand (e.g. `hermes my-plugin <subcommand>`)
+- `ctx.register_cli_command()` registers a CLI subcommand (e.g. `anakot my-plugin <subcommand>`)
 - `ctx.register_command()` registers an in-session slash command (e.g. `/myplugin <args>` inside CLI / gateway chat) — see [Register slash commands](#register-slash-commands) below
 - `ctx.dispatch_tool(name, arguments)` — call any other tool (built-in or from another plugin) with the parent agent's context (approvals, credentials, task_id) wired up automatically. Useful from slash-command handlers that need to invoke `terminal`, `read_file`, or any other tool as if the model had called it directly.
 - `ctx.get_config()` / `ctx.set_config()` access only this plugin's settings namespace; `ctx.state` stores plugin-owned runtime data under the active profile.
-- If this function crashes, the plugin is disabled but Hermes continues fine
+- If this function crashes, the plugin is disabled but Anakot continues fine
 
 **`dispatch_tool` example — a slash command that runs a tool:**
 
@@ -966,7 +966,7 @@ The dispatched tool goes through the normal approval, redaction, and budget pipe
 
 ### Store settings and runtime state
 
-Use plugin-relative config keys for user-visible behavior. Hermes resolves them
+Use plugin-relative config keys for user-visible behavior. Anakot resolves them
 under `plugins.entries.<plugin-id>.settings` and rejects global, cross-plugin,
 and traversal paths:
 
@@ -995,7 +995,7 @@ Windows-safe namespace. Malformed existing state is reported and preserved.
 
 Config and state have different owners: settings are user-visible behavior in
 `config.yaml`, while state is plugin-owned runtime data under
-`<HERMES_HOME>/plugin-data/`. Neither API exposes another plugin's namespace.
+`<ANAKOT_HOME>/plugin-data/`. Neither API exposes another plugin's namespace.
 
 ### Settings form in the Desktop
 
@@ -1035,13 +1035,13 @@ Never read `.env`, `auth.json` or another tool's credential files yourself (cata
 The `plugins.manage settings` action refuses secret keys and any value whose type
 or `choices` disagree with the schema.
 
-**Portable packages (`plugin.json`)** declare the same schema under the Hermes
+**Portable packages (`plugin.json`)** declare the same schema under the Anakot
 vendor namespace, since Agent Plugins v1 rejects unknown top-level fields:
 
 ```json
 {
   "extensions": {
-    "com.nousresearch.hermes": {
+    "com.nousresearch.anakot": {
       "config_schema": {
         "api_key": { "type": "secret", "env": "MY_PLUGIN_API_KEY" },
         "show_chip": { "type": "bool", "default": true, "label": "Show the status-bar chip" }
@@ -1053,7 +1053,7 @@ vendor namespace, since Agent Plugins v1 rejects unknown top-level fields:
 
 A secret whose `env` names a variable your `mcp.json` passes through
 (`"env": { "MY_PLUGIN_API_KEY": "${MY_PLUGIN_API_KEY}" }`) reaches the MCP server
-right away: after a save, Hermes reconnects the plugin's servers whose resolved
+right away: after a save, Anakot reconnects the plugin's servers whose resolved
 launch inputs changed (a new key does, a toggle does not), so the form is also
 where users set the server's key.
 
@@ -1061,15 +1061,15 @@ where users set the server's key.
 `plugin.<id>.settings.changed` (payload `{ written: [...keys] }`; a secret-only
 save sends an empty list), so a Desktop half re-reads its preferences at once:
 `ctx.onEvent('plugin.my-plugin.settings.changed', reload)`. Read the values from
-your own `plugin_api.py` with `load_config_readonly()` from `hermes_cli.config`
+your own `plugin_api.py` with `load_config_readonly()` from `anakot_cli.config`
 (`plugins.entries.<id>.settings`), falling back to the schema defaults.
 
 ## Step 6: Test it
 
-Start Hermes:
+Start Anakot:
 
 ```bash
-hermes
+anakot
 ```
 
 You should see `calculator: calculate, unit_convert` in the banner's tool list.
@@ -1095,10 +1095,10 @@ Plugins (1):
 
 ### Debugging plugin discovery
 
-If your plugin doesn't show up — or shows up but isn't loading — set `HERMES_PLUGINS_DEBUG=1` to get verbose discovery logs on stderr:
+If your plugin doesn't show up — or shows up but isn't loading — set `ANAKOT_PLUGINS_DEBUG=1` to get verbose discovery logs on stderr:
 
 ```bash
-HERMES_PLUGINS_DEBUG=1 hermes plugins list
+ANAKOT_PLUGINS_DEBUG=1 anakot plugins list
 ```
 
 You'll see, for every plugin source (bundled, user, project, entry-points):
@@ -1110,23 +1110,23 @@ You'll see, for every plugin source (bundled, user, project, entry-points):
 - on parse failure: a full traceback for the exception (YAML scanner errors, etc.)
 - on `register()` failure: a full traceback pointing at the line in your `__init__.py` that raised
 
-The same logs are always written to `~/.hermes/logs/agent.log` at WARNING level (failures only) and DEBUG level (everything) when the env var is set. So if you can't run with the env var (e.g. from inside the gateway), tail the log file instead:
+The same logs are always written to `~/.anakot/logs/agent.log` at WARNING level (failures only) and DEBUG level (everything) when the env var is set. So if you can't run with the env var (e.g. from inside the gateway), tail the log file instead:
 
 ```bash
-hermes logs --level WARNING | grep -i plugin
+anakot logs --level WARNING | grep -i plugin
 ```
 
 Common reasons a plugin doesn't appear:
 
-- **Not enabled in config** — plugins are opt-in. Run `hermes plugins enable <name>` (the name comes from the `plugins list` output, which can be `<category>/<plugin>` for nested layouts).
-- **Wrong directory layout:** Native packages use `~/.hermes/plugins/<plugin-name>/plugin.yaml` (flat) or one category level. Portable packages use root `plugin.json` in the same locations. Anything deeper is ignored.
+- **Not enabled in config** — plugins are opt-in. Run `anakot plugins enable <name>` (the name comes from the `plugins list` output, which can be `<category>/<plugin>` for nested layouts).
+- **Wrong directory layout:** Native packages use `~/.anakot/plugins/<plugin-name>/plugin.yaml` (flat) or one category level. Portable packages use root `plugin.json` in the same locations. Anything deeper is ignored.
 - **Missing `__init__.py`:** Native packages need both `plugin.yaml` and `__init__.py` with a `register(ctx)` function. Portable packages do not import Python and do not require `__init__.py`.
 - **Wrong `kind`** — gateway adapters need `kind: platform` in their manifest. Memory providers are auto-detected as `kind: exclusive` and routed through the `memory.provider` config instead of `plugins.enabled`.
 
 ## Your plugin's final structure
 
 ```
-~/.hermes/plugins/calculator/
+~/.anakot/plugins/calculator/
 ├── plugin.yaml      # "I'm calculator, I provide tools and hooks"
 ├── __init__.py      # Wiring: schemas → handlers, register hooks
 ├── schemas.py       # What the LLM reads (descriptions + parameter specs)
@@ -1163,14 +1163,14 @@ section.
 ### Store durable state
 
 Never write runtime state into your plugin directory: that's the install
-tree, and `hermes plugins update` / `remove` git-pull or delete it — your
+tree, and `anakot plugins update` / `remove` git-pull or delete it — your
 users' data dies with it. The sanctioned home is the per-plugin data root,
 which survives both and follows the active profile:
 
 ```python
 from plugins.plugin_storage import plugin_data_dir, plugin_db
 
-# <hermes home>/plugin-data/<name>/ — created on first use
+# <anakot home>/plugin-data/<name>/ — created on first use
 state_file = plugin_data_dir("my-plugin") / "state.json"
 
 # Or a SQLite database at <data dir>/data.db (WAL mode, thread-friendly)
@@ -1186,13 +1186,13 @@ the standard `.env` / secret-scope path like everywhere else.
 
 Text your plugin saves or uploads (a transcript, a diff, a log) can carry API keys
 the user pasted. Run it through `ctx.redact_text()` first instead of importing
-Hermes internals:
+Anakot internals:
 
 ```python
 safe = ctx.redact_text(transcript, force=True)  # force: this text leaves the machine
 ```
 
-It uses the same scrubber as Hermes's own output, at its strongest setting:
+It uses the same scrubber as Anakot's own output, at its strongest setting:
 prefixed keys become a sentinel such as `«redacted:sk-…»` with no key characters
 left, and assignments like `API_KEY=…` are masked. Patterns registered with
 `ctx.register_redaction_patterns()` apply too. Without `force`, a user who set
@@ -1203,7 +1203,7 @@ left, and assignments like `API_KEY=…` are masked. Patterns registered with
 Plugins can ship skill files that the agent loads via `skill_view("plugin:skill")`. Register them in your `__init__.py`:
 
 ```
-~/.hermes/plugins/my-plugin/
+~/.anakot/plugins/my-plugin/
 ├── __init__.py
 ├── plugin.yaml
 └── skills/
@@ -1232,13 +1232,13 @@ skill_view("my-workflow")              # → built-in version (unchanged)
 ```
 
 **Key properties:**
-- Plugin skills are **read-only** — they don't enter `~/.hermes/skills/` and can't be edited via `skill_manage`.
+- Plugin skills are **read-only** — they don't enter `~/.anakot/skills/` and can't be edited via `skill_manage`.
 - Plugin skills are **not** listed in the system prompt's `<available_skills>` index — they're opt-in explicit loads.
 - Bare skill names are unaffected — the namespace prevents collisions with built-in skills.
 - When the agent loads a plugin skill, a bundle context banner is prepended listing sibling skills from the same plugin.
 
 :::tip Legacy pattern
-The old `shutil.copy2` pattern (copying a skill into `~/.hermes/skills/`) still works but creates name collision risk with built-in skills. Prefer `ctx.register_skill()` for new plugins.
+The old `shutil.copy2` pattern (copying a skill into `~/.anakot/skills/`) still works but creates name collision risk with built-in skills. Prefer `ctx.register_skill()` for new plugins.
 :::
 
 ### Read the skill catalog
@@ -1275,25 +1275,25 @@ def open_skill(name):
 Plugin-registered skills (`ctx.register_skill`) are not on disk under these roots; `find_all_skills()`
 returns the on-disk catalog only.
 
-### Check file paths and read YAML with Hermes's own helpers
+### Check file paths and read YAML with Anakot's own helpers
 
 A plugin that reads or writes a path the model chose (an attachment, an export target, a file to
-summarise) should refuse the same paths Hermes's own file tools refuse: credential stores, the
+summarise) should refuse the same paths Anakot's own file tools refuse: credential stores, the
 skills-hub cache, project `.env` files, device and `/proc` process files, and anything outside
-`HERMES_WRITE_SAFE_ROOT`. Call these
+`ANAKOT_WRITE_SAFE_ROOT`. Call these
 instead of keeping your own denylist:
 
 | Import | What it gives you |
 |---|---|
-| `agent.file_safety.get_read_block_error(path)` | An error string if Hermes's file tools would refuse to read `path`, else `None`. Pass an absolute path. |
+| `agent.file_safety.get_read_block_error(path)` | An error string if Anakot's file tools would refuse to read `path`, else `None`. Pass an absolute path. |
 | `agent.file_safety.raise_if_read_blocked(path)` | The same check, raising `ValueError` on a block. |
-| `agent.file_safety.get_write_denied_error(path)` | An error string if Hermes's file tools would refuse to write `path`, else `None`. |
+| `agent.file_safety.get_write_denied_error(path)` | An error string if Anakot's file tools would refuse to write `path`, else `None`. |
 | `agent.file_safety.is_write_denied(path)` | `True` when that write would be refused. |
-| `hermes_yaml.safe_load(text)` / `hermes_yaml.safe_dump(data)` | The YAML reader and writer Hermes uses for its own config. Hermes does not ship PyYAML, so `import yaml` fails unless your plugin declares it. |
+| `anakot_yaml.safe_load(text)` / `anakot_yaml.safe_dump(data)` | The YAML reader and writer Anakot uses for its own config. Anakot does not ship PyYAML, so `import yaml` fails unless your plugin declares it. |
 
 ```python
 from agent.file_safety import get_read_block_error
-from hermes_yaml import safe_load
+from anakot_yaml import safe_load
 
 def load_recipe(path):
     if err := get_read_block_error(path):
@@ -1302,22 +1302,22 @@ def load_recipe(path):
         return safe_load(fh)
 ```
 
-Import the names themselves (`from hermes_yaml import safe_load`), as above: `hermes plugins
+Import the names themselves (`from anakot_yaml import safe_load`), as above: `anakot plugins
 validate` accepts those spellings and reports a bare `import agent.file_safety` as a private import.
-To read Hermes's own settings, use `load_config_readonly()` from `hermes_cli.config` rather than
+To read Anakot's own settings, use `load_config_readonly()` from `anakot_cli.config` rather than
 parsing `config.yaml` yourself.
 
 ### Send a credentialed HTTP request without leaking it on redirect
 
 Plain `urllib.request.urlopen` follows a redirect to another host with your `Authorization` header
-still attached. `hermes_cli.urllib_security.open_credentialed_url(request, timeout=...)` opens a
-`urllib.request.Request` the way Hermes's own provider calls do: credential headers are dropped when
+still attached. `anakot_cli.urllib_security.open_credentialed_url(request, timeout=...)` opens a
+`urllib.request.Request` the way Anakot's own provider calls do: credential headers are dropped when
 a redirect leaves the original origin, and the process's installed opener (proxy, TLS trust) is kept.
 
 ```python
 import urllib.request
 
-from hermes_cli.urllib_security import open_credentialed_url
+from anakot_cli.urllib_security import open_credentialed_url
 
 def fetch_models(base_url, api_key):
     request = urllib.request.Request(f"{base_url}/models", headers={"Authorization": f"Bearer {api_key}"})
@@ -1328,11 +1328,11 @@ def fetch_models(base_url, api_key):
 ### Ship a language pack
 
 A plugin can add a UI language or override the wording of an existing one for every surface at once —
-Python (`agent.i18n.t()`: approval prompts, gateway replies, tool verbs, tips), the `hermes --tui`
+Python (`agent.i18n.t()`: approval prompts, gateway replies, tool verbs, tips), the `anakot --tui`
 interface and the Desktop app. Declare `provides_locales` and ship the YAML; **no Python is needed**:
 
 ```
-~/.hermes/plugins/hermes-lang-pl/
+~/.anakot/plugins/anakot-lang-pl/
 ├── plugin.yaml
 └── locales/
     ├── pl.yaml            # core (Python) strings — same key tree as the bundled locales/en.yaml
@@ -1341,7 +1341,7 @@ interface and the Desktop app. Declare `provides_locales` and ship the YAML; **n
 ```
 
 ```yaml
-name: hermes-lang-pl
+name: anakot-lang-pl
 version: 1.0.0
 description: Polish language pack
 provides_locales:
@@ -1352,7 +1352,7 @@ provides_locales:
 
 When `provides_locales` is declared the loader calls `ctx.register_locale_dir(<plugin>/locales)` before
 `register()` (a manifest-only pack with no `__init__.py` loads like a manifest-only Desktop plugin).
-Catalogs are **layered and partial**: pack → user overlay (`<HERMES_HOME>/locales/`) → bundled →
+Catalogs are **layered and partial**: pack → user overlay (`<ANAKOT_HOME>/locales/`) → bundled →
 English → key; a pack only needs the keys it changes, and the last pack loaded wins per key.
 Core values keep English's named `{placeholders}`; TUI/Desktop entries whose English value is a
 function are written as strings with positional `{0}`, `{1}` placeholders.
@@ -1369,7 +1369,7 @@ def register(ctx):
     ctx.register_locale_dir(here / "locales")                                         # every <lang>[.surface].yaml
 ```
 
-`hermes plugins validate` checks each declared id has a parseable, text-only `locales/<id>.yaml`
+`anakot plugins validate` checks each declared id has a parseable, text-only `locales/<id>.yaml`
 (a non-text leaf is an error) and **warns** with the names of keys absent from the English catalog of
 that surface. Renderers fetch the pack layer through the `i18n.languages` / `i18n.catalog` RPCs.
 User-facing guide: [Language Packs](../../user-guide/features/language-packs.md).
@@ -1386,7 +1386,7 @@ requires_env:
 
 If `WEATHER_API_KEY` isn't set, the plugin is disabled with a clear message. No crash, no error in the agent — just "Plugin weather disabled (missing: WEATHER_API_KEY)".
 
-When users run `hermes plugins install`, they're **prompted interactively** for any missing `requires_env` variables. Values are saved to `.env` automatically.
+When users run `anakot plugins install`, they're **prompted interactively** for any missing `requires_env` variables. Values are saved to `.env` automatically.
 
 For a better install experience, use the rich format with descriptions and signup URLs:
 
@@ -1410,7 +1410,7 @@ Both formats can be mixed in the same list. Already-set variables are skipped si
 
 ### Lazy-install optional Python dependencies
 
-For an SDK covered by a Hermes project extra, use `pm.ensure_import` at the
+For an SDK covered by a Anakot project extra, use `pm.ensure_import` at the
 operation that needs it. Use `pm.available` for a read-only availability check.
 Do not install dependencies from a frequently polled `check_fn`.
 
@@ -1453,7 +1453,7 @@ previous selection. PM does not automatically disable other plugins.
 Dependencies installed manually with pip are not durable PM declarations.
 A later environment replacement need not retain them. Wrapper plugins whose
 Python runtimes remain outside PM can use the
-[memory-provider survival contract](../memory-provider-plugin.md#hermes_home-survival-contract-what-wrappers-can-rely-on).
+[memory-provider survival contract](../memory-provider-plugin.md#anakot_home-survival-contract-what-wrappers-can-rely-on).
 See [Package management](../../reference/package-management.md) for the
 runtime layout and lazy-install policy.
 
@@ -1474,7 +1474,7 @@ def get_client():
     return _client
 ```
 
-This is a footgun. Hermes runs multiple threads in one process (delegated tool calls, background workers, the self-improvement fork), so two threads can hit `get_client()` before `_client` is set, **both** pass the `is not None` check, **both** run the expensive build, and the second write clobbers the first — leaking whatever resource the loser opened (connection, file handle, background thread).
+This is a footgun. Anakot runs multiple threads in one process (delegated tool calls, background workers, the self-improvement fork), so two threads can hit `get_client()` before `_client` is set, **both** pass the `is not None` check, **both** run the expensive build, and the second write clobbers the first — leaking whatever resource the loser opened (connection, file handle, background thread).
 
 Don't hand-roll the lock. Use the helpers in `plugins/plugin_utils.py`:
 
@@ -1500,7 +1500,7 @@ def reset_client():
     _slot.reset()
 ```
 
-Both serialize concurrent first calls with double-checked locking and run the factory at most once. If the factory raises, nothing is cached and the next call retries. The [Honcho memory plugin](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho) (`client.py`) is the reference consumer.
+Both serialize concurrent first calls with double-checked locking and run the factory at most once. If the factory raises, nothing is cached and the next call retries. The [Honcho memory plugin](https://github.com/plastic-labs/honcho/tree/main/anakot-plugin-honcho) (`client.py`) is the reference consumer.
 
 > Rule of thumb: any time you write `global _something` followed by a `is None` check and a build, reach for one of these instead.
 
@@ -1542,31 +1542,31 @@ requires the operator to opt in via
 `plugins.entries.<plugin_id>.allow_tool_override: true` in `config.yaml`;
 without that gate, `register_tool(override=True)` raises
 `PluginToolOverrideError`. The override is logged so it's
-auditable in `~/.hermes/logs/agent.log`. Plugins load after built-in
+auditable in `~/.anakot/logs/agent.log`. Plugins load after built-in
 tools, so the registration order is correct: your handler replaces the
 built-in one.
 
 **Non-bundled plugins also need an operator grant.** For any plugin that
-does not ship with Hermes core (user, project, or pip source),
+does not ship with Anakot core (user, project, or pip source),
 `override=True` against an existing built-in tool additionally requires a
 per-plugin opt-in in `config.yaml`:
 
 ```yaml
 plugins:
   entries:
-    my-plugin:                    # the plugin's registry key from `hermes plugins list`
+    my-plugin:                    # the plugin's registry key from `anakot plugins list`
       allow_tool_override: true
 ```
 
 Without the grant, `ctx.register_tool(..., override=True)` raises
 `PluginToolOverrideError`; since `register()` exceptions are caught by the
-loader, the plugin is disabled and Hermes continues. The gate exists
+loader, the plugin is disabled and Anakot continues. The gate exists
 because an enabled plugin that silently replaces a privileged built-in
 like `shell_exec` or `write_file` could intercept everything the model
 routes through it. Bundled plugins are exempt: an override there is a
 maintainer decision. If config cannot be loaded, the gate fails closed.
 
-You normally never edit this key by hand. `hermes plugins enable <name>`
+You normally never edit this key by hand. `anakot plugins enable <name>`
 asks whether to grant the capability only when the plugin's manifest
 declares it under `capabilities:` (the consent screen, defaulting to no);
 a plugin that declares no capabilities is enabled without any grant
@@ -1630,17 +1630,17 @@ Most hooks are fire-and-forget observers — their return values are ignored. Th
 
 All callbacks should accept `**kwargs` for forward compatibility. If a hook callback crashes, it's logged and skipped. Other hooks and the agent continue normally.
 
-The kanban lifecycle hooks fire **after** the board DB change commits, so a callback always sees durable state and can never hold the SQLite write lock. Because kanban workers run as separate `hermes -p <profile> chat -q` subprocesses, `kanban_task_claimed` fires in the **dispatcher** process while `kanban_task_completed` / `kanban_task_blocked` fire in the **worker** process — hook in the dispatcher to observe every transition centrally, or in the worker for per-task in-session context.
+The kanban lifecycle hooks fire **after** the board DB change commits, so a callback always sees durable state and can never hold the SQLite write lock. Because kanban workers run as separate `anakot -p <profile> chat -q` subprocesses, `kanban_task_claimed` fires in the **dispatcher** process while `kanban_task_completed` / `kanban_task_blocked` fire in the **worker** process — hook in the dispatcher to observe every transition centrally, or in the worker for per-task in-session context.
 
 The **API request hooks** are observers for the raw provider request, one level below the per-turn `pre_llm_call` / `post_llm_call` pair: a single turn that calls tools makes several API requests, and these hooks fire around each one. They exist for observability plugins (tracing, cost accounting, latency dashboards). The `request` and `response` kwargs are sanitized, size-capped JSON views of the provider payload (sensitive keys redacted, long strings truncated, SDK objects normalized), and `usage` is a plain token-summary dict. Every payload carries the correlation fields `turn_id`, `api_request_id`, `task_id`, `session_id`, and `api_call_count`, so a plugin can stitch requests, tool calls, and turns together. `api_request_error` fires when a provider call raises and adds `status_code`, `retry_count` / `max_retries`, `retryable`, `reason`, and an `error` dict with `type` and `message`.
 
 ### Where each hook fires {#hook-fire-sites}
 
-Every name in `hermes_cli.plugins.VALID_HOOKS` has at least one core fire site. This table names the function that fires each one, so you can read the exact call and payload. Paths are relative to the repository root. When you add a hook, add its row here in the same change.
+Every name in `anakot_cli.plugins.VALID_HOOKS` has at least one core fire site. This table names the function that fires each one, so you can read the exact call and payload. Paths are relative to the repository root. When you add a hook, add its row here in the same change.
 
 | Hook | Fired by |
 |------|----------|
-| `pre_tool_call` | `hermes_cli/plugins.py` `_dispatch_pre_tool_call_hooks`, called from `agent/tool_executor.py` `_pre_tool_block`, `agent/agent_runtime_helpers.py` `_pre_tool_block_message` and `model_tools.py` `_pre_dispatch_guards` |
+| `pre_tool_call` | `anakot_cli/plugins.py` `_dispatch_pre_tool_call_hooks`, called from `agent/tool_executor.py` `_pre_tool_block`, `agent/agent_runtime_helpers.py` `_pre_tool_block_message` and `model_tools.py` `_pre_dispatch_guards` |
 | `post_tool_call` | `model_tools.py` `_emit_post_tool_call_hook` |
 | `transform_terminal_output` | `tools/terminal_tool_result.py` `_apply_output_transform_hook` |
 | `transform_tool_result` | `model_tools.py` `_apply_transform_tool_result_hook` |
@@ -1650,17 +1650,17 @@ Every name in `hermes_cli.plugins.VALID_HOOKS` has at least one core fire site. 
 | `on_stream_start` / `on_stream_end` | `agent/stream_delivery.py` `StreamDeliveryMixin._emit_stream_start` / `_emit_stream_end` |
 | `on_stream_delta` | `agent/stream_delivery.py` `StreamDeliveryMixin._fire_stream_delta` (text) and `_fire_reasoning_delta` (reasoning) |
 | `on_interim_message` | `agent/stream_delivery.py` `StreamDeliveryMixin._emit_interim_assistant_message` |
-| `pre_verify` | `hermes_cli/plugins.py` `get_pre_verify_continue_message`, called from `agent/turn_stop_gates.py` `_pre_verify_nudge` |
+| `pre_verify` | `anakot_cli/plugins.py` `get_pre_verify_continue_message`, called from `agent/turn_stop_gates.py` `_pre_verify_nudge` |
 | `pre_api_request` | `agent/turn_api_request.py` `_fire_pre_api_request_hook` |
 | `post_api_request` | `agent/turn_response_intake.py` `_fire_post_api_request_hook` |
 | `api_request_error` | `agent/api_request_hooks.py` `ApiRequestHooksMixin._invoke_api_request_error_hook` |
 | `pre_auxiliary_call` / `post_auxiliary_call` | `agent/auxiliary_hooks.py` `_AuxCallHooks.pre` / `_AuxCallHooks.post` |
-| `transform_api_error_classification` | `hermes_cli/plugins.py` `get_plugin_error_classification`, called from `agent/error_classifier.py` `_plugin_verdict` |
+| `transform_api_error_classification` | `anakot_cli/plugins.py` `get_plugin_error_classification`, called from `agent/error_classifier.py` `_plugin_verdict` |
 | `on_session_start` | `agent/conversation_loop.py` `_restore_or_build_system_prompt` |
-| `on_session_end` | `agent/turn_finalizer.py` `finalize_turn`; interrupted exits: `hermes_cli/cli_shutdown.py` `_invoke_interrupted_session_end`, `tui_gateway/session_lifecycle.py` `_finalize_session` |
-| `on_session_finalize` | `hermes_cli/lifecycle.py` `finalize_session`, called from `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`, `hermes_cli/cli_shutdown.py` `_notify_session_finalize`, `tui_gateway/session_lifecycle.py` `_notify_session_boundary` and `gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._finalize_session_off_loop` |
-| `on_session_reset` | `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`; `tui_gateway/session_registry.py` `_start_session_services`; `gateway/slash_commands_session.py` `GatewaySessionCommandsMixin._handle_reset_command`; `gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._reset_session_off_loop` |
-| `on_session_delete` | `hermes_state_common.py` `emit_session_deleted` |
+| `on_session_end` | `agent/turn_finalizer.py` `finalize_turn`; interrupted exits: `anakot_cli/cli_shutdown.py` `_invoke_interrupted_session_end`, `tui_gateway/session_lifecycle.py` `_finalize_session` |
+| `on_session_finalize` | `anakot_cli/lifecycle.py` `finalize_session`, called from `anakot_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`, `anakot_cli/cli_shutdown.py` `_notify_session_finalize`, `tui_gateway/session_lifecycle.py` `_notify_session_boundary` and `gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._finalize_session_off_loop` |
+| `on_session_reset` | `anakot_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`; `tui_gateway/session_registry.py` `_start_session_services`; `gateway/slash_commands_session.py` `GatewaySessionCommandsMixin._handle_reset_command`; `gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._reset_session_off_loop` |
+| `on_session_delete` | `anakot_state_common.py` `emit_session_deleted` |
 | `on_session_open` | `gateway/session_open.py` `_Open._deliver` |
 | `on_skill_lifecycle` | `tools/skill_usage.py` `_emit_skill_lifecycle` |
 | `subagent_start` | `tools/delegate_tool.py` `_build_child_agent` |
@@ -1672,28 +1672,28 @@ Every name in `hermes_cli.plugins.VALID_HOOKS` has at least one core fire site. 
 | `on_human_input_request` / `on_human_input_resolved` | `tools/human_input_hooks.py` `human_input_request` |
 | `on_room_member_activity` | `tui_gateway/hosted_room_member_activity.py` `emit_room_member_activity` |
 | `pre_transcription` | `tools/transcription_command.py` `_apply_pre_transcription_hook` |
-| `kanban_task_claimed` | `hermes_cli/kanban_db.py` `claim_task` (through `_fire_task_hook`) |
-| `kanban_task_completed` | `hermes_cli/kanban_db.py` `complete_task` (through `_fire_task_hook`); `hermes_cli/kanban_swarm.py` `create_swarm` |
-| `kanban_task_blocked` | `hermes_cli/kanban_db.py` `block_task` (through `_fire_task_hook`) |
-| `on_kanban_worker_spawned` | `hermes_cli/kanban_db.py` `_fire_worker_spawned_hook` |
-| `on_kanban_worker_exited` | `hermes_cli/kanban_db_dispatch.py` `detect_crashed_workers` |
-| `on_kanban_worker_stale_claim` | `hermes_cli/kanban_db.py` `release_stale_claims` |
-| `on_kanban_task_updated` | `hermes_cli/kanban_db.py` `notify_task_updated` |
-| `on_kanban_dispatch_tick` | `hermes_cli/kanban_db.py` `_fire_dispatch_tick_hook` |
+| `kanban_task_claimed` | `anakot_cli/kanban_db.py` `claim_task` (through `_fire_task_hook`) |
+| `kanban_task_completed` | `anakot_cli/kanban_db.py` `complete_task` (through `_fire_task_hook`); `anakot_cli/kanban_swarm.py` `create_swarm` |
+| `kanban_task_blocked` | `anakot_cli/kanban_db.py` `block_task` (through `_fire_task_hook`) |
+| `on_kanban_worker_spawned` | `anakot_cli/kanban_db.py` `_fire_worker_spawned_hook` |
+| `on_kanban_worker_exited` | `anakot_cli/kanban_db_dispatch.py` `detect_crashed_workers` |
+| `on_kanban_worker_stale_claim` | `anakot_cli/kanban_db.py` `release_stale_claims` |
+| `on_kanban_task_updated` | `anakot_cli/kanban_db.py` `notify_task_updated` |
+| `on_kanban_dispatch_tick` | `anakot_cli/kanban_db.py` `_fire_dispatch_tick_hook` |
 | `gateway_platform_event` | `gateway/run_adapters.py` `GatewayAdapterLifecycleMixin._handle_gateway_platform_event` (events come from the Telegram and Discord adapters) |
-| `pre_command` | `hermes_cli/plugins.py` `fire_pre_command_hook`, called from `cli.py` `HermesCLI.process_command`, `gateway/run_inbound_hooks.py` `GatewayInboundHooksMixin._hm_command_hooks` and `gateway/session_commands.py` |
+| `pre_command` | `anakot_cli/plugins.py` `fire_pre_command_hook`, called from `cli.py` `AnakotCLI.process_command`, `gateway/run_inbound_hooks.py` `GatewayInboundHooksMixin._hm_command_hooks` and `gateway/session_commands.py` |
 | `post_compaction` | `agent/compaction_events.py` `fire_post_compaction` |
 | `post_curator_run` | `agent/curator.py` `_notify_post_curator_run` |
 
 ### `pre_llm_call` context injection
 
-When a `pre_llm_call` callback returns a dict with a `"context"` key (or a plain string), Hermes injects that text into the **current turn's user message**. This is the mechanism for memory plugins, RAG integrations, guardrails, and any plugin that needs to provide the model with additional context.
+When a `pre_llm_call` callback returns a dict with a `"context"` key (or a plain string), Anakot injects that text into the **current turn's user message**. This is the mechanism for memory plugins, RAG integrations, guardrails, and any plugin that needs to provide the model with additional context.
 
 #### Return format
 
 ```python
 # Dict with context key
-return {"context": "Recalled memories:\n- User prefers dark mode\n- Last project: hermes-agent"}
+return {"context": "Recalled memories:\n- User prefers dark mode\n- Last project: anakot-agent"}
 
 # Plain string (equivalent to the dict form above)
 return "Recalled memories:\n- User prefers dark mode"
@@ -1715,7 +1715,7 @@ A block applies only when a callback returns it. A callback that raises, or runs
 
 #### Oversized-context spill
 
-Per-hook context is capped at `10,000` characters by default. Anything above the cap is written to `$HERMES_HOME/hook_outputs/<session_id>/<uuid>.txt` and replaced with a head/tail preview plus the saved path. The model can read the full content via `read_file` or `terminal` if it genuinely needs it. This keeps a runaway plugin from inflating every subsequent turn's prompt and blowing out the prompt cache prefix. Tune in `config.yaml`:
+Per-hook context is capped at `10,000` characters by default. Anything above the cap is written to `$ANAKOT_HOME/hook_outputs/<session_id>/<uuid>.txt` and replaced with a head/tail preview plus the saved path. The model can read the full content via `read_file` or `terminal` if it genuinely needs it. This keeps a runaway plugin from inflating every subsequent turn's prompt and blowing out the prompt cache prefix. Tune in `config.yaml`:
 
 ```yaml
 hooks:
@@ -1724,7 +1724,7 @@ hooks:
     max_chars: 10000       # default; set higher to opt out of spilling
     preview_head: 500      # chars shown at the top of the preview
     preview_tail: 500      # chars shown at the bottom of the preview
-    # directory: null      # default: $HERMES_HOME/hook_outputs
+    # directory: null      # default: $ANAKOT_HOME/hook_outputs
 ```
 
 #### How injection works
@@ -1733,7 +1733,7 @@ Injected context is appended to the **user message**, not the system prompt. Thi
 
 - **Prompt cache preservation** — the system prompt stays identical across turns. Anthropic and OpenRouter cache the system prompt prefix, so keeping it stable saves 75%+ on input tokens in multi-turn conversations. If plugins modified the system prompt, every turn would be a cache miss.
 - **Ephemeral** — the injection happens at API call time only. The original user message in the conversation history is never mutated, and nothing is persisted to the session database.
-- **The system prompt is Hermes's territory** — it contains model-specific guidance, tool enforcement rules, personality instructions, and cached skill content. Plugins contribute context alongside the user's input, not by altering the agent's core instructions.
+- **The system prompt is Anakot's territory** — it contains model-specific guidance, tool enforcement rules, personality instructions, and cached skill content. Plugins contribute context alongside the user's input, not by altering the agent's core instructions.
 
 #### Example: Memory recall plugin
 
@@ -1825,12 +1825,12 @@ def register(ctx):
     ctx.register_middleware("tool_request", cap_find_output)
 ```
 
-The canonical list of kinds is `VALID_MIDDLEWARE` in `hermes_cli/middleware.py`:
+The canonical list of kinds is `VALID_MIDDLEWARE` in `anakot_cli/middleware.py`:
 
 | Kind | Receives | Return contract |
 |------|----------|-----------------|
 | `tool_request` | `tool_name`, `args`, `original_args`, context kwargs | Return `{"args": {...}}` to replace the effective tool arguments before hooks, guardrails, approvals, and execution see them. Return `None` to leave the call unchanged. |
-| `llm_request` | `request`, `original_request`, context kwargs | Return `{"request": {...}}` to replace the effective provider kwargs before Hermes sends them. |
+| `llm_request` | `request`, `original_request`, context kwargs | Return `{"request": {...}}` to replace the effective provider kwargs before Anakot sends them. |
 | `tool_execution` | the payload plus `next_call` | Wraps tool execution. Call `next_call(payload)` exactly once to run the downstream chain (or skip it to short-circuit) and return the result. |
 | `llm_execution` | the payload plus `next_call` | Same shape, wrapping the provider call. |
 
@@ -1840,8 +1840,8 @@ The canonical list of kinds is `VALID_MIDDLEWARE` in `hermes_cli/middleware.py`:
 - You can include `source`, `reason`, and `name` strings in the returned dict. They land in the middleware trace, which downstream observer hooks receive as the `middleware_trace` kwarg.
 - `next_call` in execution middleware is **single-use**. Calling it twice raises, because it would re-run the provider or tool.
 - A middleware callback that raises is logged and skipped; the chain continues. A downstream failure raised after your `next_call` propagates as itself. Middleware can never break the base runtime path.
-- Middleware payloads carry `middleware_schema_version` (`hermes.middleware.v1`) alongside the observer telemetry fields.
-- Unknown kinds register with a warning instead of failing, so a plugin written against a newer Hermes still loads on an older one.
+- Middleware payloads carry `middleware_schema_version` (`anakot.middleware.v1`) alongside the observer telemetry fields.
+- Unknown kinds register with a warning instead of failing, so a plugin written against a newer Anakot still loads on an older one.
 
 ### Give each session's commands its own environment variables
 
@@ -1858,32 +1858,32 @@ def register(ctx):
     ctx.register_session_env(["MY_PANE", "MY_PANE_SOCKET"], pane_env)
 ```
 
-- Hermes calls `resolver(session_id)` each time it starts a local process for a session: a foreground or background `terminal` command, a `terminal()` call from `execute_code`, and the other subprocesses that get the session's `HERMES_SESSION_*` variables. The value is read at that moment, so a change (the conversation moves to another pane) applies to the next command.
+- Anakot calls `resolver(session_id)` each time it starts a local process for a session: a foreground or background `terminal` command, a `terminal()` call from `execute_code`, and the other subprocesses that get the session's `ANAKOT_SESSION_*` variables. The value is read at that moment, so a change (the conversation moves to another pane) applies to the next command.
 - `session_id` is the session the process runs for. A subagent's commands get the subagent's id; map it to its parent session in your resolver when the parent's values must apply.
 - Return a map of declared names to strings. A value of `None` removes the name from the process environment. A name you leave out keeps the gateway's own value. Names you did not declare are ignored.
 - The declared names are never saved in the shared shell snapshot, so one session's value cannot reach a later command of another session, and an `export` of one of these names does not carry to the next command. This applies to your plugin's own profile only: another profile served by the same gateway keeps its own exports of the name.
 - Each name has one plugin per profile. Declaring a name another loaded plugin of the same profile already declared raises `ValueError` naming that plugin. Unloading a plugin frees its names, and a reload of the same plugin declares them again. Your own plugin may declare a name in more than one call: the later registration's value wins, and disposing it brings back the earlier one's.
-- Names must be valid environment variable names. `HERMES_*` names are refused (they belong to core). Provider and Hermes credential names that the subprocess scrub removes are also removed from your values.
+- Names must be valid environment variable names. `ANAKOT_*` names are refused (they belong to core). Provider and Anakot credential names that the subprocess scrub removes are also removed from your values.
 - A resolver that raises is logged and contributes nothing; the command still runs. Keep it fast and local: it runs on every spawn.
 - Values apply on the local terminal backend only. Remote backends (Docker, SSH, Modal and other sandboxes) do not receive them.
 
 ### Register CLI commands
 
-Plugins can add their own `hermes <plugin>` subcommand tree:
+Plugins can add their own `anakot <plugin>` subcommand tree:
 
 ```python
 def _my_command(args):
-    """Handler for hermes my-plugin <subcommand>."""
+    """Handler for anakot my-plugin <subcommand>."""
     sub = getattr(args, "my_command", None)
     if sub == "status":
         print("All good!")
     elif sub == "config":
         print("Current config: ...")
     else:
-        print("Usage: hermes my-plugin <status|config>")
+        print("Usage: anakot my-plugin <status|config>")
 
 def _setup_argparse(subparser):
-    """Build the argparse tree for hermes my-plugin."""
+    """Build the argparse tree for anakot my-plugin."""
     subs = subparser.add_subparsers(dest="my_command")
     subs.add_parser("status", help="Show plugin status")
     subs.add_parser("config", help="Show plugin config")
@@ -1899,7 +1899,7 @@ def register(ctx):
     )
 ```
 
-After registration, users can run `hermes my-plugin status`, `hermes my-plugin config`, etc.
+After registration, users can run `anakot my-plugin status`, `anakot my-plugin config`, etc.
 
 **Memory provider plugins** use a convention-based approach instead: add a `register_cli(subparser)` function to your plugin's `cli.py` file. The memory plugin discovery system finds it automatically — no `ctx.register_cli_command()` call needed. See the [Memory Provider Plugin guide](../memory-provider-plugin.md#adding-cli-commands) for details.
 
@@ -1938,7 +1938,7 @@ After registration, users can type `/mystatus` in any session. The command appea
 
 | | `register_command()` | `register_cli_command()` |
 |---|---|---|
-| Invoked as | `/name` in a session | `hermes name` in a terminal |
+| Invoked as | `/name` in a session | `anakot name` in a terminal |
 | Where it works | CLI sessions, Telegram, Discord, etc. | Terminal only |
 | Handler receives | Raw args string (+ opt-in session context) | argparse `Namespace` |
 | Use case | Diagnostics, status, quick actions | Complex subcommand trees, setup wizards |
@@ -1965,14 +1965,14 @@ def register(ctx):
     ctx.register_command("whoami", handler=_handle_whoami, description="Show the calling session")
 ```
 
-`source` is transport identity, not an authorization grant: authorize from stable ids (`source.user_id`, `source.chat_id`), never from display names or the command text, and fail closed when a sensitive command gets `source=None`. Handler exceptions propagate; Hermes never retries the call with fewer arguments.
+`source` is transport identity, not an authorization grant: authorize from stable ids (`source.user_id`, `source.chat_id`), never from display names or the command text, and fail closed when a sensitive command gets `source=None`. Handler exceptions propagate; Anakot never retries the call with fewer arguments.
 
-**Where handlers run:** a slash command handler runs in the gateway process that owns the session, also when the user types the command in the classic `hermes chat` CLI. The handler is not running in the user's terminal or directory, so:
+**Where handlers run:** a slash command handler runs in the gateway process that owns the session, also when the user types the command in the classic `anakot chat` CLI. The handler is not running in the user's terminal or directory, so:
 
 - Return the text to show. `print()` writes to the gateway's stdout, and the user never sees it.
 - Take the session's working directory from `agent.runtime_cwd.resolve_agent_cwd()`, not `os.getcwd()`, which is the gateway's own directory. Resolve relative paths against it.
-- Read session identity with `get_session_env("HERMES_SESSION_PLATFORM")`, `get_session_env("HERMES_SESSION_CHAT_ID")` and the other `HERMES_SESSION_*` names, not `os.environ`. Import the function itself with `from gateway.session_context import get_session_env`: that name is the public seam, and `hermes plugins validate` reports `import gateway.session_context` as a private import.
-- For "who asked this turn" (authorization, provenance), read `HERMES_SESSION_ACTOR_ID` / `HERMES_SESSION_ACTOR_NAME`. Both are empty when the turn has no single actor (another member's message joined it), in process and in a terminal or `execute_code` child alike, so treat empty as nobody in particular. `HERMES_SESSION_USER_ID` is the session route, and it is empty in a shared chat (Telegram observe mode), so code that rebuilds a delivery target from it stays on the shared conversation.
+- Read session identity with `get_session_env("ANAKOT_SESSION_PLATFORM")`, `get_session_env("ANAKOT_SESSION_CHAT_ID")` and the other `ANAKOT_SESSION_*` names, not `os.environ`. Import the function itself with `from gateway.session_context import get_session_env`: that name is the public seam, and `anakot plugins validate` reports `import gateway.session_context` as a private import.
+- For "who asked this turn" (authorization, provenance), read `ANAKOT_SESSION_ACTOR_ID` / `ANAKOT_SESSION_ACTOR_NAME`. Both are empty when the turn has no single actor (another member's message joined it), in process and in a terminal or `execute_code` child alike, so treat empty as nobody in particular. `ANAKOT_SESSION_USER_ID` is the session route, and it is empty in a shared chat (Telegram observe mode), so code that rebuilds a delivery target from it stays on the shared conversation.
 
 ```python
 from agent.runtime_cwd import resolve_agent_cwd
@@ -1983,8 +1983,8 @@ def _handle_todo(raw_args: str) -> str:
     return todo.read_text() if todo.exists() else "No TODO.md here."
 
 def _handle_where(raw_args: str) -> str:
-    platform = get_session_env("HERMES_SESSION_PLATFORM")  # unbound: falls back to os.environ, then ""
-    return f"{platform or 'local'} chat {get_session_env('HERMES_SESSION_CHAT_ID') or '(none)'}"
+    platform = get_session_env("ANAKOT_SESSION_PLATFORM")  # unbound: falls back to os.environ, then ""
+    return f"{platform or 'local'} chat {get_session_env('ANAKOT_SESSION_CHAT_ID') or '(none)'}"
 ```
 
 ### Ask the user to pick an option
@@ -2059,9 +2059,9 @@ This is the public, stable interface for tool dispatch from plugin commands. Plu
 
 ### Act from inside a hook (profile + tools)
 
-`ctx._cli_ref` is only populated in an **interactive CLI** session. It is `None` in the gateway, in non-interactive `hermes chat -q` runs, and in **kanban-spawned worker sessions** — so any plugin logic that reaches through `_cli_ref` silently no-ops in exactly those contexts. Two stable, session-agnostic APIs cover what hooks actually need:
+`ctx._cli_ref` is only populated in an **interactive CLI** session. It is `None` in the gateway, in non-interactive `anakot chat -q` runs, and in **kanban-spawned worker sessions** — so any plugin logic that reaches through `_cli_ref` silently no-ops in exactly those contexts. Two stable, session-agnostic APIs cover what hooks actually need:
 
-- **`ctx.profile_name`** — the active profile name (e.g. `"default"`, or the assignee profile in a kanban worker). Derived from `HERMES_HOME`, so it works everywhere with no `_cli_ref` dependency.
+- **`ctx.profile_name`** — the active profile name (e.g. `"default"`, or the assignee profile in a kanban worker). Derived from `ANAKOT_HOME`, so it works everywhere with no `_cli_ref` dependency.
 - **`ctx.dispatch_tool(name, args)`** — invoke any registered tool (built-in or plugin), including the `kanban_*` tools, `delegate_task`, `terminal`, `read_file`, etc. Works from hook callbacks regardless of which process the hook fires in.
 
 Together these let a kanban lifecycle hook observe a transition and act on the board without touching framework internals:
@@ -2077,7 +2077,7 @@ def register(ctx):
     ctx.register_hook("kanban_task_blocked", on_blocked)
 ```
 
-For running a full `hermes <subcommand>` (e.g. `hermes kanban show`), shell out with the `terminal` tool via `ctx.dispatch_tool("terminal", {"command": "hermes kanban show ..."})` — there is no in-process slash-command bridge for headless worker sessions, and tools are the supported way to drive Hermes from a hook.
+For running a full `anakot <subcommand>` (e.g. `anakot kanban show`), shell out with the `terminal` tool via `ctx.dispatch_tool("terminal", {"command": "anakot kanban show ..."})` — there is no in-process slash-command bridge for headless worker sessions, and tools are the supported way to drive Anakot from a hook.
 
 ### Talk to your own frontend: plugin RPC methods and session events
 
@@ -2122,7 +2122,7 @@ listens for the event frame of type `plugin.<plugin_id>.pane.changed`:
   id (compression gives the agent a new one), so a tool or hook can pass the `session_id` it received.
   `payload` is a JSON dict. The call returns `True` when a live viewer took the frame, `False` when no
   client is viewing or this process holds no such session. `ctx.emit_to_session` looks the session up in
-  your plugin's own profile, also from a thread you started. `hermes_cli.plugin_events.emit_plugin_session_event(plugin_id, session_id, event, payload)`
+  your plugin's own profile, also from a thread you started. `anakot_cli.plugin_events.emit_plugin_session_event(plugin_id, session_id, event, payload)`
   is the same call for code without `ctx`; it uses the caller's profile scope, so from your own thread on
   a gateway that serves several profiles, use `ctx.emit_to_session`.
 - **`plugins.isolation: host`:** handlers run in the plugin host process, and both emit calls are
@@ -2133,8 +2133,8 @@ listens for the event frame of type `plugin.<plugin_id>.pane.changed`:
   started (the host may not know which plugin it belongs to), so use `ctx.emit_to_session` there. In-process the helper takes
   `plugin_id` as given.
 - **Where it works:** on a gateway that owns sessions (its session authority, as on the shared
-  `hermes gateway run` gateway that attached frontends use). A backend without one answers the method
-  with `-32601`. In a process without one (`hermes chat`, cron, a
+  `anakot gateway run` gateway that attached frontends use). A backend without one answers the method
+  with `-32601`. In a process without one (`anakot chat`, cron, a
   `dashboard.turn_isolation` compute child) `emit_to_session` returns `False`.
 - **Detect it first.** An owner that serves plugin methods lists `plugin-rpc-v1` in
   `runtime.describe`'s `capabilities`. With it, `-32601` means that plugin method is not loaded (the
@@ -2147,13 +2147,13 @@ listens for the event frame of type `plugin.<plugin_id>.pane.changed`:
 **Security.** A plugin method gets the same gate as a plugin slash command on that gateway: the connection
 needs the `session:control` capability, and a call that names a `session_id` must pass that session's
 authorization (the right profile, the owner of a local session, a superseded conversation is read-only).
-Beyond that, any client the gateway authenticated can call any plugin method with any params. Hermes does
+Beyond that, any client the gateway authenticated can call any plugin method with any params. Anakot does
 not check callers per method (`SECURITY.md` §2.6, rule 4): treat a plugin method like a plugin tool, validate
 its params, and never expose through it more than the plugin's own data and actions.
 
 ### Follow the user's self-learning cadence (`review_signals`)
 
-After every successful turn, `post_llm_call` carries `review_signals`: the counters behind Hermes' own background memory/skill review (`skills.creation_nudge_interval`, `memory.nudge_interval`) and whether that review is due and enabled this turn. A plugin with after-turn work of its own (judging the skills a turn touched, say) can run on the same cadence the user already tuned instead of counting tool calls itself:
+After every successful turn, `post_llm_call` carries `review_signals`: the counters behind Anakot' own background memory/skill review (`skills.creation_nudge_interval`, `memory.nudge_interval`) and whether that review is due and enabled this turn. A plugin with after-turn work of its own (judging the skills a turn touched, say) can run on the same cadence the user already tuned instead of counting tool calls itself:
 
 ```python
 def register(ctx):
@@ -2161,18 +2161,18 @@ def register(ctx):
         if not review_signals or not review_signals["background_review_enabled"]:
             return  # cron run, subagent, or the user turned background review off
         if review_signals["skill_review_due"]:
-            ...  # the same turn Hermes reviews skills on
+            ...  # the same turn Anakot reviews skills on
 
     ctx.register_hook("post_llm_call", on_post_llm_call)
 ```
 
-The hook fires before Hermes decides, and the due flags are the values that decision uses. Keys and semantics: [`post_llm_call`](../../user-guide/features/hooks.md#review_signals). To do that work the way Hermes' own review does (a background copy of the session's agent with a narrow tool list), pair the signal with [`ctx.fork_session`](../plugin-llm-access.md#forking-the-sessions-own-agent-ctxfork_session).
+The hook fires before Anakot decides, and the due flags are the values that decision uses. Keys and semantics: [`post_llm_call`](../../user-guide/features/hooks.md#review_signals). To do that work the way Anakot' own review does (a background copy of the session's agent with a narrow tool list), pair the signal with [`ctx.fork_session`](../plugin-llm-access.md#forking-the-sessions-own-agent-ctxfork_session).
 
-### Run a job when Hermes is idle (`ctx.register_idle_task`)
+### Run a job when Anakot is idle (`ctx.register_idle_task`)
 
 Experimental: the signature may change in a later release ([details](../plugin-llm-access.md#idle-tasks-ctxregister_idle_task)).
 
-Some work has no turn to hang off: re-scoring your plugin's data once a day, suggesting a cleanup, compacting a cache. `ctx.register_idle_task` runs it on the same scheduler as the skill [curator](../../user-guide/features/curator.md), from the same places (gateway housekeeping for every served profile, CLI/TUI startup, the `hermes serve` maintenance tick):
+Some work has no turn to hang off: re-scoring your plugin's data once a day, suggesting a cleanup, compacting a cache. `ctx.register_idle_task` runs it on the same scheduler as the skill [curator](../../user-guide/features/curator.md), from the same places (gateway housekeeping for every served profile, CLI/TUI startup, the `anakot serve` maintenance tick):
 
 ```python
 def register(ctx):
@@ -2186,16 +2186,16 @@ def register(ctx):
             task="suggest",  # a task this plugin registered with ctx.register_auxiliary_task
         )
         ctx.state.set("ranking", result.text)
-        return f"ranked {len(candidates)} skills"  # optional summary, shown by `hermes plugins idle-tasks`
+        return f"ranked {len(candidates)} skills"  # optional summary, shown by `anakot plugins idle-tasks`
 
     ctx.register_idle_task("suggest", suggest, interval_hours=24, min_idle_hours=2)
 ```
 
 `register_idle_task(name, fn, *, interval_hours, min_idle_hours=2, first_run="defer")` returns a `PluginRegistration` (dispose it to stop polling). A task runs when:
 
-- the host has been idle `min_idle_hours` (gateway housekeeping and CLI startup count as fully idle, `hermes serve` measures chat inactivity);
+- the host has been idle `min_idle_hours` (gateway housekeeping and CLI startup count as fully idle, `anakot serve` measures chat inactivity);
 - `interval_hours` (floored to 1) have passed since its last run. The first poll records "now" and waits one interval, like the curator, so an install or update never runs the job straight away; `first_run="immediate"` runs it on the first idle poll instead;
-- it is not paused (`hermes plugins idle-tasks <plugin> --pause <task>`);
+- it is not paused (`anakot plugins idle-tasks <plugin> --pause <task>`);
 - no other run of it is in flight, in this process or another one.
 
 `fn` runs on its own thread, in the profile that registered it, and the host does not wait for it: the poll returns at once, and no second run of the task starts while one is in flight. Keep a run short and safe to repeat: when the gateway stops, a run still going records nothing and runs again later ([shutdown contract](../plugin-llm-access.md#idle-tasks-ctxregister_idle_task)). An exception is logged and recorded as `last_status: error` and never reaches the host. State lives in the plugin's data dir, `<data dir>/idle-tasks/<name>.json` (`last_run_at`, `run_count`, `paused`, `last_summary`, `last_status`, `last_error`), so each profile schedules its own copy.
@@ -2221,13 +2221,13 @@ it performs no origin, consent or ownership checks for you. Full contract:
 | Field | Meaning |
 |---|---|
 | `job_id`, `job_name` | The cron job. |
-| `execution_id` | This run's row in the executions ledger (`hermes cron runs`). |
-| `source` | Which path fired the run: `"builtin"` (the built-in scheduler), `"direct"` (a run fired outside it, e.g. `hermes cron run`), or an external scheduler's name. |
+| `execution_id` | This run's row in the executions ledger (`anakot cron runs`). |
+| `source` | Which path fired the run: `"builtin"` (the built-in scheduler), `"direct"` (a run fired outside it, e.g. `anakot cron run`), or an external scheduler's name. |
 | `scheduled_instant` | The schedule occurrence this run fires. `None` for a manual or other off-schedule run, so check this field to tell a scheduled run from a manual one. |
 | `started_at` | When the run started. |
 | `profile` | The profile that owns the job. |
 
-The scheduler sets it only after the run has won its execution claim, and clears it when the run ends. It is per-run, so two jobs or profiles firing at the same time never see each other's value. The model cannot forge it: hook arguments come from Hermes, and tool subprocesses (terminal, `execute_code`) run in a separate interpreter. Subagents spawned with `delegate_task` get `None` because they are not the scheduled run itself.
+The scheduler sets it only after the run has won its execution claim, and clears it when the run ends. It is per-run, so two jobs or profiles firing at the same time never see each other's value. The model cannot forge it: hook arguments come from Anakot, and tool subprocesses (terminal, `execute_code`) run in a separate interpreter. Subagents spawned with `delegate_task` get `None` because they are not the scheduled run itself.
 
 ```python
 def register(ctx):
@@ -2265,7 +2265,7 @@ Users then run `/blueprint teamtools:standup` (or just `/blueprint standup`) or 
 
 - **Keys are namespaced.** The catalog key is `<plugin>:<key>` (`teamtools:standup`), so a plugin can never replace a built-in or another plugin's blueprint. Pass the bare key; a key containing `:` is rejected.
 - **Slots and templates.** Slot `type` is `time` (`HH:MM`), `enum`, `weekdays`, or `text`. `prompt_template` may use any slot as `{name}`. `schedule_template` may use slot names plus `{minute}`/`{hour}` (from a slot named `time`) and `{dow}` (from a `recurrence`/`day` slot, else `*`). A slot named `deliver` gets the profile's real delivery targets in the Desktop and dashboard forms.
-- **Validated at registration.** An unknown placeholder, bad slot type, duplicate key, or schedule that does not parse logs a warning and skips that blueprint; the rest of your plugin still loads. When every slot has a default, Hermes fills the blueprint once at load, so a broken template fails then instead of on the user's first *Schedule it*.
+- **Validated at registration.** An unknown placeholder, bad slot type, duplicate key, or schedule that does not parse logs a warning and skips that blueprint; the rest of your plugin still loads. When every slot has a default, Anakot fills the blueprint once at load, so a broken template fails then instead of on the user's first *Schedule it*.
 - **Per profile.** Plugins load per profile, so the blueprint is listed only in profiles where your plugin is enabled.
 - **Jobs outlive the plugin.** Scheduling a blueprint creates an ordinary cron job with the prompt and schedule already filled in. Disabling or uninstalling the plugin removes the blueprint from the catalog but leaves those jobs running. If a job's `skills` name a skill your plugin bundles, the job skips that skill (and logs it) while the plugin is disabled.
 
@@ -2384,11 +2384,11 @@ def register(ctx):
 
 ### Mid-run plugin loading: what activates now vs next session
 
-A plugin can load while the gateway (or the TUI/Desktop server) is already running: `hermes plugins
+A plugin can load while the gateway (or the TUI/Desktop server) is already running: `anakot plugins
 install`/`enable`, a Desktop or dashboard install, a catalog re-pin, or a tool-triggered force
 re-discovery. Every one of those paths runs a **real forced rescan** (`discover_plugins(force=True)`) and
 `PluginManager.on_plugin_loaded(callback)` fires from inside it with one summary per **newly** loaded plugin
-(`hermes_cli/plugins_activation.py`):
+(`anakot_cli/plugins_activation.py`):
 
 ```python
 {"name": "late-mcp", "key": "late-mcp",
@@ -2408,7 +2408,7 @@ re-discovery. Every one of those paths runs a **real forced rescan** (`discover_
 - There is no un-wire: disabling a plugin mid-run keeps its already-wired handlers until the gateway
   restarts, and the surfaces say so.
 
-Install surfaces report exactly this split: `hermes plugins install/enable` prints it after nudging the running
+Install surfaces report exactly this split: `anakot plugins install/enable` prints it after nudging the running
 gateway (`reload-plugins` control-socket verb), `plugins.manage install/toggle/update` returns `activation` +
 `gateway_reloaded` (`restart_required` is true only when no gateway answered).
 
@@ -2418,7 +2418,7 @@ This guide covers **general plugins** (tools, hooks, slash commands, CLI command
 
 ## Specialized plugin types
 
-Hermes has five specialized plugin types beyond the general surface. Each ships as a directory under `plugins/<category>/<name>/` (bundled) or `~/.hermes/plugins/<category>/<name>/` (user). The contract differs by category — pick the one you need, then read its full guide.
+Anakot has five specialized plugin types beyond the general surface. Each ships as a directory under `plugins/<category>/<name>/` (bundled) or `~/.anakot/plugins/<category>/<name>/` (user). The contract differs by category — pick the one you need, then read its full guide.
 
 ### Model provider plugins — add an LLM backend
 
@@ -2485,7 +2485,7 @@ def register(ctx):
         check_fn=check_requirements,
         required_env=["MYPLATFORM_TOKEN"],
         # Auto-populate PlatformConfig.extra from env so env-only setups
-        # show up in `hermes gateway status` without SDK instantiation.
+        # show up in `anakot gateway status` without SDK instantiation.
         env_enablement_fn=_env_enablement,
         # Opt in to cron delivery: `deliver=myplatform` routes to this var.
         cron_deliver_env_var="MYPLATFORM_HOME_CHANNEL",
@@ -2616,12 +2616,12 @@ description: Custom image generation backend
 The `computer_use` tool talks to exactly one **driver** through the `ComputerUseBackend` ABC
 (`tools/computer_use/backend.py`). `computer_use.backend` in `config.yaml` picks it; the default is the
 built-in cua-driver, which ships as an ordinary provider at `plugins/computer_use/cua/`. Another driver
-is a provider plugin in `~/.hermes/plugins/<name>/` whose `register(ctx)` calls
+is a provider plugin in `~/.anakot/plugins/<name>/` whose `register(ctx)` calls
 `ctx.register_computer_use_provider()`. The directory name is the value you put in `computer_use.backend`.
 Computer-use providers are single-select, like memory providers and context engines:
 
 ```python
-# ~/.hermes/plugins/my-driver/__init__.py
+# ~/.anakot/plugins/my-driver/__init__.py
 from tools.computer_use.backend import (
     ActionResult, CaptureResult, ComputerUseBackend, ComputerUseProvider,
 )
@@ -2654,7 +2654,7 @@ class MyDriverProvider(ComputerUseProvider):
     def is_available(self):                 # gates the tool; cheap, no network
         return True
 
-    def doctor(self):                       # optional: `hermes computer-use doctor`
+    def doctor(self):                       # optional: `anakot computer-use doctor`
         print("my-driver: ok")
         return 0
 
@@ -2663,13 +2663,13 @@ def register(ctx):
 ```
 
 ```yaml
-# ~/.hermes/plugins/my-driver/plugin.yaml
+# ~/.anakot/plugins/my-driver/plugin.yaml
 name: my-driver
 version: 1.0.0
 description: Alternative computer-use driver   # shown in the picker
 ```
 
-Select it in `hermes tools` → Computer Use (installed providers are listed under cua-driver, in the
+Select it in `anakot tools` → Computer Use (installed providers are listed under cua-driver, in the
 CLI and in the Desktop toolset panel), or set it directly. No `plugins.enabled` entry is needed:
 
 ```yaml
@@ -2684,24 +2684,24 @@ Rules:
   providers that aren't selected stay on disk and are only listed (from `plugin.yaml`) as options. A
   provider never activates itself.
 - **Selection is per profile and read when a session starts its driver.** If the configured name
-  doesn't resolve, the call fails with an error naming it and the installed providers. Hermes never
+  doesn't resolve, the call fails with an error naming it and the installed providers. Anakot never
   falls back to another driver.
 - **The model-facing schema is the same for every provider**, so the prompt cache survives a driver
   swap. Report gaps per action with `ActionResult(ok=False, code="unsupported_action", ...)`.
 - Approval gating, the Bot Desktop lease, screenshot dedup, element caps and vision routing all run
   in the tool, above the backend. The backend only drives the screen.
-- `hermes computer-use status`/`doctor`/`permissions` run cua-driver checks only when `cua` is
+- `anakot computer-use status`/`doctor`/`permissions` run cua-driver checks only when `cua` is
   selected. For any other provider they report its `is_available()` and run its `doctor()` if it has one.
 - Providers return live driver sessions, so they load in-process only. Under
   `plugins.isolation: host`, a user provider is refused and the call reports that it could not be loaded.
 
 ## Non-Python extension surfaces
 
-Hermes also accepts extensions that aren't Python plugins at all. These are shown in the [Pluggable interfaces table](../../user-guide/features/plugins.md#pluggable-interfaces--where-to-go-for-each); the sections below sketch each authoring style briefly.
+Anakot also accepts extensions that aren't Python plugins at all. These are shown in the [Pluggable interfaces table](../../user-guide/features/plugins.md#pluggable-interfaces--where-to-go-for-each); the sections below sketch each authoring style briefly.
 
 ### MCP servers — register external tools
 
-Model Context Protocol (MCP) servers register their own tools into Hermes without any Python plugin. Declare them in `~/.hermes/config.yaml`:
+Model Context Protocol (MCP) servers register their own tools into Anakot without any Python plugin. Declare them in `~/.anakot/config.yaml`:
 
 ```yaml
 mcp_servers:
@@ -2716,14 +2716,14 @@ mcp_servers:
       type: "oauth"
 ```
 
-Hermes connects to each server at startup, lists its tools, and registers them alongside built-ins. The LLM sees them exactly like any other tool. **Full guide:** [MCP](../../user-guide/features/mcp.md).
+Anakot connects to each server at startup, lists its tools, and registers them alongside built-ins. The LLM sees them exactly like any other tool. **Full guide:** [MCP](../../user-guide/features/mcp.md).
 
 ### Gateway event hooks — fire on lifecycle events
 
-Drop a manifest + handler into `~/.hermes/hooks/<name>/`. Unlike plugins there is no `plugins.enabled` step: the gateway imports every valid hook directory at startup, so placing the files **is** the opt-in ([trust model](../../user-guide/features/hooks.md#gateway-hook-trust)):
+Drop a manifest + handler into `~/.anakot/hooks/<name>/`. Unlike plugins there is no `plugins.enabled` step: the gateway imports every valid hook directory at startup, so placing the files **is** the opt-in ([trust model](../../user-guide/features/hooks.md#gateway-hook-trust)):
 
 ```yaml
-# ~/.hermes/hooks/long-task-alert/HOOK.yaml
+# ~/.anakot/hooks/long-task-alert/HOOK.yaml
 name: long-task-alert
 description: Send a push notification when a long task finishes
 events:
@@ -2731,7 +2731,7 @@ events:
 ```
 
 ```python
-# ~/.hermes/hooks/long-task-alert/handler.py
+# ~/.anakot/hooks/long-task-alert/handler.py
 async def handle(event_type: str, context: dict) -> None:
     if context.get("duration_seconds", 0) > 120:
         # send notification …
@@ -2763,9 +2763,9 @@ Supports all the same events as Python plugin hooks (`pre_tool_call`, `post_tool
 If you maintain a GitHub repo of skills (or want to pull from a community index beyond the built-in sources), add it as a **tap**:
 
 ```bash
-hermes skills tap add myorg/skills-repo
-hermes skills search my-workflow --source myorg/skills-repo
-hermes skills install myorg/skills-repo/my-workflow
+anakot skills tap add myorg/skills-repo
+anakot skills search my-workflow --source myorg/skills-repo
+anakot skills install myorg/skills-repo/my-workflow
 ```
 
 Publishing your own tap is just a GitHub repo with `skills/<skill-name>/SKILL.md` directories — no server or registry signup needed.
@@ -2787,7 +2787,7 @@ tts:
       voice_compatible: true
 ```
 
-For STT, point `HERMES_LOCAL_STT_COMMAND` at an argv-tokenized template. It runs without implicit shell interpretation; wrap it in `sh -c`, `cmd /c`, or PowerShell explicitly if the trusted local command requires shell syntax. Supported placeholders: `{input_path}`, `{output_path}`, `{format}`, `{voice}`, `{model}`, `{speed}` (TTS); `{input_path}`, `{output_dir}`, `{language}`, `{model}` (STT). Any path-interacting CLI is automatically a plugin.
+For STT, point `ANAKOT_LOCAL_STT_COMMAND` at an argv-tokenized template. It runs without implicit shell interpretation; wrap it in `sh -c`, `cmd /c`, or PowerShell explicitly if the trusted local command requires shell syntax. Supported placeholders: `{input_path}`, `{output_path}`, `{format}`, `{voice}`, `{model}`, `{speed}` (TTS); `{input_path}`, `{output_dir}`, `{language}`, `{model}` (STT). Any path-interacting CLI is automatically a plugin.
 
 **Full guides:** [TTS custom command providers](../../user-guide/features/tts.md#custom-command-providers) · [STT](../../user-guide/features/tts.md#voice-message-transcription-stt).
 
@@ -2797,7 +2797,7 @@ For sharing plugins publicly, add an entry point to your Python package:
 
 ```toml
 # pyproject.toml
-[project.entry-points."hermes_agent.plugins"]
+[project.entry-points."anakot_agent.plugins"]
 my-plugin = "my_plugin_package"
 ```
 
@@ -2805,9 +2805,9 @@ Entry-point discovery remains supported when the distribution is present in the
 environment supplied by the installation owner (for example, a Nix derivation).
 It is discovery, not permission to inject packages into a PM-selected generation.
 For managed installs, distribute a directory plugin with `pyproject.toml` or
-manifest Python requirements and use `hermes plugins install` / `enable` so PM
-can admit it transactionally. Restart Hermes after a new environment is selected.
-`hermes pm install` accepts managed tool names, not arbitrary PyPI packages.
+manifest Python requirements and use `anakot plugins install` / `enable` so PM
+can admit it transactionally. Restart Anakot after a new environment is selected.
+`anakot pm install` accepts managed tool names, not arbitrary PyPI packages.
 
 ## Distribute for NixOS
 
@@ -2820,28 +2820,28 @@ NixOS users can install your plugin declaratively if you provide a `pyproject.to
 **Entry-point plugins** (recommended for distribution):
 ```nix
 # User's configuration.nix
-services.hermes-agent.extraPythonPackages = [
-  (config.services.hermes-agent.package.python.pkgs.buildPythonPackage {
+services.anakot-agent.extraPythonPackages = [
+  (config.services.anakot-agent.package.python.pkgs.buildPythonPackage {
     pname = "my-plugin";
     version = "1.0.0";
     src = pkgs.fetchFromGitHub {
       owner = "you";
-      repo = "hermes-my-plugin";
+      repo = "anakot-my-plugin";
       rev = "v1.0.0";
       hash = "sha256-...";  # nix-prefetch-url --unpack
     };
     format = "pyproject";
-    build-system = [ config.services.hermes-agent.package.python.pkgs.setuptools ];
+    build-system = [ config.services.anakot-agent.package.python.pkgs.setuptools ];
   })
 ];
 ```
 
 **Directory plugins** (no `pyproject.toml` needed):
 ```nix
-services.hermes-agent.extraPlugins = [
+services.anakot-agent.extraPlugins = [
   (pkgs.fetchFromGitHub {
     owner = "you";
-    repo = "hermes-my-plugin";
+    repo = "anakot-my-plugin";
     rev = "v1.0.0";
     hash = "sha256-...";
   })

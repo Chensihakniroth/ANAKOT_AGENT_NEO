@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FileEntryContextMenu, InlineRenameInput } from '@/app/right-sidebar/file-actions'
 import { registerTerminalContextMenu } from '@/app/right-sidebar/terminal/terminal-context-menu'
 import { DirectiveContent } from '@/components/assistant-ui/directive-text'
-import { ContextMenu, ContextMenuTrigger, HERMES_CONTEXT_MENU_TRIGGER_ATTR } from '@/components/ui/context-menu'
+import { ContextMenu, ContextMenuTrigger, ANAKOT_CONTEXT_MENU_TRIGGER_ATTR } from '@/components/ui/context-menu'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { $previewTabs, closeRightRail } from '@/store/preview'
 import { $connection } from '@/store/session'
@@ -20,14 +20,14 @@ import {
 } from './store'
 import { resolveDomTarget } from './target'
 
-const desktopWindow = window as unknown as { hermesDesktop?: Window['hermesDesktop'] }
+const desktopWindow = window as unknown as { anakotDesktop?: Window['anakotDesktop'] }
 
-function installBridge(partial: Partial<Window['hermesDesktop']> = {}) {
-  desktopWindow.hermesDesktop = {
+function installBridge(partial: Partial<Window['anakotDesktop']> = {}) {
+  desktopWindow.anakotDesktop = {
     openExternal: vi.fn().mockResolvedValue(undefined),
     writeClipboard: vi.fn().mockResolvedValue(true),
     ...partial
-  } as unknown as Window['hermesDesktop']
+  } as unknown as Window['anakotDesktop']
 }
 
 function mountMenu() {
@@ -55,8 +55,8 @@ afterEach(() => {
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   document.body.innerHTML = ''
-  delete window.document.documentElement.dataset.hermesDesktopHost
-  delete desktopWindow.hermesDesktop
+  delete window.document.documentElement.dataset.anakotDesktopHost
+  delete desktopWindow.anakotDesktop
 })
 
 describe('resolveDomTarget', () => {
@@ -99,7 +99,7 @@ describe('resolveDomTarget', () => {
 describe('AppContextMenu', () => {
   it('leaves explicit row menus available on touch devices', () => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }))
     mountMenu()
     const host = attach('<div data-slot="context-menu-trigger">Profile row</div>')
@@ -115,7 +115,7 @@ describe('AppContextMenu', () => {
     ['an editable', '<textarea>selectable content</textarea>', 'textarea']
   ])('preserves native touch long-press on %s before text selection exists', (_name, content, tag) => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }))
     mountMenu()
 
@@ -135,7 +135,7 @@ describe('AppContextMenu', () => {
       ['terminal', '<div data-terminal=""><canvas></canvas></div>', 'Select all']
     ])('opens only the app menu for %s, preserving Electron native facts', async (_kind, html, label) => {
       installBridge()
-      window.document.documentElement.dataset.hermesDesktopHost = hostKind
+      window.document.documentElement.dataset.anakotDesktopHost = hostKind
       mountMenu()
       const host = attach(html)
       const terminal = host.querySelector('[data-terminal]')
@@ -170,11 +170,11 @@ describe('AppContextMenu', () => {
 
   // The skip-marked and radix-surface tests below cover these markers in
   // Electron; in the Webapp a late marker check would also cancel the native menu.
-  it.each([HERMES_CONTEXT_MENU_TRIGGER_ATTR, 'data-slot="context-menu-trigger"', 'data-context-menu-skip'])(
+  it.each([ANAKOT_CONTEXT_MENU_TRIGGER_ATTR, 'data-slot="context-menu-trigger"', 'data-context-menu-skip'])(
     'leaves the gesture untouched in the browser Webapp for a surface owning %s',
     marker => {
       installBridge()
-      window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+      window.document.documentElement.dataset.anakotDesktopHost = 'browser'
       mountMenu()
       const host = attach(`<div ${marker}><span>owned surface</span></div>`)
       const target = host.querySelector('span')!
@@ -193,7 +193,7 @@ describe('AppContextMenu', () => {
 
   it('leaves native media context menus untouched in the browser Webapp', () => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     mountMenu()
     const host = attach('<audio controls></audio>')
     const target = host.firstElementChild!
@@ -211,7 +211,7 @@ describe('AppContextMenu', () => {
 
   it('detects native media through the composed path', () => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     mountMenu()
     const host = attach('<div><video controls></video></div>')
     const target = host.firstElementChild!
@@ -237,7 +237,7 @@ describe('AppContextMenu', () => {
     ['a link inside an editable', '<div contenteditable="true"><a href="https://example.com">link</a></div>', 'a']
   ])('leaves the native menu on %s in the browser Webapp', (_name, html, selector) => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     mountMenu()
     const host = attach(html)
     // jsdom lacks the browser's isContentEditable.
@@ -258,7 +258,7 @@ describe('AppContextMenu', () => {
 
   it('leaves the native menu on an inline file rename in the browser Webapp', () => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'browser'
+    window.document.documentElement.dataset.anakotDesktopHost = 'browser'
     render(
       <MemoryRouter>
         <AppContextMenu />
@@ -284,7 +284,7 @@ describe('AppContextMenu', () => {
     ['electron', 'text']
   ])('%s: a %s input inside a row still opens the row menu', async (hostKind, type) => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = hostKind
+    window.document.documentElement.dataset.anakotDesktopHost = hostKind
     render(
       <MemoryRouter>
         <AppContextMenu />
@@ -308,7 +308,7 @@ describe('AppContextMenu', () => {
 
   it('keeps native media gestures unprevented in Electron', async () => {
     installBridge()
-    window.document.documentElement.dataset.hermesDesktopHost = 'electron'
+    window.document.documentElement.dataset.anakotDesktopHost = 'electron'
     mountMenu()
     const electronHost = attach('<video controls></video>')
     const electronEvent = createEvent.contextMenu(electronHost.firstElementChild!)
@@ -388,8 +388,8 @@ describe('AppContextMenu', () => {
     const writeClipboard = vi.fn().mockResolvedValue(true)
 
     installBridge({
-      reachPreviewUrl: reachPreviewUrl as unknown as Window['hermesDesktop']['reachPreviewUrl'],
-      writeClipboard: writeClipboard as unknown as Window['hermesDesktop']['writeClipboard']
+      reachPreviewUrl: reachPreviewUrl as unknown as Window['anakotDesktop']['reachPreviewUrl'],
+      writeClipboard: writeClipboard as unknown as Window['anakotDesktop']['writeClipboard']
     })
     mountMenu()
     const host = attach('<a href="http://localhost:5173/">Dev</a>')
@@ -414,7 +414,7 @@ describe('AppContextMenu', () => {
 
   it('copies images via native bridge in Electron and via browser clipboard in Webapp', async () => {
     const contextMenuCopyImage = vi.fn().mockResolvedValue(undefined)
-    installBridge({ contextMenuCopyImage: contextMenuCopyImage as unknown as Window['hermesDesktop']['contextMenuCopyImage'] })
+    installBridge({ contextMenuCopyImage: contextMenuCopyImage as unknown as Window['anakotDesktop']['contextMenuCopyImage'] })
     mountMenu()
     const host = attach('<img src="https://example.com/pic.png" alt="pic">')
 
@@ -457,8 +457,8 @@ describe('AppContextMenu', () => {
   it.each(['electron', 'browser'])('%s: edit verbs run after the menu closed, field refocused', async hostKind => {
     const contextMenuEdit = vi.fn().mockResolvedValue(undefined)
 
-    installBridge({ contextMenuEdit: contextMenuEdit as unknown as Window['hermesDesktop']['contextMenuEdit'] })
-    window.document.documentElement.dataset.hermesDesktopHost = hostKind
+    installBridge({ contextMenuEdit: contextMenuEdit as unknown as Window['anakotDesktop']['contextMenuEdit'] })
+    window.document.documentElement.dataset.anakotDesktopHost = hostKind
     mountMenu()
     const host = attach('<textarea>some draft text</textarea>')
     const textarea = host.querySelector('textarea')!
@@ -483,7 +483,7 @@ describe('AppContextMenu', () => {
     const contextMenuEdit = vi.fn().mockResolvedValue(undefined)
 
     installBridge({
-      contextMenuEdit: contextMenuEdit as unknown as Window['hermesDesktop']['contextMenuEdit'],
+      contextMenuEdit: contextMenuEdit as unknown as Window['anakotDesktop']['contextMenuEdit'],
       readClipboard: vi.fn().mockResolvedValue('clipboard payload')
     })
     render(
@@ -555,7 +555,7 @@ describe('AppContextMenu', () => {
   it('select all stays inside the field and never reaches main', async () => {
     const contextMenuEdit = vi.fn().mockResolvedValue(undefined)
 
-    installBridge({ contextMenuEdit: contextMenuEdit as unknown as Window['hermesDesktop']['contextMenuEdit'] })
+    installBridge({ contextMenuEdit: contextMenuEdit as unknown as Window['anakotDesktop']['contextMenuEdit'] })
     mountMenu()
     const host = attach('<textarea>alpha beta gamma</textarea>')
     const textarea = host.querySelector('textarea')!
@@ -598,7 +598,7 @@ describe('AppContextMenu', () => {
     // gray the item out; pasting on a truly empty clipboard is a no-op.
     const readClipboard = vi.fn().mockResolvedValue('')
 
-    installBridge({ readClipboard: readClipboard as unknown as Window['hermesDesktop']['readClipboard'] })
+    installBridge({ readClipboard: readClipboard as unknown as Window['anakotDesktop']['readClipboard'] })
     mountMenu()
     const host = attach('<textarea>text</textarea>')
 
@@ -858,6 +858,6 @@ describe('ContextMenuTrigger asChild', () => {
     const footer = screen.getByText('bar')
 
     expect(footer.getAttribute('data-slot')).toBe('statusbar')
-    expect(footer.hasAttribute(HERMES_CONTEXT_MENU_TRIGGER_ATTR)).toBe(true)
+    expect(footer.hasAttribute(ANAKOT_CONTEXT_MENU_TRIGGER_ATTR)).toBe(true)
   })
 })

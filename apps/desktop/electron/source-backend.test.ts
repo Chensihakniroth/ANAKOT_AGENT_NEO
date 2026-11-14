@@ -75,16 +75,16 @@ test.skipIf(process.platform === 'win32')(
 
     const env: NodeJS.ProcessEnv = Object.fromEntries(
       Object.entries(process.env).filter(
-        ([key]: [string, string | undefined]): boolean => !/^(HERMES_|PYTHON|UV_|VIRTUAL_ENV|XDG_)/.test(key)
+        ([key]: [string, string | undefined]): boolean => !/^(ANAKOT_|PYTHON|UV_|VIRTUAL_ENV|XDG_)/.test(key)
       )
     )
 
     Object.assign(env, {
       HOME: home,
       USERPROFILE: home,
-      HERMES_HOME: path.join(home, '.hermes'),
-      HERMES_RUNTIME_DIR: path.join(temp, 'tools'),
-      HERMES_DISABLE_LAZY_INSTALLS: '1',
+      ANAKOT_HOME: path.join(home, '.anakot'),
+      ANAKOT_RUNTIME_DIR: path.join(temp, 'tools'),
+      ANAKOT_DISABLE_LAZY_INSTALLS: '1',
       XDG_CONFIG_HOME: path.join(temp, 'config'),
       XDG_CONFIG_DIRS: path.join(temp, 'config'),
       PYTHONDONTWRITEBYTECODE: '1',
@@ -94,7 +94,7 @@ test.skipIf(process.platform === 'win32')(
     const python: string = process.env.HERMES_PYTHON || 'python3'
     const fixtureScript: string = path.join(import.meta.dirname, 'fixtures', 'source-backend.py')
     const token: string = 'desktop-pm-contract'
-    env.HERMES_DASHBOARD_SESSION_TOKEN = token
+    env.ANAKOT_DASHBOARD_SESSION_TOKEN = token
     vi.stubEnv('HOME', home)
 
     try {
@@ -135,7 +135,7 @@ test.skipIf(process.platform === 'win32')(
         }
 
         const backend: SourceBackend | null = await resolveSourceInstallationBackend(fixture.root, SERVE_ARGS, {
-          hermesHome: env.HERMES_HOME,
+          anakotHome: env.ANAKOT_HOME,
           env
         })
 
@@ -191,7 +191,7 @@ test.skipIf(process.platform === 'win32')(
               encoding: 'utf8',
               timeout: 15_000
             }),
-            /Hermes/
+            /Anakot/
           )
           assert.equal(fs.existsSync(poison), false)
         }
@@ -199,7 +199,7 @@ test.skipIf(process.platform === 'win32')(
 
       fs.unlinkSync(fixture.launcher)
       assert.equal(
-        await resolveSourceInstallationBackend(fixture.root, SERVE_ARGS, { hermesHome: env.HERMES_HOME, env }),
+        await resolveSourceInstallationBackend(fixture.root, SERVE_ARGS, { anakotHome: env.ANAKOT_HOME, env }),
         null,
         'a missing PM command must not fall back to the stale venv'
       )

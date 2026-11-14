@@ -152,7 +152,7 @@ test.skipIf(process.platform === 'win32')('download retries mint a new private g
   try {
     const bytes = await downloadViaTokenToFile(baseUrl + '/api/fs/download', '', {}, finish, { gatewayDescriptor: { baseUrl, gatewayEndpoint } })
     expect(bytes).toEqual(Buffer.from([0, 255, 1, 2, 128]))
-    expect(wire.map(h => h['x-hermes-gateway-ticket'])).toEqual(grants)
+    expect(wire.map(h => h['x-anakot-gateway-ticket'])).toEqual(grants)
     expect(new Set(grants).size).toBe(2)
     expect(controls).toEqual(grants.map(() => ({ profile_id: home, instance_id: 'owner', purpose: 'native-http' })))
     expect(wire.every(h => !h.origin && !h['x-hermes-session-token'] && !h.authorization)).toBe(true)
@@ -162,7 +162,7 @@ test.skipIf(process.platform === 'win32')('download retries mint a new private g
     await downloadViaTokenToFile(baseUrl, null, {}, finish, { bearer: 'remote-bearer' })
     expect(wire[2]['x-hermes-session-token']).toBe('remote-static')
     expect(wire[3].authorization).toBe('Bearer remote-bearer')
-    expect(wire.slice(2).every(h => !h['x-hermes-gateway-ticket'])).toBe(true)
+    expect(wire.slice(2).every(h => !h['x-anakot-gateway-ticket'])).toBe(true)
     expect(grants).toHaveLength(2)
   } finally {
     destroyKeepaliveAgents()

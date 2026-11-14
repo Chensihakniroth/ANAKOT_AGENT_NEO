@@ -28,8 +28,8 @@ def gemini():
 @pytest.fixture()
 def config(monkeypatch):
     holder: dict = {}
-    import hermes_cli.config
-    monkeypatch.setattr(hermes_cli.config, "load_config_readonly", lambda: holder)
+    import anakot_cli.config
+    monkeypatch.setattr(anakot_cli.config, "load_config_readonly", lambda: holder)
     return holder
 
 
@@ -173,7 +173,7 @@ def test_unary_round_trip_through_routing(gemini, config):
     assert (usage.prompt_tokens, usage.completion_tokens, usage.total_tokens) == (100, 50, 150)
     assert usage.prompt_tokens_details.cached_tokens == 40 and usage.completion_tokens_details.reasoning_tokens == 30
 
-    # What Hermes stores for that turn replays the signature ahead of the call.
+    # What Anakot stores for that turn replays the signature ahead of the call.
     stored = {"role": "assistant", "content": choice.message.content, "extra_content": choice.message.extra_content,
               "tool_calls": [{"id": call.id, "type": "function", "function": {"name": "read", "arguments": call.function.arguments},
                               "extra_content": call.extra_content}]}
@@ -574,7 +574,7 @@ def test_in_stream_snake_case_codes_map_to_http_status(gemini):
 
 
 def test_gemini_api_is_a_known_providers_key(caplog):
-    from hermes_cli.config_providers import _normalize_custom_provider_entry
+    from anakot_cli.config_providers import _normalize_custom_provider_entry
 
     with caplog.at_level("WARNING"):
         _normalize_custom_provider_entry({"base_url": "https://generativelanguage.googleapis.com/v1beta", "gemini_api": "interactions"},

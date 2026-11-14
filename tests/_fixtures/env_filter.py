@@ -126,92 +126,92 @@ def _looks_like_credential(name: str) -> bool:
     return any(name.endswith(suf) for suf in _CREDENTIAL_SUFFIXES)
 
 
-# HERMES_* vars that change test behavior by being set. Unset all of these
+# ANAKOT_* vars that change test behavior by being set. Unset all of these
 # unconditionally — individual tests that need them set do so explicitly.
-_HERMES_BEHAVIORAL_VARS = frozenset({
+_ANAKOT_BEHAVIORAL_VARS = frozenset({
     # Voice/TTS runtime flags. ``tui_gateway/server.py`` reads these straight
     # off ``os.environ`` at call time (``_voice_mode_enabled`` /
     # ``_voice_tts_enabled``) and, on every completed turn, hands the turn's
-    # final response text to ``hermes_cli.voice.speak_text`` — real synthesis,
+    # final response text to ``anakot_cli.voice.speak_text`` — real synthesis,
     # real playback, out of the developer's speakers. Blank them per-test so a
     # leak (from the shell, or from an earlier test that drove the
     # ``voice.toggle`` RPC, which writes ``os.environ`` directly) cannot carry
     # into the next test. See ``_audio_playback_guard`` for the second layer.
-    "HERMES_VOICE",
-    "HERMES_VOICE_TTS",
-    "HERMES_YOLO_MODE",
+    "ANAKOT_VOICE",
+    "ANAKOT_VOICE_TTS",
+    "ANAKOT_YOLO_MODE",
     # Injected into subprocess envs by the terminal tool (_make_run_env), so
-    # any test run launched FROM a Hermes agent session inherits them and
-    # hermes_constants home-resolution helpers prefer them over monkeypatched
+    # any test run launched FROM a Anakot agent session inherits them and
+    # anakot_constants home-resolution helpers prefer them over monkeypatched
     # HOME (test_subprocess_home_isolation red locally, green on CI).
-    "HERMES_REAL_HOME",
+    "ANAKOT_REAL_HOME",
     "TERMINAL_HOME_MODE",
-    "HERMES_INTERACTIVE",
-    "HERMES_QUIET",
-    "HERMES_TOOL_PROGRESS",
-    "HERMES_TOOL_PROGRESS_MODE",
-    "HERMES_MAX_ITERATIONS",
-    "HERMES_SESSION_PLATFORM",
-    "HERMES_SESSION_CHAT_ID",
-    "HERMES_SESSION_CHAT_NAME",
-    "HERMES_SESSION_CHAT_TYPE",
-    "HERMES_SESSION_THREAD_ID",
-    "HERMES_SESSION_SOURCE",
-    "HERMES_SESSION_KEY",
-    "HERMES_GATEWAY_SESSION",
-    "HERMES_CRON_SESSION",
-    "_HERMES_GATEWAY",
-    "HERMES_PLATFORM",
-    "HERMES_MODEL",
-    "HERMES_INFERENCE_MODEL",
-    "HERMES_INFERENCE_PROVIDER",
-    "HERMES_TUI_PROVIDER",
-    "HERMES_MANAGED",
-    "HERMES_MANAGED_DIR",
-    # A Nix-wrapped `hermes` on the developer's host exports the store's read-only plugins
+    "ANAKOT_INTERACTIVE",
+    "ANAKOT_QUIET",
+    "ANAKOT_TOOL_PROGRESS",
+    "ANAKOT_TOOL_PROGRESS_MODE",
+    "ANAKOT_MAX_ITERATIONS",
+    "ANAKOT_SESSION_PLATFORM",
+    "ANAKOT_SESSION_CHAT_ID",
+    "ANAKOT_SESSION_CHAT_NAME",
+    "ANAKOT_SESSION_CHAT_TYPE",
+    "ANAKOT_SESSION_THREAD_ID",
+    "ANAKOT_SESSION_SOURCE",
+    "ANAKOT_SESSION_KEY",
+    "ANAKOT_GATEWAY_SESSION",
+    "ANAKOT_CRON_SESSION",
+    "_ANAKOT_GATEWAY",
+    "ANAKOT_PLATFORM",
+    "ANAKOT_MODEL",
+    "ANAKOT_INFERENCE_MODEL",
+    "ANAKOT_INFERENCE_PROVIDER",
+    "ANAKOT_TUI_PROVIDER",
+    "ANAKOT_MANAGED",
+    "ANAKOT_MANAGED_DIR",
+    # A Nix-wrapped `anakot` on the developer's host exports the store's read-only plugins
     # tree; tests must discover the checkout's plugins/ (get_bundled_plugins_dir), not a
     # different release's.
-    "HERMES_BUNDLED_PLUGINS",
-    "HERMES_DEV",
-    "HERMES_CONTAINER",
-    "HERMES_EPHEMERAL_SYSTEM_PROMPT",
-    "HERMES_TIMEZONE",
-    "HERMES_REDACT_SECRETS",
-    "HERMES_BACKGROUND_NOTIFICATIONS",
-    "HERMES_EXEC_ASK",
-    "HERMES_HOME_MODE",
-    "HERMES_AGENT_USE_LEGACY_SESSION_KEYS",
-    "HERMES_NEMO_RELAY_PLUGINS_TOML",
+    "ANAKOT_BUNDLED_PLUGINS",
+    "ANAKOT_DEV",
+    "ANAKOT_CONTAINER",
+    "ANAKOT_EPHEMERAL_SYSTEM_PROMPT",
+    "ANAKOT_TIMEZONE",
+    "ANAKOT_REDACT_SECRETS",
+    "ANAKOT_BACKGROUND_NOTIFICATIONS",
+    "ANAKOT_EXEC_ASK",
+    "ANAKOT_HOME_MODE",
+    "ANAKOT_AGENT_USE_LEGACY_SESSION_KEYS",
+    "ANAKOT_NEMO_RELAY_PLUGINS_TOML",
     # Kanban path/board pins must never leak from a developer shell or
     # dispatched worker into tests; otherwise tests can write fake tasks to
-    # the real ~/.hermes/kanban.db instead of the per-test HERMES_HOME.
-    "HERMES_KANBAN_DB",
-    "HERMES_KANBAN_BOARD",
-    "HERMES_KANBAN_HOME",
-    "HERMES_KANBAN_WORKSPACES_ROOT",
-    "HERMES_KANBAN_LOGS_ROOT",
-    "HERMES_KANBAN_TASK",
-    "HERMES_KANBAN_WORKSPACE",
-    "HERMES_KANBAN_RUN_ID",
-    "HERMES_KANBAN_CLAIM_LOCK",
-    "HERMES_KANBAN_DISPATCH_IN_GATEWAY",
+    # the real ~/.anakot/kanban.db instead of the per-test ANAKOT_HOME.
+    "ANAKOT_KANBAN_DB",
+    "ANAKOT_KANBAN_BOARD",
+    "ANAKOT_KANBAN_HOME",
+    "ANAKOT_KANBAN_WORKSPACES_ROOT",
+    "ANAKOT_KANBAN_LOGS_ROOT",
+    "ANAKOT_KANBAN_TASK",
+    "ANAKOT_KANBAN_WORKSPACE",
+    "ANAKOT_KANBAN_RUN_ID",
+    "ANAKOT_KANBAN_CLAIM_LOCK",
+    "ANAKOT_KANBAN_DISPATCH_IN_GATEWAY",
     # Pytest is routinely launched from a delegated worker.  The worker
     # lineage marker must not make parent-state tests run as delegated
     # children; tests that exercise child behavior set it explicitly.
-    "HERMES_DELEGATED_CHILD_CONTEXT",
-    "HERMES_TENANT",
+    "ANAKOT_DELEGATED_CHILD_CONTEXT",
+    "ANAKOT_TENANT",
     # Honcho host selection changes which nested config block wins. A local
     # shell override leaked "myhost" into the full suite and flipped 20
-    # otherwise-unrelated config tests away from the default "hermes" host.
-    "HERMES_HONCHO_HOST",
+    # otherwise-unrelated config tests away from the default "anakot" host.
+    "ANAKOT_HONCHO_HOST",
     # Dashboard OAuth auth gate (PR #30156). When set, the bundled
     # dashboard-auth `nous` plugin auto-registers itself on plugin discovery,
     # which is triggered by any `/api/status` call. That leaks a provider
     # into the dashboard_auth registry across tests in the same worker and
     # makes assertions like `auth_providers == []` flaky. CI never sets
     # these, so production tests must not see them either.
-    "HERMES_DASHBOARD_OAUTH_CLIENT_ID",
-    "HERMES_DASHBOARD_PORTAL_URL",
+    "ANAKOT_DASHBOARD_OAUTH_CLIENT_ID",
+    "ANAKOT_DASHBOARD_PORTAL_URL",
     "TERMINAL_CWD",
     "TERMINAL_ENV",
     "TERMINAL_VERCEL_RUNTIME",

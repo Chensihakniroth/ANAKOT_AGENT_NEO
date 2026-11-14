@@ -8,9 +8,9 @@ description: "On-demand knowledge documents — progressive disclosure, agent-ma
 
 Skills are on-demand knowledge documents the agent can load when needed. They follow a **progressive disclosure** pattern to minimize token usage and are compatible with the [agentskills.io](https://agentskills.io/specification) open standard.
 
-All skills live in **`~/.hermes/skills/`** — the primary directory and source of truth. On fresh install, bundled skills are copied from the repo. Hub-installed and agent-created skills also go here. The agent can modify or delete any skill.
+All skills live in **`~/.anakot/skills/`** — the primary directory and source of truth. On fresh install, bundled skills are copied from the repo. Hub-installed and agent-created skills also go here. The agent can modify or delete any skill.
 
-You can also point Hermes at **external skill directories** — additional folders scanned alongside the local one. See [External Skill Directories](#external-skill-directories) below.
+You can also point Anakot at **external skill directories** — additional folders scanned alongside the local one. See [External Skill Directories](#external-skill-directories) below.
 
 See also:
 
@@ -19,14 +19,14 @@ See also:
 
 ## Install from the website
 
-Each installable card on the public [Skills Hub](/skills) has an **Install in Hermes**
-button. It opens Hermes Desktop with a URL-encoded, source-qualified skill target:
+Each installable card on the public [Skills Hub](/skills) has an **Install in Anakot**
+button. It opens Anakot Desktop with a URL-encoded, source-qualified skill target:
 `official/...` for optional skills, `clawhub/...` for ClawHub, and an explicit
 repository path for bundled skills rather than an ambiguous bare name. The card's
 CLI command uses the same target:
 
 ```text
-hermes://skill/install?identifier=official%2Fsecurity%2F1password
+anakot://skill/install?identifier=official%2Fsecurity%2F1password
 ```
 
 Desktop shows **Install “skill-name”?** with separate **Source** and **Install to**
@@ -42,32 +42,32 @@ does not recognize the link, expand the card and copy its CLI install command.
 
 ## Starting with a blank slate
 
-By default every profile is seeded with the bundled skill catalog, and each `hermes update` adds any newly bundled skills. If you want a profile with **no bundled skills** — and that stays empty across updates — you have two paths:
+By default every profile is seeded with the bundled skill catalog, and each `anakot update` adds any newly bundled skills. If you want a profile with **no bundled skills** — and that stays empty across updates — you have two paths:
 
-**At install time** (applies to the default `~/.hermes` profile): the
+**At install time** (applies to the default `~/.anakot` profile): the
 installer has no `--no-skills` flag. Its setup stage asks whether to seed the
 bundled catalog when you pick the Blank Slate setup; answering no writes the
 opt-out marker described below. Non-interactive installs seed the catalog, so
-run `hermes skills opt-out` afterwards if you want the profile empty.
+run `anakot skills opt-out` afterwards if you want the profile empty.
 
 **At profile-create time** (named profiles):
 
 ```bash
-hermes profile create research --no-skills
+anakot profile create research --no-skills
 ```
 
 **On an already-installed profile** (default or named), toggle it at runtime:
 
 ```bash
-hermes skills opt-out            # stop future seeding — nothing on disk is touched
-hermes skills opt-out --remove   # also delete UNMODIFIED bundled skills (confirms first)
-hermes skills opt-in --sync      # undo: remove the marker and re-seed now
+anakot skills opt-out            # stop future seeding — nothing on disk is touched
+anakot skills opt-out --remove   # also delete UNMODIFIED bundled skills (confirms first)
+anakot skills opt-in --sync      # undo: remove the marker and re-seed now
 ```
 
-All of these paths write a `.no-bundled-skills` marker into the profile directory. While the marker is present, the installer, `hermes update`, and any skill sync all skip bundled-skill seeding for that profile. Delete the marker (or run `hermes skills opt-in`) to re-enable.
+All of these paths write a `.no-bundled-skills` marker into the profile directory. While the marker is present, the installer, `anakot update`, and any skill sync all skip bundled-skill seeding for that profile. Delete the marker (or run `anakot skills opt-in`) to re-enable.
 
 :::note Safe by default
-`hermes skills opt-out` only stops *future* seeding — it never deletes anything already on disk. The optional `--remove` flag deletes bundled skills **only** when they are unmodified (byte-identical to the version Hermes installed). Skills you have edited, skills installed from the hub, and skills you wrote yourself are always kept.
+`anakot skills opt-out` only stops *future* seeding — it never deletes anything already on disk. The optional `--remove` flag deletes bundled skills **only** when they are unmodified (byte-identical to the version Anakot installed). Skills you have edited, skills installed from the hub, and skills you wrote yourself are always kept.
 :::
 
 ## Using Skills
@@ -99,19 +99,19 @@ Parsing stops at the first token that isn't an installed skill, so arguments
 that happen to start with `/` (like file paths) are never swallowed:
 
 ```bash
-/ocr-and-documents ~/.hermes/cache/scratch/scan.pdf extract the tables   # loads one skill; ~/.hermes/cache/scratch/scan.pdf is the argument
+/ocr-and-documents ~/.anakot/cache/scratch/scan.pdf extract the tables   # loads one skill; ~/.anakot/cache/scratch/scan.pdf is the argument
 ```
 
 For combinations you use repeatedly, prefer a [skill bundle](#skill-bundles) —
 same effect under one short command.
 
-(Plan mode works the same way but is a built-in command now: `/plan [request]` tells Hermes to inspect context if needed, write a markdown implementation plan instead of executing the task, and save the result under `.hermes/plans/` relative to the active workspace/backend working directory.)
+(Plan mode works the same way but is a built-in command now: `/plan [request]` tells Anakot to inspect context if needed, write a markdown implementation plan instead of executing the task, and save the result under `.anakot/plans/` relative to the active workspace/backend working directory.)
 
 You can also interact with skills through natural conversation:
 
 ```bash
-hermes chat --toolsets skills -q "What skills do you have?"
-hermes chat --toolsets skills -q "Show me the axolotl skill"
+anakot chat --toolsets skills -q "What skills do you have?"
+anakot chat --toolsets skills -q "Show me the axolotl skill"
 ```
 
 ## Learning a skill from sources (`/learn`)
@@ -121,7 +121,7 @@ reference material — into a reusable skill, without hand-writing the
 `SKILL.md`. It is open-ended: point it at *anything you can describe* and the
 agent gathers the material with the tools it already has, then authors a skill
 that follows the [house authoring standards](#skillmd-format) (≤60-char
-description, the standard section order, Hermes-tool framing, no invented
+description, the standard section order, Anakot-tool framing, no invented
 commands).
 
 ```bash
@@ -185,7 +185,7 @@ The agent only loads the full skill content when it actually needs it.
 
 The list of skills the agent picks from is part of the conversation's system prompt, which stays
 fixed so the provider's prompt cache keeps working. When a skill is installed, created or removed
-while a conversation is open (from the Skills Hub, `hermes skills install` in another
+while a conversation is open (from the Skills Hub, `anakot skills install` in another
 terminal, a plugin, the curator, or the agent itself), your next message to the agent carries a short
 note naming the new skills with their descriptions and the removed ones. The note is sent once per change;
 the system prompt itself picks up the change at the next compaction. `/reload-skills` is not needed
@@ -200,7 +200,7 @@ description: Brief description of what this skill does
 version: 1.0.0
 platforms: [macos, linux]     # Optional — restrict to specific OS platforms
 metadata:
-  hermes:
+  anakot:
     tags: [python, automation]
     category: devops
     fallback_for_toolsets: [web]    # Optional — conditional activation (see below)
@@ -260,7 +260,7 @@ If a response (or any text inside it — typically the last line) contains the l
 ```
 Here is your rendered chart:
 
-/home/user/.hermes/cache/chart-q4-2025.png
+/home/user/.anakot/cache/chart-q4-2025.png
 
 [[as_document]]
 ```
@@ -280,7 +280,7 @@ Skills can automatically show or hide themselves based on which tools are availa
 
 ```yaml
 metadata:
-  hermes:
+  anakot:
     fallback_for_toolsets: [web]      # Show ONLY when these toolsets are unavailable
     requires_toolsets: [terminal]     # Show ONLY when these toolsets are available
     fallback_for_tools: [web_search]  # Show ONLY when these specific tools are unavailable
@@ -310,7 +310,7 @@ required_environment_variables:
     required_for: full functionality
 ```
 
-When a missing value is encountered, Hermes asks for it securely only when the skill is actually loaded in the local CLI. You can skip setup and keep using the skill. Messaging surfaces never ask for secrets in chat — they tell you to use `hermes setup` or `~/.hermes/.env` locally instead.
+When a missing value is encountered, Anakot asks for it securely only when the skill is actually loaded in the local CLI. You can skip setup and keep using the skill. Messaging surfaces never ask for secrets in chat — they tell you to use `anakot setup` or `~/.anakot/.env` locally instead.
 
 Once set, declared env vars are **automatically passed through** to `execute_code` and `terminal` sandboxes — the skill's scripts can use `$TENOR_API_KEY` directly. For non-skill env vars, use the `terminal.env_passthrough` config option. See [Environment Variable Passthrough](../security.md#environment-variable-passthrough) for details.
 
@@ -320,7 +320,7 @@ Skills can also declare non-secret config settings (paths, preferences) stored i
 
 ```yaml
 metadata:
-  hermes:
+  anakot:
     config:
       - key: myplugin.path
         description: Path to the plugin data directory
@@ -328,14 +328,14 @@ metadata:
         prompt: Plugin data directory path
 ```
 
-Settings are stored under `skills.config` in your config.yaml. `hermes config migrate` prompts for unconfigured settings, and `hermes config show` displays them. When a skill loads, its resolved config values are injected into the context so the agent knows the configured values automatically.
+Settings are stored under `skills.config` in your config.yaml. `anakot config migrate` prompts for unconfigured settings, and `anakot config show` displays them. When a skill loads, its resolved config values are injected into the context so the agent knows the configured values automatically.
 
 See [Skill Settings](../configuration.md#skill-settings) and [Creating Skills — Config Settings](../../developer-guide/creating-skills.md#config-settings-configyaml) for details.
 
 ## Skill Directory Structure
 
 ```text
-~/.hermes/skills/                  # Single source of truth
+~/.anakot/skills/                  # Single source of truth
 ├── mlops/                         # Category directory
 │   ├── axolotl/
 │   │   ├── SKILL.md               # Main instructions (required)
@@ -359,7 +359,7 @@ See [Skill Settings](../configuration.md#skill-settings) and [Creating Skills �
 
 Third-party URL and GitHub installs include `SKILL.md` plus the exact local
 files it references under `references/`, `templates/`, `scripts/`, `assets/`,
-and `examples/`. Unreferenced repository files are not copied. Hermes scans the
+and `examples/`. Unreferenced repository files are not copied. Anakot scans the
 complete quarantined bundle and records the source URL, exact content hash,
 scanner version, findings, timestamp, and fresh-or-cached status in
 `skills/.hub/lock.json`.
@@ -367,7 +367,7 @@ scanner version, findings, timestamp, and fresh-or-cached status in
 ### Advisory SkillEvaluator scan
 
 In addition to the built-in security scanner (which enforces the install
-policy above), Hermes can run [NVIDIA SkillEvaluator](https://github.com/NVIDIA/SkillEvaluator)
+policy above), Anakot can run [NVIDIA SkillEvaluator](https://github.com/NVIDIA/SkillEvaluator)
 Tier 1 checks on every hub install as a second opinion. Tier 1 is
 deterministic and keyless — PII detection (leaked emails, personal paths,
 connection strings), unicode-smuggling detection, script lint, license
@@ -405,9 +405,9 @@ its response (`tier1` field) alongside the built-in scanner's verdict.
 
 ## External Skill Directories
 
-If you maintain skills outside of Hermes — for example, a shared `~/.agents/skills/` directory used by multiple AI tools — you can tell Hermes to scan those directories too.
+If you maintain skills outside of Anakot — for example, a shared `~/.agents/skills/` directory used by multiple AI tools — you can tell Anakot to scan those directories too.
 
-Add `external_dirs` under the `skills` section in `~/.hermes/config.yaml`:
+Add `external_dirs` under the `skills` section in `~/.anakot/config.yaml`:
 
 ```yaml
 skills:
@@ -421,16 +421,16 @@ Paths support `~` expansion and `${VAR}` environment variable substitution.
 
 ### How it works
 
-- **Create locally, update in place**: New agent-created skills are written to `~/.hermes/skills/` (or `skills.create_dir` when configured — see below). Existing skills are modified where they are found, including skills under `external_dirs`, when the agent uses `skill_manage` actions such as `patch` (targeted or full rewrite), `write_file`, `remove_file`, or `delete`.
-- **External dirs are not a write-protection boundary**: If an external skill directory is writable by the Hermes process, agent-managed skill updates can change files in that directory. Use filesystem permissions or a separate profile/toolset setup if shared external skills must stay read-only.
-- **Precedence**: If the same skill name exists in more than one directory, the higher-precedence directory wins everywhere — skill index, `skills_list`, `hermes skills list`, `skill_view`, slash commands, `-s` preload and cron: `project → local (~/.hermes/skills/) → skills.create_dir → external_dirs`. The hidden copy is logged as shadowed. See [Duplicate skill names](#duplicate-skill-names).
+- **Create locally, update in place**: New agent-created skills are written to `~/.anakot/skills/` (or `skills.create_dir` when configured — see below). Existing skills are modified where they are found, including skills under `external_dirs`, when the agent uses `skill_manage` actions such as `patch` (targeted or full rewrite), `write_file`, `remove_file`, or `delete`.
+- **External dirs are not a write-protection boundary**: If an external skill directory is writable by the Anakot process, agent-managed skill updates can change files in that directory. Use filesystem permissions or a separate profile/toolset setup if shared external skills must stay read-only.
+- **Precedence**: If the same skill name exists in more than one directory, the higher-precedence directory wins everywhere — skill index, `skills_list`, `anakot skills list`, `skill_view`, slash commands, `-s` preload and cron: `project → local (~/.anakot/skills/) → skills.create_dir → external_dirs`. The hidden copy is logged as shadowed. See [Duplicate skill names](#duplicate-skill-names).
 - **Full integration**: External skills appear in the system prompt index, `skills_list`, `skill_view`, and as `/skill-name` slash commands — no different from local skills.
-- **Non-existent paths are silently skipped**: If a configured directory doesn't exist, Hermes ignores it without errors. Useful for optional shared directories that may not be present on every machine.
+- **Non-existent paths are silently skipped**: If a configured directory doesn't exist, Anakot ignores it without errors. Useful for optional shared directories that may not be present on every machine.
 
 ### Example
 
 ```text
-~/.hermes/skills/               # Local (primary, read-write)
+~/.anakot/skills/               # Local (primary, read-write)
 ├── devops/deploy-k8s/
 │   └── SKILL.md
 └── mlops/axolotl/
@@ -447,7 +447,7 @@ All four skills appear in your skill index. If you create a new skill called `my
 
 ## Redirecting Skill Creation (`skills.create_dir`)
 
-By default the agent writes new skills to the profile-local `~/.hermes/skills/`. If you want agent-created skills to land somewhere else — a shared "brain" directory, a git-tracked repo, or a fleet-wide skills volume — set `create_dir` under the `skills` section:
+By default the agent writes new skills to the profile-local `~/.anakot/skills/`. If you want agent-created skills to land somewhere else — a shared "brain" directory, a git-tracked repo, or a fleet-wide skills volume — set `create_dir` under the `skills` section:
 
 ```yaml
 skills:
@@ -461,15 +461,15 @@ What this changes:
 - **The directory is fully integrated.** Skills under `create_dir` are scanned alongside the local dir: they appear in the skill index, `skills_list`, `skill_view`, slash commands, and can be patched or deleted like any local skill.
 - **Everything else stays local.** Existing skills are still modified in place wherever they live; bundled skill sync, the hub, and the curator keep operating on the profile-local dir.
 
-Paths support `~` expansion and `${VAR}` substitution; relative paths resolve against your Hermes home. Setting `create_dir` to the local skills dir is the same as leaving it unset.
+Paths support `~` expansion and `${VAR}` substitution; relative paths resolve against your Anakot home. Setting `create_dir` to the local skills dir is the same as leaving it unset.
 
 
 ## Project-Local Skills
 
-Repos can carry their own skills, active only for sessions started inside that project — the same pattern other agent harnesses use for repo-local configuration. When you launch Hermes inside a git checkout, it looks for skills in:
+Repos can carry their own skills, active only for sessions started inside that project — the same pattern other agent harnesses use for repo-local configuration. When you launch Anakot inside a git checkout, it looks for skills in:
 
 ```text
-<project-root>/.hermes/skills/    # Hermes-native location
+<project-root>/.anakot/skills/    # Anakot-native location
 <project-root>/.agents/skills/    # cross-tool convention (shared with other agent CLIs)
 ```
 
@@ -477,46 +477,46 @@ The project root is the nearest ancestor directory containing `.git` (worktrees 
 
 ### Trusting a project
 
-Skills are procedure documents the agent follows, so Hermes does **not** auto-load them from arbitrary cloned repos. The first time you run Hermes in a repo with project skills, the banner shows a notice:
+Skills are procedure documents the agent follows, so Anakot does **not** auto-load them from arbitrary cloned repos. The first time you run Anakot in a repo with project skills, the banner shows a notice:
 
 ```text
-◆ 3 project skill(s) found in /home/you/myproject but not loaded — run `hermes skills trust` to enable them.
+◆ 3 project skill(s) found in /home/you/myproject but not loaded — run `anakot skills trust` to enable them.
 ```
 
 Trust the repo once (from inside it, or by passing the path):
 
 ```bash
-hermes skills trust             # trust the current repo
-hermes skills trust ~/myproject # or explicitly
-hermes skills untrust           # revoke
+anakot skills trust             # trust the current repo
+anakot skills trust ~/myproject # or explicitly
+anakot skills untrust           # revoke
 ```
 
-Trusted roots are stored in `skills.trusted_project_dirs` in `~/.hermes/config.yaml`. Set `skills.project_discovery: false` to turn the feature off entirely (no scanning, no notices).
+Trusted roots are stored in `skills.trusted_project_dirs` in `~/.anakot/config.yaml`. Set `skills.project_discovery: false` to turn the feature off entirely (no scanning, no notices).
 
 ### Precedence
 
-Project skills are the **highest-precedence tier**: `project → local (~/.hermes/skills/) → skills.create_dir → external_dirs`. A project skill named `deploy` overrides a same-named profile or bundled skill for sessions inside that repo — that's the point: vendored repo skills win on their home turf, without touching your global profile. Project skills are tagged `[project]` in the agent's skill index so provenance stays visible.
+Project skills are the **highest-precedence tier**: `project → local (~/.anakot/skills/) → skills.create_dir → external_dirs`. A project skill named `deploy` overrides a same-named profile or bundled skill for sessions inside that repo — that's the point: vendored repo skills win on their home turf, without touching your global profile. Project skills are tagged `[project]` in the agent's skill index so provenance stays visible.
 
-Like external dirs, project skill directories are treated as repo-owned: autonomous skill maintenance (the curator) never modifies them, and new agent-created skills always go to `~/.hermes/skills/`.
+Like external dirs, project skill directories are treated as repo-owned: autonomous skill maintenance (the curator) never modifies them, and new agent-created skills always go to `~/.anakot/skills/`.
 
 ### Duplicate skill names
 
 Every surface resolves a skill name the same way:
 
 - **Across directories**, the higher-precedence directory wins (`project → local → skills.create_dir → external_dirs`), including for the same relative path (`productivity/xdup` local and external loads the local copy). The shadowed copy is hidden and a warning is logged.
-- **Inside one directory**, two *different* skills that share a name are never guessed between. Both are listed under their exact relative path (for example `a/one` and `b/two`), and loading the bare name fails with `Ambiguous skill name dup-demo: use one of a/one, b/two`. That message is also what `hermes -s dup-demo` and cron jobs report. Identical copies of one skill (a symlink view or byte-identical copy) resolve to the shallowest path.
+- **Inside one directory**, two *different* skills that share a name are never guessed between. Both are listed under their exact relative path (for example `a/one` and `b/two`), and loading the bare name fails with `Ambiguous skill name dup-demo: use one of a/one, b/two`. That message is also what `anakot -s dup-demo` and cron jobs report. Identical copies of one skill (a symlink view or byte-identical copy) resolve to the shallowest path.
 
 Plugin skills use their own `plugin:skill` names and never collide with these.
 
 ### Scan-time quarantine
 
-Trust is a repo-level decision, but a repo's skill content changes with every `git pull`. To close that gap, every project skill is scanned with the same security scanner used for Skills Hub installs before it enters the index. A skill whose scan verdict is **dangerous** (prompt-injection directives, credential-exfiltration commands, hidden-text tricks) is quarantined: it does not appear in the skill index, `skills_list`, slash commands, and refuses to load by name with an explanatory error. Scans are content-hash cached under `~/.hermes/cache/project_skill_scans/` (never inside your repo) and re-run automatically when the skill's content changes.
+Trust is a repo-level decision, but a repo's skill content changes with every `git pull`. To close that gap, every project skill is scanned with the same security scanner used for Skills Hub installs before it enters the index. A skill whose scan verdict is **dangerous** (prompt-injection directives, credential-exfiltration commands, hidden-text tricks) is quarantined: it does not appear in the skill index, `skills_list`, slash commands, and refuses to load by name with an explanatory error. Scans are content-hash cached under `~/.anakot/cache/project_skill_scans/` (never inside your repo) and re-run automatically when the skill's content changes.
 
 ### Non-interactive surfaces (cron, API, ACP)
 
 Cron jobs and other non-interactive surfaces inherit your interactive trust decision — they never prompt and never auto-trust. The project root resolves from the surface's working directory (a cron job's `workdir`, via the same mechanism the terminal tool uses). A cron job whose `workdir` is inside a repo you previously trusted loads that repo's project skills; a job in an untrusted or undecided repo loads none.
 
-In the TUI and Desktop the project root follows each **session's workspace** (the directory shown in the sidebar / set with the workspace picker), so starting `hermes --tui` inside a trusted repo registers its project skills as slash commands even when `terminal.cwd` is left at the default placeholder `.`; two sessions open in two repos each see their own.
+In the TUI and Desktop the project root follows each **session's workspace** (the directory shown in the sidebar / set with the workspace picker), so starting `anakot --tui` inside a trusted repo registers its project skills as slash commands even when `terminal.cwd` is left at the default placeholder `.`; two sessions open in two repos each see their own.
 
 ## Skill Bundles
 
@@ -526,7 +526,7 @@ Skill bundles are tiny YAML files that group several skills under a single slash
 
 ```bash
 # Create a bundle for backend feature work
-hermes bundles create backend-dev \
+anakot bundles create backend-dev \
   --skill github-code-review \
   --skill test-driven-development \
   --skill github-pr-workflow \
@@ -543,7 +543,7 @@ The agent receives all three skills loaded into one user message, with any text 
 
 ### YAML schema
 
-Bundles live in **`~/.hermes/skill-bundles/<slug>.yaml`** and look like this:
+Bundles live in **`~/.anakot/skill-bundles/<slug>.yaml`** and look like this:
 
 ```yaml
 name: backend-dev
@@ -559,7 +559,7 @@ instruction: |
 
 Fields:
 - `name` (optional — defaults to the filename stem) — the bundle's display name. Normalized to a hyphen slug for the slash command (`Backend Dev` → `/backend-dev`).
-- `description` (optional) — short text shown in `/bundles` and `hermes bundles list`.
+- `description` (optional) — short text shown in `/bundles` and `anakot bundles list`.
 - `skills` (required, non-empty list) — skill names or paths relative to your skills directory. Use the same identifier you'd pass to `/<skill-name>`.
 - `instruction` (optional) — extra guidance prepended to the loaded skill content. Useful for codifying "how we always use these together."
 
@@ -567,22 +567,22 @@ Fields:
 
 ```bash
 # List all installed bundles
-hermes bundles list
+anakot bundles list
 
 # Inspect one bundle
-hermes bundles show backend-dev
+anakot bundles show backend-dev
 
 # Create a bundle interactively (omit --skill flags to enter them one per line)
-hermes bundles create research
+anakot bundles create research
 
 # Overwrite an existing bundle
-hermes bundles create backend-dev --skill ... --force
+anakot bundles create backend-dev --skill ... --force
 
 # Delete a bundle
-hermes bundles delete backend-dev
+anakot bundles delete backend-dev
 
-# Re-scan ~/.hermes/skill-bundles/ and report changes
-hermes bundles reload
+# Re-scan ~/.anakot/skill-bundles/ and report changes
+anakot bundles reload
 ```
 
 From inside a chat session, `/bundles` lists every installed bundle and its skills.
@@ -599,9 +599,9 @@ From inside a chat session, `/bundles` lists every installed bundle and its skil
 Use a bundle when:
 - You always pair the same skills for a recurring task (`/backend-dev`, `/release-prep`, `/incident-response`).
 - You want a one-character-shorter mental model than typing several `/skill` invocations in a row.
-- You want to ship a team-wide "task profile" by checking the bundle YAML into a shared dotfiles repo and symlinking it into `~/.hermes/skill-bundles/`.
+- You want to ship a team-wide "task profile" by checking the bundle YAML into a shared dotfiles repo and symlinking it into `~/.anakot/skill-bundles/`.
 
-A bundle is just a YAML alias — it doesn't install skills for you. The skills themselves must already be present (in `~/.hermes/skills/` or an external skill directory). Otherwise the bundle invocation just skips the missing ones.
+A bundle is just a YAML alias — it doesn't install skills for you. The skills themselves must already be present (in `~/.anakot/skills/` or an external skill directory). Otherwise the bundle invocation just skips the missing ones.
 
 ## Agent-Managed Skills (skill_manage tool)
 
@@ -682,7 +682,7 @@ When `write_approval: true`, every `skill_manage` write (create / edit /
 patch / delete / write_file / remove_file) is **staged** instead of committed —
 a SKILL.md is too large to review inline, so staging applies regardless of
 whether the write came from a foreground turn or the background review.
-Staged writes survive restarts under `~/.hermes/pending/skills/` and are
+Staged writes survive restarts under `~/.anakot/pending/skills/` and are
 reviewed with the same familiar approve/deny flow as dangerous commands:
 
 ```
@@ -699,7 +699,7 @@ in the pending JSON file). Memory writes have the same gate under
 `memory.write_approval` — see [Controlling memory writes](./memory.md#controlling-memory-writes-write_approval).
 
 To stop the agent from changing one *specific* skill at all, lock it:
-`hermes curator lock <skill>` (or the lock switch in Desktop). A locked skill stays
+`anakot curator lock <skill>` (or the lock switch in Desktop). A locked skill stays
 readable and auto-loadable, but `skill_manage`, `write_file`, `patch` and `terminal`
 all refuse to change it, in every kind of session; your own edits still work. See
 [Locking a skill](./curator.md#locking-a-skill).
@@ -712,41 +712,41 @@ all refuse to change it, in every kind of session; your own edits still work. Se
 
 Browse, search, install, and manage skills from online registries, `skills.sh`, direct well-known skill endpoints, and official optional skills.
 
-Unfiltered searches (CLI, TUI, and the dashboard) are answered from a cached centralized index that covers the external registries. That index is rebuilt periodically, so when it has no match for your query Hermes also asks `skills.sh`, ClawHub, LobeHub and well-known endpoints directly — a skill published minutes ago still shows up. That extra pass gets at most 8 seconds of the search budget, so a slow registry cannot turn a miss into a long wait. Custom GitHub taps are not part of that fallback (search them with `--source github`, or via the index once it catches up), and provider filters such as `--source nvidia` do not trigger it (those registries carry no provider data).
+Unfiltered searches (CLI, TUI, and the dashboard) are answered from a cached centralized index that covers the external registries. That index is rebuilt periodically, so when it has no match for your query Anakot also asks `skills.sh`, ClawHub, LobeHub and well-known endpoints directly — a skill published minutes ago still shows up. That extra pass gets at most 8 seconds of the search budget, so a slow registry cannot turn a miss into a long wait. Custom GitHub taps are not part of that fallback (search them with `--source github`, or via the index once it catches up), and provider filters such as `--source nvidia` do not trigger it (those registries carry no provider data).
 
 ### Common commands
 
 ```bash
-hermes skills browse                              # Browse all hub skills (official first)
-hermes skills browse --source official            # Browse only official optional skills
-hermes skills search kubernetes                   # Search all sources
-hermes skills search react --source skills-sh     # Search the skills.sh directory
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect openai/skills/k8s           # Preview before installing
-hermes skills install openai/skills/k8s           # Install with security scan
-hermes skills install official/security/1password
-hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
-hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
-hermes skills install https://sharethis.chat/SKILL.md              # Direct URL (+ referenced support files)
-hermes skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
-hermes skills list --source hub                   # List hub-installed skills
-hermes skills check                               # Check installed hub skills for upstream updates
-hermes skills update                              # Reinstall hub skills with upstream changes when needed
-hermes skills audit                               # Re-scan all hub skills for security
-hermes skills uninstall k8s                       # Remove a hub skill
-hermes skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
-hermes skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
-hermes skills publish skills/my-skill --to github --repo owner/repo
-hermes skills snapshot export setup.json          # Export skill config
-hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
+anakot skills browse                              # Browse all hub skills (official first)
+anakot skills browse --source official            # Browse only official optional skills
+anakot skills search kubernetes                   # Search all sources
+anakot skills search react --source skills-sh     # Search the skills.sh directory
+anakot skills search https://mintlify.com/docs --source well-known
+anakot skills inspect openai/skills/k8s           # Preview before installing
+anakot skills install openai/skills/k8s           # Install with security scan
+anakot skills install official/security/1password
+anakot skills install skills-sh/vercel-labs/json-render/json-render-react --force
+anakot skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+anakot skills install https://sharethis.chat/SKILL.md              # Direct URL (+ referenced support files)
+anakot skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
+anakot skills list --source hub                   # List hub-installed skills
+anakot skills check                               # Check installed hub skills for upstream updates
+anakot skills update                              # Reinstall hub skills with upstream changes when needed
+anakot skills audit                               # Re-scan all hub skills for security
+anakot skills uninstall k8s                       # Remove a hub skill
+anakot skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
+anakot skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
+anakot skills publish skills/my-skill --to github --repo owner/repo
+anakot skills snapshot export setup.json          # Export skill config
+anakot skills tap add myorg/skills-repo           # Add a custom GitHub source
 ```
 
 ### Supported hub sources
 
 | Source | Example | Notes |
 |--------|---------|-------|
-| `official` | `official/security/1password` | Optional skills shipped with Hermes. |
-| `skills-sh` | `skills-sh/vercel-labs/agent-skills/vercel-react-best-practices` | Searchable via `hermes skills search <query> --source skills-sh`. Hermes resolves alias-style skills when the skills.sh slug differs from the repo folder. |
+| `official` | `official/security/1password` | Optional skills shipped with Anakot. |
+| `skills-sh` | `skills-sh/vercel-labs/agent-skills/vercel-react-best-practices` | Searchable via `anakot skills search <query> --source skills-sh`. Anakot resolves alias-style skills when the skills.sh slug differs from the repo folder. |
 | `well-known` | `well-known:https://mintlify.com/docs/.well-known/skills/mintlify` | Skills served directly from `/.well-known/skills/index.json` on a website. Search using the site or docs URL. |
 | `url` | `https://sharethis.chat/SKILL.md` | Direct HTTP(S) URL to `SKILL.md` plus explicitly referenced support files. Name resolution: frontmatter → URL slug → interactive prompt → `--name` flag. |
 | `github` | `openai/skills/k8s` | Direct GitHub repo/path installs and custom taps. |
@@ -754,24 +754,24 @@ hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
 
 ### Integrated hubs and registries
 
-Hermes currently integrates with these skills ecosystems and discovery sources:
+Anakot currently integrates with these skills ecosystems and discovery sources:
 
 #### 1. Official optional skills (`official`)
 
-These are maintained in the Hermes repository itself and install with built-in trust.
+These are maintained in the Anakot repository itself and install with built-in trust.
 
 - Catalog: [Official Optional Skills Catalog](../../reference/optional-skills-catalog)
 - Source in repo: `optional-skills/`
 - Example:
 
 ```bash
-hermes skills browse --source official
-hermes skills install official/security/1password
+anakot skills browse --source official
+anakot skills install official/security/1password
 ```
 
 #### 2. skills.sh (`skills-sh`)
 
-This is Vercel's public skills directory. Hermes can search it directly, inspect skill detail pages, resolve alias-style slugs, and install from the underlying source repo.
+This is Vercel's public skills directory. Anakot can search it directly, inspect skill detail pages, resolve alias-style slugs, and install from the underlying source repo.
 
 - Directory: [skills.sh](https://skills.sh/)
 - CLI/tooling repo: [vercel-labs/skills](https://github.com/vercel-labs/skills)
@@ -779,9 +779,9 @@ This is Vercel's public skills directory. Hermes can search it directly, inspect
 - Example:
 
 ```bash
-hermes skills search react --source skills-sh
-hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
-hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
+anakot skills search react --source skills-sh
+anakot skills inspect skills-sh/vercel-labs/json-render/json-render-react
+anakot skills install skills-sh/vercel-labs/json-render/json-render-react --force
 ```
 
 #### 3. Well-known skill endpoints (`well-known`)
@@ -793,14 +793,14 @@ This is URL-based discovery from sites that publish `/.well-known/skills/index.j
 - Example:
 
 ```bash
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlify
-hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+anakot skills search https://mintlify.com/docs --source well-known
+anakot skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+anakot skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
 ```
 
 #### 4. Direct GitHub skills (`github`)
 
-Hermes can install directly from GitHub repositories and GitHub-based taps. This is useful when you already know the repo/path or want to add your own custom source repo.
+Anakot can install directly from GitHub repositories and GitHub-based taps. This is useful when you already know the repo/path or want to add your own custom source repo.
 
 Default taps (browsable without any setup):
 - [openai/skills](https://github.com/openai/skills)
@@ -814,8 +814,8 @@ Default taps (browsable without any setup):
 - Example:
 
 ```bash
-hermes skills install openai/skills/k8s
-hermes skills tap add myorg/skills-repo
+anakot skills install openai/skills/k8s
+anakot skills tap add myorg/skills-repo
 ```
 
 **Category groupings (`skills.sh.json`).** A GitHub tap may ship a
@@ -825,7 +825,7 @@ hermes skills tap add myorg/skills-repo
 time and become the category labels shown in the
 [Skills Hub](https://hermes-agent.nousresearch.com/docs) page — instead of a
 tag-derived guess. This is generic: any tap that ships the file gets real
-categorization, no Hermes-side changes required.
+categorization, no Anakot-side changes required.
 
 ```json
 {
@@ -842,45 +842,45 @@ categorization, no Hermes-side changes required.
 A third-party skills marketplace integrated as a community source.
 
 - Site: [clawhub.ai](https://clawhub.ai/)
-- Hermes source id: `clawhub`
+- Anakot source id: `clawhub`
 
 #### 6. LobeHub (`lobehub`)
 
-Hermes can search and convert agent entries from LobeHub's public catalog into installable Hermes skills.
+Anakot can search and convert agent entries from LobeHub's public catalog into installable Anakot skills.
 
 - Site: [LobeHub](https://lobehub.com/)
 - Public agents index: [chat-agents.lobehub.com](https://chat-agents.lobehub.com/)
 - Backing repo: [lobehub/lobe-chat-agents](https://github.com/lobehub/lobe-chat-agents)
-- Hermes source id: `lobehub`
+- Anakot source id: `lobehub`
 
 #### 7. browse.sh (`browse-sh`)
 
-Hermes integrates with [browse.sh](https://browse.sh), Browserbase's catalog of 200+ site-specific browser-automation SKILL.md files (Airbnb, Amazon, arXiv, 12306.cn, Etsy, Xero, and many more). Each skill describes how to drive one website end-to-end and is suitable for use with Hermes' browser tools and any browser-automation skills you already have installed.
+Anakot integrates with [browse.sh](https://browse.sh), Browserbase's catalog of 200+ site-specific browser-automation SKILL.md files (Airbnb, Amazon, arXiv, 12306.cn, Etsy, Xero, and many more). Each skill describes how to drive one website end-to-end and is suitable for use with Anakot' browser tools and any browser-automation skills you already have installed.
 
 - Site: [browse.sh](https://browse.sh/)
 - Catalog API: `https://browse.sh/api/skills`
-- Hermes source id: `browse-sh`
+- Anakot source id: `browse-sh`
 - Trust level: `community`
 
 ```bash
-hermes skills search airbnb --source browse-sh
-hermes skills inspect browse-sh/airbnb.com/search-listings-ddgioa
-hermes skills install browse-sh/airbnb.com/search-listings-ddgioa
+anakot skills search airbnb --source browse-sh
+anakot skills inspect browse-sh/airbnb.com/search-listings-ddgioa
+anakot skills install browse-sh/airbnb.com/search-listings-ddgioa
 ```
 
 Identifiers use the form `browse-sh/<hostname>/<task-id>` and match the slug exposed by the browse.sh catalog. Content is resolved through the per-skill detail endpoint (`/api/skills/<slug>` → `skillMdUrl`), not through the catalog's GitHub `sourceUrl`.
 
 #### 8. Direct URL (`url`)
 
-Install `SKILL.md` directly from any HTTP(S) URL — useful when an author hosts a skill on their own site (no hub listing, no GitHub path to type). Hermes also fetches explicitly referenced files under `references/`, `templates/`, `scripts/`, `assets/`, and `examples/`, then scans and installs the complete bundle.
+Install `SKILL.md` directly from any HTTP(S) URL — useful when an author hosts a skill on their own site (no hub listing, no GitHub path to type). Anakot also fetches explicitly referenced files under `references/`, `templates/`, `scripts/`, `assets/`, and `examples/`, then scans and installs the complete bundle.
 
-- Hermes source id: `url`
+- Anakot source id: `url`
 - Identifier: the URL itself (no prefix needed)
-- Scope: `SKILL.md` plus exact referenced support files in the allowlisted directories. Hermes does not enumerate or copy unrelated files from the host.
+- Scope: `SKILL.md` plus exact referenced support files in the allowlisted directories. Anakot does not enumerate or copy unrelated files from the host.
 
 ```bash
-hermes skills install https://sharethis.chat/SKILL.md
-hermes skills install https://example.com/my-skill/SKILL.md --category productivity
+anakot skills install https://sharethis.chat/SKILL.md
+anakot skills install https://example.com/my-skill/SKILL.md --category productivity
 ```
 
 Name resolution, in order:
@@ -891,19 +891,19 @@ Name resolution, in order:
 
 ```bash
 # Frontmatter has no name and the URL slug is unhelpful — supply one:
-hermes skills install https://example.com/SKILL.md --name sharethis-chat
+anakot skills install https://example.com/SKILL.md --name sharethis-chat
 
 # Or inside a chat session:
 /skills install https://example.com/SKILL.md --name sharethis-chat
 ```
 
-Trust level is always `community` — the same security scan runs as for every other source. The URL is stored as the install identifier, so `hermes skills update` re-fetches from the same URL automatically when you want to refresh.
+Trust level is always `community` — the same security scan runs as for every other source. The URL is stored as the install identifier, so `anakot skills update` re-fetches from the same URL automatically when you want to refresh.
 
 ### Security scanning and `--force`
 
 All hub-installed skills go through a **security scanner** that checks for data exfiltration, prompt injection, destructive commands, supply-chain signals, and other threats.
 
-`hermes skills inspect ...` now also surfaces upstream metadata when available:
+`anakot skills inspect ...` now also surfaces upstream metadata when available:
 - repo URL
 - skills.sh detail page URL
 - install command
@@ -914,7 +914,7 @@ All hub-installed skills go through a **security scanner** that checks for data 
 Use `--force` when you have reviewed a third-party skill and want to override a non-dangerous policy block:
 
 ```bash
-hermes skills install skills-sh/anthropics/skills/pdf --force
+anakot skills install skills-sh/anthropics/skills/pdf --force
 ```
 
 Important behavior:
@@ -926,7 +926,7 @@ Important behavior:
 
 | Level | Source | Policy |
 |-------|--------|--------|
-| `builtin` | Ships with Hermes | Always trusted |
+| `builtin` | Ships with Anakot | Always trusted |
 | `official` | `optional-skills/` in the repo | Built-in trust, no third-party warning |
 | `trusted` | Trusted registries/repos such as `openai/skills`, `anthropics/skills`, `huggingface/skills`, `NVIDIA/skills`, `wandb/skills`, `qdrant/skills`, `pinecone-io/skills`, `makenotion/skills`, `Airtable/skills`, `Shopify/Shopify-AI-Toolkit` | More permissive policy than community sources |
 | `community` | Everything else (`skills.sh`, well-known endpoints, custom GitHub repos, most marketplaces) | Non-dangerous findings can be overridden with `--force`; `dangerous` verdicts stay blocked |
@@ -936,19 +936,19 @@ Important behavior:
 The hub now tracks enough provenance to re-check upstream copies of installed skills:
 
 ```bash
-hermes skills check          # Report which installed hub skills changed upstream
-hermes skills update         # Reinstall only the skills with updates available
-hermes skills update react   # Update one specific installed hub skill
-hermes skills update react --force   # Overwrite a skill you've edited locally
+anakot skills check          # Report which installed hub skills changed upstream
+anakot skills update         # Reinstall only the skills with updates available
+anakot skills update react   # Update one specific installed hub skill
+anakot skills update react --force   # Overwrite a skill you've edited locally
 ```
 
 This uses the stored source identifier plus the current upstream bundle content hash to detect drift.
 
-Checks skip network requests for missing or non-directory installs (`orphaned`) and unsafe or unresolvable recorded paths (`invalid_install`). Missing-directory entries can be removed with `hermes skills uninstall <name>`; invalid paths require inspecting and repairing the active profile's `skills/.hub/lock.json` before retrying. No entries are removed automatically.
+Checks skip network requests for missing or non-directory installs (`orphaned`) and unsafe or unresolvable recorded paths (`invalid_install`). Missing-directory entries can be removed with `anakot skills uninstall <name>`; invalid paths require inspecting and repairing the active profile's `skills/.hub/lock.json` before retrying. No entries are removed automatically.
 
 Valid installs continue to use their source adapter’s existing synchronous fetch and transport timeouts. There is no strict total deadline for an update check: an unreachable or slow source for an existing install can still delay later entries.
 
-Skills you have edited locally (the on-disk content no longer matches the hash recorded at install time) are **skipped** by `hermes skills update` so your changes are never silently overwritten. Pass `--force` to replace them with the upstream version anyway.
+Skills you have edited locally (the on-disk content no longer matches the hash recorded at install time) are **skipped** by `anakot skills update` so your changes are never silently overwritten. Pass `--force` to replace them with the upstream version anyway.
 
 :::tip GitHub rate limits
 Skills hub operations use the GitHub API, which has a rate limit of 60 requests/hour for unauthenticated users. An install costs about two API calls (the repo and its file tree); the skill's files themselves download from `raw.githubusercontent.com`, which the limit does not count. If you see rate-limit errors during install or search, set `GITHUB_TOKEN` in your `.env` file to increase the limit to 5,000 requests/hour. The error message includes an actionable hint when this happens.
@@ -956,7 +956,7 @@ Skills hub operations use the GitHub API, which has a rate limit of 60 requests/
 
 ### Publishing a custom skill tap
 
-If you want to share a curated set of skills — for your team, your org, or publicly — you can publish them as a **tap**: a GitHub repository other Hermes users add with `hermes skills tap add <owner/repo>`. No server, no registry sign-up, no release pipeline. Just a directory of `SKILL.md` files.
+If you want to share a curated set of skills — for your team, your org, or publicly — you can publish them as a **tap**: a GitHub repository other Anakot users add with `anakot skills tap add <owner/repo>`. No server, no registry sign-up, no release pipeline. Just a directory of `SKILL.md` files.
 
 #### Repo layout
 
@@ -980,16 +980,16 @@ owner/repo
 Rules:
 - Each skill lives in its own directory under the tap's root path (default `skills/`).
 - The directory name becomes the skill's install slug.
-- Each skill directory must contain a `SKILL.md` with standard [SKILL.md frontmatter](#skillmd-format) (`name`, `description`, plus optional `metadata.hermes.tags`, `version`, `author`, `platforms`, `metadata.hermes.config`).
+- Each skill directory must contain a `SKILL.md` with standard [SKILL.md frontmatter](#skillmd-format) (`name`, `description`, plus optional `metadata.anakot.tags`, `version`, `author`, `platforms`, `metadata.anakot.config`).
 - Subdirectories like `references/`, `templates/`, `scripts/`, `assets/` are downloaded alongside `SKILL.md` at install time.
 - Skills whose directory name starts with `.` or `_` are ignored.
 
-Hermes discovers skills by listing every subdirectory of the tap path and probing each for `SKILL.md`.
+Anakot discovers skills by listing every subdirectory of the tap path and probing each for `SKILL.md`.
 
 #### Minimal tap example
 
 ```
-my-org/hermes-skills
+my-org/anakot-skills
 └── skills/
     └── deploy-runbook/
         └── SKILL.md
@@ -1004,7 +1004,7 @@ description: Our deployment runbook — services, rollback, Slack channels
 version: 1.0.0
 author: My Org Platform Team
 metadata:
-  hermes:
+  anakot:
     tags: [deployment, runbook, internal]
 ---
 
@@ -1013,17 +1013,17 @@ metadata:
 Step 1: ...
 ```
 
-After pushing that to GitHub, any Hermes user can subscribe and install:
+After pushing that to GitHub, any Anakot user can subscribe and install:
 
 ```bash
-hermes skills tap add my-org/hermes-skills
-hermes skills search deploy
-hermes skills install my-org/hermes-skills/deploy-runbook
+anakot skills tap add my-org/anakot-skills
+anakot skills search deploy
+anakot skills install my-org/anakot-skills/deploy-runbook
 ```
 
 #### Non-default paths
 
-If your skills don't live under `skills/` (common when you're adding a `skills/` subtree to an existing project), edit the tap entry in `~/.hermes/skills/.hub/taps.json`:
+If your skills don't live under `skills/` (common when you're adding a `skills/` subtree to an existing project), edit the tap entry in `~/.anakot/skills/.hub/taps.json`:
 
 ```json
 {
@@ -1033,28 +1033,28 @@ If your skills don't live under `skills/` (common when you're adding a `skills/`
 }
 ```
 
-The `hermes skills tap add` CLI defaults new taps to `path: "skills/"`; edit the file directly if you need a different path. `hermes skills tap list` shows the effective path per tap.
+The `anakot skills tap add` CLI defaults new taps to `path: "skills/"`; edit the file directly if you need a different path. `anakot skills tap list` shows the effective path per tap.
 
 #### Installing individual skills directly (without adding a tap)
 
 Users can also install a single skill from any public GitHub repo without adding the whole repo as a tap:
 
 ```bash
-hermes skills install owner/repo/skills/my-workflow
+anakot skills install owner/repo/skills/my-workflow
 ```
 
 Useful when you want to share one skill without asking the user to subscribe to your whole registry.
 
 #### Trust levels for taps
 
-New taps are assigned `community` trust by default. Skills installed from them run through the standard security scan and show the third-party warning panel on first install. If your org or a widely-trusted source should get higher trust, add its repo to `TRUSTED_REPOS` in `tools/skills_guard.py` (requires a Hermes core PR).
+New taps are assigned `community` trust by default. Skills installed from them run through the standard security scan and show the third-party warning panel on first install. If your org or a widely-trusted source should get higher trust, add its repo to `TRUSTED_REPOS` in `tools/skills_guard.py` (requires a Anakot core PR).
 
 #### Tap management
 
 ```bash
-hermes skills tap list                                # show all configured taps
-hermes skills tap add myorg/skills-repo               # add (default path: skills/)
-hermes skills tap remove myorg/skills-repo            # remove
+anakot skills tap list                                # show all configured taps
+anakot skills tap add myorg/skills-repo               # add (default path: skills/)
+anakot skills tap remove myorg/skills-repo            # remove
 ```
 
 Inside a running session:
@@ -1065,34 +1065,34 @@ Inside a running session:
 /skills tap remove myorg/skills-repo
 ```
 
-Taps are stored in `~/.hermes/skills/.hub/taps.json` (created on demand).
+Taps are stored in `~/.anakot/skills/.hub/taps.json` (created on demand).
 
-## Bundled skill updates (`hermes skills reset`)
+## Bundled skill updates (`anakot skills reset`)
 
-Hermes ships with a set of bundled skills in `skills/` inside the repo. On install and on every `hermes update`, a sync pass copies those into `~/.hermes/skills/` and records a manifest at `~/.hermes/skills/.bundled_manifest` mapping each skill name to the content hash at the time it was synced (the **origin hash**).
+Anakot ships with a set of bundled skills in `skills/` inside the repo. On install and on every `anakot update`, a sync pass copies those into `~/.anakot/skills/` and records a manifest at `~/.anakot/skills/.bundled_manifest` mapping each skill name to the content hash at the time it was synced (the **origin hash**).
 
-On each sync, Hermes recomputes the hash of your local copy and compares it to the origin hash:
+On each sync, Anakot recomputes the hash of your local copy and compares it to the origin hash:
 
 - **Unchanged** → safe to pull upstream changes, copy the new bundled version in, record the new origin hash.
 - **Changed** → treated as **user-modified** and skipped forever, so your edits never get stomped.
 
-Generated runtime caches inside a skill (`__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, and a `.pyc` sitting next to its `.py`) are not part of the hash, so running a skill's helper script never marks it user-modified or hides it from `hermes skills list-modified` / `diff`.
+Generated runtime caches inside a skill (`__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, and a `.pyc` sitting next to its `.py`) are not part of the hash, so running a skill's helper script never marks it user-modified or hides it from `anakot skills list-modified` / `diff`.
 
-The protection is good, but it has one sharp edge. If you edit a bundled skill and then later want to abandon your changes and go back to the bundled version by just copy-pasting from `~/.hermes/hermes-agent/skills/`, the manifest still holds the *old* origin hash from whenever the last successful sync ran. Your fresh copy-paste contents (current bundled hash) won't match that stale origin hash, so sync keeps flagging it as user-modified.
+The protection is good, but it has one sharp edge. If you edit a bundled skill and then later want to abandon your changes and go back to the bundled version by just copy-pasting from `~/.anakot/anakot-agent/skills/`, the manifest still holds the *old* origin hash from whenever the last successful sync ran. Your fresh copy-paste contents (current bundled hash) won't match that stale origin hash, so sync keeps flagging it as user-modified.
 
-`hermes skills reset` is the escape hatch:
+`anakot skills reset` is the escape hatch:
 
 ```bash
 # Safe: clears the manifest entry for this skill. Your current copy is preserved,
 # but the next sync re-baselines against it so future updates work normally.
-hermes skills reset google-workspace
+anakot skills reset google-workspace
 
 # Full restore: also deletes your local copy and re-copies the current bundled
 # version. Use this when you want the pristine upstream skill back.
-hermes skills reset google-workspace --restore
+anakot skills reset google-workspace --restore
 
 # Non-interactive (e.g. in scripts or TUI mode) — skip the --restore confirmation.
-hermes skills reset google-workspace --restore --yes
+anakot skills reset google-workspace --restore --yes
 ```
 
 The same command works in chat as a slash command:
@@ -1103,7 +1103,7 @@ The same command works in chat as a slash command:
 ```
 
 :::note Profiles
-Each profile has its own `.bundled_manifest` under its own `HERMES_HOME`, so `hermes -p coder skills reset <name>` only affects that profile.
+Each profile has its own `.bundled_manifest` under its own `ANAKOT_HOME`, so `anakot -p coder skills reset <name>` only affects that profile.
 :::
 
 ### Slash commands (inside chat)

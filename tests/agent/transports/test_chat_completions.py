@@ -202,7 +202,7 @@ class TestChatCompletionsBasic:
         assert transport.convert_messages(msgs) is msgs
 
     def test_convert_messages_strips_internal_scaffolding_markers(self, transport):
-        """Hermes-internal ``_``-prefixed markers must never reach the wire.
+        """Anakot-internal ``_``-prefixed markers must never reach the wire.
 
         The empty-response recovery path appends synthetic messages tagged
         with ``_empty_recovery_synthetic``; permissive providers ignore the
@@ -705,7 +705,7 @@ class TestChatCompletionsGeminiNativeExtraBodyStrip:
 
     def test_tags_preserved_on_nous_endpoint(self, transport):
         kw = transport.build_kwargs(
-            "hermes-3-405b",
+            "anakot-3-405b",
             [{"role": "user", "content": "hi"}],
             None,
             provider_profile=self._nous_profile(),

@@ -12,8 +12,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from hermes_cli.active_sessions import try_acquire_active_session
-from hermes_state import SessionDB
+from anakot_cli.active_sessions import try_acquire_active_session
+from anakot_state import SessionDB
 from tui_gateway import server
 
 
@@ -26,10 +26,10 @@ class _LiveSocket:
 
 @pytest.fixture
 def resident(monkeypatch):
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
 
     monkeypatch.setattr(server, "_emit", lambda *a, **k: None)
-    db = SessionDB(db_path=get_hermes_home() / "state.db")
+    db = SessionDB(db_path=get_anakot_home() / "state.db")
     monkeypatch.setattr(server, "_db", db)
     records, competitors = [], []
 
@@ -123,8 +123,8 @@ def test_idle_released_record_never_rewinds_the_new_owners_transcript(resident, 
 
 @pytest.mark.parametrize("work", ["loop", "heartbeat", "process_notification"])
 def test_idle_release_keeps_the_lease_of_a_record_driving_local_wakeups(resident, work):
-    from hermes_cli.heartbeat import HeartbeatManager
-    from hermes_cli.loops import LoopManager
+    from anakot_cli.heartbeat import HeartbeatManager
+    from anakot_cli.loops import LoopManager
     from tools.process_registry import process_registry
     from tools.process_registry_awaiting import release, take_ready
 
@@ -154,7 +154,7 @@ def test_idle_release_keeps_the_lease_of_a_record_driving_local_wakeups(resident
 def test_a_refused_loop_wakeup_rolls_its_tick_back(resident):
     """A due tick whose turn is refused at admission (another surface owns the chat) never settles: it is
     abandoned back to the countdown instead of leaving the loop awaiting a response forever."""
-    from hermes_cli.loops import LoopManager, save_loop
+    from anakot_cli.loops import LoopManager, save_loop
 
     sid = "refused-loop"
     record = resident.add(sid)

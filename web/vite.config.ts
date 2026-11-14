@@ -22,11 +22,11 @@ import { fileURLToPath } from "node:url";
 
 const configDir: string = fileURLToPath(new URL(".", import.meta.url));
 
-const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:9119";
+const BACKEND = process.env.ANAKOT_DASHBOARD_URL ?? "http://127.0.0.1:9119";
 
 /**
- * In production the Python `hermes dashboard` server injects a one-shot
- * session token into `index.html` (see `hermes_cli/web_server.py`). The
+ * In production the Python `anakot dashboard` server injects a one-shot
+ * session token into `index.html` (see `anakot_cli/web_server.py`). The
  * Vite dev server serves its own `index.html`, so unless we forward that
  * token, every protected `/api/*` call 401s.
  *
@@ -34,15 +34,15 @@ const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:9119";
  * load and forwards its runtime bootstrap values into the dev HTML. No-op in
  * production builds.
  */
-function hermesDevToken(): Plugin {
+function anakotDevToken(): Plugin {
   const TOKEN_RE = /window\.__HERMES_SESSION_TOKEN__\s*=\s*"([^"]+)"/;
   const EMBEDDED_RE =
-    /window\.__HERMES_DASHBOARD_EMBEDDED_CHAT__\s*=\s*(true|false)/;
+    /window\.__ANAKOT_DASHBOARD_EMBEDDED_CHAT__\s*=\s*(true|false)/;
   const INITIAL_PROFILE_RE =
-    /window\.__HERMES_INITIAL_PROFILE__\s*=\s*("(?:\\.|[^"\\])*")/;
+    /window\.__ANAKOT_INITIAL_PROFILE__\s*=\s*("(?:\\.|[^"\\])*")/;
 
   return {
-    name: "hermes:dev-session-token",
+    name: "anakot:dev-session-token",
     apply: "serve",
     async transformIndexHtml() {
       try {
@@ -51,8 +51,8 @@ function hermesDevToken(): Plugin {
         const match = html.match(TOKEN_RE);
         if (!match) {
           console.warn(
-            `[hermes] Could not find session token in ${BACKEND} — ` +
-              `is \`hermes dashboard\` running? /api calls will 401.`,
+            `[anakot] Could not find session token in ${BACKEND} — ` +
+              `is \`anakot dashboard\` running? /api calls will 401.`,
           );
           return;
         }
@@ -66,14 +66,14 @@ function hermesDevToken(): Plugin {
             injectTo: "head",
             children:
               `window.__HERMES_SESSION_TOKEN__="${match[1]}";` +
-              `window.__HERMES_DASHBOARD_EMBEDDED_CHAT__=${embeddedJs};` +
-              `window.__HERMES_INITIAL_PROFILE__=${initialProfileJs};`,
+              `window.__ANAKOT_DASHBOARD_EMBEDDED_CHAT__=${embeddedJs};` +
+              `window.__ANAKOT_INITIAL_PROFILE__=${initialProfileJs};`,
           },
         ];
       } catch (err) {
         console.warn(
-          `[hermes] Dashboard at ${BACKEND} unreachable — ` +
-            `start it with \`hermes dashboard\` or set HERMES_DASHBOARD_URL. ` +
+          `[anakot] Dashboard at ${BACKEND} unreachable — ` +
+            `start it with \`anakot dashboard\` or set ANAKOT_DASHBOARD_URL. ` +
             `(${(err as Error).message})`,
         );
       }
@@ -93,12 +93,12 @@ export default defineConfig({
     // checkout root, where only this workspace's node_modules has it.
     babel({ cwd: configDir, presets: [compilerPreset()] }),
     tailwindcss(),
-    hermesDevToken(),
+    anakotDevToken(),
   ],
   resolve: {
     alias: {
       "@": path.resolve(configDir, "./src"),
-      "@hermes/shared": path.resolve(configDir, "../apps/shared/src"),
+      "@anakot/shared": path.resolve(configDir, "../apps/shared/src"),
     },
     // When @nous-research/ui is symlinked via `file:../../design-language`,
     // Node's module resolution would pick up shared deps from
@@ -120,7 +120,7 @@ export default defineConfig({
     ],
   },
   build: {
-    outDir: "../hermes_cli/web_dist",
+    outDir: "../anakot_cli/web_dist",
     emptyOutDir: true,
     // Shell stays a bit over Vite's 500 kB default after vendor splits;
     // page/xterm chunks load on demand. Keep a modest ceiling so a true
@@ -171,7 +171,7 @@ export default defineConfig({
   server: {
     // Everything the dev page loads is same-origin. Vite's default CORS
     // grants every localhost port, which would let another local page read
-    // the session token hermesDevToken() injects into index.html.
+    // the session token anakotDevToken() injects into index.html.
     cors: false,
     proxy: {
       "/api": {
@@ -182,7 +182,7 @@ export default defineConfig({
         // upgrades arrive that way however BACKEND is reached (port forwards
         // included). The backend trusts no fixed dev port.
       },
-      // Same host as `hermes dashboard` must serve these; Vite has no
+      // Same host as `anakot dashboard` must serve these; Vite has no
       // dashboard-plugins/* files, so without this, plugin scripts 404
       // or receive index.html in dev.
       "/dashboard-plugins": BACKEND,

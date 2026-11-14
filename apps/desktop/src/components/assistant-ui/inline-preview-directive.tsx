@@ -36,8 +36,8 @@ import { localPreviewTarget } from '@/lib/local-preview'
  * content reads as part of the app. The page's own styles override all of
  * it, so a full page keeps its own design.
  *
- * WIDGETS TALK BACK OFF-SCREEN. `window.hermes.send(prompt)` (or declarative
- * `data-hermes-send` on any clickable element) routes the prompt through the
+ * WIDGETS TALK BACK OFF-SCREEN. `window.anakot.send(prompt)` (or declarative
+ * `data-anakot-send` on any clickable element) routes the prompt through the
  * composer's send path as a user turn typed `display_kind=hidden`: the agent
  * wakes and the durable row exists (context, resume, audit via the DB), but
  * no bubble renders — the widget updating is the visible response. Token-
@@ -74,9 +74,9 @@ export function directiveFrameHeight(raw: string | undefined): number | null {
   return Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, parsed))
 }
 
-const SIZE_MESSAGE_TYPE = 'hermes-inline-preview-size'
-const INTENT_MESSAGE_TYPE = 'hermes-inline-preview-intent'
-const INTENT_ACK_MESSAGE_TYPE = 'hermes-inline-preview-intent-ack'
+const SIZE_MESSAGE_TYPE = 'anakot-inline-preview-size'
+const INTENT_MESSAGE_TYPE = 'anakot-inline-preview-intent'
+const INTENT_ACK_MESSAGE_TYPE = 'anakot-inline-preview-intent-ack'
 
 /** Prompt length cap for a widget intent — a sentence, not a payload dump.
  *  Over-length intents are REJECTED back to the widget, never truncated: a
@@ -86,24 +86,24 @@ export const MAX_INTENT_LENGTH = 500
 /** One intent per frame per second; clicks are human-speed. A faster intent
  *  is rejected with `retryAfterMs`, not dropped silently. */
 export const INTENT_THROTTLE_MS = 1000
-/** How long `hermes.send()` waits for the parent's ack before resolving
+/** How long `anakot.send()` waits for the parent's ack before resolving
  *  `timeout` (the parent acks synchronously; this only fires if it's gone). */
 const INTENT_ACK_TIMEOUT_MS = 5000
 
 export type IntentError = 'invalid' | 'too_long' | 'throttled' | 'undelivered'
 
-/** What `hermes.send()` resolves to inside the frame. `ok` means the prompt
+/** What `anakot.send()` resolves to inside the frame. `ok` means the prompt
  *  was handed to the owning composer's send path — not that the agent has
  *  answered. */
 export type IntentAck = { ok: true } | { error: IntentError; maxLength?: number; ok: false; retryAfterMs?: number }
 
-/** The script that gives the widget its ONE voice: `hermes.send(prompt)`.
+/** The script that gives the widget its ONE voice: `anakot.send(prompt)`.
  *  Posts the prompt up tagged with the mount token and a per-call id; the
  *  parent validates, throttles, routes it through the composer, and posts an
  *  ack back, so `send()` returns a Promise of an `IntentAck` — a widget can
- *  show "saved" only when it was. Also wires `data-hermes-send` so
+ *  show "saved" only when it was. Also wires `data-anakot-send` so
  *  declarative HTML works with zero script:
- *  `<button data-hermes-send="get-price eth">ETH</button>`. */
+ *  `<button data-anakot-send="get-price eth">ETH</button>`. */
 export function intentScript(token: string): string {
   return (
     '<script>(function(){var t=' +
@@ -123,12 +123,12 @@ export function intentScript(token: string): string {
     'parent.postMessage({type:' +
     JSON.stringify(INTENT_MESSAGE_TYPE) +
     ',token:t,id:id,prompt:p},"*")})}' +
-    'window.hermes={send:send,maxLength:' +
+    'window.anakot={send:send,maxLength:' +
     String(MAX_INTENT_LENGTH) +
     '};' +
     'addEventListener("click",function(e){var el=e.target&&e.target.closest?' +
-    'e.target.closest("[data-hermes-send]"):null;' +
-    'if(el)send(el.getAttribute("data-hermes-send")||"")},true)})()</script>'
+    'e.target.closest("[data-anakot-send]"):null;' +
+    'if(el)send(el.getAttribute("data-anakot-send")||"")},true)})()</script>'
   )
 }
 
@@ -206,7 +206,7 @@ function resolvedColorScheme(): 'light' | 'dark' {
     return 'light'
   }
 
-  const mode = document.documentElement.dataset.hermesMode
+  const mode = document.documentElement.dataset.anakotMode
 
   if (mode === 'light' || mode === 'dark') {
     return mode
@@ -336,7 +336,7 @@ export function InlinePreviewDirective({
   // nothing to frame. (Remote gateways used to bail here too — that predates
   // the mode-aware fs bridge; the frame now reads through readDesktopFileText,
   // which fetches over the authenticated /api/fs bridge in remote mode, so a
-  // URL connection — including a same-machine `hermes serve` — renders live.)
+  // URL connection — including a same-machine `anakot serve` — renders live.)
   if (!file || !HTML_FILE_RE.test(file)) {
     return file ? <PreviewAttachment target={file} /> : null
   }

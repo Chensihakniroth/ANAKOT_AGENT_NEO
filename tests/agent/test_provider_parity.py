@@ -392,7 +392,7 @@ class TestBuildApiKwargsNousPortal:
 
         messages = [{"role": "user", "content": "title this"},
                     {"role": "tool", "tool_call_id": "c1", "content": "inbox", "data_use": ["no_training"]}]
-        kwargs = _build_call_kwargs(provider="nous", model="hermes-4", messages=messages)
+        kwargs = _build_call_kwargs(provider="nous", model="anakot-4", messages=messages)
         assert kwargs["extra_body"]["provider"] == {"data_collection": "deny"}
 
 
@@ -763,7 +763,7 @@ class TestAuxiliaryClientProviderPriority:
         }
         with patch("agent.auxiliary_client._read_nous_auth", return_value=nous_auth), \
              patch("agent.auxiliary_client.OpenAI"), \
-             patch("hermes_cli.models.get_nous_recommended_aux_model", return_value=None):
+             patch("anakot_cli.models.get_nous_recommended_aux_model", return_value=None):
             _client, model = get_text_auxiliary_client()
         assert model == _NOUS_MODEL
 

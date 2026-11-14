@@ -15,7 +15,7 @@ import pytest
 from agent.agent_runtime_helpers import extract_api_error_context
 from agent.error_classifier import FailoverReason, classify_api_error
 from agent.turn_retry_state import TurnRetryState
-from tests.hermes_cli.anon_portal import make_jwt
+from tests.anakot_cli.anon_portal import make_jwt
 
 WELCOME = "https://welcome-api.nousresearch.com/v1"
 PAID = "https://inference-api.nousresearch.com/v1"
@@ -121,9 +121,9 @@ class TestOneShotRecoveries:
     def test_a_named_account_on_the_welcome_host_re_reads_the_route_once(self):
         from agent.turn_recovery import _recover_welcome_tier
         calls = []
-        agent = _agent(api_key=make_jwt(account_tier="free", client_id="hermes-cli"),
+        agent = _agent(api_key=make_jwt(account_tier="free", client_id="anakot-cli"),
                        _try_refresh_nous_client_credentials=lambda **kw: calls.append(kw) or True)
-        body = {"status": 400, "message": "This endpoint serves anonymous Hermes Agent accounts only. Use https://inference-api.nousresearch.com with your API key or signed-in account."}
+        body = {"status": 400, "message": "This endpoint serves anonymous Anakot Agent accounts only. Use https://inference-api.nousresearch.com with your API key or signed-in account."}
         classified = classify_api_error(_gateway_error(400, body), provider="nous", base_url=WELCOME, api_key=agent.api_key)
         assert classified.error_context["welcome_route"] == "named_on_welcome_host"
         retry = TurnRetryState()
@@ -185,7 +185,7 @@ class TestOutageCopy:
                                         FailoverReason.server_error])
     def test_a_spent_transport_failure_on_the_welcome_host_reads_as_one_sentence(self, reason):
         from agent.turn_recovery import _welcome_outage_copy
-        from hermes_cli.anon_auth import FREE_TIER_OUTAGE_COPY
+        from anakot_cli.anon_auth import FREE_TIER_OUTAGE_COPY
         assert _welcome_outage_copy(_ANON, WELCOME, SimpleNamespace(reason=reason)) == FREE_TIER_OUTAGE_COPY
 
     def test_other_routes_and_other_reasons_keep_the_technical_summary(self):
@@ -256,7 +256,7 @@ class TestTerminalResultsCarryTheFreeTierBlock:
         result = max_retries_exhausted_result(
             self._terminal_agent(), err, _classify(err, base_url=PAID), attempts=3, is_rate_limited=False,
             error_msg="503", api_kwargs=None, api_messages=[], messages=[], conversation_history=[],
-            api_call_count=3, approx_tokens=10, provider="nous", base_url=PAID, model="hermes-4")
+            api_call_count=3, approx_tokens=10, provider="nous", base_url=PAID, model="anakot-4")
         assert "free_tier" not in result
 
 
@@ -280,7 +280,7 @@ class TestFreeTierCooldownCutoff:
 
     @pytest.fixture(autouse=True)
     def _no_inherited_source(self, monkeypatch):
-        for name in ("HERMES_SESSION_SOURCE", "HERMES_SINGLE_QUERY_SESSION", "HERMES_SESSION_SOURCE_EXPLICIT"):
+        for name in ("ANAKOT_SESSION_SOURCE", "ANAKOT_SINGLE_QUERY_SESSION", "ANAKOT_SESSION_SOURCE_EXPLICIT"):
             monkeypatch.delenv(name, raising=False)
 
     def test_an_attended_desktop_session_ends_the_turn_and_names_the_reset(self):
@@ -306,7 +306,7 @@ class TestFreeTierCooldownCutoff:
             clear_session_vars(tokens)
 
     def test_a_gateway_admitted_finite_cli_turn_keeps_waiting(self):
-        """``hermes chat -q`` over the daemon carries its one-shot fact on the admission, not in env."""
+        """``anakot chat -q`` over the daemon carries its one-shot fact on the admission, not in env."""
         from agent.turn_recovery import free_tier_cooldown_ends_turn
         from gateway.session_finite import finite_turn_scope
         with finite_turn_scope(True):

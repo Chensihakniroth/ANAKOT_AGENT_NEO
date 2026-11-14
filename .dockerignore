@@ -44,8 +44,8 @@ ui-tui/packages/hermes-ink/dist/
 # Environment files
 .env
 .env.*
-# ...but keep the template: docker/stage2-hook.sh seeds $HERMES_HOME/.env from
-# /opt/hermes/.env.example on first boot (OOF-285 — excluding it silently broke
+# ...but keep the template: docker/stage2-hook.sh seeds $ANAKOT_HOME/.env from
+# /opt/anakot/.env.example on first boot (OOF-285 — excluding it silently broke
 # first-boot .env seeding and the API_SERVER_KEY generation that depends on it).
 !.env.example
 
@@ -67,11 +67,11 @@ htmlcov/
 
 # Runtime data (bind-mounted at /opt/data; must not leak into build context)
 data/
-.hermes-docker/
+.anakot-docker/
 .notebooklm-home/
 
 # Compose/profile runtime state (bind-mounted; avoid ownership/secret issues)
-hermes-config/
+anakot-config/
 runtime/
 
 # ---------- Not needed inside the Docker image ----------
@@ -133,7 +133,7 @@ packaging/
 # Design and planning documents
 plans/
 .plans/
-.hermes/
+.anakot/
 
 # Repo-level dotfiles that are git-only or dev-tooling config
 .envrc

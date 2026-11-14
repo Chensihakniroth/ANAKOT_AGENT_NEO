@@ -16,31 +16,31 @@ from contextlib import closing
 
 import pytest
 
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from anakot_constants import reset_anakot_home_override, set_anakot_home_override
 from tools import async_delegation as ad
 
 
 @pytest.fixture(autouse=True)
 def home(tmp_path):
     ad._reset_for_tests()
-    token = set_hermes_home_override(str(tmp_path))
+    token = set_anakot_home_override(str(tmp_path))
     yield tmp_path
-    reset_hermes_home_override(token)
+    reset_anakot_home_override(token)
     ad._reset_for_tests()
 
 
 @pytest.fixture
 def reconcile_calls(monkeypatch):
-    import hermes_state_schema
+    import anakot_state_schema
 
     calls = []
-    real = hermes_state_schema.reconcile_state_schema
+    real = anakot_state_schema.reconcile_state_schema
 
     def counting(conn):
         calls.append(1)
         return real(conn)
 
-    monkeypatch.setattr(hermes_state_schema, "reconcile_state_schema", counting)
+    monkeypatch.setattr(anakot_state_schema, "reconcile_state_schema", counting)
     return calls
 
 
@@ -98,12 +98,12 @@ def test_each_database_is_reconciled_on_its_own(tmp_path, reconcile_calls):
     _sweep_once()
     other = tmp_path / "other-home"
     other.mkdir()
-    token = set_hermes_home_override(str(other))
+    token = set_anakot_home_override(str(other))
     try:
         _sweep_once()
         _sweep_once()
     finally:
-        reset_hermes_home_override(token)
+        reset_anakot_home_override(token)
     assert len(reconcile_calls) == 2
 
 
@@ -151,7 +151,7 @@ def test_unstatable_replacement_still_reconciles(home, same_version_replacement,
 
 
 def test_replacement_between_stat_and_open_reconciles(home, same_version_replacement, monkeypatch):
-    from hermes_cli import sqlite_util
+    from anakot_cli import sqlite_util
 
     real_open = sqlite_util.open_db
 
@@ -167,17 +167,17 @@ def test_replacement_between_stat_and_open_reconciles(home, same_version_replace
 @pytest.mark.platforms("posix")
 def test_replacement_during_reconcile_is_not_marked_ready(home, same_version_replacement, monkeypatch):
     """The opened connection still refers to the old inode when its path is replaced."""
-    import hermes_state_schema
+    import anakot_state_schema
 
     ad._SCHEMA_READY.clear()
-    real_reconcile = hermes_state_schema.reconcile_state_schema
+    real_reconcile = anakot_state_schema.reconcile_state_schema
 
     def replacing_reconcile(conn):
         real_reconcile(conn)
         os.replace(same_version_replacement, home / "state.db")
 
     with monkeypatch.context() as patch:
-        patch.setattr(hermes_state_schema, "reconcile_state_schema", replacing_reconcile)
+        patch.setattr(anakot_state_schema, "reconcile_state_schema", replacing_reconcile)
         ad._connect().close()
     _assert_dispatch_persisted()
 

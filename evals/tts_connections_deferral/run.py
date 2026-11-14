@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Battery runner + readout for the text_to_speech / manage_connections deferral A/B.
 
-    TCD_BASE_TREE=<checkout of the base SHA> TCD_PR_TREE=<checkout with the change> TCD_PYTHON=<hermes env python> \\
+    TCD_BASE_TREE=<checkout of the base SHA> TCD_PR_TREE=<checkout with the change> TCD_PYTHON=<anakot env python> \\
     python3 run.py <model> <reps> [--parallel=N] [--only=task1,task2]
     python3 run.py --report
 
 Inference: TCD_INFERENCE_URL + TCD_INFERENCE_KEY, or (default) the Nous Portal agent key read fresh from
-$HERMES_HOME/auth.json for every cell. Read-only: the harness never refreshes or copies the OAuth grant.
+$ANAKOT_HOME/auth.json for every cell. Read-only: the harness never refreshes or copies the OAuth grant.
 Resume-safe per (model, task, arm, rep); errored cells score 0 and stay in the denominator.
 """
 import json
@@ -27,7 +27,7 @@ TIMEOUT = {}
 def _inference_env():
     env = dict(os.environ)
     if not env.get("TCD_INFERENCE_KEY"):
-        home = Path(os.environ.get("HERMES_HOME") or Path.home() / ".hermes")
+        home = Path(os.environ.get("ANAKOT_HOME") or Path.home() / ".anakot")
         nous = json.loads((home / "auth.json").read_text())["providers"]["nous"]
         env["TCD_INFERENCE_URL"], env["TCD_INFERENCE_KEY"] = nous["inference_base_url"], nous["agent_key"]
     return env

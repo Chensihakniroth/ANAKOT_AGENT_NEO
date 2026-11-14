@@ -5,12 +5,12 @@ import { execFile } from 'node:child_process'
 import { resolve } from 'node:path'
 import { promisify } from 'node:util'
 
-import type { GatewayConnection } from '@hermes/shared/gateway-client'
+import type { GatewayConnection } from '@anakot/shared/gateway-client'
 
 import { pythonHelperPath } from './lib/pythonHelpers.js'
 
 const resolvePython = () => {
-  // Trust HERMES_PYTHON only. The launcher guarantees it: hermes_cli/main.py
+  // Trust HERMES_PYTHON only. The launcher guarantees it: anakot_cli/main.py
   // validates it and falls back to its own sys.executable, and the Nix
   // wrapper sets it too. So a TUI started the normal way already knows its
   // interpreter, and scanning VIRTUAL_ENV / .venv here can only find a
@@ -29,7 +29,7 @@ const resolvePython = () => {
   return process.platform === 'win32' ? 'python' : 'python3'
 }
 
-/** gateway_bootstrap.py's verdict for an interpreter that cannot load Hermes or its dependencies. */
+/** gateway_bootstrap.py's verdict for an interpreter that cannot load Anakot or its dependencies. */
 // execFile's error text is `Command failed: …` followed by the child's stderr, hence the line match.
 export const isTerminalBootstrapFailure = (message: string) => /^gateway unavailable: /m.test(message)
 

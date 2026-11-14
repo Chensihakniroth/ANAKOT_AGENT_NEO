@@ -88,7 +88,7 @@ export async function stageClipboardImage(
   gw: GatewayClient, destination: SubmissionDestination,
   extract: (path: string) => Promise<boolean> = extractClipboardImage
 ): Promise<StagedImage | null> {
-  const directory = await mkdtemp(join(tmpdir(), 'hermes-clipboard-'))
+  const directory = await mkdtemp(join(tmpdir(), 'anakot-clipboard-'))
   const path = join(directory, 'clipboard.png')
 
   try {
@@ -101,9 +101,9 @@ export async function stageClipboardImage(
 export async function stageImagePath(raw: string, gw: GatewayClient, destination: SubmissionDestination): Promise<StagedImage> {
   // Explicit URL attachments may target another machine, even a loopback SSH
   // tunnel. Only discovery-owned local connections share our profile filesystem.
-  const remote = Boolean(process.env.HERMES_TUI_GATEWAY_URL?.trim())
+  const remote = Boolean(process.env.ANAKOT_TUI_GATEWAY_URL?.trim())
   // A remote session's folder names the owner's filesystem; the bytes are read here.
-  const base = (remote ? process.env.HERMES_CWD : sessionCwd()) || process.cwd()
+  const base = (remote ? process.env.ANAKOT_CWD : sessionCwd()) || process.cwd()
   const source = await resolveImagePath(raw, base)
   const bytes = await readFile(source.path)
 

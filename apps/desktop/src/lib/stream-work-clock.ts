@@ -1,7 +1,7 @@
-import { randomUuid } from '@hermes/shared'
+import { randomUuid } from '@anakot/shared'
 
 type StreamWorkBridge = Required<
-  Pick<NonNullable<Window['hermesDesktop']>, 'scheduleStreamWorkWake' | 'onStreamWorkWake'>
+  Pick<NonNullable<Window['anakotDesktop']>, 'scheduleStreamWorkWake' | 'onStreamWorkWake'>
 >
 
 interface StreamWork {
@@ -54,7 +54,7 @@ function onNativeWake(token: string): void {
 }
 
 function connectBridge(): void {
-  const candidate = typeof window === 'undefined' ? undefined : window.hermesDesktop
+  const candidate = typeof window === 'undefined' ? undefined : window.anakotDesktop
 
   if (candidate?.scheduleStreamWorkWake && candidate.onStreamWorkWake) {
     bridge = {

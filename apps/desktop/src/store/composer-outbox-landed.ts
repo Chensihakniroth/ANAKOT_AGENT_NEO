@@ -1,5 +1,5 @@
 import { getSessionMessages } from '@/api/sessions'
-import type { SessionMessage } from '@/types/hermes'
+import type { SessionMessage } from '@/types/anakot'
 
 import { listedSubmissions } from './admitted-submissions'
 import { isFreshDraftScope } from './composer'

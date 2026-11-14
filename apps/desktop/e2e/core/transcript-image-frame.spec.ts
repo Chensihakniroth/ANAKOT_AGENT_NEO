@@ -34,7 +34,7 @@ test('cold image replies stay inside their reserved frames', async () => {
     return `MEDIA:${file}`
   })
 
-  writeProviderHome(sandbox.hermesHome, provider.url)
+  writeProviderHome(sandbox.anakotHome, provider.url)
   provider.script(PROMPT, [{ text: [`${lines.join('\n\n')}\n\n${AFTER}`] }])
 
   const { app, page } = await launchCoreApp(coreAppEnv(sandbox))

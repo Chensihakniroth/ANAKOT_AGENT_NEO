@@ -11,10 +11,10 @@ import weakref
 from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import MagicMock, patch
 
-import hermes_yaml as yaml
+import anakot_yaml as yaml
 import pytest
 
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 from tests.waiting import wait_until
 from tools.process_registry import process_registry
 
@@ -37,7 +37,7 @@ class _ScriptedModel:
         self.builds, self.turns = [], []
 
     def __call__(self, **kw):
-        from hermes_constants import get_hermes_home
+        from anakot_constants import get_anakot_home
 
         child = MagicMock()
         child.session_id = kw.get("session_id") or f"child-sess-{len(self.builds)}"
@@ -48,7 +48,7 @@ class _ScriptedModel:
 
         def run_conversation(user_message, conversation_history=None, **_):
             self.turns.append({"session_id": child.session_id, "message": user_message,
-                               "history": conversation_history, "home": str(get_hermes_home())})
+                               "history": conversation_history, "home": str(get_anakot_home())})
             db.create_session(child.session_id, "subagent", parent_session_id=kw.get("parent_session_id"))
             reply = f"done: {user_message}"
             db.append_message(child.session_id, "user", user_message)
@@ -56,7 +56,7 @@ class _ScriptedModel:
             return {"final_response": reply, "completed": True, "api_calls": 1}
 
         child.run_conversation.side_effect = run_conversation
-        self.builds.append({**kw, "home": str(get_hermes_home())})
+        self.builds.append({**kw, "home": str(get_anakot_home())})
         return child
 
 
@@ -202,7 +202,7 @@ def test_one_shot_sessions_refuse_continue_without_consuming_it(monkeypatch):
     from tools.delegate_tool import delegate_task
     from tools.delegate_tool_registry import _recent_subagents
 
-    monkeypatch.setenv("HERMES_SINGLE_QUERY_SESSION", "1")  # the finite ``chat -q`` marker
+    monkeypatch.setenv("ANAKOT_SINGLE_QUERY_SESSION", "1")  # the finite ``chat -q`` marker
     parent = _parent()
     _finished("sa-cont-oneshot", owner=parent.session_id)
     out = json.loads(delegate_task(action="continue", subagent_id="sa-cont-oneshot", message="more",
@@ -223,12 +223,12 @@ def test_profile_routed_child_continues_inside_its_profile_scope(tmp_path, monke
     from tools.delegate_tool import delegate_task
     from tools.delegate_tool_routes import _route_to_task_route
 
-    launch = tmp_path / "os-home" / ".hermes"
+    launch = tmp_path / "os-home" / ".anakot"
     coder = launch / "profiles" / "coder"
     _write_profile(launch, host="launch.invalid", model="launch-model", key="launch-key")
     _write_profile(coder, host="coder.invalid", model="coder-model", key="coder-key")
     monkeypatch.setenv("HOME", str(tmp_path / "os-home"))
-    monkeypatch.setenv("HERMES_HOME", str(launch))
+    monkeypatch.setenv("ANAKOT_HOME", str(launch))
     monkeypatch.setenv("PROFILE_KEY", "launch-key")
 
     model = _ScriptedModel()

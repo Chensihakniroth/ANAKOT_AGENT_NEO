@@ -13,9 +13,9 @@ import {
   resetInFlightTurnJournalStateForTests
 } from '@/lib/inflight-turn-journal'
 
-const STORAGE_KEY = 'hermes.desktop.inflightTurnJournal.v1'
-const STORAGE_PREFIX = 'hermes.desktop.inflightTurnJournal.v2:'
-const MIGRATION_KEY = 'hermes.desktop.inflightTurnJournal.v2.migrated'
+const STORAGE_KEY = 'anakot.desktop.inflightTurnJournal.v1'
+const STORAGE_PREFIX = 'anakot.desktop.inflightTurnJournal.v2:'
+const MIGRATION_KEY = 'anakot.desktop.inflightTurnJournal.v2.migrated'
 
 const sessionStorageKey = (storedSessionId: string) => `${STORAGE_PREFIX}${encodeURIComponent(storedSessionId)}`
 

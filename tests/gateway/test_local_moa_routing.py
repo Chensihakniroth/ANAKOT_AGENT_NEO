@@ -1,7 +1,7 @@
 """``/moa <prompt>`` on a local session runs that one turn through the default MoA preset.
 
 Regression for #147510: Desktop, the Ink TUI and ACP send ``/moa`` through ``slash.exec`` and submit the
-``send`` directive it returns; ``hermes chat -q "/moa ..."`` submits the raw text. Both reached the
+``send`` directive it returns; ``anakot chat -q "/moa ..."`` submits the raw text. Both reached the
 gateway's ``/moa`` handler, which armed the runner's per-session override that a local session's frozen
 launch route never reads, so the chat's own model answered and nothing said so.
 
@@ -52,10 +52,10 @@ async def owner(tmp_path, monkeypatch):
     from gateway.run import GatewayRunner
     from gateway.session_authority import initialize_session_authority
     from gateway.session_controls import AuthorityConnection
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
 
-    monkeypatch.setattr(run, '_hermes_home', tmp_path)
-    monkeypatch.setenv('HERMES_HOME', str(tmp_path))  # a single-profile owner: this IS the launch home
+    monkeypatch.setattr(run, '_anakot_home', tmp_path)
+    monkeypatch.setenv('ANAKOT_HOME', str(tmp_path))  # a single-profile owner: this IS the launch home
     (tmp_path / 'config.yaml').write_text(json.dumps({
         'model': {'provider': 'custom', 'default': 'session-model', 'base_url': 'http://127.0.0.1:9/v1',
                   'api_key': 'loopback-only'},
@@ -99,7 +99,7 @@ async def _submit(connection, sid, input_id, text, **extra):
 
 
 def _rows(authority, sid):
-    from hermes_state_runtime import list_session_admissions
+    from anakot_state_runtime import list_session_admissions
     return list_session_admissions(authority.db, session_id=sid, pending_only=False)
 
 

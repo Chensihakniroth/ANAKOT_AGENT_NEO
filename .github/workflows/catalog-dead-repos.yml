@@ -1,7 +1,7 @@
 name: Catalog dead repos
 
 # Weekly: delist plugin-catalog entries whose repository was deleted or whose pinned commit is
-# gone (force-pushed away), since `hermes plugins install` can no longer install them. Delisting
+# gone (force-pushed away), since `anakot plugins install` can no longer install them. Delisting
 # deletes the entry file (plugin-catalog/README.md "Delisting"); it never touches removed.yaml.
 #
 # The script refuses to delist anything when a lookup does not answer cleanly or when too many

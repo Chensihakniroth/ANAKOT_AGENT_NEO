@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 from run_agent import AIAgent
 
 

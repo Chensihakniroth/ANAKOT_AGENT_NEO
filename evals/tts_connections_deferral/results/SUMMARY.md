@@ -10,7 +10,7 @@ image_gen, tts, connections (no browser, web or delegation: a narrower prefix th
 - `text_to_speech` holds: reached 12/12 on both arms on both models, arguments valid on the first call
   every time, no false trigger on the negative. Deferred by default in this change.
 - `manage_connections` does not hold on the weak model: "Install the Linear MCP server" went 3/3 -> 0/3
-  on qwen3.8-27b. It never searched; it used the terminal (`hermes mcp install linear`) instead. Kept eager.
+  on qwen3.8-27b. It never searched; it used the terminal (`anakot mcp install linear`) instead. Kept eager.
 - At ceiling on Fable 5.2 (39/39 both arms): that is no-regression on these flows, not proof of safety.
 
 ## Per model
@@ -49,7 +49,7 @@ image_gen, tts, connections (no browser, web or delegation: a narrower prefix th
 | conn_connect_gmail | 3 | 3 | 3 | 3 | |
 | conn_status_notion | 3 | 3 | 2 | 1.5 | qwen pr reached the tool 3/3 (base 2/3); it lost half points for also connecting after the scripted "go ahead" |
 | conn_required_recovery | 3 | 3 | 3 | 3 | CONNECTION_REQUIRED -> manage_connections connect -> retry, through the bridge |
-| conn_mcp_install | 3 | 3 | 3 | **0** | qwen pr never called tool_search; terminal + `hermes mcp install` instead, 12 calls and 437k tokens per cell |
+| conn_mcp_install | 3 | 3 | 3 | **0** | qwen pr never called tool_search; terminal + `anakot mcp install` instead, 12 calls and 437k tokens per cell |
 | conn_second_account | 3 | 3 | 3 | 3 | |
 | conn_negative | 3 | 3 | 3 | 3 | |
 | ctl_write_file | 3 | 3 | 3 | 3 | |

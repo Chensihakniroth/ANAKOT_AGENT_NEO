@@ -10,7 +10,7 @@ import secrets
 
 import pytest
 
-from hermes_cli.dashboard_auth import RefreshExpiredError
+from anakot_cli.dashboard_auth import RefreshExpiredError
 from plugins.dashboard_auth import basic
 
 SECRET = secrets.token_bytes(32)
@@ -50,14 +50,14 @@ def test_revoking_a_foreign_or_garbage_token_does_not_raise():
 @pytest.mark.parametrize("configured", ["plaintext", "hash"])
 def test_rotating_the_password_with_the_same_secret_ends_old_sessions(monkeypatch, configured):
     monkeypatch.setattr(basic, "_load_config_basic_auth_section", dict)
-    monkeypatch.setenv("HERMES_DASHBOARD_BASIC_AUTH_USERNAME", "admin")
-    monkeypatch.setenv("HERMES_DASHBOARD_BASIC_AUTH_SECRET", SECRET.hex())
+    monkeypatch.setenv("ANAKOT_DASHBOARD_BASIC_AUTH_USERNAME", "admin")
+    monkeypatch.setenv("ANAKOT_DASHBOARD_BASIC_AUTH_SECRET", SECRET.hex())
 
     def start(password):
         if configured == "plaintext":
-            monkeypatch.setenv("HERMES_DASHBOARD_BASIC_AUTH_PASSWORD", password)
+            monkeypatch.setenv("ANAKOT_DASHBOARD_BASIC_AUTH_PASSWORD", password)
         else:
-            monkeypatch.setenv("HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH", basic.hash_password(password))
+            monkeypatch.setenv("ANAKOT_DASHBOARD_BASIC_AUTH_PASSWORD_HASH", basic.hash_password(password))
         return basic.BasicAuthProvider(**basic._settings())
 
     old = start("old-pw")
@@ -148,9 +148,9 @@ def test_access_token_revocation_ends_its_login_and_ignores_other_tokens(monkeyp
 def gated_basic():
     from fastapi.testclient import TestClient
 
-    from hermes_cli import web_server
-    from hermes_cli.dashboard_auth import clear_providers, register_provider
-    from hermes_cli.dashboard_auth import refresh_singleflight
+    from anakot_cli import web_server
+    from anakot_cli.dashboard_auth import clear_providers, register_provider
+    from anakot_cli.dashboard_auth import refresh_singleflight
 
     provider = _provider()
     clear_providers()
@@ -171,8 +171,8 @@ def test_logout_ends_a_refresh_the_gate_cached_just_before_it(gated_basic):
     login that has since signed out."""
     provider, client = gated_basic
     s = provider.complete_password_login(username="admin", password="old-pw")
-    copied = {"hermes_session_at": "lapsed", "hermes_session_rt": s.refresh_token,
-              "hermes_session_provider": "basic"}
+    copied = {"hermes_session_at": "lapsed", "anakot_session_rt": s.refresh_token,
+              "anakot_session_provider": "basic"}
 
     def me():
         client.cookies.clear()
@@ -190,7 +190,7 @@ def test_logout_ends_a_refresh_the_gate_cached_just_before_it(gated_basic):
 
 def _cookie_request(client, cookies, method="get", path="/api/auth/me", **kw):
     client.cookies.clear()
-    client.cookies.update({"hermes_session_provider": "basic", **cookies})
+    client.cookies.update({"anakot_session_provider": "basic", **cookies})
     return getattr(client, method)(path, **kw)
 
 
@@ -206,10 +206,10 @@ def test_logout_with_the_browsers_current_rt_ends_a_copied_rts_cached_replay(gat
     provider, client = gated_basic
     s = provider.complete_password_login(username="admin", password="old-pw")
     browser_rt = provider.refresh_session(refresh_token=s.refresh_token).refresh_token
-    copied = {"hermes_session_at": "lapsed", "hermes_session_rt": s.refresh_token}
+    copied = {"hermes_session_at": "lapsed", "anakot_session_rt": s.refresh_token}
 
     assert _cookie_request(client, copied).status_code == 200  # replayed just before logout
-    _logout(client, {"hermes_session_at": "lapsed", "hermes_session_rt": browser_rt})
+    _logout(client, {"hermes_session_at": "lapsed", "anakot_session_rt": browser_rt})
 
     assert _cookie_request(client, copied).status_code == 401
 

@@ -11,14 +11,14 @@
     { pkgs, lib, self', ... }:
     let
       packages = builtins.attrValues self'.packages;
-      hermesNpmLib = self'.packages.default.passthru.hermesNpmLib;
+      anakotNpmLib = self'.packages.default.passthru.anakotNpmLib;
 
       # Collect all packageJsonPath values from pnpm workspace packages.
       npmPackageJsonPaths = builtins.filter (p: p != null) (
         map (p: p.passthru.packageJsonPath or null) packages
       );
 
-      hermesAgentDevShellHook = self'.packages.default.passthru.devShellHook;
+      anakotAgentDevShellHook = self'.packages.default.passthru.devShellHook;
     in
     {
       devShells.default = pkgs.mkShell {
@@ -45,8 +45,8 @@
           # The editable venv's .pth resolves the checkout through this.
           export HERMES_PYTHON_SRC_ROOT=$(git rev-parse --show-toplevel)
 
-          ${hermesAgentDevShellHook}
-          ${hermesNpmLib.mkPnpmDevShellHook npmPackageJsonPaths}
+          ${anakotAgentDevShellHook}
+          ${anakotNpmLib.mkPnpmDevShellHook npmPackageJsonPaths}
 
           # Force Node to use Nix's playwright-test binary instead of node_modules/.bin
           export PATH="${pkgs.playwright-test}/bin:$PATH"
@@ -57,8 +57,8 @@
           export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
           export NIX_SSL_CERT_FILE="$SSL_CERT_FILE"
 
-          echo "Hermes Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
-          echo "Ready. 'hermes-checkout' runs this checkout; 'hermes' stays your installed Hermes."
+          echo "Anakot Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
+          echo "Ready. 'anakot-checkout' runs this checkout; 'anakot' stays your installed Anakot."
         '';
       };
     };

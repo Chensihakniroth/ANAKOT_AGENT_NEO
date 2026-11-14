@@ -13,8 +13,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from hermes_cli.active_sessions import try_acquire_active_session
-from hermes_state import SessionDB
+from anakot_cli.active_sessions import try_acquire_active_session
+from anakot_state import SessionDB
 from tui_gateway import server
 
 
@@ -40,9 +40,9 @@ class _Agent:
 
 
 def _make(monkeypatch, sid):
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
     monkeypatch.setattr(server, "_emit", lambda *a, **k: None)
-    db = SessionDB(db_path=get_hermes_home() / "state.db")
+    db = SessionDB(db_path=get_anakot_home() / "state.db")
     monkeypatch.setattr(server, "_db", db)
     db.create_session(sid, source="desktop")
     for n in range(3):
@@ -155,7 +155,7 @@ def _user_turn_in_refusal_gap(chat, monkeypatch, competitor):
 
 
 def test_n1_refused_heartbeat_tick_never_clears_a_user_turn(taken, monkeypatch):
-    from hermes_cli.heartbeat import HeartbeatManager, save_heartbeat
+    from anakot_cli.heartbeat import HeartbeatManager, save_heartbeat
     mgr = HeartbeatManager(taken.sid)
     mgr.set("check the build", interval_seconds=600)
     mgr.state.created_at = time.time() - 3600
@@ -185,9 +185,9 @@ def test_n2_refused_notification_submit_never_clears_a_user_turn(taken, monkeypa
 @pytest.fixture
 def foreign(monkeypatch):
     sid = "idle-edge-foreign"
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
     monkeypatch.setattr(server, "_emit", lambda *a, **k: None)
-    db = SessionDB(db_path=get_hermes_home() / "state.db")
+    db = SessionDB(db_path=get_anakot_home() / "state.db")
     monkeypatch.setattr(server, "_db", db)
     db.create_session(sid, source="desktop")
     ready = threading.Event()
@@ -224,7 +224,7 @@ def _user_turn_after_refusal(chat, monkeypatch):
 
 
 def test_m1_heartbeat_refusal_keeps_running_of_a_turn_started_in_the_gap(foreign, monkeypatch):
-    from hermes_cli.heartbeat import HeartbeatManager, save_heartbeat
+    from anakot_cli.heartbeat import HeartbeatManager, save_heartbeat
     mgr = HeartbeatManager(foreign.sid)
     mgr.set("check the build", interval_seconds=600)
     mgr.state.created_at = time.time() - 3600
@@ -291,8 +291,8 @@ def test_r3_in_process_slash_writer_on_a_taken_chat_never_runs_the_worker(taken,
 
 
 def test_r2_model_reset_on_a_taken_chat_keeps_the_pin_it_refuses_to_drop(taken, monkeypatch):
-    from hermes_cli.model_switch import ModelSwitchResult
-    monkeypatch.setattr("hermes_cli.model_switch.switch_model", lambda **kw: ModelSwitchResult(
+    from anakot_cli.model_switch import ModelSwitchResult
+    monkeypatch.setattr("anakot_cli.model_switch.switch_model", lambda **kw: ModelSwitchResult(
         success=True, new_model="cfg/model", target_provider="prov"))
     monkeypatch.setattr(server, "_expensive_model_confirm", lambda *a, **k: None)
     monkeypatch.setattr(server, "_merge_preflight_warning", lambda *a, **k: None)

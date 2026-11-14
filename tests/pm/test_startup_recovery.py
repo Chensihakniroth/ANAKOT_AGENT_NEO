@@ -29,7 +29,7 @@ def isolated_machine_home(tmp_path, monkeypatch):
     # machine cache and platform-specific home lookup must be isolated there too.
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".hermes"))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path / ".anakot"))
     monkeypatch.delenv("HERMES_INSTALL_ROOT", raising=False)
 
 
@@ -44,17 +44,17 @@ def test_bootstrap_repairs_before_dependency_activation(tmp_path, monkeypatch, m
     core.mkdir()
     home = tmp_path / "home"
     home.mkdir()
-    for name in ("hermes_bootstrap.py", "hermes_constants.py"):
+    for name in ("anakot_bootstrap.py", "anakot_constants.py"):
         shutil.copy2(repo / name, core / name)
-    for package in ("pm", "hermes_agent"):
+    for package in ("pm", "anakot_agent"):
         shutil.copytree(repo / package, core / package, ignore=shutil.ignore_patterns("__pycache__"))
-    cli = core / "hermes_cli"
+    cli = core / "anakot_cli"
     cli.mkdir()
     # Include the real preimport protocol, including its ownership check. Do
     # not stub prepare_launch: the same files are also saved in PM's workspace.
     for name in ("__init__.py", "runtime_state.py", "_early_recovery.py",
                  "_parser.py", "venv_sync.py", "steward.py"):
-        shutil.copy2(repo / "hermes_cli" / name, cli / name)
+        shutil.copy2(repo / "anakot_cli" / name, cli / name)
     wheels = tmp_path / "wheels"
     wheels.mkdir()
     _wheel(wheels, "startup_dep", "1.0")
@@ -67,8 +67,8 @@ def test_bootstrap_repairs_before_dependency_activation(tmp_path, monkeypatch, m
     )
     uv = shutil.which("uv")
     assert uv, "startup recovery requires real uv"
-    monkeypatch.setenv("HERMES_HOME", str(home))
-    monkeypatch.setenv("HERMES_RUNTIME_DIR", str(tmp_path / "tools"))
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_RUNTIME_DIR", str(tmp_path / "tools"))
     monkeypatch.setattr(paths, "repo_root", lambda: core)
     monkeypatch.setattr("pm._uv._toolchain", lambda **kwargs: (Path(uv), Path(sys.executable)))
     monkeypatch.setattr(engine, "lazy_installs_allowed", lambda: True)
@@ -139,7 +139,7 @@ def test_bootstrap_repairs_before_dependency_activation(tmp_path, monkeypatch, m
     launcher.write_text(
         'import importlib.util, json\n'
         'assert importlib.util.find_spec("startup_dep") is None\n'
-        'import hermes_bootstrap\nimport startup_dep\n'
+        'import anakot_bootstrap\nimport startup_dep\n'
         'print(json.dumps({"version": startup_dep.__version__, "file": startup_dep.__file__}))\n',
         encoding="utf-8",
     )

@@ -17,7 +17,7 @@ export interface MissingLocalProfileCheck {
   globalRemote: boolean
   /** The profile has its own remote, SSH or cloud route. */
   hasRemoteOverride: (profile: string) => boolean
-  /** The profile this launch named with --profile; like `hermes -p`, it still fails loudly. */
+  /** The profile this launch named with --profile; like `anakot -p`, it still fails loudly. */
   launchProfile: null | string
   log: (line: string) => void
   /** The profile is live on this machine (localProfileIsLive: the CLI's named_profile_is_live). */
@@ -114,12 +114,12 @@ export function registerDesktopProfilePreferenceIpc(
   preferences: ReturnType<typeof createDesktopProfilePreferences>,
   isKnownConnection: (connectionId: string) => boolean
 ) {
-  ipc.handle('hermes:profile:default:get', async () => preferences.getDefault())
-  ipc.handle('hermes:profile:default:set', async (_event, route) => preferences.setDefault(route))
-  ipc.handle('hermes:profile:connections:remember', async (_event, connectionId, profile) =>
+  ipc.handle('anakot:profile:default:get', async () => preferences.getDefault())
+  ipc.handle('anakot:profile:default:set', async (_event, route) => preferences.setDefault(route))
+  ipc.handle('anakot:profile:connections:remember', async (_event, connectionId, profile) =>
     preferences.rememberConnectionProfile(connectionId, profile, isKnownConnection)
   )
-  ipc.handle('hermes:profile:connections:import', async (_event, record) =>
+  ipc.handle('anakot:profile:connections:import', async (_event, record) =>
     preferences.importConnectionProfiles(record, isKnownConnection)
   )
 }
@@ -316,8 +316,8 @@ export function createDesktopProfilePreferences(
     }
   }
 
-  // userData outlives HERMES_HOME: a reinstall that wiped the Hermes home, or a
-  // `hermes profile delete` while the app was closed, never reaches
+  // userData outlives ANAKOT_HOME: a reinstall that wiped the Anakot home, or a
+  // `anakot profile delete` while the app was closed, never reaches
   // afterProfileRequest. A remembered local profile that is gone would launch
   // `--profile <gone>` on every boot, which the backend refuses, so apply the
   // in-app delete's outcome: last-used falls back to default and a matching

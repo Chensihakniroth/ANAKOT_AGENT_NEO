@@ -16,7 +16,7 @@ import pytest
 
 pytestmark = pytest.mark.platforms("windows")
 COLLECTOR = Path(__file__).resolve().parents[3] / "tests" / "install" / "e2e-assets" / "windows-update-evidence.ps1"
-IDENTITY = "NousResearch.Hermes.EvidenceTest"
+IDENTITY = "NousResearch.Anakot.EvidenceTest"
 LOGS = ("AppxPackaging_Operational", "AppXDeploymentServer_Operational",
         "AppXDeployment_Operational", "AppModel-Runtime_Admin")
 
@@ -40,9 +40,9 @@ function New-FakeEvent($Minutes, $Id, $Level, $Message) {
 }
 $fixtureEvents = @{
     'Microsoft-Windows-AppxPackaging/Operational' = @(
-        (New-FakeEvent 2 404 2 "Error in parsing the app package.`r`n  Hermes-0.22.0.msixbundle"),
+        (New-FakeEvent 2 404 2 "Error in parsing the app package.`r`n  Anakot-0.22.0.msixbundle"),
         (New-FakeEvent 1 216 3 'App manifest validation warning for Microsoft.WindowsStore'),
-        (New-FakeEvent 3 400 4 'Started deployment from http://127.0.0.1:8443/Hermes.appinstaller'))
+        (New-FakeEvent 3 400 4 'Started deployment from http://127.0.0.1:8443/Anakot.appinstaller'))
     'Microsoft-Windows-AppModel-Runtime/Admin' = @(New-FakeEvent 5 69 3 'IDENTITY could not be activated')
 }
 function Get-WinEvent { [CmdletBinding()] param([hashtable]$FilterHashtable)
@@ -57,7 +57,7 @@ MISSING_AND_EMPTY_CHANNEL = FAKE_HOST + r"""
 function Get-WinEvent { [CmdletBinding()] param([hashtable]$FilterHashtable)
     $filter = $FilterHashtable.Clone()
     switch ($filter.LogName) {
-        'Microsoft-Windows-AppXDeploymentServer/Operational' { $filter.LogName = 'Microsoft-Windows-HermesEvidenceTest-Missing/Operational' }
+        'Microsoft-Windows-AppXDeploymentServer/Operational' { $filter.LogName = 'Microsoft-Windows-AnakotEvidenceTest-Missing/Operational' }
         'Microsoft-Windows-AppXDeployment/Operational' { $filter.StartTime = (Get-Date).AddDays(1) }
         default { return $fixtureEvents[$filter.LogName] }
     }
@@ -111,15 +111,15 @@ def test_saves_package_process_and_event_records_and_logs_only_relevant_problems
     # Every record of the window is saved, oldest first, one line each.
     assert _lines(out, "AppxPackaging_Operational") == [
         "2026-11-13T09:01:00.0000000Z 216 Warning App manifest validation warning for Microsoft.WindowsStore",
-        "2026-11-13T09:02:00.0000000Z 404 Error Error in parsing the app package. Hermes-0.22.0.msixbundle",
-        "2026-11-13T09:03:00.0000000Z 400 Information Started deployment from http://127.0.0.1:8443/Hermes.appinstaller",
+        "2026-11-13T09:02:00.0000000Z 404 Error Error in parsing the app package. Anakot-0.22.0.msixbundle",
+        "2026-11-13T09:03:00.0000000Z 400 Information Started deployment from http://127.0.0.1:8443/Anakot.appinstaller",
     ]
     assert "Microsoft-Windows-AppxPackaging/Operational: 3 events" in result.stdout
     assert "Microsoft-Windows-AppXDeployment/Operational: 0 events" in result.stdout
     assert _lines(out, "AppXDeployment_Operational") == []
 
     # The job log shows warnings and errors that name this update, nothing else.
-    assert "404 Error: Error in parsing the app package. Hermes-0.22.0.msixbundle" in result.stdout
+    assert "404 Error: Error in parsing the app package. Anakot-0.22.0.msixbundle" in result.stdout
     assert f"69 Warning: {IDENTITY} could not be activated" in result.stdout
     assert "Microsoft.WindowsStore" not in result.stdout
     assert "Started deployment" not in result.stdout

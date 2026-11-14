@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from gateway.session import SessionEntry, build_session_key
-from hermes_state import AsyncSessionDB, SessionDB
+from anakot_state import AsyncSessionDB, SessionDB
 from tests.gateway.test_status_command import _make_event, _make_runner, _make_source
 
 _CONFIG = {"model": {"provider": "openrouter", "default": "thinkingmachines/inkling-small:free"}}

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { HermesConnection } from '@/global'
-import { getSession } from '@/hermes'
+import type { AnakotConnection } from '@/global'
+import { getSession } from '@/anakot'
 import { clearSessionDraft, stashSessionDraft } from '@/store/composer'
 import { $gatewaySwitching } from '@/store/gateway-switch'
 import { $activeGatewayProfile, $profiles } from '@/store/profile'
@@ -17,12 +17,12 @@ import {
   WRONG_BACKEND_TILE_ERROR
 } from './session-tile'
 
-vi.mock('@/hermes', async importOriginal => ({
+vi.mock('@/anakot', async importOriginal => ({
   ...(await importOriginal<Record<string, unknown>>()),
   getSession: vi.fn()
 }))
 
-function localConnection(): HermesConnection {
+function localConnection(): AnakotConnection {
   return {
     baseUrl: 'http://127.0.0.1:9119',
     isFullscreen: false,
@@ -220,7 +220,7 @@ describe('startUnrestoredTileTitleBackfill retires dead tiles (#125678)', () => 
 
     await vi.waitFor(() => expect($sessionTiles.get()).toEqual([]))
     expect(get.mock.calls.map(call => call[1])).toEqual(['default', 'writer'])
-    expect(window.localStorage.getItem('hermes.desktop.sessionTiles.v2') ?? '').not.toContain('dead-chat')
+    expect(window.localStorage.getItem('anakot.desktop.sessionTiles.v2') ?? '').not.toContain('dead-chat')
     reopenLastClosedTile()
     expect($sessionTiles.get()).toEqual([])
   })

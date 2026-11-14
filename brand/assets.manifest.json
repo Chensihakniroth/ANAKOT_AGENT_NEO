@@ -1,0 +1,698 @@
+{
+  "count": 173,
+  "files": {
+    "apps/bootstrap-installer/public/nous-girl.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/128x128.png": {
+      "bytes": 11335,
+      "sha256": "35dc2589e7dc92ef"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/128x128@2x.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/32x32.png": {
+      "bytes": 1393,
+      "sha256": "352536905d063bed"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/icon.icns": {
+      "bytes": 611442,
+      "sha256": "e646adcad19097bc"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/icon.ico": {
+      "bytes": 50392,
+      "sha256": "b13a912ebdfdfde8"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/icon.icon/Assets/art-dark.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/icon.icon/Assets/art-light.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/bootstrap-installer/src-tauri/icons/icon.icon/Assets/mono.png": {
+      "bytes": 251156,
+      "sha256": "a5492e3bff861957"
+    },
+    "apps/desktop/assets/appx/Square150x150Logo.png": {
+      "bytes": 14243,
+      "sha256": "f821987e77821e2d"
+    },
+    "apps/desktop/assets/appx/Square150x150Logo.scale-125.png": {
+      "bytes": 20065,
+      "sha256": "5c2282080456934b"
+    },
+    "apps/desktop/assets/appx/Square150x150Logo.scale-150.png": {
+      "bytes": 26407,
+      "sha256": "6ebbf5779aa20c40"
+    },
+    "apps/desktop/assets/appx/Square150x150Logo.scale-200.png": {
+      "bytes": 41434,
+      "sha256": "e09dd78c88ff8931"
+    },
+    "apps/desktop/assets/appx/Square150x150Logo.scale-400.png": {
+      "bytes": 129389,
+      "sha256": "e4c0156d9595c0a5"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.png": {
+      "bytes": 2194,
+      "sha256": "3e71cb1b1fe9b952"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.scale-125.png": {
+      "bytes": 2991,
+      "sha256": "d5cc9140881f3797"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.scale-150.png": {
+      "bytes": 4012,
+      "sha256": "5e952d322c8a8c16"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.scale-200.png": {
+      "bytes": 6462,
+      "sha256": "783555640839507c"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.scale-400.png": {
+      "bytes": 18057,
+      "sha256": "0dc653872ce4295e"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-16.png": {
+      "bytes": 641,
+      "sha256": "cb48a73cff5b5119"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-16_altform-lightunplated.png": {
+      "bytes": 641,
+      "sha256": "cb48a73cff5b5119"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-16_altform-unplated.png": {
+      "bytes": 641,
+      "sha256": "cb48a73cff5b5119"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-20.png": {
+      "bytes": 812,
+      "sha256": "dbdaf7f338943842"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-20_altform-lightunplated.png": {
+      "bytes": 812,
+      "sha256": "dbdaf7f338943842"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-20_altform-unplated.png": {
+      "bytes": 812,
+      "sha256": "dbdaf7f338943842"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-24.png": {
+      "bytes": 983,
+      "sha256": "926679a9dc3ec31d"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-24_altform-lightunplated.png": {
+      "bytes": 983,
+      "sha256": "926679a9dc3ec31d"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-24_altform-unplated.png": {
+      "bytes": 983,
+      "sha256": "926679a9dc3ec31d"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-256.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-256_altform-lightunplated.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-256_altform-unplated.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-30.png": {
+      "bytes": 1291,
+      "sha256": "74ee78ac6a8e3c5a"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-30_altform-lightunplated.png": {
+      "bytes": 1291,
+      "sha256": "74ee78ac6a8e3c5a"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-30_altform-unplated.png": {
+      "bytes": 1291,
+      "sha256": "74ee78ac6a8e3c5a"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-32.png": {
+      "bytes": 1393,
+      "sha256": "352536905d063bed"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-32_altform-lightunplated.png": {
+      "bytes": 1393,
+      "sha256": "352536905d063bed"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-32_altform-unplated.png": {
+      "bytes": 1393,
+      "sha256": "352536905d063bed"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-36.png": {
+      "bytes": 1643,
+      "sha256": "ce6bff4b36896be7"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-36_altform-lightunplated.png": {
+      "bytes": 1643,
+      "sha256": "ce6bff4b36896be7"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-36_altform-unplated.png": {
+      "bytes": 1643,
+      "sha256": "ce6bff4b36896be7"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-40.png": {
+      "bytes": 1896,
+      "sha256": "1615206562eaf314"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-40_altform-lightunplated.png": {
+      "bytes": 1896,
+      "sha256": "1615206562eaf314"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-40_altform-unplated.png": {
+      "bytes": 1896,
+      "sha256": "1615206562eaf314"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-48.png": {
+      "bytes": 2449,
+      "sha256": "a4ce2e8ee0b98340"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-48_altform-lightunplated.png": {
+      "bytes": 2449,
+      "sha256": "a4ce2e8ee0b98340"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-48_altform-unplated.png": {
+      "bytes": 2449,
+      "sha256": "a4ce2e8ee0b98340"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-60.png": {
+      "bytes": 3386,
+      "sha256": "bfbb47512141d197"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-60_altform-lightunplated.png": {
+      "bytes": 3386,
+      "sha256": "bfbb47512141d197"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-60_altform-unplated.png": {
+      "bytes": 3386,
+      "sha256": "bfbb47512141d197"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-64.png": {
+      "bytes": 3852,
+      "sha256": "126cce5842a1c740"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-64_altform-lightunplated.png": {
+      "bytes": 3852,
+      "sha256": "126cce5842a1c740"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-64_altform-unplated.png": {
+      "bytes": 3852,
+      "sha256": "126cce5842a1c740"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-72.png": {
+      "bytes": 4726,
+      "sha256": "98d4aebcbaaa02ef"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-72_altform-lightunplated.png": {
+      "bytes": 4726,
+      "sha256": "98d4aebcbaaa02ef"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-72_altform-unplated.png": {
+      "bytes": 4726,
+      "sha256": "98d4aebcbaaa02ef"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-80.png": {
+      "bytes": 5507,
+      "sha256": "cda1fe6da18ea47b"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-80_altform-lightunplated.png": {
+      "bytes": 5507,
+      "sha256": "cda1fe6da18ea47b"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-80_altform-unplated.png": {
+      "bytes": 5507,
+      "sha256": "cda1fe6da18ea47b"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-96.png": {
+      "bytes": 7397,
+      "sha256": "b475a77951d1e776"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-96_altform-lightunplated.png": {
+      "bytes": 7397,
+      "sha256": "b475a77951d1e776"
+    },
+    "apps/desktop/assets/appx/Square44x44Logo.targetsize-96_altform-unplated.png": {
+      "bytes": 7397,
+      "sha256": "b475a77951d1e776"
+    },
+    "apps/desktop/assets/appx/StoreLogo.png": {
+      "bytes": 2590,
+      "sha256": "15951c4bf121ccdf"
+    },
+    "apps/desktop/assets/appx/StoreLogo.scale-125.png": {
+      "bytes": 3730,
+      "sha256": "92b8345cfbdf8891"
+    },
+    "apps/desktop/assets/appx/StoreLogo.scale-150.png": {
+      "bytes": 5015,
+      "sha256": "dd5fa86a851fdd95"
+    },
+    "apps/desktop/assets/appx/StoreLogo.scale-200.png": {
+      "bytes": 7847,
+      "sha256": "f475dcf37e9932e3"
+    },
+    "apps/desktop/assets/appx/StoreLogo.scale-400.png": {
+      "bytes": 21961,
+      "sha256": "c297fe01029d0c3b"
+    },
+    "apps/desktop/assets/appx/Wide310x150Logo.png": {
+      "bytes": 8400,
+      "sha256": "55494d32aeb70058"
+    },
+    "apps/desktop/assets/appx/Wide310x150Logo.scale-125.png": {
+      "bytes": 11845,
+      "sha256": "240e4c5e2f1060f3"
+    },
+    "apps/desktop/assets/appx/Wide310x150Logo.scale-150.png": {
+      "bytes": 15674,
+      "sha256": "dc3621e584601d21"
+    },
+    "apps/desktop/assets/appx/Wide310x150Logo.scale-200.png": {
+      "bytes": 24598,
+      "sha256": "dd925634df0976a5"
+    },
+    "apps/desktop/assets/appx/Wide310x150Logo.scale-400.png": {
+      "bytes": 74733,
+      "sha256": "d56d85dfc0947355"
+    },
+    "apps/desktop/assets/fonts/SaintCarell.otf": {
+      "bytes": 167352,
+      "sha256": "37826a30641d6dae"
+    },
+    "apps/desktop/assets/fonts/SaintCarellClean.otf": {
+      "bytes": 149744,
+      "sha256": "37bf26f3ef66d51b"
+    },
+    "apps/desktop/assets/fonts/staravenue.ttf": {
+      "bytes": 30468,
+      "sha256": "20c01c85855868e9"
+    },
+    "apps/desktop/assets/icon-dark.icns": {
+      "bytes": 611442,
+      "sha256": "e646adcad19097bc"
+    },
+    "apps/desktop/assets/icon-dark.ico": {
+      "bytes": 53891,
+      "sha256": "a34f06578c02678a"
+    },
+    "apps/desktop/assets/icon-dark.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/assets/icon-mac.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/assets/icon.icns": {
+      "bytes": 611442,
+      "sha256": "e646adcad19097bc"
+    },
+    "apps/desktop/assets/icon.ico": {
+      "bytes": 53891,
+      "sha256": "a34f06578c02678a"
+    },
+    "apps/desktop/assets/icon.icon/Assets/art-dark.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/assets/icon.icon/Assets/art-light.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/assets/icon.icon/Assets/mono.png": {
+      "bytes": 251156,
+      "sha256": "a5492e3bff861957"
+    },
+    "apps/desktop/assets/icon.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/packaging/dmg-volume.icns": {
+      "bytes": 524642,
+      "sha256": "27a03b93e6e88e1c"
+    },
+    "apps/desktop/packaging/nous-dmg-2b.tiff": {
+      "bytes": 1285534,
+      "sha256": "9d71588c15d855be"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-0.png": {
+      "bytes": 135394,
+      "sha256": "6c5338be35df1b8d"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-1.png": {
+      "bytes": 117575,
+      "sha256": "5b2fd9a7539c38b0"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-2.png": {
+      "bytes": 111811,
+      "sha256": "57065f52a3a3de53"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-3.png": {
+      "bytes": 78092,
+      "sha256": "d91ee2a3df66ed61"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-4.png": {
+      "bytes": 119430,
+      "sha256": "5ebec9c65fdf954f"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-5.png": {
+      "bytes": 99006,
+      "sha256": "bfdcf647608616c1"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-6.png": {
+      "bytes": 99409,
+      "sha256": "7d90be014e70da54"
+    },
+    "apps/desktop/public/anakot-frames/anakot-frame-7.png": {
+      "bytes": 94075,
+      "sha256": "32c7b2279fbba052"
+    },
+    "apps/desktop/public/anakot-sprite.png": {
+      "bytes": 904171,
+      "sha256": "e328d387a2fca8c0"
+    },
+    "apps/desktop/public/anakot.png": {
+      "bytes": 1378595,
+      "sha256": "5e13476656a88908"
+    },
+    "apps/desktop/public/apple-touch-icon.png": {
+      "bytes": 307204,
+      "sha256": "f878d3151ab7a4eb"
+    },
+    "apps/desktop/public/ds-assets/filler-bg0.jpg": {
+      "bytes": 1136566,
+      "sha256": "bd7cce67e452c902"
+    },
+    "apps/desktop/public/nous-girl-dark.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/desktop/public/nous-girl.png": {
+      "bytes": 32428,
+      "sha256": "5fcba2252621facc"
+    },
+    "apps/desktop/src/assets/catalog-wing-retro.svg": {
+      "bytes": 256846,
+      "sha256": "ba4cf44dff4cd317"
+    },
+    "apps/desktop/src/assets/catalog-wing.svg": {
+      "bytes": 50708,
+      "sha256": "6ee276e9bff5a166"
+    },
+    "apps/desktop/src/assets/tiers/feature-automation.webp": {
+      "bytes": 5410,
+      "sha256": "50079a429ac0693b"
+    },
+    "apps/desktop/src/assets/tiers/feature-connect.webp": {
+      "bytes": 7670,
+      "sha256": "18b08fe16bb51021"
+    },
+    "apps/desktop/src/assets/tiers/feature-memory.webp": {
+      "bytes": 5214,
+      "sha256": "2623d9ef20871e25"
+    },
+    "apps/desktop/src/assets/tiers/feature-sandbox.webp": {
+      "bytes": 7854,
+      "sha256": "776bb7fb12e0210b"
+    },
+    "apps/desktop/src/components/pet/pet-egg-sheet.png": {
+      "bytes": 1797,
+      "sha256": "9630e59d8836ac8c"
+    },
+    "apps/desktop/src/fonts/JetBrainsMono-Bold.woff2": {
+      "bytes": 94628,
+      "sha256": "08863c7964612257"
+    },
+    "apps/desktop/src/fonts/JetBrainsMono-Italic.woff2": {
+      "bytes": 96428,
+      "sha256": "9f158b85eca345da"
+    },
+    "apps/desktop/src/fonts/JetBrainsMono-Regular.woff2": {
+      "bytes": 92380,
+      "sha256": "f1a7a03672cdd494"
+    },
+    "apps/desktop/src/fonts/Rostex-Outline.ttf": {
+      "bytes": 138184,
+      "sha256": "86e18d825f93d2a0"
+    },
+    "apps/desktop/src/fonts/Rostex-Regular.ttf": {
+      "bytes": 52240,
+      "sha256": "ecc7ee2439f0cee3"
+    },
+    "apps/desktop/src/fonts/SaintCarell.otf": {
+      "bytes": 167352,
+      "sha256": "37826a30641d6dae"
+    },
+    "apps/desktop/src/fonts/SaintCarellClean.otf": {
+      "bytes": 149744,
+      "sha256": "37bf26f3ef66d51b"
+    },
+    "apps/desktop/src/fonts/staravenue.ttf": {
+      "bytes": 30468,
+      "sha256": "20c01c85855868e9"
+    },
+    "assets/backgrounds/squircle-dark.svg": {
+      "bytes": 236,
+      "sha256": "96ac0751566f42b0"
+    },
+    "assets/backgrounds/squircle-light.svg": {
+      "bytes": 235,
+      "sha256": "f142c8d01c792537"
+    },
+    "assets/backgrounds/squircle-mac-dark.svg": {
+      "bytes": 388,
+      "sha256": "e1538d0d657a772e"
+    },
+    "assets/backgrounds/squircle-mac-light.svg": {
+      "bytes": 387,
+      "sha256": "c4429c41db2f1862"
+    },
+    "assets/banner.png": {
+      "bytes": 3112745,
+      "sha256": "3cc68cc2df276ebf"
+    },
+    "assets/dmg-volume.png": {
+      "bytes": 285680,
+      "sha256": "7c38a978e5d9a81b"
+    },
+    "assets/icon-master-dark.svg": {
+      "bytes": 137768,
+      "sha256": "e1517a2d5b81108f"
+    },
+    "assets/icon-master.svg": {
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f1045"
+    },
+    "assets/nous-girl-black.svg": {
+      "bytes": 114241,
+      "sha256": "7798b8e400a454ee"
+    },
+    "assets/nous-girl-white.svg": {
+      "bytes": 114241,
+      "sha256": "16172472f6552fe6"
+    },
+    "gateway/assets/telegram-botfather-threads-settings.jpg": {
+      "bytes": 118213,
+      "sha256": "26dd629bdd14edf9"
+    },
+    "tools/bot_desktop/wallpaper.png": {
+      "bytes": 2475,
+      "sha256": "57f8bda750c95bf4"
+    },
+    "web/public/favicon.ico": {
+      "bytes": 4552,
+      "sha256": "e22b7e74c414cd41"
+    },
+    "web/public/fonts-terminal/JetBrainsMono-Bold.woff2": {
+      "bytes": 94628,
+      "sha256": "08863c7964612257"
+    },
+    "web/public/fonts-terminal/JetBrainsMono-Italic.woff2": {
+      "bytes": 96428,
+      "sha256": "9f158b85eca345da"
+    },
+    "web/public/fonts-terminal/JetBrainsMono-Regular.woff2": {
+      "bytes": 92380,
+      "sha256": "f1a7a03672cdd494"
+    },
+    "website/static/img/anakot-agent-banner.png": {
+      "bytes": 12333,
+      "sha256": "75e85ef6fecf5a62"
+    },
+    "website/static/img/apple-touch-icon.png": {
+      "bytes": 18760,
+      "sha256": "de5a981fc7a792d1"
+    },
+    "website/static/img/catalog/official-art-card-one.jpg": {
+      "bytes": 371439,
+      "sha256": "44e8a78dc31fd2ee"
+    },
+    "website/static/img/catalog/official-art-card-two.jpg": {
+      "bytes": 395243,
+      "sha256": "03d1471039900c14"
+    },
+    "website/static/img/catalog/official-art-feature.jpg": {
+      "bytes": 211344,
+      "sha256": "a51a0860884ad846"
+    },
+    "website/static/img/catalog/official-art.jpg": {
+      "bytes": 481242,
+      "sha256": "8bc88b77c5a521b4"
+    },
+    "website/static/img/dashboard/admin-channels.png": {
+      "bytes": 521851,
+      "sha256": "11a4dbbbc2fb6b4f"
+    },
+    "website/static/img/dashboard/admin-config.png": {
+      "bytes": 514222,
+      "sha256": "41c7c136d9dba87f"
+    },
+    "website/static/img/dashboard/admin-hook-create.png": {
+      "bytes": 138392,
+      "sha256": "d568a1a9597db124"
+    },
+    "website/static/img/dashboard/admin-mcp.png": {
+      "bytes": 507403,
+      "sha256": "576e5aefe1c3a464"
+    },
+    "website/static/img/dashboard/admin-pairing.png": {
+      "bytes": 481850,
+      "sha256": "6eca575438b3eed6"
+    },
+    "website/static/img/dashboard/admin-sessions.png": {
+      "bytes": 491795,
+      "sha256": "5b997c10c5fc811f"
+    },
+    "website/static/img/dashboard/admin-skills-hub.png": {
+      "bytes": 484669,
+      "sha256": "a7d7c66228f362d9"
+    },
+    "website/static/img/dashboard/admin-system-curator.png": {
+      "bytes": 494463,
+      "sha256": "3d6ac935e598f012"
+    },
+    "website/static/img/dashboard/admin-system-ops.png": {
+      "bytes": 484316,
+      "sha256": "fde1320f934773d1"
+    },
+    "website/static/img/dashboard/admin-system-top.png": {
+      "bytes": 519615,
+      "sha256": "3415ff4df03e5a37"
+    },
+    "website/static/img/dashboard/admin-webhooks.png": {
+      "bytes": 499441,
+      "sha256": "874cf67a72089eec"
+    },
+    "website/static/img/docs/cli-layout.svg": {
+      "bytes": 3025,
+      "sha256": "8d04885fbf535d86"
+    },
+    "website/static/img/docs/dashboard-models/auxiliary-expanded.png": {
+      "bytes": 606838,
+      "sha256": "9c0bf79ca5820922"
+    },
+    "website/static/img/docs/dashboard-models/overview.png": {
+      "bytes": 681292,
+      "sha256": "9a6e1949e0381164"
+    },
+    "website/static/img/docs/dashboard-models/picker-dialog.png": {
+      "bytes": 220829,
+      "sha256": "6d931d69adfdeb47"
+    },
+    "website/static/img/docs/dashboard-models/use-as-dropdown.png": {
+      "bytes": 664643,
+      "sha256": "c80376cf87f16e4a"
+    },
+    "website/static/img/docs/session-recap.svg": {
+      "bytes": 1242,
+      "sha256": "441dd32d0baf769d"
+    },
+    "website/static/img/docs/tui-session-orchestrator/session-orchestrator.png": {
+      "bytes": 30743,
+      "sha256": "45cfb7f3678002a8"
+    },
+    "website/static/img/favicon-16x16.png": {
+      "bytes": 641,
+      "sha256": "cb48a73cff5b5119"
+    },
+    "website/static/img/favicon-32x32.png": {
+      "bytes": 1393,
+      "sha256": "352536905d063bed"
+    },
+    "website/static/img/favicon.ico": {
+      "bytes": 4552,
+      "sha256": "e22b7e74c414cd41"
+    },
+    "website/static/img/favicon.svg": {
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f1045"
+    },
+    "website/static/img/kanban-tutorial/01-board-overview.png": {
+      "bytes": 766059,
+      "sha256": "fc84d5c60b774faa"
+    },
+    "website/static/img/kanban-tutorial/02-board-flat.png": {
+      "bytes": 782295,
+      "sha256": "1eb68f90eea92675"
+    },
+    "website/static/img/kanban-tutorial/03-drawer-schema-task.png": {
+      "bytes": 487002,
+      "sha256": "c65ea825349b6fbd"
+    },
+    "website/static/img/kanban-tutorial/04b-drawer-retry-history-scrolled.png": {
+      "bytes": 512488,
+      "sha256": "109d3cfcf3bd637e"
+    },
+    "website/static/img/kanban-tutorial/06-drawer-crash-recovery.png": {
+      "bytes": 508160,
+      "sha256": "918d385d4081d7af"
+    },
+    "website/static/img/kanban-tutorial/07-fleet-transcribes.png": {
+      "bytes": 830148,
+      "sha256": "12217d1ccca459dc"
+    },
+    "website/static/img/kanban-tutorial/08-pipeline-auth.png": {
+      "bytes": 823572,
+      "sha256": "56141e0ca1198a26"
+    },
+    "website/static/img/kanban-tutorial/09-drawer-pipeline-review.png": {
+      "bytes": 473844,
+      "sha256": "d857eb08bae2433e"
+    },
+    "website/static/img/kanban-tutorial/10-drawer-in-flight.png": {
+      "bytes": 483717,
+      "sha256": "3ae0bb90387ea932"
+    },
+    "website/static/img/kanban-tutorial/11-drawer-gave-up.png": {
+      "bytes": 482232,
+      "sha256": "57d37fcc54ff85f8"
+    },
+    "website/static/img/logo-dark.png": {
+      "bytes": 138674,
+      "sha256": "1e9ac9f274ba4848"
+    },
+    "website/static/img/logo.png": {
+      "bytes": 112828,
+      "sha256": "f529ef9753d104f5"
+    },
+    "website/static/img/nous-logo-dark.png": {
+      "bytes": 8479,
+      "sha256": "ec9ce3f45b304da5"
+    },
+    "website/static/img/nous-logo.png": {
+      "bytes": 5068,
+      "sha256": "2eef1c594ba28f00"
+    }
+  },
+  "note": "Brand-owned assets. rebrand.py --verify fails if any hash differs after an upstream sync."
+}

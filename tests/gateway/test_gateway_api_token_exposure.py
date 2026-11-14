@@ -17,13 +17,13 @@ from starlette.testclient import TestClient
 @pytest.mark.asyncio
 async def test_gateway_listener_never_publishes_the_session_token(tmp_path, monkeypatch):
     from gateway.run_api import start_gateway_api, stop_gateway_api
-    from hermes_cli import web_server
+    from anakot_cli import web_server
 
     dist = tmp_path / "web_dist"
     (dist / "assets").mkdir(parents=True)
     (dist / "index.html").write_text("<html><head></head><body>spa</body></html>", encoding="utf-8")
     monkeypatch.setattr(web_server, "WEB_DIST", dist)
-    monkeypatch.delenv("HERMES_SERVE_HEADLESS", raising=False)
+    monkeypatch.delenv("ANAKOT_SERVE_HEADLESS", raising=False)
     # The process app mounted its SPA at import against the packaged dist; mount the same
     # routes over a built dist so GET / renders the bootstrap script the token rides in.
     spa = FastAPI()

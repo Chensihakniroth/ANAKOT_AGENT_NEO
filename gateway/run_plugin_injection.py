@@ -92,7 +92,7 @@ def wake_background_wait(authority, ref, *, person_input=False):
 
 def _wake_if_person_queued(authority, ref, wait):
     from gateway.session_unattended_unknown import is_unattended
-    from hermes_state_runtime import list_session_admissions
+    from anakot_state_runtime import list_session_admissions
     if any(row["status"] == "queued" and not is_unattended(row)
            for row in list_session_admissions(authority.db, session_id=ref.session_id)):
         wait.set()
@@ -139,14 +139,14 @@ class GatewayPluginInjectionMixin:
     def _install_plugin_message_injector(self) -> None:
         """Publish this live gateway's plugin message scheduler process-wide. Runs on the gateway
         loop at startup: its context is the one every plugin-triggered turn starts from."""
-        from hermes_cli.plugins import publish_gateway_message_host
+        from anakot_cli.plugins import publish_gateway_message_host
 
         self._plugin_injection_context = contextvars.copy_context()
         publish_gateway_message_host(self, self._schedule_plugin_message_injection)
 
     def _clear_plugin_message_injector(self) -> None:
         """Remove this runner's scheduler without clobbering a newer owner."""
-        from hermes_cli.plugins import clear_published_gateway_message_host
+        from anakot_cli.plugins import clear_published_gateway_message_host
 
         clear_published_gateway_message_host(self)
 
@@ -283,7 +283,7 @@ class GatewayPluginInjectionMixin:
         profile = self._served_profile_for_home(plugin_home)
         owner = profile
         if profile is not None and getattr(getattr(self, "config", None), "multiplex_profiles", False) is True:
-            from hermes_state_keys import profile_from_session_key
+            from anakot_state_keys import profile_from_session_key
             owner = profile_from_session_key(session_key)
         if profile is not None and owner == profile:
             return True
@@ -335,7 +335,7 @@ class GatewayPluginInjectionMixin:
             text=content, message_type=MessageType.TEXT, source=source, internal=True,
             allow_gateway_control=False,
             metadata={
-                "hermes_plugin_id": plugin_id, "hermes_plugin_injection": True,
+                "anakot_plugin_id": plugin_id, "anakot_plugin_injection": True,
                 "gateway_session_key": session_key, "gateway_session_id": entry.session_id,
                 "gateway_session_strict": True,
             },
@@ -374,8 +374,8 @@ class GatewayPluginInjectionMixin:
         ``None`` when this gateway does not serve it."""
         if home is None:
             return None
-        from hermes_constants import get_routing_process_hermes_home, hermes_home_key
-        key = hermes_home_key(home)
+        from anakot_constants import get_routing_process_anakot_home, anakot_home_key
+        key = anakot_home_key(home)
         if getattr(getattr(self, "config", None), "multiplex_profiles", False):
             from gateway.run import _multiplex_profile_homes
             try:
@@ -383,8 +383,8 @@ class GatewayPluginInjectionMixin:
             except Exception:
                 logger.warning("Plugin message injection: served-profile set unavailable", exc_info=True)
                 return None
-            return next((name for name, served_home in served if hermes_home_key(served_home) == key), None)
-        if hermes_home_key(get_routing_process_hermes_home()) != key:
+            return next((name for name, served_home in served if anakot_home_key(served_home) == key), None)
+        if anakot_home_key(get_routing_process_anakot_home()) != key:
             return None
         return getattr(self, "_primary_profile_name", None) or self._active_profile_name()
 
@@ -478,7 +478,7 @@ class GatewayPluginInjectionMixin:
                 allow_gateway_control=False,
                 # Non-strict: the key is pinned against topic recovery, the session may not exist yet.
                 metadata={
-                    "hermes_plugin_id": plugin_id, "hermes_plugin_injection": True,
+                    "anakot_plugin_id": plugin_id, "anakot_plugin_injection": True,
                     "gateway_session_key": session_key,
                 },
             ))
@@ -499,7 +499,7 @@ class GatewayPluginInjectionMixin:
             return None
         import json
         import uuid
-        from hermes_state_runtime import RuntimeStoreError
+        from anakot_state_runtime import RuntimeStoreError
         identity = json.dumps([_PLUGIN_PRODUCER, plugin_id, session_key, uuid.uuid4().hex], separators=(",", ":"))
         event = MessageEvent(
             text=content, message_type=MessageType.TEXT, source=source, internal=True,
