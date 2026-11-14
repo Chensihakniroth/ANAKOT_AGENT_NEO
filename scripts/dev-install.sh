@@ -246,12 +246,20 @@ else
     # The script's own PATH export does not survive into your shell, and the JS tree needs >= 26.
     js_prefix="$node_msys"
     [ -n "$pnpm_msys" ] && js_prefix="${js_prefix:+$js_prefix:}$pnpm_msys"
-    printf '    cd "%s" && PATH="%s:$PATH" %s -C apps/desktop start\n' "$DIR" "$js_prefix" "$PNPM"
+    printf '    cd "%s" && ANAKOT_HOME="%s" PATH="%s:$PATH" %s -C apps/desktop start\n' \
+        "$DIR" "$DEV_HOME" "$js_prefix" "$PNPM"
     printf '    (or hot-reloading: %s -C apps/desktop dev)\n' "$PNPM"
+    printf '    (window says "Gateway starting (deadline)"? ANAKOT_HOME="%s" "%s" gateway status)\n' \
+        "$DEV_HOME" "$ANAKOT_BIN"
 fi
 
 if [ "$RUN_DESKTOP" = 1 ]; then
     say "building and opening the desktop app (first build takes a few minutes)"
+    # The app reads ANAKOT_HOME from its process env -- it is a launch-only key and the loader never
+    # takes it from a .env -- so exporting it here is what keeps the dev app on the dev home. Without
+    # it the app uses the machine's default home, spawns a backend against that, and the window
+    # reports "Gateway starting (deadline). Use anakot gateway status for recovery."
+    export ANAKOT_HOME="$DEV_HOME"
     exec $PNPM -C apps/desktop start
 fi
 
