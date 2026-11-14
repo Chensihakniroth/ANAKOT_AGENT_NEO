@@ -431,6 +431,21 @@ ANAKOT_HOME=<copy-of-a-real-profile> anakot -z "say hi" --cli
 
 A "no API keys or providers found" answer means the *brand surface*, not the model, is broken.
 
+**Gates.** 18 of 20 `scripts/check` guards pass. The two ratchet guards are **not measurable for a
+regenerate**, and that is a property of the base rather than of the tree:
+
+- `blob-size --base 422ad18618` reports four blobs over the 500 KiB limit —
+  `assets/banner.png`, `brand/assets/assets/banner.png`,
+  `apps/desktop/public/ds-assets/filler-bg0.jpg` and its snapshot copy. Every one is byte-identical
+  to the same path on `main` (`git rev-parse <ref>:<path>` agrees), so merging this branch adds no
+  new blob object: there is nothing to compress and nothing to allowlist. Measuring against upstream
+  simply makes the fork's own brand art look new.
+- `health --base 422ad18618` exceeds its own internal 900 s budget over a 16k-path delta and cannot
+  finish on this host.
+
+Both need a per-change base (an ordinary PR) to mean anything. For a whole-tree regenerate, record
+them as unmeasurable — never as passed, and not as failed either.
+
 **Environment findings.** A full system drive disguises itself as `curl: (23) client returned ERROR
 on write` while pm bootstraps uv; `uv cache clean` reclaimed 5.6 GB. `run_tests.sh` on this version
 honours **`HERMES_PYTHON`** (protected), not `ANAKOT_PYTHON`.
