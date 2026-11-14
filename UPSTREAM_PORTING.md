@@ -493,7 +493,13 @@ Two of the 246 showed up immediately in the dev desktop — this is what "the fo
   a missing render is invisible to the gate.
 
 95 of the 246 are brand art (15 `brand-ui` + 80 `generated-art`) and are restored verbatim in this
-branch, along with the fork's generator. The other 151 are code and config the fork edited — build
+branch, along with the fork's generator. Re-running the restored generator in a clone that has the JS deps renders every target cleanly, exit
+0, and its output is **pixel-identical** to the fork's committed art (mean channel difference 0.00/255
+on every file probed) — the bytes differ only in PNG encoder metadata. So a future regenerate may
+either restore these files verbatim or re-render them; the generator is the durable route, the verbatim
+copy is the byte-exact one.
+
+The other 151 are code and config the fork edited — build
 scripts, installers, CI workflows, agent files — where upstream has *also* moved on, so a blind
 restore would revert upstream work and a blind keep would drop the fork's. Those need a three-way
 merge (`base` = the file at `eaac327f` rebranded, `ours` = the fork, `theirs` = this tree) and are
