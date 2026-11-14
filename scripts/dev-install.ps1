@@ -8,6 +8,12 @@
     on its own is often "not recognized" even though git works. This wrapper finds bash from the
     git install and forwards the options in PowerShell spelling.
 
+    If PowerShell refuses to load this file ("running scripts is disabled on this system"), the
+    execution policy is blocking it, not the script — run either of these instead:
+
+        powershell -ExecutionPolicy Bypass -File .\scripts\dev-install.ps1 -Desktop
+        Set-ExecutionPolicy -Scope CurrentUser RemoteSigned     # once, then this works normally
+
 .EXAMPLE
     .\scripts\dev-install.ps1 -Run
     .\scripts\dev-install.ps1 -Dir D:\anakot-dev -Ref update/upstream-2026-11-14 -Js -SeedHome
