@@ -131,6 +131,14 @@ if [ -z "$UV_BIN" ]; then
     then re-run this script."
 fi
 say "uv: $("$UV_BIN" --version 2>/dev/null || echo "$UV_BIN")"
+# The rebrand does not touch lockfiles, so a regenerated tree arrives with locks that still name
+# the upstream project. uv then refuses every strict entry point (this sync, pm's staging, the
+# desktop pack, the test bootstrap) with a message that never mentions a lock. Harmless -- and a
+# no-op -- on a tree whose locks already agree.
+if [ -f "$DIR/scripts/fix_lock_identity.py" ]; then
+    ( cd "$DIR" && "$UV_BIN" run --no-project python scripts/fix_lock_identity.py ) \
+        || die "scripts/fix_lock_identity.py could not make the locks agree with their manifests"
+fi
 say "building the Python environment (uv sync --locked --all-packages --group dev --group test)"
 "$UV_BIN" sync --locked --all-packages --group dev --group test
 

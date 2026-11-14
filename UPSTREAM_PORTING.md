@@ -556,10 +556,26 @@ brand surface is intact end to end.
 without that export it re-runs pm's bootstrap and dies on the lock wall below, which reads as a
 broken environment rather than a missing variable.
 
-**Still open.** The `pm` / `uv.lock` wall: `pm.build_env` and `anakot desktop --build-only` both
-prepare an isolated runtime through pm, whose generated workspace manifest makes uv reject the seeded
-lock ("needs to be updated, but --locked was provided") even though `uv lock` produces no diff. Until
-that is fixed a regenerated tree cannot build its desktop package, so the dev app runs from source.
+**Fixed this cycle -- the `pm` / `uv.lock` wall, and it was not pm's workspace.** `pm/uv.lock` still
+named the *upstream* project (`hermes-pm-runtime`) while `pm/pyproject.toml` names the fork's
+(`anakot-pm-runtime`), because the rebrand deliberately does not rewrite lockfiles -- the same reason
+the root `uv.lock` had to be re-pointed by hand. uv then refuses every strict entry point with a
+message that names no lock, so one stale string read as four unrelated breakages: pm's runtime
+staging, `pm build_env`, `anakot desktop --build-only` and `scripts/run_tests.sh`'s bootstrap, each
+reporting a *missing environment*.
+
+`scripts/fix_lock_identity.py` now owns it: it re-points only the project's own `[[package]]` entry
+(resolved versions and hashes untouched) and lets `uv lock --check` be the authority rather than a
+hand comparison. `scripts/rebrand.py` imports it, so `--apply` repairs and `--verify` fails on any
+lock that still disagrees -- an inert-by-memory fix is how this recurred once already. Proven
+red/green on realistic fixtures (a copy of pm's real lock with the name corrupted) in both LF and
+CRLF, then on the tree: the gate passes, and the runner's own bootstrap now builds a pm runtime
+generation where it previously died at the lock in 4 s. `scripts/dev-install.sh` runs the same fix
+before its `uv sync`, so a dev tree self-heals.
+
+**Still open.** Nothing from the regenerate itself. What remains untested end to end is the desktop
+*pack* path (`anakot desktop --build-only`), which the lock fix should have unblocked but which has
+not been run since.
 
 ## Quick commands
 

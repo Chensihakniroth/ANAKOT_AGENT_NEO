@@ -7,6 +7,12 @@ file contents and paths. What makes that safe is *masking*: every string in
 last, so a live wire (docs/API URLs, the upstream repo, on-disk markers, plugin
 protocol globals) is never rewritten.
 
+``scripts/fix_lock_identity.py`` re-points the checked-in ``uv.lock`` files -- the one thing
+this rewrite must not touch textually, since a lock holds a resolved graph. A regenerate
+otherwise leaves each lock naming the upstream project, and uv then refuses every strict entry
+point (pm's staging, ``pm build_env``, the desktop pack, the test bootstrap) with a message
+that names no lock. ``--apply`` repairs them; ``--verify`` fails on any that still disagree.
+
 Brand-owned images keep their upstream filenames, so an upstream sync would
 silently replace them with upstream art. ``brand/assets/`` holds the sources and
 ``brand/assets.manifest.json`` the hashes; ``--verify`` fails when a brand file
@@ -283,6 +289,41 @@ def _generated_targets() -> set[str]:
 GENERATED = _generated_targets()
 
 
+def _lock_helper():
+    """The fork's lock-identity helper (``scripts/fix_lock_identity.py``), or None.
+
+    Loaded from the module rather than duplicated so the rules live in one place. Absent on a
+    tree where the fork's scripts were not carried, which is why the callers treat None as
+    "nothing to check" rather than an error.
+    """
+    path = os.path.join(REPO, "scripts", "fix_lock_identity.py")
+    if not os.path.isfile(path):
+        return None
+    spec = importlib.util.spec_from_file_location("_fix_lock_identity", path)
+    if spec is None or spec.loader is None:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def lock_disagreements(apply: bool) -> list[str]:
+    """Locks whose project entry disagrees with their manifest, as report lines.
+
+    Non-empty at the end means ``--verify`` must fail: the tree cannot be staged as it stands,
+    and the symptom appears three layers away from the cause.
+    """
+    helper = _lock_helper()
+    if helper is None:
+        return []
+    stale = helper.stale_locks(REPO)
+    if apply and stale:
+        helper.repair_locks(REPO)
+        stale = helper.stale_locks(REPO)
+    return [f"{os.path.relpath(lock, REPO).replace(os.sep, '/')}: {current!r} -> {wanted!r}"
+            for lock, current, wanted in stale]
+
+
 def _snapshot_rels() -> list[str]:
     """Brand-art paths the snapshot keeps (relative, posix), minus generator-owned
     targets. The snapshot tree is the brand set: dropping a copy drops it."""
@@ -379,7 +420,7 @@ def rewrite_tree(rules: list[tuple[str, re.Pattern]], apply: bool) -> tuple[list
 
 def report(apply: bool, scanned: int, protected_total: int, rewritten: list[str],
            path_changes: list[tuple[str, str]], path_conflicts: list[tuple[str, str]],
-           drifted: list[str], asset_bad: list[str]) -> None:
+           drifted: list[str], asset_bad: list[str], lock_bad: list[str]) -> None:
     mode = "APPLY" if apply else "CHECK (dry run)"
     print(f"[{mode}] {scanned} files scanned")
     print(f"  protected occurrences : {protected_total}")
@@ -396,10 +437,14 @@ def report(apply: bool, scanned: int, protected_total: int, rewritten: list[str]
         print(f"  asset manifest MISMATCH: {len(asset_bad)}")
         for b in asset_bad[:8]:
             print(f"      {b}")
+    if lock_bad:
+        print(f"  lock MANIFEST MISMATCH : {len(lock_bad)}  ({'re-pointed' if apply else 'would re-point'})")
+        for b in lock_bad[:8]:
+            print(f"      {b}")
 
 
 def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
-                    drifted: list[str], asset_bad: list[str]) -> list[str]:
+                    drifted: list[str], asset_bad: list[str], lock_bad: list[str]) -> list[str]:
     """Every kind of pending work, as report lines. Empty means the tree is fully rebranded.
 
     A gate that only looks at asset hashes passes a half-rebranded tree: a rename that collided
@@ -412,6 +457,7 @@ def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
         ("path(s) still need a rename", [f"{s}  ->  {d}" for s, d in path_changes]),
         ("brand file(s) still drifted", drifted),
         ("asset manifest mismatch(es)", asset_bad),
+        ("lock(s) disagreeing with their manifest", lock_bad),
     ):
         if items:
             out.append(f"  {len(items)} {label}:")
@@ -437,10 +483,12 @@ def main() -> int:
     path_changes, path_conflicts = rename_paths(apply=args.apply)
     drifted = restore_assets(apply=args.apply)
     asset_bad = verify_assets()
+    # Last, so a lock repaired mid-rewrite cannot be re-flagged by the next pass.
+    lock_bad = lock_disagreements(args.apply)
 
     if not args.quiet:
         report(args.apply, scanned, protected_total, rewritten, path_changes, path_conflicts,
-               drifted, asset_bad)
+               drifted, asset_bad, lock_bad)
 
     if path_conflicts:
         print("ABORT: a rename target already exists (an ignored leftover inside that directory).")
@@ -448,7 +496,7 @@ def main() -> int:
         return 2
 
     if args.verify:
-        failures = verify_failures(rewritten, path_changes, drifted, asset_bad)
+        failures = verify_failures(rewritten, path_changes, drifted, asset_bad, lock_bad)
         print("VERIFY:", "PASS" if not failures else "FAIL")
         print("\n".join(failures))
         return 0 if not failures else 1
