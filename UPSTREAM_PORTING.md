@@ -431,6 +431,16 @@ ANAKOT_HOME=<copy-of-a-real-profile> anakot -z "say hi" --cli
 
 A "no API keys or providers found" answer means the *brand surface*, not the model, is broken.
 
+**Tests.** `tests/ci/` shows 6 failures + 1 import error, byte-identical to the recorded host baseline
+(the same six files, one test each; `test_e2e_upgrade_start_version` cannot even import, since `pwd`
+is POSIX-only), and `tests/anakot_cli/test_profiles.py` 4 failed / 102 passed — also identical. The
+open question was `tests/ci/test_update_ci_routing.py`, which exceeds the default 300 s per-file cap
+on this host. Raised, it **passes: 105 passed, 0 failed, 1 skipped in 631 s.** It parametrizes over
+lane sets and spawns a classifier subprocess per case — cheap on Linux CI, seconds each on Windows —
+so this is host slowness, not a regression. The cap variable is `ANAKOT_TEST_FILE_TIMEOUT` on this
+tree; exporting the pre-rename `HERMES_` spelling silently leaves the default in place, which is how
+one run reported it as a timeout.
+
 **Gates.** 18 of 20 `scripts/check` guards pass. The two ratchet guards are **not measurable for a
 regenerate**, and that is a property of the base rather than of the tree:
 
