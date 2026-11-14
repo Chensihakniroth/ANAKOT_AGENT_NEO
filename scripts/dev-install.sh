@@ -57,14 +57,19 @@ is_windows=0
 case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) is_windows=1 ;; esac
 
 # A Windows path on PATH is accepted silently by bash and loses to the existing entry, so convert
-# to the MSYS spelling before prepending.
+# to the MSYS spelling before prepending. Idempotent: a path already in MSYS form is returned as-is,
+# because prepending another slash yields `//c/...`, which matches nothing — and the drive-letter sed
+# already writes the leading slash, so it must not be added twice.
 to_msys_path() {
     local p="$1"
     if [ "$is_windows" = 1 ]; then
-        printf '/%s' "$(printf '%s' "$p" | sed 's|\\|/|g; s|^\([A-Za-z]\):|/\L\1|')"
-    else
-        printf '%s' "$p"
+        case "$p" in
+            [A-Za-z]:[\\/]*)
+                printf '%s' "$(printf '%s' "$p" | sed 's|\\|/|g; s|^\([A-Za-z]\):|/\L\1|')"
+                return ;;
+        esac
     fi
+    printf '%s' "$p"
 }
 
 # ─── 1. locate or create the checkout ────────────────────────────────────────
@@ -181,6 +186,11 @@ say "ready. run the CLI with:"
 printf '    ANAKOT_HOME="%s" "%s" chat\n' "$DEV_HOME" "$ANAKOT_BIN"
 if [ "$WITH_JS" = 0 ]; then
     printf '    (desktop/web need --js first)\n'
+else
+    printf '\n'
+    say "or open the desktop app with:"
+    # The script's own PATH export does not survive into your shell, and the JS tree needs >= 26.
+    printf '    cd "%s" && PATH="%s:$PATH" pnpm -C apps/desktop start\n' "$DIR" "$node_bin"
 fi
 
 if [ "$RUN_CLI" = 1 ]; then
