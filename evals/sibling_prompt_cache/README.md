@@ -6,7 +6,7 @@ instructions that arrive only in its `context`?
 - `launch.py <route> <model> <arm> <out.jsonl> <tree>`: resolves the route under the real home and
   starts `worker.py` with the credential passed by environment only. Run it with
   `PYTHONPATH=<tree>` and the tree's interpreter; `<arm>` is a label for the tree under test.
-- `worker.py`: a real parent `AIAgent` in a temp `HERMES_HOME` calls the real `delegate_task` three
+- `worker.py`: a real parent `AIAgent` in a temp `ANAKOT_HOME` calls the real `delegate_task` three
   times in a row: child A, child B with different context, child C with A's context. Each child
   reads a file with real tools and must end its reply with a word named only in its context.
   `SC_PARALLEL=1` sends the three as one batch; `SC_LONG=1` gives each child eight calls.

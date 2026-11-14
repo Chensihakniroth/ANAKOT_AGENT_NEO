@@ -25,7 +25,7 @@ def test_blobless_checkout_fetches_its_blobs_in_one_gzipped_request(tmp_path):
         (src / f"f{i}.txt").write_text(f"{i}\n", encoding="utf-8")
     _git("add", ".", cwd=src)
     _git("-c", "user.name=e2e", "-c", "user.email=e2e@example.invalid", "commit", "-qm", "files", cwd=src)
-    bare = tmp_path / "forge" / "NousResearch" / "hermes-agent.git"
+    bare = tmp_path / "forge" / "NousResearch" / "anakot-agent.git"
     bare.parent.mkdir(parents=True)
     _git("clone", "-q", "--bare", str(src), str(bare), cwd=tmp_path)
     _git("config", "uploadpack.allowFilter", "true", cwd=bare)

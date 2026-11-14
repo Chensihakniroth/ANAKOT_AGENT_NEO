@@ -1,4 +1,4 @@
-import { skillCatalogInstallIdentifier } from '@hermes/shared'
+import { skillCatalogInstallIdentifier } from '@anakot/shared'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 
 import { CATALOG_ORIGIN } from '@/lib/plugin-catalog'
@@ -23,7 +23,7 @@ export interface CatalogEntry {
   sha: string
   subdir: string
   version: string
-  requiresHermes: string
+  requiresAnakot: string
   tags: string[]
   platforms: string[]
   requirements: string[]
@@ -53,7 +53,7 @@ export interface CatalogEntry {
 
 // The public domain redirects here without CORS headers on the redirect.
 // Use the docs' actual static host, not GitHub's API or repository endpoints.
-const CATALOG_BASE = 'https://nousresearch.github.io/hermes-agent/docs/api'
+const CATALOG_BASE = 'https://nousresearch.github.io/anakot-agent/docs/api'
 /** A download with no new bytes for this long is aborted (inactivity, not total time). */
 const CATALOG_STALL_MS = 60_000
 const text = (value: unknown): string => (typeof value === 'string' ? value : '')
@@ -157,7 +157,7 @@ function catalogEntry(kind: CatalogKind, row: any): CatalogEntry {
     sha: text(row.sha),
     subdir: text(row.subdir),
     version: text(row.version),
-    requiresHermes: text(row.requiresHermes),
+    requiresAnakot: text(row.requiresAnakot),
     tags,
     tools,
     hooks,

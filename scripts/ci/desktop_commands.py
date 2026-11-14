@@ -26,9 +26,9 @@ def export_commands(path: Path) -> None:
         directories.insert(0, str(commands))
     file_commands("GITHUB_ENV", {
         "HERMES_PYTHON": prepared.python,
-        "HERMES_NODE": prepared.node,
-        "HERMES_HOME": prepared.request.work / "hermes-home",
-        "HERMES_RUNTIME_DIR": prepared.request.cache / "tools",
+        "ANAKOT_NODE": prepared.node,
+        "ANAKOT_HOME": prepared.request.work / "anakot-home",
+        "ANAKOT_RUNTIME_DIR": prepared.request.cache / "tools",
         "PYTHONUTF8": "1",
         "PYTHONDONTWRITEBYTECODE": "1",
     })

@@ -11,8 +11,8 @@
 // value instead of writing it whole. Not shared keys themselves.
 import { isSharedPreferenceKey } from './keys'
 
-const OUTBOX_PREFIX = 'hermes:ui-preferences:outbox:'
-const TAB_KEY = 'hermes:ui-preferences:tab'
+const OUTBOX_PREFIX = 'anakot:ui-preferences:outbox:'
+const TAB_KEY = 'anakot:ui-preferences:tab'
 // A live tab with unsent changes re-stamps its outbox this often. A hidden
 // tab's timers can be throttled to once a minute, so an owner counts as gone
 // only well past that, or once its page was hidden for good (`closed`).

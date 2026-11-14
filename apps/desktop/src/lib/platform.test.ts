@@ -4,34 +4,34 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { isBrowserHostedDesktop } from './platform'
 
 type HostWindow = Window & {
-  __HERMES_AUTH_REQUIRED__?: boolean
+  __ANAKOT_AUTH_REQUIRED__?: boolean
   __HERMES_SESSION_TOKEN__?: string
-  __HERMES_UI_SURFACE__?: string
+  __ANAKOT_UI_SURFACE__?: string
 }
 
 describe('isBrowserHostedDesktop', () => {
   beforeEach(() => {
-    document.documentElement.removeAttribute('data-hermes-desktop-host')
+    document.documentElement.removeAttribute('data-anakot-desktop-host')
     const win = window as HostWindow
     delete win.__HERMES_SESSION_TOKEN__
-    delete win.__HERMES_AUTH_REQUIRED__
-    delete win.__HERMES_UI_SURFACE__
+    delete win.__ANAKOT_AUTH_REQUIRED__
+    delete win.__ANAKOT_UI_SURFACE__
   })
 
   it('recognizes the browser-hosted renderer marker', () => {
-    document.documentElement.dataset.hermesDesktopHost = 'browser'
+    document.documentElement.dataset.anakotDesktopHost = 'browser'
     expect(isBrowserHostedDesktop()).toBe(true)
   })
 
   it('recognizes a gated host before the bridge marker is written', () => {
-    ;(window as HostWindow).__HERMES_AUTH_REQUIRED__ = true
+    ;(window as HostWindow).__ANAKOT_AUTH_REQUIRED__ = true
     expect(isBrowserHostedDesktop()).toBe(true)
   })
 
   // The Webapp surface is served without an injected token; the bridge still
   // installs for it, so the pre-marker check must agree.
   it('recognizes the tokenless Webapp surface before the bridge marker is written', () => {
-    ;(window as HostWindow).__HERMES_UI_SURFACE__ = 'webapp'
+    ;(window as HostWindow).__ANAKOT_UI_SURFACE__ = 'webapp'
     expect(isBrowserHostedDesktop()).toBe(true)
   })
 
@@ -44,7 +44,7 @@ describe('isBrowserHostedDesktop', () => {
   })
 
   it('does not treat Electron as browser-hosted', () => {
-    document.documentElement.dataset.hermesDesktopHost = 'electron'
+    document.documentElement.dataset.anakotDesktopHost = 'electron'
     expect(isBrowserHostedDesktop()).toBe(false)
   })
 })

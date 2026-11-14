@@ -44,7 +44,7 @@ def _configured_trusted_peers() -> frozenset[str]:
     if raw:
         return frozenset(p.strip() for p in raw.split(",") if p.strip())
     try:
-        from hermes_cli.config import load_config
+        from anakot_cli.config import load_config
         peers = ((load_config() or {}).get("a2a") or {}).get("trusted_peers", [])
         if isinstance(peers, list):
             return frozenset(str(peer).strip() for peer in peers if str(peer).strip())
@@ -270,10 +270,10 @@ def post_callback(url: str, body: bytes, headers: dict, *, localhost_mode: bool,
 def audit(direction: str, peer: str, task_id: str, summary: str) -> None:
     """Append an audit record (direction: inbound | outbound | push). Never raises."""
     try:
-        from hermes_constants import get_hermes_home
+        from anakot_constants import get_anakot_home
         rec = {"ts": time.time(), "direction": direction, "peer": peer, "task_id": task_id, "summary": (summary or "")[:500]}
-        get_hermes_home().mkdir(parents=True, exist_ok=True)
-        with (get_hermes_home() / "a2a_audit.jsonl").open("a", encoding="utf-8") as fh:
+        get_anakot_home().mkdir(parents=True, exist_ok=True)
+        with (get_anakot_home() / "a2a_audit.jsonl").open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
     except Exception:
         logger.debug("A2A: audit write failed", exc_info=True)

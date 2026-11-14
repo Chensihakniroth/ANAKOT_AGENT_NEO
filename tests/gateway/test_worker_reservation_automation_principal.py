@@ -7,14 +7,14 @@ from types import SimpleNamespace
 import psutil
 import pytest
 
-from hermes_state import SessionDB
-from hermes_state_runtime import admit_session_input, begin_runtime_epoch, claim_session_input
+from anakot_state import SessionDB
+from anakot_state_runtime import admit_session_input, begin_runtime_epoch, claim_session_input
 
 AUTOMATION = 'automation:agent:main:local:dm:owned'
 
 
 def _hello(process):
-    from hermes_cli.process_identity import worker_birth
+    from anakot_cli.process_identity import worker_birth
     return {'type': 'hello', 'pid': process.pid, 'birth': worker_birth(psutil.Process(process.pid)),
             'ancestors': [os.getpid()]}
 

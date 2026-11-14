@@ -7,7 +7,7 @@ reading everything?
 - `launch.py <arm> <out.jsonl> <rep> <tree>`: resolves the Nous route under the real home and starts
   `worker.py` with the key passed by environment only. Run it with `PYTHONPATH=<tree>` and the tree's
   interpreter.
-- `worker.py`: temp `HERMES_HOME` with `isolate_host`, a repo-shaped workspace carrying an `AGENTS.md`,
+- `worker.py`: temp `ANAKOT_HOME` with `isolate_host`, a repo-shaped workspace carrying an `AGENTS.md`,
   and three subagent-shaped agents whose system prompt carries a hand-built per-session tail (not the real
   delegate prompt builder), run one after another: A, then B
   with different task text, then C with A's task text. Each does a small real task with real tools.

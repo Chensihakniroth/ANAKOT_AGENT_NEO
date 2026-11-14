@@ -102,7 +102,7 @@ async def test_the_base_ledger_reports_whether_it_saved_a_redelivery(monkeypatch
     """The real adapter seam: with ``gateway.delivery_ledger`` off nothing is saved, and it says so."""
     from gateway import delivery_ledger as dl
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     monkeypatch.setattr(dl, "ledger_enabled", lambda config=None: enabled)
     adapter = ProgressCaptureAdapter(platform=Platform.TELEGRAM)
     source = SessionSource(platform=Platform.TELEGRAM, chat_id="42", chat_type="dm")

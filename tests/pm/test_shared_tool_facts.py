@@ -199,7 +199,7 @@ def test_claiming_a_found_pin_keeps_the_callers_view_on_its_own_pin(tmp_path, mo
 def test_update_claims_a_default_tool_another_checkout_installed(tmp_path, monkeypatch):
     """The gateway's update finds the Chromium a worktree installed on the same pin: it must claim
     that row, or the worktree's next upgrade drops it and gc deletes the gateway's browser."""
-    from hermes_cli.update_cmd_maint import _install_default_tools_after_update
+    from anakot_cli.update_cmd_maint import _install_default_tools_after_update
     from pm import client
 
     root = tmp_path / "tools"

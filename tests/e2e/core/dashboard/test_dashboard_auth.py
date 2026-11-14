@@ -38,8 +38,8 @@ pytestmark = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="PO
 _INVENTORY = r"""
 import json
 from fastapi.routing import APIRoute, APIWebSocketRoute
-from hermes_cli.web_server import app
-from hermes_cli.dashboard_auth.public_paths import PUBLIC_API_PATHS
+from anakot_cli.web_server import app
+from anakot_cli.dashboard_auth.public_paths import PUBLIC_API_PATHS
 http = sorted({(m, r.path) for r in app.routes if isinstance(r, APIRoute) for m in r.methods if m != "HEAD"})
 ws = sorted({r.path for r in app.routes if isinstance(r, APIWebSocketRoute)})
 print(json.dumps({"http": http, "ws": ws, "public": sorted(PUBLIC_API_PATHS)}))
@@ -52,7 +52,7 @@ _CHAT_WS = ("/api/ws", "/api/events", "/api/console")  # accept a token-bearing 
 # download URL opened outside the SPA may carry the token in its query string.
 _QUERY_TOKEN_ROUTES = frozenset({"/api/files/download"})
 # ``/api/peer/`` is opened only by a peer pass minted for this agent, never by the session token
-# (``hermes_cli.dashboard_auth.peer_pass``, 3dbdf864026d). With no pass provider registered (this
+# (``anakot_cli.dashboard_auth.peer_pass``, 3dbdf864026d). With no pass provider registered (this
 # sandbox) it answers 404 ``peer_access_unavailable``, the same bit ``/api/status`` publishes as
 # ``peer_access: 0``; with one, a missing or wrong pass is 401. Held to that by its own test below.
 _PEER_PREFIX = "/api/peer/"

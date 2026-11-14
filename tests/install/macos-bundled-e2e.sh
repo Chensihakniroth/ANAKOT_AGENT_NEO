@@ -71,19 +71,19 @@ case "$ARCH" in arm64|x64) ;; *) echo "error: --arch must be arm64 or x64" >&2; 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 ASSETS="$REPO_ROOT/tests/install/e2e-assets"
 export TS_BASE=$SECONDS
-NODE_BIN="${HERMES_E2E_NODE:-$(command -v node)}"
-export HERMES_E2E_NODE="$NODE_BIN"
+NODE_BIN="${ANAKOT_E2E_NODE:-$(command -v node)}"
+export ANAKOT_E2E_NODE="$NODE_BIN"
 
 # OS activation does not inherit the ordinary journey's sandbox overrides.
-WORK_ROOT="${HERMES_E2E_WORKROOT:-${RUNNER_TEMP:-${TMPDIR:-/tmp}}/hermes-bundled-e2e}"
-LOG_DIR="${HERMES_E2E_LOG_DIR:-$WORK_ROOT/logs}"
+WORK_ROOT="${ANAKOT_E2E_WORKROOT:-${RUNNER_TEMP:-${TMPDIR:-/tmp}}/anakot-bundled-e2e}"
+LOG_DIR="${ANAKOT_E2E_LOG_DIR:-$WORK_ROOT/logs}"
 HOME_SANDBOX="$WORK_ROOT/home"
 export HOME_SANDBOX
 RUNNER_HOME="$HOME"
-export HERMES_HOME="$HOME_SANDBOX/.hermes"
+export ANAKOT_HOME="$HOME_SANDBOX/.anakot"
 export HOME="$HOME_SANDBOX"   # the app must see the ISOLATED home, not the runner's
-export HERMES_DESKTOP_USER_DATA_DIR="$WORK_ROOT/electron-user-data"
-mkdir -p "$WORK_ROOT" "$LOG_DIR" "$HOME_SANDBOX" "$HERMES_HOME"
+export ANAKOT_DESKTOP_USER_DATA_DIR="$WORK_ROOT/electron-user-data"
+mkdir -p "$WORK_ROOT" "$LOG_DIR" "$HOME_SANDBOX" "$ANAKOT_HOME"
 
 step() { printf '\n=== %s ===\n' "$*"; }
 ok()   { printf '  OK %s\n' "$*"; }
@@ -122,7 +122,7 @@ cleanup() {
     bash "$ASSETS/mac-update-evidence.sh" --out "$LOG_DIR/update-evidence" \
       --since "$LOG_DIR/update-started" --app "$UPDATE_APP" \
       --home "$HOME_SANDBOX" --home "$RUNNER_HOME" \
-      --hermes-home "$HERMES_HOME" --user-data "$HERMES_DESKTOP_USER_DATA_DIR" 2>&1 | ts_prefix || true
+      --anakot-home "$ANAKOT_HOME" --user-data "$ANAKOT_DESKTOP_USER_DATA_DIR" 2>&1 | ts_prefix || true
   fi
 }
 trap cleanup EXIT
@@ -163,7 +163,7 @@ stage_bundle_inputs() {
 }
 
 # Derive the executable from the bundle's own Info.plist — the product
-# name is NOT assumed to be "Hermes" (packaged name: "Hermes Bundled") and
+# name is NOT assumed to be "Anakot" (packaged name: "Anakot Bundled") and
 # nothing is renamed. Returns the absolute binary path.
 derive_app_bin() { # $1: .app path
   local exec_name
@@ -201,7 +201,7 @@ phase_install() {
   local found
   found="$(find "$WORK_ROOT/install-old" -maxdepth 2 -name '*.app' -type d | head -1)"
   [ -n "$found" ] || fail "no .app inside the OLD release zip"
-  local old_app="$WORK_ROOT/apps/Hermes.app"
+  local old_app="$WORK_ROOT/apps/Anakot.app"
   mv "$found" "$old_app"
 
   local old_app_bin
@@ -230,11 +230,11 @@ phase_install() {
   ' "$INSTALL_RECEIPT" "$old_app" "$old_app_bin"
   ok "install receipt persisted at $INSTALL_RECEIPT"
 
-  # Isolated user state: a private HOME/HERMES_HOME plus one profile marker
+  # Isolated user state: a private HOME/ANAKOT_HOME plus one profile marker
   # file the update must leave untouched.
-  mkdir -p "$HERMES_HOME"
-  printf 'user_state_marker=%s\n' "$old_commit" > "$HERMES_HOME/desktop-bundled-marker.txt"
-  ok "isolated user state seeded at $HERMES_HOME"
+  mkdir -p "$ANAKOT_HOME"
+  printf 'user_state_marker=%s\n' "$old_commit" > "$ANAKOT_HOME/desktop-bundled-marker.txt"
+  ok "isolated user state seeded at $ANAKOT_HOME"
 }
 
 phase_update() {
@@ -261,10 +261,10 @@ phase_update() {
   # The app must boot configured or the onboarding overlay (a fullscreen
   # div) eats every click: configure the mock inference server exactly like
   # the dev:mock flow does (shared owner: mock-provider.sh). It writes
-  # $HERMES_HOME/config.yaml; the feed base URL below is appended after.
+  # $ANAKOT_HOME/config.yaml; the feed base URL below is appended after.
   # shellcheck source=../e2e-assets/mock-provider.sh
   source "$ASSETS/mock-provider.sh"
-  PATH="$(dirname "$HERMES_E2E_NODE"):$PATH" mock_start "$WORK_ROOT"
+  PATH="$(dirname "$ANAKOT_E2E_NODE"):$PATH" mock_start "$WORK_ROOT"
 
   # ── the controlled loopback feed ──────────────────────────────────────
   step "building the loopback feed from the REAL NEW signed zip"
@@ -301,9 +301,9 @@ phase_update() {
   # non-HTTPS override the production client accepts (mac-client.ts).
   step "configuring updates.desktop_feed_base_url in the isolated config"
   local config_feed_line="  desktop_feed_base_url: $feed_url"
-  grep -q '^updates:' "$HERMES_HOME/config.yaml" 2>/dev/null || printf '\nupdates:\n' >> "$HERMES_HOME/config.yaml"
-  grep -qF "$config_feed_line" "$HERMES_HOME/config.yaml" || printf '%s\n' "$config_feed_line" >> "$HERMES_HOME/config.yaml"
-  cat "$HERMES_HOME/config.yaml" | ts_prefix | tee "$LOG_DIR/config.yaml"
+  grep -q '^updates:' "$ANAKOT_HOME/config.yaml" 2>/dev/null || printf '\nupdates:\n' >> "$ANAKOT_HOME/config.yaml"
+  grep -qF "$config_feed_line" "$ANAKOT_HOME/config.yaml" || printf '%s\n' "$config_feed_line" >> "$ANAKOT_HOME/config.yaml"
+  cat "$ANAKOT_HOME/config.yaml" | ts_prefix | tee "$LOG_DIR/config.yaml"
   ok "feed base URL configured: $feed_url"
 
   # ── the external relaunch watcher ─────────────────────────────────────
@@ -324,7 +324,7 @@ phase_update() {
   local rc=0
   (cd "$WORK_ROOT" && "$NODE_BIN" "$ASSETS/mac-bundled-update-driver.mjs" \
     --app-bin "$old_app_bin" \
-    --old-sha "$(manifest_side old commit)" --chat-out "$LOG_DIR" --mock-url "$HERMES_E2E_MOCK_URL" \
+    --old-sha "$(manifest_side old commit)" --chat-out "$LOG_DIR" --mock-url "$ANAKOT_E2E_MOCK_URL" \
     --shots "$LOG_DIR/shots" \
     --close-timeout-ms 420000 2>&1 | ts_prefix | tee "$LOG_DIR/app-update.log") || rc=$?
   log_group "in-app update (Playwright) transcript" "$LOG_DIR/app-update.log"
@@ -383,7 +383,7 @@ phase_update() {
 
   # ── user state survived ───────────────────────────────────────────────
   preserve_after_upgrade
-  grep -qF "user_state_marker=$(manifest_side old commit)" "$HERMES_HOME/desktop-bundled-marker.txt" \
+  grep -qF "user_state_marker=$(manifest_side old commit)" "$ANAKOT_HOME/desktop-bundled-marker.txt" \
     || fail "isolated user-state marker did not survive the update"
   ok "isolated user state survived"
 
@@ -405,8 +405,8 @@ phase_update() {
   printf '{"phase":"new","launch":"post-update-launch","automaticRelaunchProof":"relaunch-proof.json"}\n' > "$LOG_DIR/desktop-chat-new-launch.json"
   "$NODE_BIN" "$ASSETS/desktop-smoke.ts" --exe "$old_app_bin" \
     --root "$old_app/Contents/Resources/agent-payload" --origin bundled \
-    --home "$HERMES_HOME" --user-data "$HERMES_DESKTOP_USER_DATA_DIR" \
-    --out "$LOG_DIR" --phase new --expect-commit "$new_commit" --mock-url "$HERMES_E2E_MOCK_URL" \
+    --home "$ANAKOT_HOME" --user-data "$ANAKOT_DESKTOP_USER_DATA_DIR" \
+    --out "$LOG_DIR" --phase new --expect-commit "$new_commit" --mock-url "$ANAKOT_E2E_MOCK_URL" \
     2>&1 | ts_prefix | tee "$LOG_DIR/desktop-chat-new.log"
 
   # The check right after relaunch can win the race against the app's first payload-Python spawn.

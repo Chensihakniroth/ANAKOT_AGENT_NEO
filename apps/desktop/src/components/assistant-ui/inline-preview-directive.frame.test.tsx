@@ -3,11 +3,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { InlinePreviewDirective, MAX_FRAME_WIDTH } from './inline-preview-directive'
 
-const original = window.hermesDesktop
+const original = window.anakotDesktop
 
 // The frame reads its file through the desktop bridge, as it does in the app.
 beforeEach(() => {
-  window.hermesDesktop = {
+  window.anakotDesktop = {
     ...original,
     readFileText: async (path: string) => ({
       path,
@@ -18,7 +18,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup()
-  window.hermesDesktop = original
+  window.anakotDesktop = original
 })
 
 async function mountFrame() {
@@ -39,7 +39,7 @@ async function mountFrame() {
 
   const report = (size: { height: number; width?: number }) =>
     act(() => {
-      window.dispatchEvent(new MessageEvent('message', { data: { type: 'hermes-inline-preview-size', token, ...size } }))
+      window.dispatchEvent(new MessageEvent('message', { data: { type: 'anakot-inline-preview-size', token, ...size } }))
     })
 
   return { box: iframe.parentElement, report }

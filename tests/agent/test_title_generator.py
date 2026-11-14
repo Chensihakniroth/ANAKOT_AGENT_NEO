@@ -17,7 +17,7 @@ from agent.title_generator import (
     wait_for_title_upgrades,
     _title_language,
 )
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 
 
 class TestGenerateTitle:
@@ -47,7 +47,7 @@ class TestGenerateTitle:
         """The titler receives the opener AFTER @-reference expansion: the generated ref carries a
         `--- Context Warnings ---` (or `--- Attached Context ---`) footer, which must not turn a
         paste-only opener into "instruction + trailing preview" (live wire finding on #114984)."""
-        ref = "@file:/home/u/.hermes/attachments/pasted_content_2026-09-18_14-09-43-735_d0ee85.txt"
+        ref = "@file:/home/u/.anakot/attachments/pasted_content_2026-09-18_14-09-43-735_d0ee85.txt"
         preview = "Quarterly incident analysis for the database cluster"
         for footer in (f"\n\n--- Context Warnings ---\n- {ref}: path is outside the allowed workspace",
                        "\n\n--- Attached Context ---\n\n### file: pasted_content.txt\n" + preview):
@@ -62,7 +62,7 @@ class TestGenerateTitle:
         ``@file:``) sends NO Desktop paste preview, so the build_title_input
         ref-only shortcut cannot rescue it. The titler must still refuse to
         name the session after the truncated file path."""
-        msg = "@file:AppData/Local/hermes/profiles/local/attachments/report.pdf"
+        msg = "@file:AppData/Local/anakot/profiles/local/attachments/report.pdf"
 
         assert is_titleable_user_message(msg) is False
         assert derive_title(msg) is None
@@ -102,12 +102,12 @@ class TestGenerateTitle:
     def test_title_language_reads_config(self):
         cfg = {"auxiliary": {"title_generation": {"language": "  French "}}}
 
-        with patch("hermes_cli.config.load_config", return_value=cfg), patch("hermes_cli.config.load_config_readonly", return_value=cfg):
+        with patch("anakot_cli.config.load_config", return_value=cfg), patch("anakot_cli.config.load_config_readonly", return_value=cfg):
             assert _title_language() == "French"
-        with patch("hermes_cli.config.load_config", return_value={}), patch("hermes_cli.config.load_config_readonly", return_value={}):
+        with patch("anakot_cli.config.load_config", return_value={}), patch("anakot_cli.config.load_config_readonly", return_value={}):
             assert _title_language() == ""
-        with patch("hermes_cli.config.load_config", side_effect=RuntimeError("bad config")), \
-         patch("hermes_cli.config.load_config_readonly", side_effect=RuntimeError("bad config")):
+        with patch("anakot_cli.config.load_config", side_effect=RuntimeError("bad config")), \
+         patch("anakot_cli.config.load_config_readonly", side_effect=RuntimeError("bad config")):
             assert _title_language() == ""
 
 
@@ -254,10 +254,10 @@ class TestGenerateTitle:
     @pytest.mark.parametrize("answer", [
         # The four persisted titles from the report: Chinese replies of 32-80 characters that
         # `len(title.split())` counts as 1-8 "words" because CJK has no inter-word spaces.
-        "好的，这个可以做。不过我现在看不到 hermesbubble 的代码（这条对话里没带仓库/文件），所以先把改造方案列出来…",
+        "好的，这个可以做。不过我现在看不到 anakotbubble 的代码（这条对话里没带仓库/文件），所以先把改造方案列出来…",
         "可以，直接在这说。先判断一个关键点：登录页本身能打开吗？",
         "我是 ChatGPT，由 OpenAI 开发。当前对话里没有提供可披露的具体模型版本号…",
-        "先确认一下：你说的 **Hermes** 是哪个项目/镜像？（很多 App 都叫 Hermes…",
+        "先确认一下：你说的 **Anakot** 是哪个项目/镜像？（很多 App 都叫 Anakot…",
         # Japanese takes the same path: kana carries no inter-word spaces. Korean keeps spaces, so it
         # already trips the word guard; it is here to pin that the character budget changes nothing there.
         "まず、どのリポジトリの話か教えてもらえますか。この会話にはコードが含まれていないので、確認が必要です。",
@@ -577,17 +577,17 @@ class TestMaybeAutoTitle:
         main_runtime = {"provider": main_provider, "base_url": "http://127.0.0.1:8080/v1"}
         keyed = {"providers": {"gptoss": {"name": "GPTOSS Local", "base_url": "http://127.0.0.1:8080/v1"}}}
         with patch.object(tg, "_title_config", return_value=title_cfg), \
-                patch("hermes_cli.config.load_config_readonly", return_value=keyed):
+                patch("anakot_cli.config.load_config_readonly", return_value=keyed):
             assert tg.title_upgrade_must_wait_for_turn(main_runtime) is deferred
 
     def test_kanban_worker_is_named_after_its_card_without_the_llm_thread(self, tmp_path, monkeypatch):
         """A worker's session takes the board card's title synchronously; no auxiliary model call (#111166)."""
-        from hermes_cli import kanban_db, kanban_db_connect
+        from anakot_cli import kanban_db, kanban_db_connect
 
         with kanban_db_connect.connect_closing(board="default") as conn:
             task_id = kanban_db.create_task(conn, title="Fix flaky worker startup", board="default")
             conn.commit()
-        monkeypatch.setenv("HERMES_KANBAN_TASK", task_id)
+        monkeypatch.setenv("ANAKOT_KANBAN_TASK", task_id)
         db = SessionDB(tmp_path / "state.db")
         db.create_session(session_id="sess-1", source="kanban")
 
@@ -600,14 +600,14 @@ class TestMaybeAutoTitle:
 
     def test_kanban_worker_with_an_overlong_card_title_is_still_named(self, tmp_path, monkeypatch):
         """Cards have no length cap; the store rejects past MAX_TITLE_LENGTH, so the card title is trimmed, not dropped."""
-        from hermes_cli import kanban_db, kanban_db_connect
+        from anakot_cli import kanban_db, kanban_db_connect
 
         card = "Investigate why the swap modal intermittently fails to render its confirmation step on mobile Safari after a retry"
         assert len(card) > SessionDB.MAX_TITLE_LENGTH
         with kanban_db_connect.connect_closing(board="default") as conn:
             task_id = kanban_db.create_task(conn, title=card, board="default")
             conn.commit()
-        monkeypatch.setenv("HERMES_KANBAN_TASK", task_id)
+        monkeypatch.setenv("ANAKOT_KANBAN_TASK", task_id)
         db = SessionDB(tmp_path / "state.db")
         for sid in ("sess-1", "sess-2"):  # a retried card must still get the ``#N`` suffix within the cap
             db.create_session(session_id=sid, source="kanban")
@@ -620,7 +620,7 @@ class TestMaybeAutoTitle:
         assert len(second) <= SessionDB.MAX_TITLE_LENGTH
 
     def test_kanban_worker_with_unreadable_card_falls_back_to_the_task_id(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("HERMES_KANBAN_TASK", "t_missing")
+        monkeypatch.setenv("ANAKOT_KANBAN_TASK", "t_missing")
         db = SessionDB(tmp_path / "state.db")
         db.create_session(session_id="sess-1", source="kanban")
 
@@ -631,11 +631,11 @@ class TestMaybeAutoTitle:
         mock_auto.assert_not_called()
 
     def test_delegated_child_of_a_worker_is_not_named_after_the_card(self, tmp_path, monkeypatch):
-        """A delegate_task child inherits ``HERMES_KANBAN_TASK`` but is not the card's session;
+        """A delegate_task child inherits ``ANAKOT_KANBAN_TASK`` but is not the card's session;
         it takes the ordinary title path instead of the parent's card title (#112817)."""
         from agent.delegation_context import delegated_child_context
 
-        monkeypatch.setenv("HERMES_KANBAN_TASK", "t_parent")
+        monkeypatch.setenv("ANAKOT_KANBAN_TASK", "t_parent")
         db = SessionDB(tmp_path / "state.db")
         db.create_session(session_id="child-1", source="kanban")
 
@@ -664,7 +664,7 @@ class TestMaybeAutoTitle:
                 "enabled": True, "model_upgrade_enabled": False,
             }}
         }
-        with patch("hermes_cli.config.load_config_readonly", return_value=config), \
+        with patch("anakot_cli.config.load_config_readonly", return_value=config), \
              patch("agent.memory_provider.spawn_context_thread") as thread, \
              patch("agent.title_generator.call_llm") as call_llm:
             maybe_auto_title(db, "sess-1", "repair startup memory routing", [])
@@ -673,11 +673,11 @@ class TestMaybeAutoTitle:
         thread.assert_not_called()
         call_llm.assert_not_called()
         # The toggle only silences the automatic upgrade: an explicit ``generate_title`` call
-        # (``hermes sessions retitle-skills``) still asks the model.
+        # (``anakot sessions retitle-skills``) still asks the model.
         resp = MagicMock()
         resp.choices = [MagicMock()]
         resp.choices[0].message.content = '{"title": "Repair startup memory routing"}'
-        with patch("hermes_cli.config.load_config_readonly", return_value=config), \
+        with patch("anakot_cli.config.load_config_readonly", return_value=config), \
              patch("agent.title_generator.call_llm", return_value=resp):
             assert generate_title("repair startup memory routing") == "Repair startup memory routing"
 
@@ -689,7 +689,7 @@ class TestMaybeAutoTitle:
                 "enabled": False, "model_upgrade_enabled": True,
             }}
         }
-        with patch("hermes_cli.config.load_config_readonly", return_value=config), \
+        with patch("anakot_cli.config.load_config_readonly", return_value=config), \
              patch("agent.memory_provider.spawn_context_thread") as thread, \
              patch("agent.title_generator.call_llm") as call_llm:
             maybe_auto_title(db, "sess-1", "repair startup memory routing", [])

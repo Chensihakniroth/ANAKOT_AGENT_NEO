@@ -100,7 +100,7 @@ beforeEach(() => {
   openGatewayAgent.mockReset()
   setLastUsed.mockClear()
   vi.stubGlobal('window', {
-    hermesDesktop: {
+    anakotDesktop: {
       api: vi.fn(async () => ({ profiles: [] })),
       connections: { list: vi.fn(async () => registry), setLastUsed },
       getAgentRoster: async () => reachable

@@ -1,4 +1,4 @@
-import { DEFAULT_REASONING_EFFORT, REASONING_EFFORT_VALUES } from '@hermes/shared'
+import { DEFAULT_REASONING_EFFORT, REASONING_EFFORT_VALUES } from '@anakot/shared'
 import { describe, expect, it } from 'vitest'
 
 import {

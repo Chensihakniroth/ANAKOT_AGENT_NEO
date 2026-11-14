@@ -19,10 +19,10 @@ vi.mock('@/store/gateway', () => ({
   requestGatewayForAgent: vi.fn()
 }))
 
-vi.mock('@/hermes', () => ({
-  getHermesConfig: vi.fn(),
+vi.mock('@/anakot', () => ({
+  getAnakotConfig: vi.fn(),
   getProfiles: vi.fn(),
-  hermesApi: vi.fn(),
+  anakotApi: vi.fn(),
   setApiRequestProfile: vi.fn(),
   STARTUP_REQUEST_TIMEOUT_MS: 1000
 }))

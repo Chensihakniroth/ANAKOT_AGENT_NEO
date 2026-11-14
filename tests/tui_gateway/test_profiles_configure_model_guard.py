@@ -21,9 +21,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import hermes_yaml as yaml
+import anakot_yaml as yaml
 
-import hermes_cli.model_selection_guards as guards
+import anakot_cli.model_selection_guards as guards
 import tui_gateway.server as srv
 
 GUARDED_MODEL = "muse-spark-1.2-contributor"
@@ -32,17 +32,17 @@ GUARD_MESSAGE = "CONTRIBUTOR TIER: this model may train on your data."
 
 @pytest.fixture
 def home(tmp_path, monkeypatch):
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    anakot_home = tmp_path / ".anakot"
+    anakot_home.mkdir()
+    monkeypatch.setenv("ANAKOT_HOME", str(anakot_home))
     # The profile write now validates through ``switch_model`` (catalog + credentials); these
     # tests pin the guard handshake, so echo the pick back as an accepted route.
-    from hermes_cli.model_switch import ModelSwitchResult
+    from anakot_cli.model_switch import ModelSwitchResult
     monkeypatch.setattr(
-        "hermes_cli.model_switch.switch_model",
+        "anakot_cli.model_switch.switch_model",
         lambda *, raw_input, explicit_provider, **_kw: ModelSwitchResult(
             success=True, new_model=raw_input, target_provider=explicit_provider))
-    return hermes_home
+    return anakot_home
 
 
 @pytest.fixture
@@ -97,11 +97,11 @@ def test_confirmed_resend_writes_the_guarded_model(home, contributor_guard):
 
 
 def test_unguarded_model_still_writes_without_confirmation(home, contributor_guard):
-    result = _configure({"model": "hermes-4.5-405b", "provider": "nous"})
+    result = _configure({"model": "anakot-4.5-405b", "provider": "nous"})
 
     assert not result.get("confirm_required")
     assert result["applied"].get("model") is True
-    assert _profile_model(home) == "hermes-4.5-405b"
+    assert _profile_model(home) == "anakot-4.5-405b"
 
 
 def test_other_sections_still_apply_while_model_awaits_confirmation(home, contributor_guard):
@@ -121,7 +121,7 @@ def test_other_sections_still_apply_while_model_awaits_confirmation(home, contri
 @pytest.mark.parametrize("group_tokens, expect_warning", [(99_000, False), (120_000, True)])
 def test_profile_switch_uses_the_largest_affected_group_context(home, group_tokens, expect_warning):
     from agent.usage_anchor import USAGE_ANCHOR_MODEL_CONFIG_KEY, capture_usage_anchor
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
 
     old_model = "old-local-model"
     new_model = "new-local-model"

@@ -348,12 +348,12 @@ async def test_thread_root_forwarded_image_is_recovered(adapter):
          "attachments": [_share(files=[{"id": "F0IMG", "name": "graph.png", "mimetype": "image/png",
                                         "url_private_download": "https://files.slack.com/files-pri/T_TEAM-F0IMG/graph.png"}])]},
     ]})
-    adapter._download_slack_file = AsyncMock(return_value="/tmp/hermes-cached.png")
+    adapter._download_slack_file = AsyncMock(return_value="/tmp/anakot-cached.png")
     await adapter._fetch_thread_context(
         channel_id="C_CHAN", thread_ts="1793899999.000001", current_ts="1793899999.000009")
     urls, _types = await adapter._collect_thread_root_images(
         channel_id="C_CHAN", thread_ts="1793899999.000001", team_id="")
-    assert urls == ["/tmp/hermes-cached.png"]
+    assert urls == ["/tmp/anakot-cached.png"]
 
 
 # -- review follow-ups: shared budget, block order, quoted source, echo across workspaces --------

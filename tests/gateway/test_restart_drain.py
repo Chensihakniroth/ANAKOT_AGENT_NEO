@@ -22,8 +22,8 @@ async def test_restart_command_while_busy_requests_drain_without_interrupt(monke
     # which changes the restart call signature.
     monkeypatch.delenv("INVOCATION_ID", raising=False)
     monkeypatch.delenv("XPC_SERVICE_NAME", raising=False)
-    monkeypatch.delenv("HERMES_S6_SUPERVISED_CHILD", raising=False)
-    monkeypatch.delenv("HERMES_GATEWAY_EXTERNAL_SUPERVISOR", raising=False)
+    monkeypatch.delenv("ANAKOT_S6_SUPERVISED_CHILD", raising=False)
+    monkeypatch.delenv("ANAKOT_GATEWAY_EXTERNAL_SUPERVISOR", raising=False)
     # Hermeticity: neutralize the real container probe (see
     # test_restart_service_detection.py) — /.dockerenv on a containerized CI
     # runner would otherwise route via_service=True under this test.
@@ -59,9 +59,9 @@ async def test_restart_command_while_busy_requests_drain_without_interrupt(monke
 
 
 def test_load_busy_text_mode_follows_input_mode_and_honors_legacy(tmp_path, monkeypatch):
-    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
-    monkeypatch.delenv("HERMES_GATEWAY_BUSY_TEXT_MODE", raising=False)
-    monkeypatch.delenv("HERMES_GATEWAY_BUSY_INPUT_MODE", raising=False)
+    monkeypatch.setattr(gateway_run, "_anakot_home", tmp_path)
+    monkeypatch.delenv("ANAKOT_GATEWAY_BUSY_TEXT_MODE", raising=False)
+    monkeypatch.delenv("ANAKOT_GATEWAY_BUSY_INPUT_MODE", raising=False)
 
     # No knobs set → follows busy_input_mode, which defaults to interrupt.
     assert gateway_run.GatewayRunner._load_busy_text_mode() == "interrupt"
@@ -83,18 +83,18 @@ def test_load_busy_text_mode_follows_input_mode_and_honors_legacy(tmp_path, monk
     (tmp_path / "config.yaml").write_text(
         "display:\n  busy_input_mode: interrupt\n", encoding="utf-8"
     )
-    monkeypatch.setenv("HERMES_GATEWAY_BUSY_TEXT_MODE", "queue")
+    monkeypatch.setenv("ANAKOT_GATEWAY_BUSY_TEXT_MODE", "queue")
     assert gateway_run.GatewayRunner._load_busy_text_mode() == "queue"
 
     # Bogus legacy value is ignored → falls through to busy_input_mode (interrupt).
-    monkeypatch.setenv("HERMES_GATEWAY_BUSY_TEXT_MODE", "bogus")
+    monkeypatch.setenv("ANAKOT_GATEWAY_BUSY_TEXT_MODE", "bogus")
     assert gateway_run.GatewayRunner._load_busy_text_mode() == "interrupt"
 
 
 def test_load_signal_interrupt_grace_timeout_from_typed_config(
     tmp_path, monkeypatch, caplog
 ):
-    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
+    monkeypatch.setattr(gateway_run, "_anakot_home", tmp_path)
 
     assert (
         gateway_run.GatewayRunner._load_signal_interrupt_grace_timeout()
@@ -305,13 +305,13 @@ async def test_run_restart_excluded_from_stop_cancel_loop():
 @pytest.mark.asyncio
 async def test_restart_from_served_profile_chat_restarts_the_host_gateway(monkeypatch):
     """A /restart handled inside a served profile's runtime scope restarts the HOST gateway: the
-    detached watcher relaunches `hermes gateway restart` under the launch home (under a named
+    detached watcher relaunches `anakot gateway restart` under the launch home (under a named
     profile's home it exits 78 and nothing comes back), and stop() - which flushes pending
-    messages under get_hermes_home() - runs outside the requester's profile scope."""
+    messages under get_anakot_home() - runs outside the requester's profile scope."""
     from agent.secret_scope import current_secret_scope
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
 
-    launch_home = get_hermes_home()
+    launch_home = get_anakot_home()
     profile_home = launch_home / "profiles" / "research"
     profile_home.mkdir(parents=True)
     (profile_home / ".env").write_text("RESEARCH_ONLY_TOKEN=x\n", encoding="utf-8")
@@ -320,22 +320,22 @@ async def test_restart_from_served_profile_chat_restarts_the_host_gateway(monkey
     seen = {}
 
     async def _recording_stop(**_kwargs):
-        seen["stop_home"] = get_hermes_home()
+        seen["stop_home"] = get_anakot_home()
         seen["stop_secret_scope"] = current_secret_scope()
 
     runner.stop = _recording_stop
     watcher_envs = []
-    monkeypatch.setattr(gateway_run, "_resolve_hermes_bin", lambda: ["hermes"])
+    monkeypatch.setattr(gateway_run, "_resolve_anakot_bin", lambda: ["anakot"])
     monkeypatch.setattr(
         subprocess, "Popen", lambda _argv, **kwargs: watcher_envs.append(kwargs["env"]) or MagicMock()
     )
 
     async with gateway_run._async_profile_runtime_scope(profile_home):
-        assert get_hermes_home() == profile_home
+        assert get_anakot_home() == profile_home
         assert runner.request_restart(detached=True, via_service=False) is True
     await runner._restart_task
 
-    assert [env.get("HERMES_HOME") for env in watcher_envs] == [str(launch_home)]
+    assert [env.get("ANAKOT_HOME") for env in watcher_envs] == [str(launch_home)]
     assert seen == {"stop_home": launch_home, "stop_secret_scope": None}
 
 
@@ -348,11 +348,11 @@ async def test_windows_detached_restart_scrubs_gateway_marker(monkeypatch, tmp_p
     runner, _adapter = make_restart_runner()
     popen_calls = []
 
-    monkeypatch.setattr(gateway_run, "_resolve_hermes_bin", lambda: ["hermes"])
+    monkeypatch.setattr(gateway_run, "_resolve_anakot_bin", lambda: ["anakot"])
     monkeypatch.setattr(gateway_run.os, "getpid", lambda: 321)
-    monkeypatch.setenv("_HERMES_GATEWAY", "1")
+    monkeypatch.setenv("_ANAKOT_GATEWAY", "1")
 
-    import hermes_cli._subprocess_compat as subprocess_compat
+    import anakot_cli._subprocess_compat as subprocess_compat
 
     monkeypatch.setattr(
         subprocess_compat,
@@ -370,11 +370,11 @@ async def test_windows_detached_restart_scrubs_gateway_marker(monkeypatch, tmp_p
 
     assert len(popen_calls) == 1
     cmd, kwargs = popen_calls[0]
-    assert cmd[-3:] == ["hermes", "gateway", "restart"]
-    assert kwargs["env"].get("_HERMES_GATEWAY") is None
+    assert cmd[-3:] == ["anakot", "gateway", "restart"]
+    assert kwargs["env"].get("_ANAKOT_GATEWAY") is None
     # The watcher is an installation-bound command: PM's bootstrap selects the
     # dependency generation at child start, no venv is captured in its env.
-    from hermes_cli._launchers import runtime_command
+    from anakot_cli._launchers import runtime_command
     from pathlib import Path
     assert cmd[:3] == runtime_command(Path(gateway_run.__file__).resolve().parent.parent)[:3]
     assert kwargs["stdout"] is subprocess.DEVNULL
@@ -399,11 +399,11 @@ async def test_windows_detached_restart_watcher_keeps_console_python(monkeypatch
     site_packages.mkdir(parents=True)
 
     monkeypatch.setattr(gateway_run.sys, "executable", r"C:\venv\Scripts\python.exe")
-    monkeypatch.setattr(gateway_run, "_resolve_hermes_bin", lambda: ["hermes"])
+    monkeypatch.setattr(gateway_run, "_resolve_anakot_bin", lambda: ["anakot"])
     monkeypatch.setattr(gateway_run.os, "getpid", lambda: 321)
     monkeypatch.setenv("VIRTUAL_ENV", str(venv_dir))
 
-    import hermes_cli._subprocess_compat as subprocess_compat
+    import anakot_cli._subprocess_compat as subprocess_compat
 
     monkeypatch.setattr(
         subprocess_compat,
@@ -422,7 +422,7 @@ async def test_windows_detached_restart_watcher_keeps_console_python(monkeypatch
     assert len(popen_calls) == 1
     cmd, kwargs = popen_calls[0]
     assert cmd[0] == r"C:\venv\Scripts\python.exe"
-    assert cmd[-3:] == ["hermes", "gateway", "restart"]
+    assert cmd[-3:] == ["anakot", "gateway", "restart"]
     assert kwargs["creationflags"] == 0x08000200
 
 
@@ -467,7 +467,7 @@ async def test_drain_suppress_skips_home_channel_keeps_session_ping(tmp_path, mo
     from gateway.config import HomeChannel, Platform
     import gateway.drain_control as dc
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
 
     runner, adapter = make_restart_runner()
     # A home channel distinct from the active session's chat.
@@ -516,12 +516,12 @@ def _live_agent(idle_seconds: float = 1.0) -> MagicMock:
 async def test_request_restart_skips_wait_when_only_wedged_turns(monkeypatch):
     """A turn idle past agent.gateway_timeout must not defer the restart.
 
-    Regression: a WhatsApp turn wedged for 30+ min pinned `hermes update`
+    Regression: a WhatsApp turn wedged for 30+ min pinned `anakot update`
     in "draining" for the full restart_after_turn_timeout cap — the
     after-turn wait counted the wedged agent as active work even though
     the inactivity watchdog had already declared it dead (Aug 2026).
     """
-    monkeypatch.delenv("HERMES_AGENT_TIMEOUT", raising=False)
+    monkeypatch.delenv("ANAKOT_AGENT_TIMEOUT", raising=False)
     runner, _adapter = make_restart_runner()
     runner.stop = AsyncMock()
     # A cap long enough that the test would hang without the wedge bypass.
@@ -541,7 +541,7 @@ async def test_request_restart_skips_wait_when_only_wedged_turns(monkeypatch):
 @pytest.mark.asyncio
 async def test_request_restart_still_waits_for_live_turn_alongside_wedged(monkeypatch):
     """Mixed live + wedged: the live turn is honored, the wedged one ignored."""
-    monkeypatch.delenv("HERMES_AGENT_TIMEOUT", raising=False)
+    monkeypatch.delenv("ANAKOT_AGENT_TIMEOUT", raising=False)
     runner, _adapter = make_restart_runner()
     runner.stop = AsyncMock()
     runner._launch_detached_restart_command = AsyncMock()
@@ -564,14 +564,14 @@ async def test_request_restart_still_waits_for_live_turn_alongside_wedged(monkey
 
 def test_wedged_agent_count_disabled_timeout_counts_nothing(monkeypatch):
     """gateway_timeout=0 (unbounded turns) disables wedge detection."""
-    monkeypatch.setenv("HERMES_AGENT_TIMEOUT", "0")
+    monkeypatch.setenv("ANAKOT_AGENT_TIMEOUT", "0")
     runner, _adapter = make_restart_runner()
     runner._running_agents["agent:main:telegram:dm:1"] = _wedged_agent(10**6)
     assert runner._wedged_agent_count() == 0
 
 
 def test_wedged_agent_count_ignores_sentinels_and_bad_summaries(monkeypatch):
-    monkeypatch.delenv("HERMES_AGENT_TIMEOUT", raising=False)
+    monkeypatch.delenv("ANAKOT_AGENT_TIMEOUT", raising=False)
     runner, _adapter = make_restart_runner()
     broken = MagicMock()
     broken.get_activity_summary = MagicMock(side_effect=RuntimeError("boom"))
@@ -592,14 +592,14 @@ def test_wedged_agent_count_ignores_sentinels_and_bad_summaries(monkeypatch):
 async def test_request_restart_skips_wait_for_cron_run_past_inflight_allowance(monkeypatch, tmp_path):
     """A cron run older than the scheduler's stale-inflight allowance is wedged: the restart proceeds.
 
-    #115469 Defect B: a no-agent job whose delivery hung pinned ``hermes update`` in "draining" for the
+    #115469 Defect B: a no-agent job whose delivery hung pinned ``anakot update`` in "draining" for the
     full ``restart_after_turn_timeout`` because ``_wedged_agent_count`` only ever looked at chat agents,
     so the cron unit was structurally un-skippable ("0 wedged and excluded").
     """
     import cron.scheduler as sched
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-    monkeypatch.delenv("HERMES_AGENT_TIMEOUT", raising=False)
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
+    monkeypatch.delenv("ANAKOT_AGENT_TIMEOUT", raising=False)
     monkeypatch.setattr("cron.jobs.load_jobs", list)
     runner, _adapter = make_restart_runner()
     runner.stop = AsyncMock()
@@ -623,7 +623,7 @@ def test_wedged_cron_allowance_honours_young_runs_and_job_interval(monkeypatch, 
     """Control: a run inside ``max(2 * interval, cron.inflight_max_minutes)`` is live work, not wedged."""
     import cron.scheduler as sched
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     monkeypatch.setattr("cron.jobs.load_jobs", lambda: [{"id": "six-hourly-job", "schedule": {"kind": "interval", "minutes": 360}}])
     runner, _adapter = make_restart_runner()
     assert sched.try_register_running_job("six-hourly-job")
@@ -644,7 +644,7 @@ def test_wedged_cron_check_parses_jobs_once_per_run(monkeypatch, tmp_path):
     must be resolved once per in-flight run, not by a full jobs.json parse per job per tick."""
     import cron.scheduler as sched
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     loads = []
     monkeypatch.setattr("cron.jobs.load_jobs", lambda: loads.append(1) or [
         {"id": jid, "schedule": {"kind": "interval", "minutes": 360}} for jid in ("job-a", "job-b", "job-c")])
@@ -676,7 +676,7 @@ async def test_request_restart_skips_wait_for_scope_isolated_cron_worker(monkeyp
     """
     import cron.scheduler as sched
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     monkeypatch.setattr("cron.jobs.load_jobs", list)
     runner, _adapter = make_restart_runner()
     runner.stop = AsyncMock()
@@ -710,7 +710,7 @@ async def test_request_restart_still_waits_for_worker_without_its_own_scope(monk
     """
     import cron.scheduler as sched
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     monkeypatch.setattr("cron.jobs.load_jobs", list)
     runner, _adapter = make_restart_runner()
     runner._restart_after_turn_timeout = 300.0
@@ -732,7 +732,7 @@ async def test_request_restart_still_waits_for_worker_without_its_own_scope(monk
 def _register_in_profile(monkeypatch, sched, home, job_id):
     """Claim ``job_id`` in-flight under profile ``home`` (the multiplexed ticker binds it per tick)."""
     home.mkdir(exist_ok=True)
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
     assert sched.try_register_running_job(job_id)
 
 
@@ -773,7 +773,7 @@ def test_same_job_id_wedged_in_one_profile_does_not_hide_live_run_in_another(mon
     """
     import cron.scheduler as sched
 
-    monkeypatch.delenv("HERMES_AGENT_TIMEOUT", raising=False)
+    monkeypatch.delenv("ANAKOT_AGENT_TIMEOUT", raising=False)
     monkeypatch.setattr("cron.jobs.load_jobs", list)
     runner, _adapter = make_restart_runner()
     home_a, home_b = tmp_path / "profile-a", tmp_path / "profile-b"
@@ -836,7 +836,7 @@ async def test_an_update_pause_adopts_a_waiting_restart_instead_of_reporting_it_
     home = tmp_path / "boot"
     home.mkdir(mode=0o700)
     home = home.resolve()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
     runner, _adapter = make_restart_runner()
     runner.session_runtime_descriptor = {"runtime_protocol": 1, "state": "ready", "instance_id": "i-1",
                                          "authority_epoch": 1, "served_profiles": []}

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { setApiRequestConnection, setApiRequestProfile } from '@/hermes'
+import { setApiRequestConnection, setApiRequestProfile } from '@/anakot'
 import { clearWebappSession, seedWebappSession } from '@/test/webapp-session'
 
 import { installBrowserDesktopBridge } from './browser-desktop-bridge'
@@ -13,9 +13,9 @@ import { resolveSpeakStreamUrl } from './voice-playback'
 // sent streaming voice to its whole-reply fallback every time.
 
 type MutableWindow = Window & {
-  __HERMES_AUTH_REQUIRED__?: boolean
-  __HERMES_BASE_PATH__?: string
-  hermesDesktop?: Window['hermesDesktop']
+  __ANAKOT_AUTH_REQUIRED__?: boolean
+  __ANAKOT_BASE_PATH__?: string
+  anakotDesktop?: Window['anakotDesktop']
 }
 
 const mutableWindow = () => window as unknown as MutableWindow
@@ -42,11 +42,11 @@ const minted = (fetchMock: ReturnType<typeof serveTickets>) =>
 
 afterEach(() => {
   const win = mutableWindow()
-  delete win.__HERMES_AUTH_REQUIRED__
-  delete win.__HERMES_BASE_PATH__
+  delete win.__ANAKOT_AUTH_REQUIRED__
+  delete win.__ANAKOT_BASE_PATH__
   clearWebappSession()
-  Reflect.deleteProperty(win, 'hermesDesktop')
-  document.documentElement.removeAttribute('data-hermes-desktop-host')
+  Reflect.deleteProperty(win, 'anakotDesktop')
+  document.documentElement.removeAttribute('data-anakot-desktop-host')
   setApiRequestConnection(null)
   setApiRequestProfile(null)
   vi.unstubAllGlobals()
@@ -56,22 +56,22 @@ afterEach(() => {
 describe('browser-hosted Desktop voice streams', () => {
   it('speaks on a ticket minted for the speech stream, never the gateway ticket', async () => {
     const win = mutableWindow()
-    win.__HERMES_AUTH_REQUIRED__ = true
-    win.__HERMES_BASE_PATH__ = '/hermes'
+    win.__ANAKOT_AUTH_REQUIRED__ = true
+    win.__ANAKOT_BASE_PATH__ = '/anakot'
     const fetchMock = serveTickets()
     expect(installBrowserDesktopBridge()).toBe(true)
     setApiRequestProfile('worker-a')
 
     const url = new URL((await resolveSpeakStreamUrl())!)
 
-    expect(url.pathname).toBe('/hermes/api/audio/speak-stream')
+    expect(url.pathname).toBe('/anakot/api/audio/speak-stream')
     expect(url.searchParams.get('ticket')).toBe('speak-stream-ticket')
     expect(url.searchParams.get('profile')).toBe('worker-a')
     expect(url.searchParams.has('token')).toBe(false)
 
     const [mint, ...others] = minted(fetchMock)
     expect(others).toEqual([])
-    expect(mint.url.pathname).toBe('/hermes/api/webapp/socket-ticket')
+    expect(mint.url.pathname).toBe('/anakot/api/webapp/socket-ticket')
     expect(mint.url.searchParams.get('socket')).toBe('speak-stream')
     expect(mint.init?.method).toBe('POST')
     expect(mint.init?.credentials).toBe('same-origin')
@@ -98,11 +98,11 @@ describe('browser-hosted Desktop voice streams', () => {
 
   it('leaves the gateway socket on its own ticket', async () => {
     const win = mutableWindow()
-    win.__HERMES_AUTH_REQUIRED__ = true
+    win.__ANAKOT_AUTH_REQUIRED__ = true
     const fetchMock = serveTickets()
     expect(installBrowserDesktopBridge()).toBe(true)
 
-    const result = await win.hermesDesktop!.getGatewayWsUrl()
+    const result = await win.anakotDesktop!.getGatewayWsUrl()
     const url = new URL(typeof result === 'string' ? result : result.ok ? result.wsUrl : '')
 
     expect(url.pathname).toBe('/api/ws')

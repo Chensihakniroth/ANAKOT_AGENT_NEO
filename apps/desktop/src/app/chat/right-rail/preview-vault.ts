@@ -20,7 +20,7 @@
  *   back session-less on the same socket and are matched by target alone.
  */
 
-import { randomUuid } from '@hermes/shared'
+import { randomUuid } from '@anakot/shared'
 
 import type { PreviewOwner } from '@/store/preview-ownership'
 

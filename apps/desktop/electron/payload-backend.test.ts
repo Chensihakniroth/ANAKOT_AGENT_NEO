@@ -34,7 +34,7 @@ test('bundled launch paths come from build metadata without filesystem access', 
     toolsDir: 'binary-store',
     storePython: 'binary-store/custom-python/python',
     sitePackages: 'dependencies/lib/python3.14/site-packages',
-    commands: { hermes: 'commands/run-hermes', custom: 'commands/custom' }
+    commands: { anakot: 'commands/run-anakot', custom: 'commands/custom' }
   }
 
   const probe = vi.spyOn(fs, 'existsSync').mockImplementation(() => {
@@ -51,7 +51,7 @@ test('bundled launch paths come from build metadata without filesystem access', 
       assert.ok(result)
       assert.equal(result.storePython, path.join(resources, 'agent-payload', runtime.storePython))
       assert.equal(result.sitePackages, path.join(resources, 'agent-payload', runtime.sitePackages))
-      assert.equal(result.shim, result.commands.hermes)
+      assert.equal(result.shim, result.commands.anakot)
       assert.equal(result.commands.custom, path.join(resources, 'agent-payload', runtime.commands.custom))
     }
 
@@ -71,7 +71,7 @@ test('ticket minting runs the payload python, never the CLI shim', () => {
     storePython: '/p/tools/python',
     repoDir: '/p/repo',
     sitePackages: '/p/venv/site-packages',
-    shim: '/p/bin/hermes'
+    shim: '/p/bin/anakot'
   }
 
   const runtime = payloadTicketRuntime(payload, {}, 'win32')
@@ -91,13 +91,13 @@ test('the ticket bridge caches bytecode where the POSIX bin launchers do, outsid
   const prefix = (env: NodeJS.ProcessEnv, platform: NodeJS.Platform = 'darwin') =>
     payloadTicketRuntime(payload, env, platform).ticketEnv.PYTHONPYCACHEPREFIX
 
-  assert.equal(prefix({ HOME: '/Users/u' }), '/Users/u/.cache/hermes-pycache')
-  assert.equal(prefix({ HOME: '/home/u' }, 'linux'), '/home/u/.cache/hermes-pycache')
-  assert.equal(prefix({ HOME: '/Users/u', XDG_CACHE_HOME: '/Users/u/xdg' }), '/Users/u/xdg/hermes-pycache')
+  assert.equal(prefix({ HOME: '/Users/u' }), '/Users/u/.cache/anakot-pycache')
+  assert.equal(prefix({ HOME: '/home/u' }, 'linux'), '/home/u/.cache/anakot-pycache')
+  assert.equal(prefix({ HOME: '/Users/u', XDG_CACHE_HOME: '/Users/u/xdg' }), '/Users/u/xdg/anakot-pycache')
   assert.equal(prefix({ HOME: '/Users/u', PYTHONPYCACHEPREFIX: '/Users/u/mine' }), '/Users/u/mine')
   assert.equal(
     prefix({ HOME: '/Users/u', PYTHONPYCACHEPREFIX: '', XDG_CACHE_HOME: '' }),
-    '/Users/u/.cache/hermes-pycache'
+    '/Users/u/.cache/anakot-pycache'
   )
   // A baked Windows payload reads its own pycs from a read-only tree, as its launcher does.
   assert.equal(prefix({ LOCALAPPDATA: 'C:\\Users\\u\\AppData\\Local' }, 'win32'), undefined)
@@ -106,21 +106,21 @@ test('the ticket bridge caches bytecode where the POSIX bin launchers do, outsid
 // ─── update channel helpers ─────────────────────────────────────────
 
 test('installIdForRoot matches the Python install id (sha16 of the canonical path)', () => {
-  // sha256('/home/u/.hermes/hermes-agent')[:16] — recomputed independently.
+  // sha256('/home/u/.anakot/anakot-agent')[:16] — recomputed independently.
   assert.equal(
-    installIdForRoot('/home/u/.hermes/hermes-agent'),
-    createHash('sha256').update('/home/u/.hermes/hermes-agent', 'utf8').digest('hex').slice(0, 16)
+    installIdForRoot('/home/u/.anakot/anakot-agent'),
+    createHash('sha256').update('/home/u/.anakot/anakot-agent', 'utf8').digest('hex').slice(0, 16)
   )
   // The canonicalizer output is what gets hashed (symlinked homes).
   assert.equal(
-    installIdForRoot('/link/hermes-agent', () => '/real/hermes-agent'),
-    installIdForRoot('/real/hermes-agent')
+    installIdForRoot('/link/anakot-agent', () => '/real/anakot-agent'),
+    installIdForRoot('/real/anakot-agent')
   )
 })
 
 test('bundled core code precedes the dependencies, as the bin launchers order them', () => {
   assert.equal(
-    payloadPythonPath({ repoDir: 'payload/hermes-agent', sitePackages: 'payload/venv/site-packages' }),
-    ['payload/hermes-agent', 'payload/venv/site-packages'].join(path.delimiter)
+    payloadPythonPath({ repoDir: 'payload/anakot-agent', sitePackages: 'payload/venv/site-packages' }),
+    ['payload/anakot-agent', 'payload/venv/site-packages'].join(path.delimiter)
   )
 })

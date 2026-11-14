@@ -1713,7 +1713,7 @@ export default function SessionsPage() {
               <span className="text-xs font-mondwest tracking-[0.12em] truncate">
                 {activeAction === "restart"
                   ? t.status.restartGateway
-                  : t.status.updateHermes}
+                  : t.status.updateAnakot}
               </span>
 
               <Badge

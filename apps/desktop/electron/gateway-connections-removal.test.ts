@@ -28,9 +28,9 @@ afterEach(() => {
 const STALE_V1 = { mode: 'remote', remote: { url: 'http://127.0.0.1:9119', authMode: 'token', token: 'x' } }
 
 function machine() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-gw-removal-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-gw-removal-'))
   dirs.push(dir)
-  const root = path.join(dir, 'hermes')
+  const root = path.join(dir, 'anakot')
   const userData = path.join(dir, 'userData')
   fs.mkdirSync(root, { recursive: true })
   fs.mkdirSync(userData, { recursive: true })
@@ -90,8 +90,8 @@ test('a gateway the Webapp removed stays removed for Desktop, and its stale rout
   const m = machine()
   m.launch().read()
 
-  const env = { HERMES_HOME: m.root, HOME: m.dir, PATH: process.env.PATH, PYTHONPATH: repo }
-  const script = 'from hermes_cli import gateway_connections as g\ng.remove_connection("old-http")'
+  const env = { ANAKOT_HOME: m.root, HOME: m.dir, PATH: process.env.PATH, PYTHONPATH: repo }
+  const script = 'from anakot_cli import gateway_connections as g\ng.remove_connection("old-http")'
   await promisify(execFile)(python, ['-c', script], { env })
 
   const registry = m.launch().read()

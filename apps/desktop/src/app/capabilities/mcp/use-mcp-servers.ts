@@ -4,14 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   getMcpCatalog,
-  type HermesGateway,
+  type AnakotGateway,
   type McpCatalogEntry,
   type McpCatalogResponse,
   type McpTestResult,
   type ProfileScope,
   profileScopeKey,
   saveMcpServers
-} from '@/hermes'
+} from '@/anakot'
 import { useI18n } from '@/i18n'
 import { completeMcpDesktopOAuth } from '@/lib/mcp-dashboard-oauth'
 import { probeCache, probeKey } from '@/lib/mcp-probe-cache'
@@ -21,9 +21,9 @@ import { setDisabledTools, toggleToolInServer } from '@/lib/mcp-tool-filter'
 import { notify, notifyError } from '@/store/notifications'
 import { $activeGatewayProfile, normalizeProfileKey } from '@/store/profile'
 import { $activeSessionId } from '@/store/session'
-import type { HermesConfigRecord } from '@/types/hermes'
+import type { AnakotConfigRecord } from '@/types/anakot'
 
-import { hermesConfigCacheWriter, useHermesConfigRecord } from '../../hooks/use-config-record'
+import { anakotConfigCacheWriter, useAnakotConfigRecord } from '../../hooks/use-config-record'
 import { useOnProfileSwitch } from '../../hooks/use-on-profile-switch'
 import { useProfileSwitchLatch } from '../../hooks/use-profile-switch-latch'
 import { seedOptions } from '../connectors/data/persist'
@@ -42,7 +42,7 @@ export interface McpServersController extends McpDraft, PublishedProbes {
   availableCatalog: McpCatalogEntry[]
   catalog: McpCatalogEntry[]
   catalogLoading: boolean
-  config: HermesConfigRecord | null
+  config: AnakotConfigRecord | null
   configError: unknown
   configFailed: boolean
   configLoading: boolean
@@ -62,7 +62,7 @@ export interface McpServersController extends McpDraft, PublishedProbes {
 }
 
 export interface UseMcpServersOptions {
-  gateway: HermesGateway | null
+  gateway: AnakotGateway | null
   profile?: ProfileScope
 }
 
@@ -82,9 +82,9 @@ export function useMcpServers({ gateway, profile }: UseMcpServersOptions): McpSe
     refetch: refetchConfigQuery,
     dataUpdatedAt: configUpdatedAt,
     errorUpdatedAt: configErroredAt
-  } = useHermesConfigRecord(profile)
+  } = useAnakotConfigRecord(profile)
 
-  const setConfig = hermesConfigCacheWriter(profile)
+  const setConfig = anakotConfigCacheWriter(profile)
 
   const { arm: armProfileLatch, pending: profilePending } = useProfileSwitchLatch({
     dataUpdatedAt: configUpdatedAt,

@@ -3,8 +3,8 @@
  * 2026-11-07): the install worked, but the card kept its "+", the plugin sat switched off (it ships
  * `defaultEnabled: false`), and a second Install answered "already exists" with Force out of sight.
  *
- * Real Electron and real `hermes serve`. The catalog feed is answered with one entry that points at a
- * local Git repository laid out like hermes-official-plugins (plugin.yaml + desktop/plugin.js, no agent
+ * Real Electron and real `anakot serve`. The catalog feed is answered with one entry that points at a
+ * local Git repository laid out like anakot-official-plugins (plugin.yaml + desktop/plugin.js, no agent
  * half), so the install clones, checks out the pinned commit and publishes for real, with no network.
  *
  * The second half is the copy an older build left behind: the folder with no recorded catalog entry.
@@ -18,9 +18,9 @@ import { pathToFileURL } from 'node:url'
 import { type MockBackendFixture, setupMockBackend, waitForAppReady } from './fixtures'
 import { expect, test } from './test'
 
-const CATALOG_FEED = 'https://nousresearch.github.io/hermes-agent/docs/api/plugins.json'
+const CATALOG_FEED = 'https://nousresearch.github.io/anakot-agent/docs/api/plugins.json'
 const NAME = 'accent-picker'
-const INSTALL_ORIGIN = '.hermes-origin.json'
+const INSTALL_ORIGIN = '.anakot-origin.json'
 
 const PLUGIN_JS = `export default {
   id: 'accent',
@@ -39,7 +39,7 @@ function git(cwd: string, ...args: string[]): string {
   return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
 }
 
-/** A repository shaped like hermes-official-plugins: the entry is a subdirectory, desktop half only. */
+/** A repository shaped like anakot-official-plugins: the entry is a subdirectory, desktop half only. */
 function officialPluginsRepo(root: string): void {
   const plugin = path.join(root, NAME)
   fs.mkdirSync(path.join(plugin, 'desktop'), { recursive: true })
@@ -52,7 +52,7 @@ function officialPluginsRepo(root: string): void {
 
 test.beforeAll(async () => {
   fixture = await setupMockBackend()
-  repo = path.join(fixture.sandbox.root, 'hermes-official-plugins')
+  repo = path.join(fixture.sandbox.root, 'anakot-official-plugins')
   fs.mkdirSync(repo, { recursive: true })
   officialPluginsRepo(repo)
   sha = git(repo, 'rev-parse', 'HEAD')
@@ -85,7 +85,7 @@ test('a desktop-only catalog plugin shows installed, turns on, and an older copy
   test.setTimeout(300_000)
   const { page, sandbox } = fixture!
   await waitForAppReady(fixture!, 120_000)
-  const folder = path.join(sandbox.hermesHome, 'desktop-plugins', NAME)
+  const folder = path.join(sandbox.anakotHome, 'desktop-plugins', NAME)
   const addButton = page.getByRole('button', { name: `Add ${NAME}` })
   const pluginSwitch = page.getByRole('switch', { name: 'Accent Picker' })
 
@@ -110,7 +110,7 @@ test('a desktop-only catalog plugin shows installed, turns on, and an older copy
     repo: pathToFileURL(repo).href,
     sha
   })
-  expect(fs.existsSync(path.join(folder, '.hermes-package.json'))).toBe(false)
+  expect(fs.existsSync(path.join(folder, '.anakot-package.json'))).toBe(false)
   await expect(addButton).toHaveCount(0, { timeout: 30_000 })
   await expect(pluginSwitch).toHaveAttribute('aria-checked', 'true', { timeout: 30_000 })
 

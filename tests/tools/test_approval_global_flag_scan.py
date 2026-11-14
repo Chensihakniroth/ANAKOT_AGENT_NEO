@@ -21,7 +21,7 @@ def test_long_flag_runs_still_reach_the_target():
 from tools.approval_detection import detect_dangerous_command
 run = "--opt val --flag=x -q - " * 58
 cases = {
-    f"hermes {run}gateway restart": "stop/restart hermes gateway (kills running agents)",
+    f"anakot {run}gateway restart": "stop/restart anakot gateway (kills running agents)",
     f"docker {run}-H ssh://prod ps": "docker with remote daemon redirect (-H/--host)",
     f"docker {run}--context=prod ps": "docker with daemon redirect (--context: alternate daemon)",
     f"podman {run}--url tcp://prod ps": "podman with remote daemon redirect (--url/--connection/--identity)",
@@ -37,7 +37,7 @@ for command, description in cases.items():
 def test_nonmatching_flag_runs_finish():
     _run('''
 from tools.approval_detection import detect_dangerous_command
-for prefix in ("rclone lsf $HOME/.hermes --recursive --files-only", "hermes", "docker",
+for prefix in ("rclone lsf $HOME/.anakot --recursive --files-only", "anakot", "docker",
                "docker compose", "podman"):
     for run in ("--exclude " * 58, "--opt val " * 58, "--opt=val " * 58, "--opt" + " " * 100 + "val "):
         assert detect_dangerous_command(f"{prefix} {run}ps 2>/dev/null")[0] is False, prefix
@@ -45,7 +45,7 @@ for prefix in ("rclone lsf $HOME/.hermes --recursive --files-only", "hermes", "d
 
 
 def test_value_whitespace_runs_reach_the_container_verb():
-    # docker/podman values may follow a whitespace run, like hermes values always could: the shell
+    # docker/podman values may follow a whitespace run, like anakot values always could: the shell
     # collapses the run before docker sees the command, so a value behind two spaces used to end the
     # flag group and hide the verb (#130511). Single-space commands keep their exact decisions.
     _run('''
@@ -60,7 +60,7 @@ cases = {
     "podman --log-level  debug --url tcp://prod ps": True,
     "docker compose --project-name  demo down": True,
     "docker compose --project-name demo  down": True,
-    "hermes --config  x.yaml gateway restart": True,
+    "anakot --config  x.yaml gateway restart": True,
 }
 for command, dangerous in cases.items():
     assert detect_dangerous_command(command)[0] is dangerous, command

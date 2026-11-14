@@ -25,7 +25,7 @@ import { useModelControls } from './use-model-controls'
 const tile = vi.hoisted(() => ({ delegate: null as unknown }))
 const notifyError = vi.fn()
 
-vi.mock('@/hermes', () => ({
+vi.mock('@/anakot', () => ({
   getGlobalModelInfo: vi.fn(),
   setApiRequestProfile: vi.fn(),
   setGlobalModel: vi.fn()

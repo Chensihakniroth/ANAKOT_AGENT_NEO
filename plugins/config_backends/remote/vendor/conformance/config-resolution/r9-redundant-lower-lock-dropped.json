@@ -76,7 +76,7 @@
       "by": "profile",
       "op": "set",
       "path": "model.default",
-      "value": "hermes-4-70b",
+      "value": "anakot-4-70b",
       "expect": {
         "result": "reject",
         "error": "config_key_locked",

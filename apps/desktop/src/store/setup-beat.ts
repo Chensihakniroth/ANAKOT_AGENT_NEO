@@ -21,7 +21,7 @@ import type {
   SetupPluginsAnswer,
   SetupThemeAnswer,
   SetupTourAnswer
-} from '@hermes/shared'
+} from '@anakot/shared'
 import { atom } from 'nanostores'
 
 import { recordOf } from '@/lib/connector-tools'

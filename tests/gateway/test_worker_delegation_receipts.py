@@ -7,10 +7,10 @@ import time
 import psutil
 import pytest
 
-from hermes_cli.process_identity import worker_birth
+from anakot_cli.process_identity import worker_birth
 from agent.runtime_session_store import RuntimeSessionStore
-from hermes_state import SessionDB
-from hermes_state_runtime import (RuntimeStoreError, begin_runtime_epoch, register_worker_execution,
+from anakot_state import SessionDB
+from anakot_state_runtime import (RuntimeStoreError, begin_runtime_epoch, register_worker_execution,
                                   adopt_worker_execution, mutate_worker_execution)
 from tools.async_delegation import _initialize_schema
 

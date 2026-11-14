@@ -27,8 +27,8 @@ function fixture() {
   pe.writeUInt32LE(pe.length, 296)
   pe.writeUInt32LE(24, 300)
   fs.writeFileSync(binary, pe)
-  const env = { ...process.env, HERMES_HOME: path.join(directory, 'home'),
-    HERMES_RUNTIME_DIR: path.join(directory, 'runtime'),
+  const env = { ...process.env, ANAKOT_HOME: path.join(directory, 'home'),
+    ANAKOT_RUNTIME_DIR: path.join(directory, 'runtime'),
     HERMES_PYTHON: python, UV_PYTHON_DOWNLOADS: 'never', UV_OFFLINE: '1',
     UV_CACHE_DIR: path.join(directory, 'uv-cache') }
   for (const key of Object.keys(env)) {
@@ -44,7 +44,7 @@ function fixture() {
   const facts = path.join(payload, 'tools', 'facts.json')
   const before = JSON.parse(fs.readFileSync(facts, 'utf8'))
   const context = { electronPlatformName: process.platform, appOutDir: directory,
-    packager: { appInfo: { productFilename: 'Hermes' }, config: {}, buildResourcesDir: directory } }
+    packager: { appInfo: { productFilename: 'Anakot' }, config: {}, buildResourcesDir: directory } }
   const run = () => spawnSync(process.execPath, ['--input-type=module', '-e',
     `import afterPack from ${JSON.stringify(hook)}; await afterPack(${JSON.stringify(context)})`,
     'after-pack-test'], { cwd: directory, env, encoding: 'utf8', timeout: 60000 })

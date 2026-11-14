@@ -11,21 +11,21 @@ interface LayoutEntry {
 }
 
 export const LAYOUT_KEYS = {
-  floating: 'hermes.desktop.floatingPanes.v1',
-  tree: 'hermes.desktop.layoutTree.v2',
-  preset: 'hermes.desktop.layoutPreset.active',
-  panes: 'hermes.desktop.paneStates.v1',
-  dismissed: 'hermes.desktop.dismissedPanes.v1',
-  shares: 'hermes.desktop.paneShare.v1',
-  sharePartners: 'hermes.desktop.paneSharePartners.v1',
-  hiddenTabs: 'hermes.desktop.hiddenStripTabs.v1',
-  placed: 'hermes.desktop.userPlacedPanes.v1',
-  flipped: 'hermes.desktop.panesFlipped',
-  collapsed: 'hermes.desktop.collapsedTreeSides.v1'
+  floating: 'anakot.desktop.floatingPanes.v1',
+  tree: 'anakot.desktop.layoutTree.v2',
+  preset: 'anakot.desktop.layoutPreset.active',
+  panes: 'anakot.desktop.paneStates.v1',
+  dismissed: 'anakot.desktop.dismissedPanes.v1',
+  shares: 'anakot.desktop.paneShare.v1',
+  sharePartners: 'anakot.desktop.paneSharePartners.v1',
+  hiddenTabs: 'anakot.desktop.hiddenStripTabs.v1',
+  placed: 'anakot.desktop.userPlacedPanes.v1',
+  flipped: 'anakot.desktop.panesFlipped',
+  collapsed: 'anakot.desktop.collapsedTreeSides.v1'
 } as const
 
 function migrateLayoutScopes(initialMode: InterfaceMode) {
-  const marker = 'hermes.desktop.layoutModeScopes.v1'
+  const marker = 'anakot.desktop.layoutModeScopes.v1'
   const legacy = new Map<string, string>()
 
   if (readKey(marker) !== null) {

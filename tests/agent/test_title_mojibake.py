@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from agent.title_generator import _clean_title, _repair_mojibake, auto_title_session, generate_title
-from hermes_state import SessionDB
+from anakot_state import SessionDB
 
 
 def test_utf8_read_as_cp1250_is_restored():

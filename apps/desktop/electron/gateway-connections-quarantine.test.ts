@@ -26,9 +26,9 @@ const broken = (who: string, n: number) =>
   Array.from({ length: n }, (_, i) => ({ reason: 'entry-missing-url', entry: { kind: 'remote', label: `${who} ${i}` } }))
 
 test('every quarantined entry survives the import past the cap, and later writes keep them', async () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-gw-quar-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-gw-quar-'))
   dirs.push(dir)
-  const root = path.join(dir, 'hermes')
+  const root = path.join(dir, 'anakot')
   const userData = path.join(dir, 'userData')
   fs.mkdirSync(root, { recursive: true })
   fs.mkdirSync(userData, { recursive: true })
@@ -63,8 +63,8 @@ test('every quarantined entry survives the import past the cap, and later writes
   store.write({ ...store.read(), launchMode: 'last-used' })
   assert.deepEqual(kept(), all)
 
-  const env = { HERMES_HOME: root, HOME: dir, PATH: process.env.PATH, PYTHONPATH: repo }
-  const script = 'from hermes_cli import gateway_connections as g\ng.set_launch_mode("primary")'
+  const env = { ANAKOT_HOME: root, HOME: dir, PATH: process.env.PATH, PYTHONPATH: repo }
+  const script = 'from anakot_cli import gateway_connections as g\ng.set_launch_mode("primary")'
   await promisify(execFile)(python, ['-c', script], { env })
   assert.deepEqual(kept(), all)
 })

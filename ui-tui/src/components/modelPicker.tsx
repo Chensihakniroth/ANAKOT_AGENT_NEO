@@ -1,11 +1,11 @@
-import { Box, Text, useInput, useStdout } from '@hermes/ink'
-import { fuzzyRank } from '@hermes/shared/fuzzy'
-import type { ModelOptionProvider, ModelOptionsResult } from '@hermes/shared/gateway-events'
-import { modelSearchText } from '@hermes/shared/model-search-text'
-import { hasTopTier, planBlocks, planLimitLine, sectionAt, usageLevel, usageTag } from '@hermes/shared/plan-usage'
-import { providerDisplayNames } from '@hermes/shared/provider-names'
-import { REASONING_EFFORTS } from '@hermes/shared/reasoning-effort'
-import { TUI_SESSION_MODEL_FLAG } from '@hermes/shared/slash-input'
+import { Box, Text, useInput, useStdout } from '@anakot/ink'
+import { fuzzyRank } from '@anakot/shared/fuzzy'
+import type { ModelOptionProvider, ModelOptionsResult } from '@anakot/shared/gateway-events'
+import { modelSearchText } from '@anakot/shared/model-search-text'
+import { hasTopTier, planBlocks, planLimitLine, sectionAt, usageLevel, usageTag } from '@anakot/shared/plan-usage'
+import { providerDisplayNames } from '@anakot/shared/provider-names'
+import { REASONING_EFFORTS } from '@anakot/shared/reasoning-effort'
+import { TUI_SESSION_MODEL_FLAG } from '@anakot/shared/slash-input'
 import { useEffect, useMemo, useState } from 'react'
 
 import type { GatewayClient } from '../gatewayClient.js'
@@ -371,7 +371,7 @@ export function ModelPicker({
                         authenticated: false,
                         models: [],
                         total_models: 0,
-                        warning: p.key_env ? M.pasteKeyToActivate(p.key_env) : M.runHermesModelToConfigure
+                        warning: p.key_env ? M.pasteKeyToActivate(p.key_env) : M.runAnakotModelToConfigure
                       }
                     : p
                 )
@@ -495,7 +495,7 @@ export function ModelPicker({
             setFilter('')
           }
 
-          // Other auth types: no-op (warning shown tells them to run hermes model)
+          // Other auth types: no-op (warning shown tells them to run anakot model)
           return
         }
 
@@ -551,7 +551,7 @@ export function ModelPicker({
     }
 
     // Persist-global toggle moved to Ctrl+G so 'g' can be typed into the
-    // filter. With Ctrl held, @hermes/ink reports `ch` as the key name ('g'),
+    // filter. With Ctrl held, @anakot/ink reports `ch` as the key name ('g'),
     // not the raw control byte (see input-event.ts: input = ctrl ? name : seq).
     if (allowPersistGlobal && key.ctrl && ch === 'g') {
       setPersistGlobal(v => !v)

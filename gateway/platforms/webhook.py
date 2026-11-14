@@ -401,7 +401,7 @@ class WebhookAdapter(BasePlatformAdapter):
 
     def toolsets_for_source(self, source) -> Optional[list[str]]:
         """Per-route ``toolsets`` override (config.yaml or a manual key in webhook_subscriptions.json —
-        deliberately NOT settable via `hermes webhook subscribe`, so an agent-created subscription
+        deliberately NOT settable via `anakot webhook subscribe`, so an agent-created subscription
         cannot self-grant tools). Keyed on ``user_id`` (exactly ``webhook:{route}`` as authenticated), not
         ``chat_id``, whose caller-supplied delivery id and ``:``-bearing route names make any split ambiguous
         (GHSA-2fmg-cjqm-hhrj)."""
@@ -438,7 +438,7 @@ class WebhookAdapter(BasePlatformAdapter):
             return False
         if not is_dispatchable_target(deliver := route.get("deliver", "log")):
             logger.warning("[webhook] Dynamic route '%s' skipped: unknown delivery target %r. "
-                           "Run `hermes webhook list` for a repair command that keeps its settings.", name, deliver)
+                           "Run `anakot webhook list` for a repair command that keeps its settings.", name, deliver)
             return False
         try:
             # Hot-reloaded from the request handler: a malformed block must skip the route, not 500 the request.
@@ -455,9 +455,9 @@ class WebhookAdapter(BasePlatformAdapter):
         atomic rename, which also gives the file a new inode, so a restored mtime cannot hide a change;
         ``file_cache_version`` also catches a same-tick same-size edit made in place (a hand edit).
         """
-        from hermes_constants import get_hermes_home
+        from anakot_constants import get_anakot_home
         from utils import file_cache_version
-        subs_path = get_hermes_home() / _DYNAMIC_ROUTES_FILENAME
+        subs_path = get_anakot_home() / _DYNAMIC_ROUTES_FILENAME
         try:
             stat_key = file_cache_version(subs_path)
         except FileNotFoundError:
@@ -516,12 +516,12 @@ class WebhookAdapter(BasePlatformAdapter):
             # Only a self-referential prefix may fall through to the bare route; anything else fails
             # closed (silently ignoring the prefix served the owner's routes under another profile's URL).
             with suppress(Exception):
-                from hermes_cli.profiles import profile_matches_home
+                from anakot_cli.profiles import profile_matches_home
                 if profile_matches_home(profile):
                     return None
             return _PROFILE_REJECTED
         try:
-            from hermes_cli.profiles import profiles_to_serve
+            from anakot_cli.profiles import profiles_to_serve
             served = {name for name, _ in profiles_to_serve(multiplex=True)}
         except Exception:
             return _PROFILE_REJECTED
@@ -541,7 +541,7 @@ class WebhookAdapter(BasePlatformAdapter):
         if not profile or not isinstance(profile, str):
             return nullcontext()
         from gateway.run import _profile_runtime_scope
-        from hermes_cli.profiles import get_profile_dir
+        from anakot_cli.profiles import get_profile_dir
         return _profile_runtime_scope(get_profile_dir(profile))
 
     async def _read_authenticated_body(self, request: web.Request, route_name: str,
@@ -854,7 +854,7 @@ class WebhookAdapter(BasePlatformAdapter):
         return "accepted"
 
     async def _finalize_delivery(self, event, authority, receipt):
-        from hermes_state_runtime import get_session_admission
+        from anakot_state_runtime import get_session_admission
         try:
             row = get_session_admission(authority.db, admission_id=receipt.admission_id)
             if row['status'] in {'queued', 'started'}:

@@ -2,7 +2,7 @@
 // can attach the harness (`pnpm run perf`) or DevTools to it. Ctrl-C tears it
 // down and removes its temp dirs.
 //
-//   pnpm run perf:serve                # :9222, temp HERMES_HOME + user-data-dir
+//   pnpm run perf:serve                # :9222, temp ANAKOT_HOME + user-data-dir
 //   PERF_PORT=9333 pnpm run perf:serve # custom CDP port
 //
 // This is the isolation seam: because it uses its own --user-data-dir the
@@ -18,7 +18,7 @@ console.log(`[perf:serve] starting isolated instance (CDP :${port}, dev :${devPo
 const instance = await startIsolatedInstance({
   port,
   devPort,
-  hermesHome: process.env.PERF_HERMES_HOME,
+  anakotHome: process.env.PERF_ANAKOT_HOME,
   userDataDir: process.env.PERF_USER_DATA
 })
 

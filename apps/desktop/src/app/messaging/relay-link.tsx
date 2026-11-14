@@ -11,7 +11,7 @@ import {
   type RelayLinkedAccount,
   requestRelayLink,
   unlinkRelayAccount
-} from '@/hermes'
+} from '@/anakot'
 import { useI18n } from '@/i18n'
 import { openExternalLink } from '@/lib/external-link'
 import { Copy, ExternalLink, QrCode } from '@/lib/icons'
@@ -34,7 +34,7 @@ async function renderQr(payload: string): Promise<string> {
   return QRCode.toDataURL(payload, { errorCorrectionLevel: 'M', margin: 1, width: 192 })
 }
 
-// The IPC bridge hands a router refusal over as "Error invoking remote method 'hermes:api': Error:
+// The IPC bridge hands a router refusal over as "Error invoking remote method 'anakot:api': Error:
 // 409: {"detail":{"code":…,"message":…}}"; the card shows the connector's sentence, not the envelope.
 function relayErrorText(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error)

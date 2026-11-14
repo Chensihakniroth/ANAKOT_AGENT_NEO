@@ -28,7 +28,7 @@ export function useKeychainEncryption(): KeychainEncryption {
   useEffect(() => {
     let cancelled = false
 
-    void window.hermesDesktop
+    void window.anakotDesktop
       ?.getSecretStorageEncryption?.()
       .then(res => {
         if (!cancelled && res) {
@@ -43,7 +43,7 @@ export function useKeychainEncryption(): KeychainEncryption {
   }, [])
 
   const setKeychainEncryption = async (on: boolean) => {
-    const setEncryption = window.hermesDesktop?.setSecretStorageEncryption
+    const setEncryption = window.anakotDesktop?.setSecretStorageEncryption
 
     if (!setEncryption) {
       return
@@ -70,8 +70,8 @@ export function useKeychainEncryption(): KeychainEncryption {
     on: keychainEncryption,
     set: setKeychainEncryption,
     supported:
-      typeof window.hermesDesktop?.getSecretStorageEncryption === 'function' &&
-      typeof window.hermesDesktop?.setSecretStorageEncryption === 'function'
+      typeof window.anakotDesktop?.getSecretStorageEncryption === 'function' &&
+      typeof window.anakotDesktop?.setSecretStorageEncryption === 'function'
   }
 }
 

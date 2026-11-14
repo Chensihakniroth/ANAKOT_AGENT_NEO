@@ -5,32 +5,32 @@ import { hostHas } from './host-capabilities'
 import { isBrowserHostedDesktop } from './platform'
 
 interface HostGlobals {
-  __HERMES_AUTH_REQUIRED__?: boolean
-  __HERMES_UI_SURFACE__?: string
-  hermesDesktop?: unknown
+  __ANAKOT_AUTH_REQUIRED__?: boolean
+  __ANAKOT_UI_SURFACE__?: string
+  anakotDesktop?: unknown
 }
 
 const win = window as unknown as HostGlobals
 
 function reset() {
-  document.documentElement.removeAttribute('data-hermes-desktop-host')
-  delete win.__HERMES_AUTH_REQUIRED__
-  delete win.__HERMES_UI_SURFACE__
-  delete win.hermesDesktop
+  document.documentElement.removeAttribute('data-anakot-desktop-host')
+  delete win.__ANAKOT_AUTH_REQUIRED__
+  delete win.__ANAKOT_UI_SURFACE__
+  delete win.anakotDesktop
 }
 
 // Every way the renderer meets its host: before and after the bridge writes the marker.
 const HOST_STATES: { browser: boolean; name: string; setup: () => void }[] = [
-  { browser: true, name: 'browser marker', setup: () => (document.documentElement.dataset.hermesDesktopHost = 'browser') },
-  { browser: true, name: 'gated host before the marker', setup: () => (win.__HERMES_AUTH_REQUIRED__ = true) },
-  { browser: true, name: 'Webapp surface before the marker', setup: () => (win.__HERMES_UI_SURFACE__ = 'webapp') },
-  { browser: false, name: 'electron marker', setup: () => (document.documentElement.dataset.hermesDesktopHost = 'electron') },
+  { browser: true, name: 'browser marker', setup: () => (document.documentElement.dataset.anakotDesktopHost = 'browser') },
+  { browser: true, name: 'gated host before the marker', setup: () => (win.__ANAKOT_AUTH_REQUIRED__ = true) },
+  { browser: true, name: 'Webapp surface before the marker', setup: () => (win.__ANAKOT_UI_SURFACE__ = 'webapp') },
+  { browser: false, name: 'electron marker', setup: () => (document.documentElement.dataset.anakotDesktopHost = 'electron') },
   {
     browser: false,
     name: 'Electron preload with a stale Webapp global',
     setup: () => {
-      win.hermesDesktop = {}
-      win.__HERMES_UI_SURFACE__ = 'webapp'
+      win.anakotDesktop = {}
+      win.__ANAKOT_UI_SURFACE__ = 'webapp'
     }
   },
   { browser: false, name: 'no host signal', setup: () => undefined }
@@ -100,7 +100,7 @@ describe('hostHas', () => {
 
   it('follows the host marker written after import', () => {
     expect(hostHas('clipboardIpc')).toBe(true)
-    document.documentElement.dataset.hermesDesktopHost = 'browser'
+    document.documentElement.dataset.anakotDesktopHost = 'browser'
     expect(hostHas('clipboardIpc')).toBe(false)
     expect(hostHas('webappCopy')).toBe(true)
   })

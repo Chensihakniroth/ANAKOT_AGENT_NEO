@@ -36,7 +36,7 @@ def test_shared_dm_text_batches_stay_per_thread(tmp_path, monkeypatch):
 def test_topic_mode_read_from_the_routed_profiles_store(tmp_path, monkeypatch):
     """A primary bot routed to profile ``work`` keys before the runner enters that scope: /topic on
     in ``work`` (not in the launch profile) must still keep each topic its own session."""
-    from hermes_state_registry import acquire
+    from anakot_state_registry import acquire
     adapter, _ = _adapter(tmp_path, monkeypatch)
     work = tmp_path / "profiles" / "work"
     work.mkdir(parents=True)
@@ -57,7 +57,7 @@ def test_hot_reloaded_dm_topic_stays_isolated(monkeypatch):
     from tests.gateway.conftest import _ensure_telegram_mock
     _ensure_telegram_mock()
     from plugins.platforms.telegram.adapter import TelegramAdapter
-    import hermes_cli.config as cfg
+    import anakot_cli.config as cfg
     adapter = TelegramAdapter(PlatformConfig(enabled=True, token="***", extra=dict(SHARED)))
     topics = [{"chat_id": 111, "topics": [{"name": "W", "thread_id": 501}]}]
     monkeypatch.setattr(cfg, "load_config", lambda: {"platforms": {"telegram": {"extra": {"dm_topics": topics}}}})

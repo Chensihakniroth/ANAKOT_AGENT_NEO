@@ -78,7 +78,7 @@ def _stub_turns(runner, monkeypatch, turns):
 
 
 def _rows(authority):
-    from hermes_state_runtime import list_session_admissions
+    from anakot_state_runtime import list_session_admissions
     return [r for sid in list(authority.sessions)
             for r in list_session_admissions(authority.db, session_id=sid, pending_only=False)]
 
@@ -87,7 +87,7 @@ def _rows(authority):
 async def test_relay_admission_queued_across_a_restart_runs_and_replies_with_egress_routing(tmp_path, monkeypatch):
     from gateway.run_runtime import recover_gateway_native_sessions
     from gateway.session_authority import SessionAuthority, initialize_session_authority
-    from hermes_state_runtime import list_session_admissions
+    from anakot_state_runtime import list_session_admissions
 
     connector = _Connector('discord')
     raw = {'text': 'queued before restart', 'message_id': 'm-1', 'source': {
@@ -137,12 +137,12 @@ async def test_relay_admission_queued_across_a_restart_runs_and_replies_with_egr
 
 
 def _reserve_homes(tmp_path, monkeypatch):
-    root = tmp_path / '.hermes'
+    root = tmp_path / '.anakot'
     root.mkdir(mode=0o700)
     monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-    monkeypatch.setenv('HERMES_HOME', str(root))
-    import hermes_state
-    monkeypatch.setattr(hermes_state, 'DEFAULT_DB_PATH', hermes_state._IMPORT_DEFAULT_DB_PATH)
+    monkeypatch.setenv('ANAKOT_HOME', str(root))
+    import anakot_state
+    monkeypatch.setattr(anakot_state, 'DEFAULT_DB_PATH', anakot_state._IMPORT_DEFAULT_DB_PATH)
     work = root / 'profiles' / 'work'
     work.mkdir(parents=True, mode=0o700)
     (work / 'config.yaml').write_text('{}')

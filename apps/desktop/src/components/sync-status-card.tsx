@@ -30,7 +30,7 @@ export function SyncStatusCard() {
   useEffect(() => {
     let alive = true
 
-    void window.hermesDesktop
+    void window.anakotDesktop
       ?.getSyncStatus?.()
       .then(receipt => {
         if (alive) {

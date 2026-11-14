@@ -10,15 +10,15 @@ from pathlib import Path
 
 
 def test_siblings_send_one_system_prompt_and_get_their_context_in_the_user_turn():
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
     from run_agent import AIAgent
     from tests.e2e.core.history._helpers import NO_BACKGROUND_REVIEW, OFFLINE_CONFIG
-    from tests.fakes.fake_llm_provider import FakeLLMServer, Text, write_hermes_home
+    from tests.fakes.fake_llm_provider import FakeLLMServer, Text, write_anakot_home
     from tools.delegate_tool import delegate_task
 
-    home = Path(os.environ["HERMES_HOME"])
+    home = Path(os.environ["ANAKOT_HOME"])
     with FakeLLMServer([]) as srv:
-        write_hermes_home(home, srv.base_url, extra_config=OFFLINE_CONFIG + NO_BACKGROUND_REVIEW)
+        write_anakot_home(home, srv.base_url, extra_config=OFFLINE_CONFIG + NO_BACKGROUND_REVIEW)
         srv.push(Text("first done"), Text("second done"))
         parent = AIAgent(provider="custom", base_url=srv.base_url, api_key="sk-fake-e2e", model="fake-model",
                          session_db=SessionDB(db_path=home / "state.db"), session_id="parent", quiet_mode=True, platform="cli")
@@ -41,18 +41,18 @@ def test_schema_correction_turn_carries_the_contract_even_after_a_compaction():
     and pastes the contract again, because a long first turn is compacted before the retry is sent."""
     import json
 
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
     from run_agent import AIAgent
     from tests.e2e.core.history._helpers import NO_BACKGROUND_REVIEW, OFFLINE_CONFIG
-    from tests.fakes.fake_llm_provider import FakeLLMServer, Text, ToolCall, write_hermes_home
+    from tests.fakes.fake_llm_provider import FakeLLMServer, Text, ToolCall, write_anakot_home
     from tools.delegate_tool import delegate_task
 
-    home = Path(os.environ["HERMES_HOME"])
+    home = Path(os.environ["ANAKOT_HOME"])
     schema = {"type": "object", "properties": {"count": {"type": "integer"}}, "required": ["count"]}
     (home / "big.txt").write_text("filler line for the transcript\n" * 400)
     # The provider's reported prompt size drives compaction, so the fake reports a real one.
     with FakeLLMServer([], prompt_tokens_fn=lambda body: len(json.dumps(body)) // 4) as srv:
-        write_hermes_home(home, srv.base_url, extra_config=OFFLINE_CONFIG + NO_BACKGROUND_REVIEW
+        write_anakot_home(home, srv.base_url, extra_config=OFFLINE_CONFIG + NO_BACKGROUND_REVIEW
                           + "compression:\n  threshold_tokens: 12000\n")
         srv.push(*[ToolCall("read_file", {"path": str(home / "big.txt"), "offset": 1 + i}) for i in range(10)],
                  Text("there are three"), Text('{"count": 3}'))

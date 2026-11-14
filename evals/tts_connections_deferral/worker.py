@@ -38,33 +38,33 @@ if not (INFER_URL and INFER_KEY):
 for var in list(os.environ):
     if var.endswith(("_API_KEY", "_TOKEN")):
         os.environ.pop(var, None)
-os.environ.pop("HERMES_PROFILE", None)
+os.environ.pop("ANAKOT_PROFILE", None)
 
 HARNESS = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HARNESS, "..", "core_tool_deferral"))
 from sandbox import isolate_host
 
 tmp_root = os.environ.get("TCD_CELL_ROOT") or tempfile.mkdtemp(prefix="tcd-cell-")  # never the arm name: the model sees it
-hermes_home = os.path.join(tmp_root, ".hermes")
+anakot_home = os.path.join(tmp_root, ".anakot")
 workspace = os.path.join(tmp_root, "ws")
-os.makedirs(hermes_home, exist_ok=True)
+os.makedirs(anakot_home, exist_ok=True)
 os.makedirs(workspace, exist_ok=True)
-isolate_host(tmp_root, hermes_home)
-# A model that cannot see manage_connections reaches for the host's `hermes` CLI (`hermes mcp install`,
-# `hermes pm repair`); keep that out of the operator's install.
-with open(os.path.join(tmp_root, "bin", "hermes"), "w", encoding="utf-8") as f:
-    f.write("#!/bin/sh\necho 'hermes: the CLI is not available inside this eval sandbox' >&2\nexit 127\n")
-os.chmod(os.path.join(tmp_root, "bin", "hermes"), 0o755)
-os.environ["HERMES_HOME"] = hermes_home
+isolate_host(tmp_root, anakot_home)
+# A model that cannot see manage_connections reaches for the host's `anakot` CLI (`anakot mcp install`,
+# `anakot pm repair`); keep that out of the operator's install.
+with open(os.path.join(tmp_root, "bin", "anakot"), "w", encoding="utf-8") as f:
+    f.write("#!/bin/sh\necho 'anakot: the CLI is not available inside this eval sandbox' >&2\nexit 127\n")
+os.chmod(os.path.join(tmp_root, "bin", "anakot"), 0o755)
+os.environ["ANAKOT_HOME"] = anakot_home
 os.environ["TERMINAL_CWD"] = workspace
 os.chdir(workspace)
 sys.path.insert(0, TREE)
 defer_yaml = ""
 if ARM in ARMS:  # every arm pins the list, so the only difference is the one name
-    from hermes_cli.config_defaults import DEFAULT_CONFIG
+    from anakot_cli.config_defaults import DEFAULT_CONFIG
     defer = [n for n in DEFAULT_CONFIG["tools"]["tool_search"]["defer"] if n != "manage_connections"]
     defer_yaml = "tools:\n  tool_search:\n    defer: [" + ", ".join(defer + ["manage_connections"] * ARMS[ARM][0]) + "]\n"
-with open(os.path.join(hermes_home, "config.yaml"), "w", encoding="utf-8") as f:
+with open(os.path.join(anakot_home, "config.yaml"), "w", encoding="utf-8") as f:
     f.write(f"model:\n  provider: custom\n  base_url: {INFER_URL}\n  model: {MODEL}\n{defer_yaml}")
 
 NOTES = "Dentist moved to Thursday 3pm.\nPick up the rye bread from Larder.\nCall Priya about the cabin keys.\n"
@@ -95,7 +95,7 @@ TASKS = {
                               "mcp": "linear"},
     "mcp_setup_github": {"kind": "conn", "expect": True, "prompt": "Set up the GitHub MCP.", "connected": [], "mcp": "github"},
     # Either side is a right answer here (hosted account or MCP server); the terminal is not.
-    "mcp_talk_sentry": {"kind": "conn", "expect": True, "prompt": "I want Hermes to talk to Sentry.", "connected": [],
+    "mcp_talk_sentry": {"kind": "conn", "expect": True, "prompt": "I want Anakot to talk to Sentry.", "connected": [],
                         "mcp": "sentry", "hosted_ok": True},
     "conn_second_account": {
         "kind": "conn", "expect": True, "connected": ["gmail"], "replies": ["Call it work.", "Yes, go ahead."],
@@ -274,10 +274,10 @@ if DRY:
     from agent.inline_tool_executors import _manage_connections
     from tools.terminal_tool import terminal_tool
 
-    real_home = os.environ.get("TCD_REAL_HERMES_HOME") or "/nonexistent"
-    proof = {"arm": ARM, "surface": SURFACE, "tools": agent.tools, "hermes_home": hermes_home, "env_home": os.environ["HOME"],
+    real_home = os.environ.get("TCD_REAL_ANAKOT_HOME") or "/nonexistent"
+    proof = {"arm": ARM, "surface": SURFACE, "tools": agent.tools, "anakot_home": anakot_home, "env_home": os.environ["HOME"],
              "real_home_visible": {n: os.path.exists(os.path.join(real_home, n))
-                                   for n in ("config.yaml", "auth.json", ".env", "state.db", "mcp-tokens", "hermes-agent")},
+                                   for n in ("config.yaml", "auth.json", ".env", "state.db", "mcp-tokens", "anakot-agent")},
              "real_home_listing": sorted(os.listdir(real_home)) if os.path.isdir(real_home) else None, "net": {}}
     for host in ("api.notion.com", "mcp.linear.app", "backend.composio.dev", "1.1.1.1", "github.com"):
         try:
@@ -299,7 +299,7 @@ if DRY:
     except RuntimeError as exc:
         proof["real_backend"] = f"raises: {exc}"
     proof["terminal"] = terminal_tool(
-        "command -v hermes; hermes mcp install linear; echo rc=$?; echo HOME=$HOME; ls -a " + real_home + "; cat " + real_home
+        "command -v anakot; anakot mcp install linear; echo rc=$?; echo HOME=$HOME; ls -a " + real_home + "; cat " + real_home
         + "/config.yaml; curl -sS -m 5 -o /dev/null -w '%{http_code}' https://mcp.linear.app/mcp; echo curl_rc=$?", task_id="dry")
     proof["stub_log"], proof["conn_calls"] = LOG, len(CONN_CALLS)
     with open(OUT, "w", encoding="utf-8") as f:

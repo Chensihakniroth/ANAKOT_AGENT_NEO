@@ -103,7 +103,7 @@ class TestResolveCommandProviderConfig:
 
 class TestCommandTtsEnv:
     def test_command_provider_uses_sanitized_child_env(self, monkeypatch):
-        """Salvage of #56332: command TTS must not inherit Hermes secrets."""
+        """Salvage of #56332: command TTS must not inherit Anakot secrets."""
         monkeypatch.setenv("AUXILIARY_VISION_API_KEY", "sk-vision")
         monkeypatch.setenv("GATEWAY_RELAY_SECRET", "relay-secret")
         monkeypatch.setenv("OPENAI_API_KEY", "sk-openai")
@@ -592,8 +592,8 @@ class TestCommandTtsEnvPassthrough:
         assert _command_provider_env_passthrough({}) == []
         assert _command_provider_env_passthrough({"env_passthrough": "A_KEY"}) == []
 
-    def test_allowlist_refuses_hermes_provider_credentials(self):
-        """Provider config cannot smuggle Hermes-managed credentials back into the
+    def test_allowlist_refuses_anakot_provider_credentials(self):
+        """Provider config cannot smuggle Anakot-managed credentials back into the
         scrubbed command child env (#138361, GHSA-rhgp-j443-p4rf policy)."""
         from tools.tts_command_provider import command_env_passthrough as _command_provider_env_passthrough
 
@@ -614,7 +614,7 @@ class TestCommandProviderSpawnGroupKwargs:
     """
 
     def test_nt_branch_hides_the_console_window(self, monkeypatch):
-        from hermes_cli import _subprocess_compat
+        from anakot_cli import _subprocess_compat
         from tools.tts_command_provider import provider_popen_group_kwargs
 
         # Pin the compat module's host probe so the nt data branch is assertable
@@ -628,7 +628,7 @@ class TestCommandProviderSpawnGroupKwargs:
         assert "start_new_session" not in kwargs
 
     def test_nt_branch_matches_the_shared_detach_bundle(self, monkeypatch):
-        from hermes_cli import _subprocess_compat
+        from anakot_cli import _subprocess_compat
         from tools.tts_command_provider import provider_popen_group_kwargs
 
         monkeypatch.setattr(_subprocess_compat, "IS_WINDOWS", True)

@@ -1,5 +1,5 @@
-import type { BillingStateResponse } from '@hermes/shared/gateway-types'
-import { formatResetsIn } from '@hermes/shared/plan-usage'
+import type { BillingStateResponse } from '@anakot/shared/gateway-types'
+import { formatResetsIn } from '@anakot/shared/plan-usage'
 
 import { t } from '../../i18n/runtime.js'
 import type { PanelSection } from '../../types.js'

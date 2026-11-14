@@ -27,7 +27,7 @@ import {
   SAFE_STORAGE_ENCODING,
   SECRET_FILE_MODE,
   sensitiveFileBlockReason,
-  setSensitiveHermesHome,
+  setSensitiveAnakotHome,
   tightenSecretFileMode,
   writeSecretFileAtomic
 } from './hardening'
@@ -39,7 +39,7 @@ import {
  * from a POSIX run.
  */
 function withTempDir(run: (dir: string) => void) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-secret-file-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-secret-file-'))
 
   try {
     run(dir)
@@ -90,7 +90,7 @@ test('clampDataUrlReadMaxMb defaults and bounds the attach size preference', () 
 })
 
 test('attachment data URL helper reads bytes above the preview default without changing that limit', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-large-attachment-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-large-attachment-'))
   const source = path.join(tempDir, 'large.bin')
   const previewLimit = dataUrlReadMaxBytesFromMb(DATA_URL_READ_DEFAULT_MAX_MB)
   const content = Buffer.alloc(previewLimit + 1024, 0x5a)
@@ -790,7 +790,7 @@ test('path helpers reject blank non-string NUL and Windows device syntax', async
 })
 
 test('resolveRequestedPathForIpc resolves relative paths from the trimmed base directory', () => {
-  const baseDir = path.join(os.tmpdir(), 'hermes-desktop-base')
+  const baseDir = path.join(os.tmpdir(), 'anakot-desktop-base')
 
   assert.equal(
     resolveRequestedPathForIpc('notes.txt', {
@@ -815,7 +815,7 @@ test('resolveRequestedPathForIpc expands ~ to the home directory', () => {
 })
 
 test('resolveReadableFileForIpc validates existence type size and sensitivity', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-hardening-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-hardening-'))
 
   try {
     const textPath = path.join(tempDir, 'notes.txt')
@@ -895,7 +895,7 @@ test('resolveReadableFileForIpc validates existence type size and sensitivity', 
 })
 
 test('resolveReadableFileForIpc blocks common sensitive files', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-sensitive-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-sensitive-'))
 
   try {
     const sshDir = path.join(tempDir, '.ssh')
@@ -923,12 +923,12 @@ test('resolveReadableFileForIpc blocks common sensitive files', async () => {
   }
 })
 
-test('resolveReadableFileForIpc blocks Hermes credential stores in the home and every profile', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-creds-'))
-  const hermesHome = path.join(tempDir, 'hermes-home')
+test('resolveReadableFileForIpc blocks Anakot credential stores in the home and every profile', async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-creds-'))
+  const anakotHome = path.join(tempDir, 'anakot-home')
 
   try {
-    setSensitiveHermesHome(hermesHome)
+    setSensitiveAnakotHome(anakotHome)
 
     const stores = [
       'auth.json',
@@ -945,7 +945,7 @@ test('resolveReadableFileForIpc blocks Hermes credential stores in the home and 
       'runtime/photon-sidecar.json'
     ]
 
-    for (const base of [hermesHome, path.join(hermesHome, 'profiles', 'work')]) {
+    for (const base of [anakotHome, path.join(anakotHome, 'profiles', 'work')]) {
       for (const rel of stores) {
         const filePath = path.join(base, rel)
         fs.mkdirSync(path.dirname(filePath), { recursive: true })
@@ -954,8 +954,8 @@ test('resolveReadableFileForIpc blocks Hermes credential stores in the home and 
       }
     }
 
-    // Ordinary Hermes files and same-named project files stay previewable.
-    const allowed = [path.join(hermesHome, 'config.yaml'), path.join(tempDir, 'project', 'auth.json')]
+    // Ordinary Anakot files and same-named project files stay previewable.
+    const allowed = [path.join(anakotHome, 'config.yaml'), path.join(tempDir, 'project', 'auth.json')]
 
     for (const filePath of allowed) {
       fs.mkdirSync(path.dirname(filePath), { recursive: true })
@@ -963,7 +963,7 @@ test('resolveReadableFileForIpc blocks Hermes credential stores in the home and 
       assert.equal((await resolveReadableFileForIpc(filePath, { purpose: 'File preview' })).resolvedPath, filePath)
     }
   } finally {
-    setSensitiveHermesHome(null)
+    setSensitiveAnakotHome(null)
     fs.rmSync(tempDir, { recursive: true, force: true })
   }
 })
@@ -983,39 +983,39 @@ function trySymlink(target: string, link: string, type?: 'dir' | 'file' | 'junct
   }
 }
 
-test('resolveReadableFileForIpc blocks a link outside the home that resolves to a Hermes store', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-creds-link-'))
-  const hermesHome = path.join(tempDir, 'hermes-home')
+test('resolveReadableFileForIpc blocks a link outside the home that resolves to a Anakot store', async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-creds-link-'))
+  const anakotHome = path.join(tempDir, 'anakot-home')
 
   try {
-    fs.mkdirSync(hermesHome)
-    fs.writeFileSync(path.join(hermesHome, 'auth.json'), 'TOKEN_MARKER', 'utf8')
-    setSensitiveHermesHome(hermesHome)
+    fs.mkdirSync(anakotHome)
+    fs.writeFileSync(path.join(anakotHome, 'auth.json'), 'TOKEN_MARKER', 'utf8')
+    setSensitiveAnakotHome(anakotHome)
 
     const link = path.join(tempDir, 'innocent.json')
 
-    if (!trySymlink(path.join(hermesHome, 'auth.json'), link, 'file')) {
+    if (!trySymlink(path.join(anakotHome, 'auth.json'), link, 'file')) {
       return
     }
 
     await rejectsWithCode(resolveReadableFileForIpc(link, { purpose: 'File preview' }), 'sensitive-file')
   } finally {
-    setSensitiveHermesHome(null)
+    setSensitiveAnakotHome(null)
     fs.rmSync(tempDir, { recursive: true, force: true })
   }
 })
 
-test('resolveReadableFileForIpc blocks relocated Hermes stores read through their real path', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-creds-moved-'))
-  const hermesHome = path.join(tempDir, 'hermes-home')
+test('resolveReadableFileForIpc blocks relocated Anakot stores read through their real path', async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-creds-moved-'))
+  const anakotHome = path.join(tempDir, 'anakot-home')
   const workHome = path.join(tempDir, 'data', 'work-home')
   const vaultDir = path.join(tempDir, 'data', 'vault')
   const authFile = path.join(tempDir, 'data', 'auth-store.json')
-  const envFile = path.join(tempDir, 'data', 'hermes-secrets')
+  const envFile = path.join(tempDir, 'data', 'anakot-secrets')
   const workEnvFile = path.join(tempDir, 'data', 'work-secrets')
 
   try {
-    fs.mkdirSync(path.join(hermesHome, 'profiles'), { recursive: true })
+    fs.mkdirSync(path.join(anakotHome, 'profiles'), { recursive: true })
     fs.mkdirSync(workHome, { recursive: true })
     fs.mkdirSync(vaultDir, { recursive: true })
     fs.writeFileSync(path.join(workHome, 'auth.json'), 'TOKEN_MARKER', 'utf8')
@@ -1026,17 +1026,17 @@ test('resolveReadableFileForIpc blocks relocated Hermes stores read through thei
     fs.writeFileSync(workEnvFile, 'TOKEN_MARKER', 'utf8')
 
     const linked =
-      trySymlink(workHome, path.join(hermesHome, 'profiles', 'work'), 'junction') &&
-      trySymlink(vaultDir, path.join(hermesHome, 'vault'), 'junction') &&
-      trySymlink(authFile, path.join(hermesHome, 'auth.json'), 'file') &&
-      trySymlink(envFile, path.join(hermesHome, '.env'), 'file') &&
+      trySymlink(workHome, path.join(anakotHome, 'profiles', 'work'), 'junction') &&
+      trySymlink(vaultDir, path.join(anakotHome, 'vault'), 'junction') &&
+      trySymlink(authFile, path.join(anakotHome, 'auth.json'), 'file') &&
+      trySymlink(envFile, path.join(anakotHome, '.env'), 'file') &&
       trySymlink(workEnvFile, path.join(workHome, '.env'), 'file')
 
     if (!linked) {
       return
     }
 
-    setSensitiveHermesHome(hermesHome)
+    setSensitiveAnakotHome(anakotHome)
 
     for (const filePath of [
       path.join(workHome, 'auth.json'),
@@ -1051,26 +1051,26 @@ test('resolveReadableFileForIpc blocks relocated Hermes stores read through thei
     const notes = path.join(workHome, 'notes.md')
     assert.equal((await resolveReadableFileForIpc(notes, { purpose: 'File preview' })).resolvedPath, notes)
   } finally {
-    setSensitiveHermesHome(null)
+    setSensitiveAnakotHome(null)
     fs.rmSync(tempDir, { recursive: true, force: true })
   }
 })
 
-test('sensitiveFileBlockReason re-resolves relocated Hermes stores at most once per window', () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-creds-ttl-'))
-  const hermesHome = path.join(tempDir, 'hermes-home')
+test('sensitiveFileBlockReason re-resolves relocated Anakot stores at most once per window', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-creds-ttl-'))
+  const anakotHome = path.join(tempDir, 'anakot-home')
   const vaultDir = path.join(tempDir, 'data', 'vault')
   const notes = path.join(tempDir, 'project', 'notes.md')
   vi.useFakeTimers({ toFake: ['Date'] })
   const realpath = vi.spyOn(fs.realpathSync, 'native')
 
   try {
-    fs.mkdirSync(path.join(hermesHome, 'profiles', 'work'), { recursive: true })
+    fs.mkdirSync(path.join(anakotHome, 'profiles', 'work'), { recursive: true })
     fs.mkdirSync(vaultDir, { recursive: true })
     fs.mkdirSync(path.dirname(notes), { recursive: true })
     fs.writeFileSync(path.join(vaultDir, 'vault.key'), 'TOKEN_MARKER', 'utf8')
     fs.writeFileSync(notes, 'ok', 'utf8')
-    setSensitiveHermesHome(hermesHome)
+    setSensitiveAnakotHome(anakotHome)
     assert.equal(sensitiveFileBlockReason(notes), null)
 
     const sweep = realpath.mock.calls.length
@@ -1081,7 +1081,7 @@ test('sensitiveFileBlockReason re-resolves relocated Hermes stores at most once 
 
     assert.equal(realpath.mock.calls.length, sweep)
 
-    if (!trySymlink(vaultDir, path.join(hermesHome, 'vault'), 'junction')) {
+    if (!trySymlink(vaultDir, path.join(anakotHome, 'vault'), 'junction')) {
       return
     }
 
@@ -1090,13 +1090,13 @@ test('sensitiveFileBlockReason re-resolves relocated Hermes stores at most once 
   } finally {
     realpath.mockRestore()
     vi.useRealTimers()
-    setSensitiveHermesHome(null)
+    setSensitiveAnakotHome(null)
     fs.rmSync(tempDir, { recursive: true, force: true })
   }
 })
 
 test('resolveReadableFileForIpc blocks symlinks whose realpath is sensitive', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-realpath-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-realpath-'))
 
   try {
     const envPath = path.join(tempDir, '.env')
@@ -1121,7 +1121,7 @@ test('resolveReadableFileForIpc blocks symlinks whose realpath is sensitive', as
 })
 
 test('resolveDirectoryForIpc accepts directories and rejects invalid directory targets', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-dir-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-dir-'))
 
   try {
     const directory = path.join(tempDir, 'project')
@@ -1142,7 +1142,7 @@ test('resolveDirectoryForIpc accepts directories and rejects invalid directory t
 })
 
 test('resolveDirectoryForIpc accepts directory symlinks or junctions', async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-desktop-dir-link-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-desktop-dir-link-'))
 
   try {
     const directory = path.join(tempDir, 'actual-project')
@@ -1172,56 +1172,56 @@ test('resolveDirectoryForIpc accepts directory symlinks or junctions', async () 
 // homeRelativeAttachmentCandidates (#115609)
 // ---------------------------------------------------------------------------
 
-test('homeRelativeAttachmentCandidates tries the home dir and the HERMES_HOME attachments dir', () => {
+test('homeRelativeAttachmentCandidates tries the home dir and the ANAKOT_HOME attachments dir', () => {
   const candidates = homeRelativeAttachmentCandidates(
-    'AppData/Local/hermes/attachments/foo.xlsx',
+    'AppData/Local/anakot/attachments/foo.xlsx',
     '/Users/alice',
-    '/Users/alice/AppData/Local/hermes'
+    '/Users/alice/AppData/Local/anakot'
   )
 
   assert.deepEqual(candidates, [
-    path.join('/Users/alice', 'AppData/Local/hermes/attachments/foo.xlsx'),
-    path.join('/Users/alice/AppData/Local/hermes', 'attachments', 'foo.xlsx')
+    path.join('/Users/alice', 'AppData/Local/anakot/attachments/foo.xlsx'),
+    path.join('/Users/alice/AppData/Local/anakot', 'attachments', 'foo.xlsx')
   ])
 })
 
 test('homeRelativeAttachmentCandidates normalizes Windows backslashes before joining', () => {
   const candidates = homeRelativeAttachmentCandidates(
-    'AppData\\Local\\hermes\\attachments\\foo.xlsx',
+    'AppData\\Local\\anakot\\attachments\\foo.xlsx',
     '/Users/alice',
-    '/Users/alice/.hermes'
+    '/Users/alice/.anakot'
   )
 
-  assert.equal(candidates[0], path.join('/Users/alice', 'AppData/Local/hermes/attachments/foo.xlsx'))
+  assert.equal(candidates[0], path.join('/Users/alice', 'AppData/Local/anakot/attachments/foo.xlsx'))
 })
 
 test('homeRelativeAttachmentCandidates returns nothing for an absolute path', () => {
   assert.deepEqual(
-    homeRelativeAttachmentCandidates('/already/absolute/foo.xlsx', '/Users/alice', '/Users/alice/.hermes'),
+    homeRelativeAttachmentCandidates('/already/absolute/foo.xlsx', '/Users/alice', '/Users/alice/.anakot'),
     []
   )
 })
 
 test('homeRelativeAttachmentCandidates returns nothing for a file: URL', () => {
   assert.deepEqual(
-    homeRelativeAttachmentCandidates('file:///already/resolved/foo.xlsx', '/Users/alice', '/Users/alice/.hermes'),
+    homeRelativeAttachmentCandidates('file:///already/resolved/foo.xlsx', '/Users/alice', '/Users/alice/.anakot'),
     []
   )
 })
 
 test('homeRelativeAttachmentCandidates returns nothing for empty input', () => {
-  assert.deepEqual(homeRelativeAttachmentCandidates('', '/Users/alice', '/Users/alice/.hermes'), [])
-  assert.deepEqual(homeRelativeAttachmentCandidates('   ', '/Users/alice', '/Users/alice/.hermes'), [])
+  assert.deepEqual(homeRelativeAttachmentCandidates('', '/Users/alice', '/Users/alice/.anakot'), [])
+  assert.deepEqual(homeRelativeAttachmentCandidates('   ', '/Users/alice', '/Users/alice/.anakot'), [])
 })
 
 test('homeRelativeAttachmentCandidates second candidate falls back to basename only', () => {
   // A ref that lost its directory prefix entirely still has a shot via the
   // well-known attachments dir + basename, matching the reported repro shape.
-  const candidates = homeRelativeAttachmentCandidates('foo.xlsx', '/Users/alice', '/Users/alice/.hermes')
+  const candidates = homeRelativeAttachmentCandidates('foo.xlsx', '/Users/alice', '/Users/alice/.anakot')
 
   assert.deepEqual(candidates, [
     path.join('/Users/alice', 'foo.xlsx'),
-    path.join('/Users/alice/.hermes', 'attachments', 'foo.xlsx')
+    path.join('/Users/alice/.anakot', 'attachments', 'foo.xlsx')
   ])
 })
 

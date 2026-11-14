@@ -36,8 +36,8 @@ async def _owner(tmp_path, monkeypatch, run_job):
     from gateway.config import GatewayConfig
     from gateway.run import GatewayRunner
     from gateway.session_authority import initialize_session_authority
-    monkeypatch.setenv('HERMES_HOME', str(tmp_path))
-    monkeypatch.setattr('hermes_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
+    monkeypatch.setenv('ANAKOT_HOME', str(tmp_path))
+    monkeypatch.setattr('anakot_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
     monkeypatch.setattr(run, '_load_gateway_config', lambda *a: {'model': {}, 'platform_toolsets': {'cli': []}})
     monkeypatch.setattr(jobs, 'get_job', lambda jid: {'id': jid, 'prompt': 'report', 'model': 'm', 'name': 'job'})
     monkeypatch.setattr(scheduler, 'run_job', run_job)
@@ -49,7 +49,7 @@ async def _owner(tmp_path, monkeypatch, run_job):
 
 def _slow_store(monkeypatch, slow):
     """Every SessionDB read and write waits ``SLOW_S`` while ``slow`` is set, on whatever thread."""
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
     read, write = SessionDB._read_ctx, SessionDB._execute_write
 
     def _read_ctx(self, *args, **kwargs):

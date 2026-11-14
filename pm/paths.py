@@ -25,7 +25,7 @@ def install_stamp_path(project_root: Path) -> Path:
     bakes the stamp outside the store's package dir and its wrapper carries
     ``HERMES_INSTALL_ROOT`` for the executing tree only — so the executing
     tree resolves through install_root, any other tree is taken literally.
-    PM reads it in sealed stages (the Docker runtime base) before hermes_cli
+    PM reads it in sealed stages (the Docker runtime base) before anakot_cli
     ships, so it lives here rather than beside the stewards.
     """
     root = Path(project_root)
@@ -47,16 +47,16 @@ def store_root() -> Path:
 def partials_root() -> Path:
     """The downloader's managed partials area: machine-scoped and shared
     (keyed by sha256(url), so two callers or two profiles reuse one
-    partial), but anchored to the DEFAULT hermes root — NOT the byte
+    partial), but anchored to the DEFAULT anakot root — NOT the byte
     store. The store can live inside a read-only sealed payload
     (WindowsApps/agent-payload), and partials are mutable state the
     downloader writes continuously, so they must land somewhere writable
-    on every install kind: ``%LOCALAPPDATA%\\hermes\\cache\\partials`` on
-    Windows, ``~/.hermes/cache/partials`` on POSIX.
+    on every install kind: ``%LOCALAPPDATA%\\anakot\\cache\\partials`` on
+    Windows, ``~/.anakot/cache/partials`` on POSIX.
     """
-    from hermes_constants import get_default_hermes_root
+    from anakot_constants import get_default_anakot_root
 
-    return get_default_hermes_root() / "cache" / "partials"
+    return get_default_anakot_root() / "cache" / "partials"
 
 
 def facts_path() -> Path:
@@ -66,9 +66,9 @@ def facts_path() -> Path:
 def writable_store_root() -> Path:
     if not (store_root().parent / "manifest.json").is_file():
         return store_root()
-    from hermes_constants import get_default_hermes_root
+    from anakot_constants import get_default_anakot_root
 
-    return get_default_hermes_root() / "tools"
+    return get_default_anakot_root() / "tools"
 
 
 def runtime_facts_path() -> Path:

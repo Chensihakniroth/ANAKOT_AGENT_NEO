@@ -8,7 +8,7 @@ import { WINDOWS_NO_REPARSE_PS, windowsHelperArgv } from './windows-runtime-comm
 
 const LOCKFILE_SCHEMA_VERSION = 2
 const PROTOCOL_VERSION = 1
-const READY_RE = /^HERMES_(?:BACKEND|DASHBOARD)_READY port=(\d+)/gm
+const READY_RE = /^ANAKOT_(?:BACKEND|DASHBOARD)_READY port=(\d+)/gm
 const READY_POLL_INTERVAL_MS = 750
 
 function psLiteral(value) {
@@ -107,8 +107,8 @@ function decodePowerShellCommand(command) {
   return zlib.inflateRawSync(Buffer.from(deflated)).toString('utf8')
 }
 
-async function probeWindowsFiles(ssh, explicitHermesPath = '') {
-  const explicit = psLiteral(explicitHermesPath)
+async function probeWindowsFiles(ssh, explicitAnakotPath = '') {
+  const explicit = psLiteral(explicitAnakotPath)
 
   const script = [
     // Module auto-load / cold-start progress records get serialized by Windows
@@ -127,40 +127,40 @@ async function probeWindowsFiles(ssh, explicitHermesPath = '') {
     '}',
     `$explicit=${explicit}`,
     'if($explicit){Assert-NoReparse $explicit $false;$explicitPython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($explicit), "python.exe");Assert-NoReparse $explicitPython $true}',
-    // HERMES_HOME is only trusted when it names a directory on the REMOTE: a stale User-scope
+    // ANAKOT_HOME is only trusted when it names a directory on the REMOTE: a stale User-scope
     // value (older install.ps1 persisted one) or a client path leaked over SSH otherwise fails
-    // assertSafeRemoteHome as "Unsafe remote Hermes home" (#118988).
-    '$hermesHome=$env:HERMES_HOME',
-    'if(-not $hermesHome -or -not (Test-Path -LiteralPath $hermesHome -PathType Container)){$hermesHome=Join-Path $env:LOCALAPPDATA "hermes"}',
-    'Assert-NoReparse $hermesHome $true',
-    '$candidate=[IO.Path]::Combine($hermesHome, "hermes-agent\\venv\\Scripts\\hermes.exe")',
+    // assertSafeRemoteHome as "Unsafe remote Anakot home" (#118988).
+    '$anakotHome=$env:ANAKOT_HOME',
+    'if(-not $anakotHome -or -not (Test-Path -LiteralPath $anakotHome -PathType Container)){$anakotHome=Join-Path $env:LOCALAPPDATA "anakot"}',
+    'Assert-NoReparse $anakotHome $true',
+    '$candidate=[IO.Path]::Combine($anakotHome, "anakot-agent\\venv\\Scripts\\anakot.exe")',
     '$candidatePython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($candidate), "python.exe")',
     'Assert-NoReparse $candidate $true',
     'Assert-NoReparse $candidatePython $true',
-    '$profileCandidate=[IO.Path]::Combine($HOME, "hermes-agent\\.venv\\Scripts\\hermes.exe")',
+    '$profileCandidate=[IO.Path]::Combine($HOME, "anakot-agent\\.venv\\Scripts\\anakot.exe")',
     '$profileCandidatePython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($profileCandidate), "python.exe")',
     'Assert-NoReparse $profileCandidate $true',
     'Assert-NoReparse $profileCandidatePython $true',
-    '$fallbackHomeCandidate=Join-Path $hermesHome "hermes-agent\\venv\\Scripts\\hermes.exe"',
-    '$fallbackProfileCandidate=Join-Path $HOME "hermes-agent\\.venv\\Scripts\\hermes.exe"',
+    '$fallbackHomeCandidate=Join-Path $anakotHome "anakot-agent\\venv\\Scripts\\anakot.exe"',
+    '$fallbackProfileCandidate=Join-Path $HOME "anakot-agent\\.venv\\Scripts\\anakot.exe"',
     '$candidates=@()',
     'if($explicit){$candidates+=$explicit}',
-    // A bare `hermes` resolves through PATHEXT, so a published hermes.cmd counts as well as hermes.exe.
-    '$cmd=@(Get-Command hermes -CommandType Application -ErrorAction SilentlyContinue)|Select-Object -First 1',
+    // A bare `anakot` resolves through PATHEXT, so a published anakot.cmd counts as well as anakot.exe.
+    '$cmd=@(Get-Command anakot -CommandType Application -ErrorAction SilentlyContinue)|Select-Object -First 1',
     'if($cmd){Assert-NoReparse $cmd.Source $true;$cmdPython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($cmd.Source), "python.exe");Assert-NoReparse $cmdPython $true;$candidates+=$cmd.Source}',
     // The installer's launchers, for an SSH session whose PATH lacks the user PATH entry.
-    '$candidates+=Join-Path $hermesHome "bin\\hermes.exe"',
-    '$candidates+=Join-Path $hermesHome "bin\\hermes.cmd"',
+    '$candidates+=Join-Path $anakotHome "bin\\anakot.exe"',
+    '$candidates+=Join-Path $anakotHome "bin\\anakot.cmd"',
     '$candidates+=$fallbackHomeCandidate',
     '$candidates+=$fallbackProfileCandidate',
-    '$hermes=$null',
-    'foreach($candidate in $candidates){Assert-NoReparse $candidate $true;$candidatePython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($candidate), "python.exe");Assert-NoReparse $candidatePython $true;try{$item=Get-Item -LiteralPath $candidate -Force -ErrorAction Stop;if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0 -and -not $item.PSIsContainer){$pair=Test-Path -LiteralPath $candidatePython -PathType Leaf;if($pair -or (Split-Path -Leaf (Split-Path -Parent $candidate)) -ieq "bin"){$hermes=$item.FullName;break}}}catch [Management.Automation.ItemNotFoundException]{continue}}',
-    'if(-not $hermes){throw "Hermes is not installed on the remote Windows host."}',
-    'Assert-NoReparse $hermes $false',
-    'if($explicit -and $hermes -ne $explicit){throw "The configured Hermes path is not an executable file."}',
-    '$python=[IO.Path]::Combine([IO.Path]::GetDirectoryName($hermes), "python.exe")',
+    '$anakot=$null',
+    'foreach($candidate in $candidates){Assert-NoReparse $candidate $true;$candidatePython=[IO.Path]::Combine([IO.Path]::GetDirectoryName($candidate), "python.exe");Assert-NoReparse $candidatePython $true;try{$item=Get-Item -LiteralPath $candidate -Force -ErrorAction Stop;if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0 -and -not $item.PSIsContainer){$pair=Test-Path -LiteralPath $candidatePython -PathType Leaf;if($pair -or (Split-Path -Leaf (Split-Path -Parent $candidate)) -ieq "bin"){$anakot=$item.FullName;break}}}catch [Management.Automation.ItemNotFoundException]{continue}}',
+    'if(-not $anakot){throw "Anakot is not installed on the remote Windows host."}',
+    'Assert-NoReparse $anakot $false',
+    'if($explicit -and $anakot -ne $explicit){throw "The configured Anakot path is not an executable file."}',
+    '$python=[IO.Path]::Combine([IO.Path]::GetDirectoryName($anakot), "python.exe")',
     'if(Test-Path -LiteralPath $python -PathType Leaf){Assert-NoReparse $python $false}else{$python=""}',
-    '[ordered]@{os="Windows";arch=$env:PROCESSOR_ARCHITECTURE;hermesHome=$hermesHome;hermesPath=$hermes;launcherPath=$hermes;python=$python}|ConvertTo-Json -Compress'
+    '[ordered]@{os="Windows";arch=$env:PROCESSOR_ARCHITECTURE;anakotHome=$anakotHome;anakotPath=$anakot;launcherPath=$anakot;python=$python}|ConvertTo-Json -Compress'
   ].join('\r\n')
 
   // Windows OpenSSH may serialize PowerShell's progress stream as
@@ -181,12 +181,12 @@ async function probeWindowsFiles(ssh, explicitHermesPath = '') {
   return parsed
 }
 
-async function probeWindowsRemote(ssh, explicitHermesPath = '') {
-  const parsed = await probeWindowsFiles(ssh, explicitHermesPath)
+async function probeWindowsRemote(ssh, explicitAnakotPath = '') {
+  const parsed = await probeWindowsFiles(ssh, explicitAnakotPath)
 
   // Resolve only after the OS-only marker gate: never import a changing checkout.
   if (parsed.launcherPath) {
-    await assertWindowsRemoteInstallUpdateClear(ssh, parsed.hermesHome)
+    await assertWindowsRemoteInstallUpdateClear(ssh, parsed.anakotHome)
 
     return resolveWindowsLauncher(ssh, parsed)
   }
@@ -199,12 +199,12 @@ async function resolveWindowsLauncher(ssh: any, runtime: any) {
     '$ProgressPreference="SilentlyContinue"',
     '$ErrorActionPreference="Stop"',
     WINDOWS_NO_REPARSE_PS,
-    `Assert-NoReparse ${psLiteral(runtime.hermesPath)} $false`,
-    `$lines=@(& ${psLiteral(runtime.hermesPath)} '--print-runtime-command');$code=$LASTEXITCODE`,
-    'if($code -ne 0){throw "The Hermes launcher does not support --print-runtime-command; refresh the Windows installation launcher."}',
+    `Assert-NoReparse ${psLiteral(runtime.anakotPath)} $false`,
+    `$lines=@(& ${psLiteral(runtime.anakotPath)} '--print-runtime-command');$code=$LASTEXITCODE`,
+    'if($code -ne 0){throw "The Anakot launcher does not support --print-runtime-command; refresh the Windows installation launcher."}',
     '$command=$lines[-1]|ConvertFrom-Json',
-    'if($command -isnot [array] -or $command.Count -lt 2 -or -not [IO.Path]::IsPathRooted([string]$command[0])){throw "Invalid Hermes runtime command"}',
-    'foreach($part in $command){if($part -isnot [string] -or $part.Contains([char]0)){throw "Invalid Hermes runtime argument"}}',
+    'if($command -isnot [array] -or $command.Count -lt 2 -or -not [IO.Path]::IsPathRooted([string]$command[0])){throw "Invalid Anakot runtime command"}',
+    'foreach($part in $command){if($part -isnot [string] -or $part.Contains([char]0)){throw "Invalid Anakot runtime argument"}}',
     'Assert-NoReparse ([string]$command[0]) $false',
     '[ordered]@{python=[string]$command[0];runtimeCommand=@($command)}|ConvertTo-Json -Depth 5 -Compress'
   ].join('\r\n')
@@ -220,7 +220,7 @@ async function resolveWindowsLauncher(ssh: any, runtime: any) {
     }
   } catch (cause: any) {
     if (TRANSPORT_KINDS.has(cause?.kind)) {throw cause}
-    const error: any = new Error('Refresh the remote Windows Hermes launcher: its boot-selecting runtime could not be resolved.')
+    const error: any = new Error('Refresh the remote Windows Anakot launcher: its boot-selecting runtime could not be resolved.')
     error.kind = 'update-required'
     error.cause = cause
     throw error
@@ -230,20 +230,20 @@ async function resolveWindowsLauncher(ssh: any, runtime: any) {
 }
 
 // The checkouts whose update lock guards a dead marker (update_lock._reclaim_dead):
-// the installer's `<install root>\hermes-agent` and the checkout of the runtime
+// the installer's `<install root>\anakot-agent` and the checkout of the runtime
 // python (`<root>\venv\Scripts\python.exe`). Defines $checkoutRoots; needs $installRoot.
 function windowsCheckoutRootsScript(python = '') {
   const runtimeRoot = python
     ? `[IO.Path]::GetDirectoryName([IO.Path]::GetDirectoryName([IO.Path]::GetDirectoryName(${psLiteral(python)})))`
     : '$null'
 
-  return `$checkoutRoots=@([IO.Path]::Combine($installRoot,"hermes-agent"),${runtimeRoot})`
+  return `$checkoutRoots=@([IO.Path]::Combine($installRoot,"anakot-agent"),${runtimeRoot})`
 }
 
 // Marker-gate probe script: reads the install-wide update marker fail-closed
 // (missing -> CLEAR, unreadable/malformed -> UNCERTAIN) without following
 // symlinks on any path level, including the marker file itself.
-function windowsUpdateMarkerProbeScript(hermesHome, python = '') {
+function windowsUpdateMarkerProbeScript(anakotHome, python = '') {
   const script = [
     '$ProgressPreference="SilentlyContinue"',
     '$ErrorActionPreference="Stop"',
@@ -252,7 +252,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
-public static class HermesMarkerNoFollow {
+public static class AnakotMarkerNoFollow {
   [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
   private static extern SafeFileHandle CreateFile(string name, uint access, uint share, IntPtr security, uint creation, uint flags, IntPtr template);
   public static FileStream OpenRead(string name) {
@@ -274,17 +274,17 @@ public static class HermesMarkerNoFollow {
     '$parent=[IO.Path]::GetDirectoryName($current);if(-not $parent -or $parent -eq $current){break};$current=$parent;$first=$false',
     '}',
     '}',
-    `$hermesHome=${psLiteral(hermesHome)}`,
-    '$installRoot=$hermesHome',
-    '$parent=Split-Path -Parent $hermesHome',
+    `$anakotHome=${psLiteral(anakotHome)}`,
+    '$installRoot=$anakotHome',
+    '$parent=Split-Path -Parent $anakotHome',
     'if((Split-Path -Leaf $parent) -ieq "profiles"){$installRoot=Split-Path -Parent $parent}',
-    '$marker=Join-Path $installRoot ".hermes-update-in-progress"',
+    '$marker=Join-Path $installRoot ".anakot-update-in-progress"',
     windowsCheckoutRootsScript(python),
     '$result="UNCERTAIN"',
     '$stream=$null;$memory=$null',
     'try{',
     'Assert-NoReparse $marker $true',
-    'if(-not (Test-Path -LiteralPath $marker -PathType Leaf)){$result="CLEAR"}else{$stream=[HermesMarkerNoFollow]::OpenRead($marker)',
+    'if(-not (Test-Path -LiteralPath $marker -PathType Leaf)){$result="CLEAR"}else{$stream=[AnakotMarkerNoFollow]::OpenRead($marker)',
     'Assert-NoReparse $marker $false',
     '$memory=New-Object IO.MemoryStream;$stream.CopyTo($memory);$bytes=$memory.ToArray()',
     'if($bytes.Length -le 4096){',
@@ -305,7 +305,7 @@ public static class HermesMarkerNoFollow {
  * This uses only PowerShell/.NET and therefore never imports the remote
  * checkout while an updater may be replacing it.
  */
-async function assertWindowsRemoteInstallUpdateClear(ssh, hermesHome, python = '') {
+async function assertWindowsRemoteInstallUpdateClear(ssh, anakotHome, python = '') {
   let observation = ''
 
   try {
@@ -314,10 +314,10 @@ async function assertWindowsRemoteInstallUpdateClear(ssh, hermesHome, python = '
     // CLEAR gate into a fail-closed 'update-in-progress' verdict.
     observation =
       stripPowerShellNoise(
-        await ssh.exec(compressedPowerShellCommand(windowsUpdateMarkerProbeScript(hermesHome, python)))
+        await ssh.exec(compressedPowerShellCommand(windowsUpdateMarkerProbeScript(anakotHome, python)))
       ).pop() || ''
   } catch (cause) {
-    const error: any = new Error('Could not prove that the remote Hermes install is clear for SSH startup.')
+    const error: any = new Error('Could not prove that the remote Anakot install is clear for SSH startup.')
     error.kind = 'update-in-progress'
     error.cause = cause
     throw error
@@ -331,10 +331,10 @@ async function assertWindowsRemoteInstallUpdateClear(ssh, hermesHome, python = '
 
   const error: any = new Error(
     live
-      ? `Remote Hermes update process ${live[1]} is still running; SSH startup is paused.`
+      ? `Remote Anakot update process ${live[1]} is still running; SSH startup is paused.`
       : observation === 'HELD'
-        ? 'A process the remote Hermes update started still holds the install; SSH startup is paused.'
-        : 'The remote Hermes update marker is unreadable or malformed; refusing SSH startup.'
+        ? 'A process the remote Anakot update started still holds the install; SSH startup is paused.'
+        : 'The remote Anakot update marker is unreadable or malformed; refusing SSH startup.'
   )
 
   error.kind = 'update-in-progress'
@@ -362,7 +362,7 @@ function powerShellErrorDetail(value) {
     .replace(/&amp;/g, '&')
 }
 
-async function detectRemotePlatform(ssh, explicitHermesPath = '') {
+async function detectRemotePlatform(ssh, explicitAnakotPath = '') {
   try {
     const output = (await ssh.exec('uname -s; uname -m')).trim().split('\n')
 
@@ -379,7 +379,7 @@ async function detectRemotePlatform(ssh, explicitHermesPath = '') {
   }
 
   try {
-    return await probeWindowsRemote(ssh, explicitHermesPath)
+    return await probeWindowsRemote(ssh, explicitAnakotPath)
   } catch (cause: any) {
     if (TRANSPORT_KINDS.has(cause?.kind)) {
       throw cause
@@ -441,11 +441,11 @@ function atomicWindowsSpawnCommand(runtime, reservation: any = {}, payload?: str
     '$OutputEncoding=[Text.UTF8Encoding]::new($false)',
     WINDOWS_MARKER_JUDGE_PS,
     WINDOWS_CHECKOUT_LOCK_PS,
-    `$hermesHome=${psLiteral(runtime.hermesHome)}`,
-    '$installRoot=$hermesHome',
-    '$parent=Split-Path -Parent $hermesHome',
+    `$anakotHome=${psLiteral(runtime.anakotHome)}`,
+    '$installRoot=$anakotHome',
+    '$parent=Split-Path -Parent $anakotHome',
     'if((Split-Path -Leaf $parent) -ieq "profiles"){$installRoot=Split-Path -Parent $parent}',
-    '$marker=Join-Path $installRoot ".hermes-update-in-progress"',
+    '$marker=Join-Path $installRoot ".anakot-update-in-progress"',
     windowsCheckoutRootsScript(runtime.python),
     // The updaters' kernel lock (A7 rule 1): `<marker>.lock` opened sharing
     // nothing, like marker.ps1 Open-MarkerLock / update_lock.py, bounded 10 s.
@@ -470,7 +470,7 @@ function atomicWindowsSpawnCommand(runtime, reservation: any = {}, payload?: str
       ? '  if($spawnExit -ne 0){exit $spawnExit}'
       : '  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}',
     reservation.ownershipId
-      ? `  $spawned=$spawnLines[-1]|ConvertFrom-Json; $lock=[ordered]@{schemaVersion=2;protocolVersion=1;ownershipId=${psLiteral(reservation.ownershipId)};spawnNonce=${psLiteral(reservation.spawnNonce)};pid=[int]$spawned.pid;creationTimeNs=[string]$spawned.creationTimeNs;port=0;profile=${psLiteral(reservation.profile)};hermesPath=${psLiteral(reservation.hermesPath)};hermesHome=${psLiteral(reservation.hermesHome)};tokenFingerprint=${psLiteral(reservation.tokenFingerprint)};devServer=${psLiteral(reservation.devServer || '')};startedAt=${psLiteral(reservation.startedAt)}}|ConvertTo-Json -Compress; ` +
+      ? `  $spawned=$spawnLines[-1]|ConvertFrom-Json; $lock=[ordered]@{schemaVersion=2;protocolVersion=1;ownershipId=${psLiteral(reservation.ownershipId)};spawnNonce=${psLiteral(reservation.spawnNonce)};pid=[int]$spawned.pid;creationTimeNs=[string]$spawned.creationTimeNs;port=0;profile=${psLiteral(reservation.profile)};anakotPath=${psLiteral(reservation.anakotPath)};anakotHome=${psLiteral(reservation.anakotHome)};tokenFingerprint=${psLiteral(reservation.tokenFingerprint)};devServer=${psLiteral(reservation.devServer || '')};startedAt=${psLiteral(reservation.startedAt)}}|ConvertTo-Json -Compress; ` +
         `  $lock | & ${helper('write-lock').map(psLiteral).join(' ')} ${psLiteral(reservation.ownershipId)} | Out-Null; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; $spawnLines|Write-Output`
       : '',
     '  if([IO.File]::Exists($marker)){throw "remote update marker claimed during backend spawn"}',
@@ -522,8 +522,8 @@ function validLock(lock, ownershipId) {
     lock.port >= 0 &&
     lock.port <= 65535 &&
     /^[0-9a-f]{32}$/.test(lock.tokenFingerprint || '') &&
-    typeof lock.hermesPath === 'string' &&
-    typeof lock.hermesHome === 'string'
+    typeof lock.anakotPath === 'string' &&
+    typeof lock.anakotHome === 'string'
   )
 }
 
@@ -534,8 +534,8 @@ function reusableWindowsLock(lock, state, profile, reuseToken, runtime, devServe
     lockServesConnect(lock, {
       profile,
       reuseToken,
-      hermesPath: runtime.hermesPath,
-      hermesHome: runtime.hermesHome,
+      anakotPath: runtime.anakotPath,
+      anakotHome: runtime.anakotHome,
       devServer
     })
   )
@@ -545,7 +545,7 @@ async function processState(ssh, runtime, lock) {
   return helper(ssh, runtime, 'process-state', [
     String(lock.pid),
     String(lock.creationTimeNs),
-    lock.hermesPath,
+    lock.anakotPath,
     lock.spawnNonce
   ])
 }
@@ -568,7 +568,7 @@ async function cleanupOwned(ssh, runtime, ownershipId, lock) {
       await helper(ssh, runtime, 'terminate', [
         String(lock.pid),
         String(lock.creationTimeNs),
-        lock.hermesPath,
+        lock.anakotPath,
         lock.spawnNonce
       ])
     }
@@ -591,8 +591,8 @@ function windowsLockMatchesManagedUpdateScope(lock, expected) {
     lock.spawnNonce === expected.spawnNonce &&
     lock.creationTimeNs === expected.creationTimeNs &&
     lock.profile === expected.profile &&
-    lock.hermesPath === expected.hermesPath &&
-    lock.hermesHome === expected.hermesHome
+    lock.anakotPath === expected.anakotPath &&
+    lock.anakotHome === expected.anakotHome
   )
 }
 
@@ -649,7 +649,7 @@ async function terminateOwnedWindowsDashboardForUpdate(ssh, runtime, expected) {
   await helper(ssh, runtime, 'terminate', [
     String(lock.pid),
     String(lock.creationTimeNs),
-    lock.hermesPath,
+    lock.anakotPath,
     lock.spawnNonce
   ])
 
@@ -744,7 +744,7 @@ function windowsHelperOwnsRuntime(runtime, inspection) {
 
 // Test answers with Connect's own capability bar.
 async function inspectWindowsSupport(ssh, runtime) {
-  const inspection = await helper(ssh, runtime, 'inspect', [runtime.hermesPath])
+  const inspection = await helper(ssh, runtime, 'inspect', [runtime.anakotPath])
 
   return { version: inspection.version, supported: inspection.supported && windowsHelperOwnsRuntime(runtime, inspection) }
 }
@@ -754,23 +754,23 @@ async function connectWindowsRemote(deps) {
     ssh,
     ownershipId,
     profile = '',
-    remoteHermesPath = '',
+    remoteAnakotPath = '',
     reuseToken = '',
     devServer = '',
     signal,
     pickLocalPort,
     forward,
     cancelForward,
-    waitForHermes,
+    waitForAnakot,
     probeReuseProof,
     rememberLog = () => {},
     readyTimeoutMs = resolveReadyTimeoutMs()
   } = deps
 
   assertBootstrapNotSuperseded(signal)
-  const runtime = await probeWindowsRemote(ssh, remoteHermesPath)
-  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
-  const inspection = await helper(ssh, runtime, 'inspect', [runtime.hermesPath])
+  const runtime = await probeWindowsRemote(ssh, remoteAnakotPath)
+  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
+  const inspection = await helper(ssh, runtime, 'inspect', [runtime.anakotPath])
 
   if (!windowsHelperOwnsRuntime(runtime, inspection)) {
     const error: any = new Error('The remote Windows SSH helper must be updated with boot-selecting runtime ownership support before connecting.')
@@ -779,17 +779,17 @@ async function connectWindowsRemote(deps) {
   }
 
   if (!inspection.supported) {
-    const error: any = new Error('Update Hermes on the remote Windows host before connecting with Desktop SSH.')
+    const error: any = new Error('Update Anakot on the remote Windows host before connecting with Desktop SSH.')
     error.kind = 'update-required'
     throw error
   }
 
-  runtime.hermesPath = inspection.path
-  const hermesVersion = inspection.version || ''
+  runtime.anakotPath = inspection.path
+  const anakotVersion = inspection.version || ''
   rememberLog(`[ssh-lifecycle] remote platform Windows/${runtime.arch}`)
-  rememberLog(`[ssh-lifecycle] located hermes at ${runtime.hermesPath}`)
+  rememberLog(`[ssh-lifecycle] located anakot at ${runtime.anakotPath}`)
 
-  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
   const lock = await helper(ssh, runtime, 'read-lock', [ownershipId])
 
   if (validLock(lock, ownershipId)) {
@@ -804,7 +804,7 @@ async function connectWindowsRemote(deps) {
     const reusable = reusableWindowsLock(lock, state, profile, reuseToken, runtime, devServer)
 
     if (reusable) {
-      await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+      await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
       const localPort = await pickLocalPort()
       await forward(localPort, lock.port)
 
@@ -821,12 +821,12 @@ async function connectWindowsRemote(deps) {
             pid: lock.pid,
             reused: true,
             platform: { os: 'Windows', arch: runtime.arch },
-            hermesPath: runtime.hermesPath,
-            hermesVersion,
+            anakotPath: runtime.anakotPath,
+            anakotVersion,
             ownershipId,
             spawnNonce: lock.spawnNonce,
             creationTimeNs: lock.creationTimeNs,
-            hermesHome: runtime.hermesHome,
+            anakotHome: runtime.anakotHome,
             pythonPath: runtime.python
           }
         }
@@ -836,23 +836,23 @@ async function connectWindowsRemote(deps) {
         }
 
         await cancelForward(localPort, lock.port)
-        await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+        await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
         await cleanupOwned(ssh, runtime, ownershipId, lock)
       } catch (error) {
         await cancelForward(localPort, lock.port)
         throw error
       }
     } else {
-      await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+      await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
       await cleanupOwned(ssh, runtime, ownershipId, lock)
     }
   } else if (lock) {
-    await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+    await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
     await helper(ssh, runtime, 'remove-lock', [ownershipId])
   }
 
   assertBootstrapNotSuperseded(signal)
-  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+  await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
   const token = crypto.randomBytes(32).toString('hex')
   const spawnNonce = crypto.randomBytes(8).toString('hex')
   await helper(ssh, runtime, 'upload-token', [ownershipId, spawnNonce], token)
@@ -861,19 +861,19 @@ async function connectWindowsRemote(deps) {
   let spawned
 
   try {
-    await assertWindowsRemoteInstallUpdateClear(ssh, runtime.hermesHome, runtime.python)
+    await assertWindowsRemoteInstallUpdateClear(ssh, runtime.anakotHome, runtime.python)
     spawned = await atomicWindowsSpawn(
       ssh,
       runtime,
-      // The backend trusts a dev renderer's http origin only from the HERMES_DESKTOP_DEV_SERVER it
+      // The backend trusts a dev renderer's http origin only from the ANAKOT_DESKTOP_DEV_SERVER it
       // inherits; the runtime helper sets it from devServer, as the POSIX spawn command does.
-      JSON.stringify({ ownershipId, spawnNonce, profile, hermesPath: runtime.hermesPath, devServer }),
+      JSON.stringify({ ownershipId, spawnNonce, profile, anakotPath: runtime.anakotPath, devServer }),
       {
         ownershipId,
         spawnNonce,
         profile,
-        hermesPath: runtime.hermesPath,
-        hermesHome: runtime.hermesHome,
+        anakotPath: runtime.anakotPath,
+        anakotHome: runtime.anakotHome,
         tokenFingerprint,
         devServer,
         startedAt
@@ -914,8 +914,8 @@ async function connectWindowsRemote(deps) {
     creationTimeNs: spawned.creationTimeNs,
     port: 0,
     profile,
-    hermesPath: runtime.hermesPath,
-    hermesHome: runtime.hermesHome,
+    anakotPath: runtime.anakotPath,
+    anakotHome: runtime.anakotHome,
     tokenFingerprint,
     devServer,
     startedAt
@@ -935,7 +935,7 @@ async function connectWindowsRemote(deps) {
     localPort = await pickLocalPort()
     await forward(localPort, remotePort)
     const baseUrl = `http://127.0.0.1:${localPort}`
-    await waitForHermes(baseUrl, token)
+    await waitForAnakot(baseUrl, token)
     assertBootstrapNotSuperseded(signal)
     await helper(ssh, runtime, 'write-lock', [ownershipId], JSON.stringify({ ...owned, port: remotePort }))
 
@@ -947,12 +947,12 @@ async function connectWindowsRemote(deps) {
       pid: spawned.pid,
       reused: false,
       platform: { os: 'Windows', arch: runtime.arch },
-      hermesPath: runtime.hermesPath,
-      hermesVersion,
+      anakotPath: runtime.anakotPath,
+      anakotVersion,
       ownershipId,
       spawnNonce,
       creationTimeNs: spawned.creationTimeNs,
-      hermesHome: runtime.hermesHome,
+      anakotHome: runtime.anakotHome,
       pythonPath: runtime.python
     }
   } catch (error) {
@@ -975,7 +975,7 @@ function buildWindowsInteractiveCommand(remoteCwd = '') {
     )
   }
 
-  script.push('$host.UI.RawUI.WindowTitle="Hermes SSH"', 'powershell.exe -NoLogo')
+  script.push('$host.UI.RawUI.WindowTitle="Anakot SSH"', 'powershell.exe -NoLogo')
 
   return powerShellCommand(script.join(';'))
 }

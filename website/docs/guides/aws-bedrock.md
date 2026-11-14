@@ -1,18 +1,18 @@
 ---
 sidebar_position: 14
 title: "AWS Bedrock"
-description: "Use Hermes Agent with Amazon Bedrock — native Converse API, Anthropic SDK routing, OpenAI models via Bedrock Mantle, IAM authentication, Guardrails, and cross-region inference"
+description: "Use Anakot Agent with Amazon Bedrock — native Converse API, Anthropic SDK routing, OpenAI models via Bedrock Mantle, IAM authentication, Guardrails, and cross-region inference"
 ---
 
 # AWS Bedrock
 
 Python dependency commands on this page use a
 [PM-prepared source checkout](../reference/package-management.md#developer-workflow).
-After a dependency change, reactivate the checkout and restart Hermes.
+After a dependency change, reactivate the checkout and restart Anakot.
 
-Hermes Agent supports Amazon Bedrock as a native provider. This gives you full access to the Bedrock ecosystem: IAM authentication, Guardrails, cross-region inference profiles, and all foundation models.
+Anakot Agent supports Amazon Bedrock as a native provider. This gives you full access to the Bedrock ecosystem: IAM authentication, Guardrails, cross-region inference profiles, and all foundation models.
 
-Hermes routes each model family through the API that serves it best:
+Anakot routes each model family through the API that serves it best:
 
 | Model family | API route | Why |
 |---|---|---|
@@ -30,34 +30,34 @@ All three routes share the same AWS credential chain and region resolution — n
   - `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` environment variables
   - `AWS_PROFILE` for SSO or named profiles
   - `aws configure` for local development
-- **boto3** — install with `cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"`
+- **boto3** — install with `cd ~/.anakot/anakot-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"`
 - **IAM permissions** — at minimum:
   - `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` (for inference)
   - `bedrock:ListFoundationModels` and `bedrock:ListInferenceProfiles` (for model discovery)
   - `bedrock:GetInferenceProfile` (only if `model.default` is an application inference profile ARN — used to size the context window from the wrapped model)
 
 :::tip EC2 / ECS / Lambda
-On AWS compute, attach an IAM role with `AmazonBedrockFullAccess` and you're done. No API keys, no `.env` configuration — Hermes detects the instance role automatically.
+On AWS compute, attach an IAM role with `AmazonBedrockFullAccess` and you're done. No API keys, no `.env` configuration — Anakot detects the instance role automatically.
 :::
 
 ## Quick Start
 
 ```bash
 # Install with Bedrock support
-cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"
+cd ~/.anakot/anakot-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"
 
 # Select Bedrock as your provider
-hermes model
+anakot model
 # → Choose "More providers..." → "AWS Bedrock"
 # → Select your region and model
 
 # Start chatting
-hermes chat
+anakot chat
 ```
 
 ## Configuration
 
-After running `hermes model`, your `~/.hermes/config.yaml` will contain:
+After running `anakot model`, your `~/.anakot/config.yaml` will contain:
 
 ```yaml
 model:
@@ -102,7 +102,7 @@ unchanged. Ultrafast is a paid opt-in, not the meaning of plain `/fast fast`.
 - **Exact scope:** only `openai.gpt-6.1-sol` on this Mantle endpoint is enabled.
   Priority, Flex, Reserved, and auto/cold fast windows are not enabled for it.
 - **Runtime profiles:** AWS also documents Ultrafast over Responses for
-  `us.openai.gpt-6.1-sol` and `global.openai.gpt-6.1-sol`. Hermes still routes
+  `us.openai.gpt-6.1-sol` and `global.openai.gpt-6.1-sol`. Anakot still routes
   those IDs through Converse. This setting does not enable their Ultrafast
   path, switch their API, or translate Ultrafast to Converse `serviceTier`.
 - **Other entrypoints:** this does not add Bedrock Ultrafast to speed pickers
@@ -136,7 +136,7 @@ AWS does not apply Guardrails to the Mantle Responses endpoint used by bare `ope
 
 ### Model Discovery
 
-Hermes auto-discovers available models via the Bedrock control plane. You can customize discovery:
+Anakot auto-discovers available models via the Bedrock control plane. You can customize discovery:
 
 ```yaml
 bedrock:
@@ -148,21 +148,21 @@ bedrock:
 
 ### Prompt caching (cachePoint)
 
-Hermes automatically applies prompt caching on the Bedrock **Converse API** path by inserting `cachePoint` markers after the system prompt, tool definitions, and the latest message. Because sending a `cachePoint` block to a model that doesn't support it raises a `ValidationException`, markers are only added for models on a known-good allowlist (Anthropic Claude and Amazon Nova model IDs); unknown models default to no cache markers. Claude models normally use the AnthropicBedrock SDK path, which has its own prompt caching — the Converse `cachePoint` path covers Nova and the bearer-token Claude fallback. No configuration needed; cache reads/writes show up in usage accounting.
+Anakot automatically applies prompt caching on the Bedrock **Converse API** path by inserting `cachePoint` markers after the system prompt, tool definitions, and the latest message. Because sending a `cachePoint` block to a model that doesn't support it raises a `ValidationException`, markers are only added for models on a known-good allowlist (Anthropic Claude and Amazon Nova model IDs); unknown models default to no cache markers. Claude models normally use the AnthropicBedrock SDK path, which has its own prompt caching — the Converse `cachePoint` path covers Nova and the bearer-token Claude fallback. No configuration needed; cache reads/writes show up in usage accounting.
 
 ### Context-window probing
 
-For models whose context window isn't in Hermes' static table, Hermes can probe the real limit by sending oversized requests at fixed tiers (~1.3M and ~2.2M tokens) and parsing the `maximum` reported in Bedrock's length-validation error. Probed values feed the same metadata cache as the static table; stale cached entries that under-report a model's window (e.g. entries seeded before a model's 1M window went GA) are dropped automatically in favor of the larger known value.
+For models whose context window isn't in Anakot' static table, Anakot can probe the real limit by sending oversized requests at fixed tiers (~1.3M and ~2.2M tokens) and parsing the `maximum` reported in Bedrock's length-validation error. Probed values feed the same metadata cache as the static table; stale cached entries that under-report a model's window (e.g. entries seeded before a model's 1M window went GA) are dropped automatically in favor of the larger known value.
 
-When the static table has no row for a model from Anthropic, OpenAI or xAI, Hermes uses that model family's window from its general model catalog (`agent/model_metadata.py`). This is how a new tier gets its real window before the Bedrock table is updated. Other vendors' catalog rows are vendor-direct windows that can exceed what Bedrock serves (Llama 3 8B is 8K on Bedrock), so those models do not borrow them.
+When the static table has no row for a model from Anthropic, OpenAI or xAI, Anakot uses that model family's window from its general model catalog (`agent/model_metadata.py`). This is how a new tier gets its real window before the Bedrock table is updated. Other vendors' catalog rows are vendor-direct windows that can exceed what Bedrock serves (Llama 3 8B is 8K on Bedrock), so those models do not borrow them.
 
-When nothing knows a model, Hermes uses a 128,000-token fallback and logs a WARNING naming the model. The banner, status bar, `/usage`, `/model` and the gateway session line mark that window `fallback` so it is not mistaken for a detected limit. Set `model.context_length` (or `model_overrides.bedrock.<model id>.context_window`) in `config.yaml` to the model's real window.
+When nothing knows a model, Anakot uses a 128,000-token fallback and logs a WARNING naming the model. The banner, status bar, `/usage`, `/model` and the gateway session line mark that window `fallback` so it is not mistaken for a detected limit. Set `model.context_length` (or `model_overrides.bedrock.<model id>.context_window`) in `config.yaml` to the model's real window.
 
-**Application inference profiles.** An ARN such as `arn:aws:bedrock:us-west-2:123456789012:application-inference-profile/abcdef123456` names no model, so neither the probe nor the static table can size it. Hermes calls `bedrock:GetInferenceProfile` in the ARN's region and sizes the window from the model the profile wraps (1M for a profile wrapping Claude Sonnet 4.6). Without that permission the 128,000-token default applies and a WARNING names the profile; set `model.context_length` explicitly to override either way.
+**Application inference profiles.** An ARN such as `arn:aws:bedrock:us-west-2:123456789012:application-inference-profile/abcdef123456` names no model, so neither the probe nor the static table can size it. Anakot calls `bedrock:GetInferenceProfile` in the ARN's region and sizes the window from the model the profile wraps (1M for a profile wrapping Claude Sonnet 4.6). Without that permission the 128,000-token default applies and a WARNING names the profile; set `model.context_length` explicitly to override either way.
 
 ## Available Models
 
-Bedrock models use **inference profile IDs** for on-demand invocation. The `hermes model` picker shows these automatically, with recommended models at the top:
+Bedrock models use **inference profile IDs** for on-demand invocation. The `anakot model` picker shows these automatically, with recommended models at the top:
 
 | Model | ID | Notes |
 |-------|-----|-------|
@@ -187,7 +187,7 @@ Bedrock models use **inference profile IDs** for on-demand invocation. The `herm
 :::info Cross-Region Inference
 Models prefixed with `us.` use cross-region inference profiles, which provide better capacity and automatic failover across AWS regions. Models prefixed with `global.` route across all available regions worldwide.
 
-OpenAI models have two endpoint forms. The bare `openai.*` ID is in-Region and Hermes sends it to Bedrock Mantle's Responses endpoint in the configured region. The `us.openai.*` and `global.openai.*` IDs are cross-Region inference profiles. Hermes sends them to `bedrock-runtime` through the Converse API, the same path as other inference profiles. Each AWS model card lists the profiles a model offers and the regions Mantle serves it in.
+OpenAI models have two endpoint forms. The bare `openai.*` ID is in-Region and Anakot sends it to Bedrock Mantle's Responses endpoint in the configured region. The `us.openai.*` and `global.openai.*` IDs are cross-Region inference profiles. Anakot sends them to `bedrock-runtime` through the Converse API, the same path as other inference profiles. Each AWS model card lists the profiles a model offers and the regions Mantle serves it in.
 :::
 
 ## Switching Models Mid-Session
@@ -203,7 +203,7 @@ Use the `/model` command during a conversation:
 ## Diagnostics
 
 ```bash
-hermes doctor
+anakot doctor
 ```
 
 The doctor checks:
@@ -214,11 +214,11 @@ The doctor checks:
 
 ## Gateway (Messaging Platforms)
 
-Bedrock works with all Hermes gateway platforms (Telegram, Discord, Slack, Feishu, etc.). Configure Bedrock as your provider, then start the gateway normally:
+Bedrock works with all Anakot gateway platforms (Telegram, Discord, Slack, Feishu, etc.). Configure Bedrock as your provider, then start the gateway normally:
 
 ```bash
-hermes gateway setup
-hermes gateway start
+anakot gateway setup
+anakot gateway start
 ```
 
 The gateway reads `config.yaml` and uses the same Bedrock provider configuration.
@@ -227,7 +227,7 @@ The gateway reads `config.yaml` and uses the same Bedrock provider configuration
 
 ### "No API key found" / "No AWS credentials"
 
-Hermes checks for credentials in this order:
+Anakot checks for credentials in this order:
 1. `AWS_BEARER_TOKEN_BEDROCK`
 2. `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`
 3. `AWS_PROFILE`
@@ -245,10 +245,10 @@ Use an **inference profile ID** (prefixed with `us.` or `global.`) instead of th
 
 ### "ThrottlingException"
 
-You've hit the Bedrock per-model rate limit. Hermes automatically retries with backoff. To increase limits, request a quota increase in the [AWS Service Quotas console](https://console.aws.amazon.com/servicequotas/).
+You've hit the Bedrock per-model rate limit. Anakot automatically retries with backoff. To increase limits, request a quota increase in the [AWS Service Quotas console](https://console.aws.amazon.com/servicequotas/).
 
 ## One-Click AWS Deployment
 
 For a fully automated deployment on EC2 with CloudFormation:
 
-**[sample-hermes-agent-on-aws-with-bedrock](https://github.com/JiaDe-Wu/sample-hermes-agent-on-aws-with-bedrock)** — creates VPC, IAM role, EC2 instance, and configures Bedrock automatically. Deploy in any region with one click.
+**[sample-anakot-agent-on-aws-with-bedrock](https://github.com/JiaDe-Wu/sample-anakot-agent-on-aws-with-bedrock)** — creates VPC, IAM role, EC2 instance, and configures Bedrock automatically. Deploy in any region with one click.

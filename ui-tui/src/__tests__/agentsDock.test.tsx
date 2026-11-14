@@ -1,6 +1,6 @@
 import { PassThrough } from 'node:stream'
 
-import { renderSync } from '@hermes/ink'
+import { renderSync } from '@anakot/ink'
 import chalk from 'chalk'
 import React from 'react'
 import stripAnsi from 'strip-ansi'

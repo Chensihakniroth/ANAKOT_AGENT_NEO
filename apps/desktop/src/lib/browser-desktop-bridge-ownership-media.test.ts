@@ -1,4 +1,4 @@
-import { LOCAL_CONNECTION_ID } from '@hermes/shared'
+import { LOCAL_CONNECTION_ID } from '@anakot/shared'
 import { afterEach, expect, it, vi } from 'vitest'
 
 import { setApiRequestConnection, setApiRequestProfile } from '@/api/client'
@@ -22,8 +22,8 @@ const BACKENDS: Record<string, Record<string, string>> = {
 
 afterEach(() => {
   clearWebappSession()
-  Reflect.deleteProperty(win, 'hermesDesktop')
-  document.documentElement.removeAttribute('data-hermes-desktop-host')
+  Reflect.deleteProperty(win, 'anakotDesktop')
+  document.documentElement.removeAttribute('data-anakot-desktop-host')
   setApiRequestConnection(null)
   setApiRequestProfile(null)
   $connection.set(null)

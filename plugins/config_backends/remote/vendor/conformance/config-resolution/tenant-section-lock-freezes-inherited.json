@@ -54,7 +54,7 @@
       "kind": "profile",
       "values": {
         "model": {
-          "default": "hermes-4-70b"
+          "default": "anakot-4-70b"
         }
       },
       "locks": []
@@ -70,7 +70,7 @@
         "personality": "concise"
       },
       "model": {
-        "default": "hermes-4-70b"
+        "default": "anakot-4-70b"
       }
     },
     "provenance": {
@@ -103,7 +103,7 @@
       "by": "profile",
       "op": "set",
       "path": "model.default",
-      "value": "hermes-4-405b",
+      "value": "anakot-4-405b",
       "expect": {
         "result": "accept"
       }
@@ -149,7 +149,7 @@
         "personality": "concise"
       },
       "model": {
-        "default": "hermes-4-70b"
+        "default": "anakot-4-70b"
       }
     }
   }

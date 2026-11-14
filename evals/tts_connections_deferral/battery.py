@@ -2,14 +2,14 @@
 """Sandboxed multi-arm battery: can manage_connections sit behind tool_search?
 
     relay.py <sock> <log> &                                   # the only network exit for a cell
-    TCD_TREE=<checkout> TCD_PYTHON=<hermes env python> TCD_RESULTS=<dir> TCD_CELLS=<scratch dir> TCD_RELAY_SOCK=<sock> \\
+    TCD_TREE=<checkout> TCD_PYTHON=<anakot env python> TCD_RESULTS=<dir> TCD_CELLS=<scratch dir> TCD_RELAY_SOCK=<sock> \\
       python3 battery.py <model> --arms=A,B,C [--parallel=N] [--only=t1,t2] [--reps=N] [--dry]
     TCD_RESULTS=<dir> python3 battery.py --report
 
 Arms (one tree, see worker.py): A eager, B deferred, C deferred + reworded catalog line, D eager + reworded.
 Every cell runs in bubblewrap: its own network namespace (loopback + the relay socket only), /home, /tmp,
 /run and /mnt replaced by empty tmpfs, the tree and the interpreter bound read-only, one writable cell
-dir at /home/cell. The operator's Hermes home, tokens and CLI do not exist inside, and the agent key
+dir at /home/cell. The operator's Anakot home, tokens and CLI do not exist inside, and the agent key
 stays in the relay. ``--dry`` runs the no-model proof cell for each arm.
 """
 import json
@@ -43,8 +43,8 @@ def _sandbox_cmd(cell_dir, worker_args):
     hosts.write_text(f"127.0.0.1 localhost {INFER_HOST}\n", encoding="utf-8")
     cmd = ["bwrap", "--die-with-parent", "--unshare-net", "--unshare-pid", "--unshare-ipc", "--clearenv",
            "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc"]
-    # The real Hermes home is hidden wherever it lives (HERMES_HOME may sit outside /home).
-    real_home = Path(os.environ.get("HERMES_HOME") or Path.home() / ".hermes").resolve()
+    # The real Anakot home is hidden wherever it lives (ANAKOT_HOME may sit outside /home).
+    real_home = Path(os.environ.get("ANAKOT_HOME") or Path.home() / ".anakot").resolve()
     for masked in ("/home", "/tmp", "/run", "/mnt", "/media", "/srv", "/var/tmp", str(real_home)):
         cmd += ["--tmpfs", masked]
     cmd += ["--ro-bind", str(base_py), str(base_py), "--ro-bind", str(venv), str(venv), "--ro-bind", tree, "/home/tree",
@@ -53,7 +53,7 @@ def _sandbox_cmd(cell_dir, worker_args):
     env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": "/home/cell", "LANG": "C.UTF-8", "TMPDIR": "/tmp",
            "PYTHONDONTWRITEBYTECODE": "1", "TCD_TREE": "/home/tree", "TCD_CELL_ROOT": "/home/cell",
            "TCD_INFERENCE_URL": f"http://{INFER_HOST}:8080/v1", "TCD_INFERENCE_KEY": "held-by-the-relay",
-           "TCD_REAL_HERMES_HOME": str(real_home)}
+           "TCD_REAL_ANAKOT_HOME": str(real_home)}
     for k, v in env.items():
         cmd += ["--setenv", k, v]
     script = ("socat TCP-LISTEN:8080,bind=127.0.0.1,fork,reuseaddr UNIX-CONNECT:/run/relay.sock & sleep 0.3; "
@@ -142,7 +142,7 @@ def report():
                          f"{a['calls']:.1f}", f"{a['tok_task']:,.0f}"]
             print("| " + " | ".join(line) + " |")
     print(f"\ntotal priced from token counts: ${sum(_usd(r) for r in rows):.2f}; "
-          f"Hermes's own estimate: ${sum(r.get('cost_usd') or 0 for r in rows):.2f}; cells: {len(rows)}")
+          f"Anakot's own estimate: ${sum(r.get('cost_usd') or 0 for r in rows):.2f}; cells: {len(rows)}")
 
 
 if __name__ == "__main__":

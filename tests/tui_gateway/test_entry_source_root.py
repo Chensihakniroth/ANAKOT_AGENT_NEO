@@ -20,7 +20,7 @@ def test_entry_ignores_an_inherited_source_root(tmp_path):
 
     env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
     env.update(PYTHONPATH=str(PROJECT_ROOT), HERMES_PYTHON_SRC_ROOT=str(decoy),
-               HERMES_HOME=str(tmp_path / "home"))
+               ANAKOT_HOME=str(tmp_path / "home"))
     report = tmp_path / "report.json"
     # tui_gateway routes stdout to stderr (the JSON-RPC channel), so the probe writes a file.
     result = subprocess.run(

@@ -7,12 +7,12 @@ const coarsePointer = (matches: boolean) =>
 
 afterEach(() => {
   vi.unstubAllGlobals()
-  delete document.documentElement.dataset.hermesDesktopHost
+  delete document.documentElement.dataset.anakotDesktopHost
 })
 
 describe('touch input ownership in the browser-hosted Desktop', () => {
   beforeEach(() => {
-    document.documentElement.dataset.hermesDesktopHost = 'browser'
+    document.documentElement.dataset.anakotDesktopHost = 'browser'
   })
 
   it('uses coarse capability only when the event has no input evidence', () => {

@@ -9,7 +9,7 @@ from gateway.platforms._shared import bridged_env_digest, bridged_env_marker, ya
 
 @pytest.fixture(autouse=True)
 def isolated_bridge(monkeypatch):
-    from hermes_cli import env_loader
+    from anakot_cli import env_loader
 
     monkeypatch.setattr(env_loader, "_LOADED_DOTENV_KEYS", set())
     monkeypatch.setattr(env_loader, "_MANAGED_DOTENV_KEYS", set())
@@ -21,7 +21,7 @@ def isolated_bridge(monkeypatch):
 
 def test_lazy_plugin_failure_preserves_configured_value_on_first_and_later_loads(tmp_path, monkeypatch):
     from gateway import platform_registry as registry_module
-    from hermes_cli import plugins
+    from anakot_cli import plugins
 
     yaml_env_setter()("TELEGRAM_REACTIONS", "false")
     (tmp_path / "config.yaml").write_text("telegram:\n  reactions: false\n", encoding="utf-8")
@@ -44,10 +44,10 @@ def test_lazy_plugin_failure_preserves_configured_value_on_first_and_later_loads
 
 @pytest.mark.parametrize("replacement,expected", [("telegram:\n  reactions: true\n", "true"), ("{}\n", None)])
 def test_blank_real_dotenv_does_not_claim_a_later_yaml_bridge_value(tmp_path, replacement, expected):
-    from hermes_cli.env_loader import load_hermes_dotenv
+    from anakot_cli.env_loader import load_anakot_dotenv
 
     (tmp_path / ".env").write_text("TELEGRAM_REACTIONS=\n", encoding="utf-8")
-    load_hermes_dotenv(hermes_home=tmp_path, load_external_secrets=False)
+    load_anakot_dotenv(anakot_home=tmp_path, load_external_secrets=False)
     (tmp_path / "config.yaml").write_text("telegram:\n  reactions: false\n", encoding="utf-8")
     load_yaml_layer(tmp_path, {})
     assert os.environ.get("TELEGRAM_REACTIONS") == "false"
@@ -62,8 +62,8 @@ def test_blank_real_dotenv_does_not_claim_a_later_yaml_bridge_value(tmp_path, re
 def test_platform_plugin_whose_import_fails_keeps_its_bridged_value(tmp_path, monkeypatch):
     """The real loader disposes a failed plugin's deferred lease; that is still not a YAML key deletion."""
     from gateway import platform_registry as registry_module
-    from hermes_cli import plugins
-    from hermes_cli.plugins import PluginManager, PluginManifest
+    from anakot_cli import plugins
+    from anakot_cli.plugins import PluginManager, PluginManifest
 
     plugin_dir = tmp_path / "plugins" / "bridgeprobe"
     plugin_dir.mkdir(parents=True)
@@ -90,13 +90,13 @@ def test_platform_plugin_whose_import_fails_keeps_its_bridged_value(tmp_path, mo
 @pytest.mark.platforms("windows")
 def test_lowercase_dotenv_key_is_the_operators_value_on_windows(tmp_path, monkeypatch):
     """Windows env names are case-insensitive: ``telegram_reactions`` in .env owns TELEGRAM_REACTIONS."""
-    from hermes_cli.env_loader import load_hermes_dotenv
+    from anakot_cli.env_loader import load_anakot_dotenv
 
     # inherited from the previous generation's bridge
     monkeypatch.setenv("TELEGRAM_REACTIONS", "false")
     monkeypatch.setenv(bridged_env_marker("TELEGRAM_REACTIONS"), bridged_env_digest("false"))
     (tmp_path / ".env").write_text("telegram_reactions=false\n", encoding="utf-8")
-    load_hermes_dotenv(hermes_home=tmp_path, load_external_secrets=False)
+    load_anakot_dotenv(anakot_home=tmp_path, load_external_secrets=False)
     (tmp_path / "config.yaml").write_text("{}\n", encoding="utf-8")
 
     load_yaml_layer(tmp_path, {})
@@ -107,8 +107,8 @@ def test_lowercase_dotenv_key_is_the_operators_value_on_windows(tmp_path, monkey
 def test_a_force_reload_drops_the_failed_load_record(tmp_path, monkeypatch):
     """A plugin whose import failed, then disabled: a force reload must let YAML cleanup resume."""
     from gateway import platform_registry as registry_module
-    from hermes_cli import plugins
-    from hermes_cli.plugins import PluginManager, PluginManifest
+    from anakot_cli import plugins
+    from anakot_cli.plugins import PluginManager, PluginManifest
 
     plugin_dir = tmp_path / "plugins" / "bridgeprobe"
     plugin_dir.mkdir(parents=True)
@@ -136,8 +136,8 @@ def test_a_force_reload_drops_the_failed_load_record(tmp_path, monkeypatch):
 def test_another_profiles_reload_keeps_this_profiles_failed_load_record(tmp_path, monkeypatch):
     """A force reload of a sibling profile's plugins re-decides only that profile's plugins."""
     from gateway import platform_registry as registry_module
-    from hermes_cli import plugins
-    from hermes_cli.plugins import PluginManager, PluginManifest
+    from anakot_cli import plugins
+    from anakot_cli.plugins import PluginManager, PluginManifest
 
     plugin_dir = tmp_path / "plugins" / "bridgeprobe"
     plugin_dir.mkdir(parents=True)
@@ -163,7 +163,7 @@ def test_another_profiles_reload_keeps_this_profiles_failed_load_record(tmp_path
 @pytest.mark.parametrize("yaml_text", ["{}\n", "telegram:\n  proxy_url: 'http://other:3128'\n"])
 def test_a_value_an_external_secret_source_supplies_is_the_operators(tmp_path, monkeypatch, yaml_text):
     """The proxy moved from config.yaml into the vault: neither a YAML removal nor a YAML edit touches it."""
-    from hermes_cli import env_loader
+    from anakot_cli import env_loader
 
     proxy = "http://user:pw@proxy:3128"
     monkeypatch.setenv("TELEGRAM_PROXY", proxy)
@@ -177,16 +177,16 @@ def test_a_value_an_external_secret_source_supplies_is_the_operators(tmp_path, m
 
 
 def _launch_home_key() -> str:
-    from hermes_constants import get_routing_process_hermes_home
+    from anakot_constants import get_routing_process_anakot_home
 
-    return str(get_routing_process_hermes_home().resolve())
+    return str(get_routing_process_anakot_home().resolve())
 
 
 @pytest.mark.parametrize("history", ["removed_mapping", "other_profile"])
 def test_source_history_the_launch_home_no_longer_owns_does_not_block_a_yaml_edit(tmp_path, monkeypatch, history):
     """Only the launch home's CURRENT source snapshot owns a value: a vault mapping removed since, or a
     sibling profile's vault supplying the same name, must not freeze the bridge's own leftover."""
-    from hermes_cli import env_loader
+    from anakot_cli import env_loader
 
     proxy = "http://user:pw@proxy:3128"
     monkeypatch.setenv("TELEGRAM_PROXY", proxy)
@@ -206,14 +206,14 @@ def test_a_dotenv_value_equal_to_an_earlier_bridged_one_reaches_child_programs(t
     """Moving TELEGRAM_REACTIONS=false from config.yaml into .env: the operator's value must survive
     the child-env scrub, which drops any value still matching a bridge marker's digest."""
     from gateway.bridged_env import drop_bridge_markers
-    from hermes_cli.env_loader import load_hermes_dotenv
+    from anakot_cli.env_loader import load_anakot_dotenv
 
     (tmp_path / "config.yaml").write_text("telegram:\n  reactions: false\n", encoding="utf-8")
     load_yaml_layer(tmp_path, {})
     assert os.environ.get(bridged_env_marker("TELEGRAM_REACTIONS")) == bridged_env_digest("false")
     (tmp_path / ".env").write_text("TELEGRAM_REACTIONS=false\n", encoding="utf-8")
     (tmp_path / "config.yaml").write_text("{}\n", encoding="utf-8")
-    load_hermes_dotenv(hermes_home=tmp_path, load_external_secrets=False)
+    load_anakot_dotenv(anakot_home=tmp_path, load_external_secrets=False)
     load_yaml_layer(tmp_path, {})
 
     assert drop_bridge_markers(dict(os.environ)).get("TELEGRAM_REACTIONS") == "false"
@@ -227,12 +227,12 @@ def test_a_vault_value_equal_to_an_earlier_bridged_one_reaches_child_programs(tm
     import agent.secret_sources.bitwarden as bw_module
     from agent.secret_sources import registry as reg_module
     from gateway.bridged_env import drop_bridge_markers
-    from hermes_cli import env_loader
+    from anakot_cli import env_loader
 
     monkeypatch.setattr(env_loader, "_SECRET_SOURCE_VALUES_BY_HOME", {})
     monkeypatch.setattr(env_loader, "_SECRET_SOURCES", {})
     env_loader.reset_secret_source_cache()
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("ANAKOT_HOME", str(tmp_path))
     monkeypatch.setenv("BWS_ACCESS_TOKEN", "0.test-token")
     monkeypatch.setattr(bw_module, "find_bws", lambda **_kw: Path("/fake/bws"))
     monkeypatch.setattr(bw_module, "fetch_bitwarden_secrets", lambda **_kw: ({"TELEGRAM_REACTIONS": "false"}, []))

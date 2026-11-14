@@ -35,7 +35,7 @@ from tests.e2e.core.upgrade import _helpers as H
 from tests.e2e.core.upgrade import _install_helpers as I
 from tests.e2e.core.upgrade.network import _netedge as N
 
-ASSETS = "hermes-assets.nousresearch.com"
+ASSETS = "anakot-assets.nousresearch.com"
 REPOSITORY = "NousResearch/hermes-agent"
 # Hosts a correctly isolated update must never reach directly; with the proxy they appear in
 # the proxy log as "refused" (the proxy has no route for them).
@@ -148,8 +148,8 @@ class Installed:
             bridge.close()
         return Result(cp, time.monotonic() - t0, edge)
 
-    def hermes(self, *args: str, edge: Edge | None, **kw) -> Result:
-        return self.run([self.sb.hermes, *args], edge=edge, **kw)
+    def anakot(self, *args: str, edge: Edge | None, **kw) -> Result:
+        return self.run([self.sb.anakot, *args], edge=edge, **kw)
 
     # -- observation -------------------------------------------------------------
     def state(self) -> dict:
@@ -158,7 +158,7 @@ class Installed:
         from pm.environments import install_key
 
         key = install_key(self.sb.checkout)
-        inst = self.sb.hermes_home / "installs" / key
+        inst = self.sb.anakot_home / "installs" / key
 
         def read(p: Path) -> str:
             try:
@@ -166,7 +166,7 @@ class Installed:
             except OSError:
                 return "missing"
 
-        tools = self.sb.hermes_home / "tools"
+        tools = self.sb.anakot_home / "tools"
         return {
             "head": self.head(),
             "facts": read(inst / "facts.json"),
@@ -176,14 +176,14 @@ class Installed:
 
     def logs_tail(self, lines: int = 40) -> str:
         out = []
-        for log in sorted((self.sb.hermes_home / "logs").glob("*.log")):
+        for log in sorted((self.sb.anakot_home / "logs").glob("*.log")):
             text = log.read_text(encoding="utf-8", errors="replace").splitlines()[-lines:]
             out.append(f"--- {log.name} (tail) ---\n" + "\n".join(text))
         return "\n".join(out) or "(no logs)"
 
     def version_works(self) -> Result:
-        """The next ``hermes`` invocation, offline: the install must still start."""
-        return self.hermes("--version", edge=None, timeout=120)
+        """The next ``anakot`` invocation, offline: the install must still start."""
+        return self.anakot("--version", edge=None, timeout=120)
 
 
 def seed_install(root: Path, release: str | None = None) -> Installed:
@@ -210,7 +210,7 @@ def seed_install(root: Path, release: str | None = None) -> Installed:
     (sb.home / ".gitconfig").write_text("", encoding="utf-8")
     gitroot = root / "gitroot"
     (gitroot / "NousResearch").mkdir(parents=True, exist_ok=True)
-    (gitroot / "NousResearch" / "hermes-agent.git").symlink_to(origin)
+    (gitroot / "NousResearch" / "anakot-agent.git").symlink_to(origin)
     ca = N.TestCA(root / "corporate-ca")
     inst = Installed(root, sb, origin, gitroot, ca, ca.os_trust_store(root / "corporate-ca" / "etc-ssl-certs"))
     assert_isolated(inst)
@@ -222,7 +222,7 @@ def assert_isolated(inst: Installed) -> None:
     probe = (
         "import socket,sys\n"
         "bad=[]\n"
-        "for host in ('github.com','pypi.org','hermes-assets.nousresearch.com'):\n"
+        "for host in ('github.com','pypi.org','anakot-assets.nousresearch.com'):\n"
         "    try: socket.getaddrinfo(host,443); bad.append('dns:'+host)\n"
         "    except OSError: pass\n"
         "for ip in ('140.82.112.3','1.1.1.1'):\n"
@@ -240,7 +240,7 @@ def assert_isolated(inst: Installed) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Release-channel records (the R2 objects under https://hermes-assets.nousresearch.com/).
+# Release-channel records (the R2 objects under https://anakot-assets.nousresearch.com/).
 # ---------------------------------------------------------------------------
 
 def canonical(value: object) -> bytes:
@@ -249,9 +249,9 @@ def canonical(value: object) -> bytes:
 
 
 def _identity(name: str, token: str) -> dict:
-    pascal = f"HermesChannel{token}"
-    return {"token": token, "displayName": f"Hermes {name}", "appId": f"ai.hermes.channel.h{token}",
-            "appNamePascal": pascal, "artifactNamePascal": pascal, "cliName": f"hermes-{name}",
+    pascal = f"AnakotChannel{token}"
+    return {"token": token, "displayName": f"Anakot {name}", "appId": f"ai.anakot.channel.h{token}",
+            "appNamePascal": pascal, "artifactNamePascal": pascal, "cliName": f"anakot-{name}",
             "windowsExecutableName": pascal, "msixAppIdWithOrg": f"NousResearch.{pascal}"}
 
 
@@ -329,7 +329,7 @@ def env_without(env: dict[str, str], *names: str) -> dict[str, str]:
 
 
 def installed_tool(inst: Installed, name: str) -> dict:
-    facts = json.loads((inst.sb.hermes_home / "tools" / "facts.json").read_text(encoding="utf-8"))
+    facts = json.loads((inst.sb.anakot_home / "tools" / "facts.json").read_text(encoding="utf-8"))
     return facts["packages"][name]
 
 
@@ -338,7 +338,7 @@ def tool_missing(inst: Installed, name: str) -> Iterator[dict]:
     """A provisioned tool's store entry is gone (pruned or deleted), so PM must fetch it again.
     The entry is parked, not deleted, and put back afterwards unless the cell re-provisioned it."""
     tool = installed_tool(inst, name)
-    entry = inst.sb.hermes_home / "tools" / tool["entry"]
+    entry = inst.sb.anakot_home / "tools" / tool["entry"]
     parked = inst.root / "parked" / tool["entry"]
     parked.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(entry), str(parked))
@@ -356,11 +356,11 @@ SUCCESS_BANNERS = ("Update complete", "Code updated", "Already up to date")
 
 def assert_nothing_changed(inst: Installed, before: dict, r: Result, what: str) -> None:
     """The failure contract: non-zero, says why, nothing reported as success, nothing moved,
-    and the next ``hermes`` still starts."""
+    and the next ``anakot`` still starts."""
     assert r.rc != 0, f"{what}: the command reported success\n" + r.report(inst)
     claimed = [b for b in SUCCESS_BANNERS if b in r.out]
     assert not claimed, f"{what}: failed run printed a success banner {claimed}\n" + r.report(inst)
     after = inst.state()
     assert after == before, f"{what}: install state moved {before} -> {after}\n" + r.report(inst)
     v = inst.version_works()
-    assert v.rc == 0 and I.TRACEBACK not in v.out, f"{what}: `hermes --version` broken afterwards\n" + I.describe(v.cp)
+    assert v.rc == 0 and I.TRACEBACK not in v.out, f"{what}: `anakot --version` broken afterwards\n" + I.describe(v.cp)

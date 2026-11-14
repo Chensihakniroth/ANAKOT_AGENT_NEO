@@ -1,16 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type * as HermesApi from '@/hermes'
+import type * as AnakotApi from '@/anakot'
 import type { FreeTierRequester } from '@/store/free-tier'
-import type { AppHandoffStatus } from '@/types/hermes'
+import type { AppHandoffStatus } from '@/types/anakot'
 
 const startOAuthLogin = vi.fn()
 const pollOAuthSession = vi.fn()
 const cancelOAuthSession = vi.fn(async (_id: string) => ({ ok: true }))
 const getNousHandoffStatus = vi.fn()
 
-vi.mock('@/hermes', async importOriginal => ({
-  ...(await importOriginal<typeof HermesApi>()),
+vi.mock('@/anakot', async importOriginal => ({
+  ...(await importOriginal<typeof AnakotApi>()),
   cancelOAuthSession: (id: string) => cancelOAuthSession(id),
   getNousHandoffStatus: (since: null | string) => getNousHandoffStatus(since),
   listOAuthProviders: async () => ({ providers: [] }),

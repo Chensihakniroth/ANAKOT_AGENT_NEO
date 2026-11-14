@@ -17,7 +17,7 @@ import {
 } from './gateway-connections-store'
 import { loadNativeTokenSet, persistNativeTokenSet } from './native-token-store'
 
-// Desktop (this module) and the Webapp's Python server (hermes_cli/gateway_connections.py)
+// Desktop (this module) and the Webapp's Python server (anakot_cli/gateway_connections.py)
 // keep ONE saved-gateways list. Existing Desktop users must keep everything on the move.
 const repo = path.resolve(import.meta.dirname, '../../..')
 const python = process.env.HERMES_PYTHON || 'python3'
@@ -35,9 +35,9 @@ afterEach(() => {
 })
 
 function scratch() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-gw-conns-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'anakot-gw-conns-'))
   dirs.push(dir)
-  const root = path.join(dir, 'hermes')
+  const root = path.join(dir, 'anakot')
   const userData = path.join(dir, 'userData')
   fs.mkdirSync(root, { recursive: true })
   fs.mkdirSync(userData, { recursive: true })
@@ -184,7 +184,7 @@ test('a v2 user keeps every connection, field, secret, quarantined entry and sig
         user: 'alice',
         port: 2222,
         keyPath: '~/.ssh/id',
-        remoteHermesPath: '/opt/h',
+        remoteAnakotPath: '/opt/h',
         remoteProfile: 'coder',
         token: sealed('ssh-tok')
       }
@@ -331,10 +331,10 @@ test('the Python writer and this module share one file, one lock and each otherâ
   const seen = store.read()
   store.write({ ...seen, connections: [...seen.connections, { id: 'desk', kind: 'ssh', label: 'Desk', host: 'd' }] })
 
-  const env = { HERMES_HOME: root, HOME: dir, PATH: process.env.PATH, PYTHONPATH: repo }
+  const env = { ANAKOT_HOME: root, HOME: dir, PATH: process.env.PATH, PYTHONPATH: repo }
 
   const script = [
-    'from hermes_cli import gateway_connections as g',
+    'from anakot_cli import gateway_connections as g',
     'g.save_connection({"kind": "remote", "label": "From web", "url": "http://web:1", "token": "t"})',
     'print(",".join(c["id"] for c in g.read_registry()["connections"]))'
   ].join('\n')

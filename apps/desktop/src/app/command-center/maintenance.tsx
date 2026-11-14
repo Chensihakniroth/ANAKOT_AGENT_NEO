@@ -19,14 +19,14 @@ import {
   runDoctor,
   runSecurityAudit,
   setCuratorPaused
-} from '@/hermes'
+} from '@/anakot'
 import { useI18n } from '@/i18n'
 import { AlertCircle } from '@/lib/icons'
 import { cn } from '@/lib/utils'
 import { upsertDesktopActionTask } from '@/store/activity'
 import { confirm } from '@/store/confirm'
 import { notify, notifyError } from '@/store/notifications'
-import type { ActionStatusResponse } from '@/types/hermes'
+import type { ActionStatusResponse } from '@/types/anakot'
 
 import { MemoryLayersSummary } from '../settings/memory/memory-layers'
 
@@ -49,7 +49,7 @@ function formatBytes(size: number): string {
   return `${size} B`
 }
 
-/** Maintenance panel — desktop parity for `hermes doctor` / `security audit` /
+/** Maintenance panel — desktop parity for `anakot doctor` / `security audit` /
  *  `backup` / `debug share` / `curator` / `memory` (the dashboard System page's
  *  ops section). Spawn-based actions tail their logs inline via the shared
  *  /api/actions status endpoint. */
@@ -258,7 +258,7 @@ export function MaintenancePanel() {
                 </span>
                 <Button
                   onClick={() => {
-                    void window.hermesDesktop.writeClipboard(url)
+                    void window.anakotDesktop.writeClipboard(url)
                     notify({ durationMs: 1500, kind: 'success', message: mm.linkCopied })
                   }}
                   size="xs"

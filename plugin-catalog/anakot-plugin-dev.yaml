@@ -1,0 +1,23 @@
+name: anakot-plugin-dev
+title: Anakot Plugin Dev
+repo: https://github.com/mojomast/anakot-plugin-dev
+sha: "796a35e4d893b985f1b61d8e11b5ae7e4118bf6f"
+subdir: ""
+description: "Anakot Plugin Dev: build Anakot plugins with Anakot. A plugin-development skill plus two offline tools that scaffold a new plugin and lint it against the catalog rules before you submit. The anakot-plugin-dev:anakot-plugin-development skill covers manifest v2 and strict YAML, the ctx API, all 46 hooks, capabilities and isolation, dashboard and Desktop panes, testing, release and catalog submission, and lessons from catalog reviews, with a template plugin and catalog-entry and PR-body templates. hpd_scaffold(target_dir, name) copies the hello-anakot template, which passes anakot plugins validate and doctor --ci as-is, renames it, and adds a catalog entry and PR body stub; it refuses non-empty folders and never overwrites. hpd_check(path, catalog_entry?) is a read-only lint: strict YAML, manifest rules, provides_tools against the registered tools, a security preflight, static schema token cost, and catalog entry rules (sha, image hosts, category, subdir, at most 6 screenshots). Both tool schemas together cost 190 o200k tokens. It is for anyone writing a first Anakot plugin or getting one ready for a catalog PR. To start, run anakot plugins install anakot-plugin-dev and anakot plugins enable anakot-plugin-dev, then ask: \"Scaffold a Anakot plugin called weather-now in ~/code/weather-now, then check it.\" Finish with anakot plugins doctor <dir> --ci and anakot plugins validate <dir> --install-deps. The same skill installs into other coding agents with npx skills add mojomast/anakot-plugin-dev. Disclosure — `hpd_scaffold` creates files in any new or empty folder the model names (fixed template content only); `hpd_check` reads any folder or file the model names (read-only, never imports it); the user-run `anakot hpd check <dir> --execute` imports and runs the target plugin's `register()` unsandboxed in the Anakot process, so use it only on code you trust."
+maintainer: mojomast
+tier: community
+category: tools
+requires_hermes: ">=0.21.6"
+docs_url: https://github.com/mojomast/anakot-plugin-dev#readme
+version: "0.3.1"
+image: https://raw.githubusercontent.com/mojomast/anakot-plugin-dev/796a35e4d893b985f1b61d8e11b5ae7e4118bf6f/assets/banner-v3.jpg
+readme: true
+platforms: []
+known_issues: []
+capabilities:
+  provides_tools:
+    - hpd_scaffold
+    - hpd_check
+  provides_hooks: []
+  provides_middleware: []
+  requires_env: []

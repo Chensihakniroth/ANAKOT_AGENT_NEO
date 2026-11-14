@@ -1,4 +1,4 @@
-"""Regression tests for the codex_app_server → Hermes UI event bridge.
+"""Regression tests for the codex_app_server → Anakot UI event bridge.
 
 Pin the translation of codex JSON-RPC notifications into agent callbacks
 (`tool_progress_callback`, `_fire_stream_delta`, `_fire_reasoning_delta`,
@@ -54,16 +54,16 @@ class TestCodexItemToToolName:
             {"type": "dynamicToolCall", "tool": "web_search"}
         ) == "web_search"
 
-    def test_hermes_tools_mcp_server_emits_bare_tool_name(self):
-        """The hermes-tools MCP server wraps Hermes' own tools for codex;
+    def test_anakot_tools_mcp_server_emits_bare_tool_name(self):
+        """The anakot-tools MCP server wraps Anakot' own tools for codex;
         the inner dispatch subprocess can't fire native progress events,
         so the codex-level event IS the display event — shown without the
-        mcp.hermes-tools.* namespacing (from #26541 by @simpolism)."""
+        mcp.anakot-tools.* namespacing (from #26541 by @simpolism)."""
         assert _codex_item_to_tool_name(
-            {"type": "mcpToolCall", "server": "hermes-tools", "tool": "web_search"}
+            {"type": "mcpToolCall", "server": "anakot-tools", "tool": "web_search"}
         ) == "web_search"
         assert _codex_item_to_tool_name(
-            {"type": "mcpToolCall", "server": "hermes-tools", "tool": "browser_navigate"}
+            {"type": "mcpToolCall", "server": "anakot-tools", "tool": "browser_navigate"}
         ) == "browser_navigate"
 
 class TestCodexItemToArgs:
@@ -202,18 +202,18 @@ class TestToolProgressDispatch:
         bridge(_item_started({
             "type": "webSearch",
             "id": "ws-1",
-            "query": "hermes agent docs",
+            "query": "anakot agent docs",
         }))
         bridge(_item_completed({
             "type": "webSearch",
             "id": "ws-1",
-            "query": "hermes agent docs",
+            "query": "anakot agent docs",
         }))
         calls = agent.tool_progress_callback.call_args_list
         assert [c.args[0] for c in calls] == ["tool.started", "tool.completed"]
         assert calls[0].args[1] == "web_search"
-        assert calls[0].args[2] == "hermes agent docs"
-        assert calls[0].args[3] == {"query": "hermes agent docs"}
+        assert calls[0].args[2] == "anakot agent docs"
+        assert calls[0].args[3] == {"query": "anakot agent docs"}
 
 class TestAgentMessageInterimDispatch:
     def test_completed_agent_message_emits_interim(self):

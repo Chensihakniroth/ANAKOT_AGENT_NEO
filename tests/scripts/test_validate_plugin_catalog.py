@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import hermes_yaml as yaml
+import anakot_yaml as yaml
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -19,7 +19,7 @@ SCRIPT = REPO_ROOT / "scripts" / "validate_plugin_catalog.py"
 
 VALID_ENTRY = {
     "name": "example-plugin",
-    "repo": "https://github.com/NousResearch/hermes-example-plugins",
+    "repo": "https://github.com/NousResearch/anakot-example-plugins",
     "sha": "38fe0fb53eff98d477f807432e965429e665ca33",
     "subdir": "",
     "description": "One-line description.",

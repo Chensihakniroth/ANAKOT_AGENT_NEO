@@ -104,13 +104,13 @@ def _start_continue(runner: Any, record: dict[str, Any], unit: dict[str, Any], m
     """Continue one claimed child; None once it is dispatched, else the refusal text. Runs on a worker thread in the
     profile's scope, inside a fresh context so the parent's routing binding never leaks into another task."""
     from gateway.session_context import reset_session_vars, set_session_vars
-    from hermes_constants import get_hermes_home
-    from hermes_state_registry import acquire, release_or_close
+    from anakot_constants import get_anakot_home
+    from anakot_state_registry import acquire, release_or_close
     reset_session_vars()
     route = _session_route(unit)
     # An api_server parent has no push channel: its result is persisted for its next request, as at dispatch.
     set_session_vars(**route, async_delivery=not unit.get("origin_session_id"), cron_session="")
-    db = acquire(get_hermes_home() / "state.db")  # the bound profile's store, never the launch profile's
+    db = acquire(get_anakot_home() / "state.db")  # the bound profile's store, never the launch profile's
     try:
         out = _continue_as_parent(runner, db, record, unit, route, message)
     finally:
@@ -121,19 +121,19 @@ def _start_continue(runner: Any, record: dict[str, Any], unit: dict[str, Any], m
 
 
 def _profile_homes(runner: Any) -> list[tuple[str, Path]]:
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
     homes = dict(getattr(runner, "_served_profile_homes", None) or {})
     primary = getattr(runner, "_primary_profile_name", None) or "default"
-    homes.setdefault(primary, get_hermes_home())
+    homes.setdefault(primary, get_anakot_home())
     return [(name, Path(home)) for name, home in homes.items()]
 
 
 def _capacity() -> int:
     """The bound profile's ``delegation.max_concurrent_children`` minus the units THIS profile has running."""
-    from hermes_constants import get_hermes_home
+    from anakot_constants import get_anakot_home
     from tools.async_delegation import active_count
     from tools.delegate_tool_config import _get_max_concurrent_children
-    return _get_max_concurrent_children() - active_count(home=get_hermes_home())
+    return _get_max_concurrent_children() - active_count(home=get_anakot_home())
 
 
 def tick_profiles(runner: Any) -> list[str]:

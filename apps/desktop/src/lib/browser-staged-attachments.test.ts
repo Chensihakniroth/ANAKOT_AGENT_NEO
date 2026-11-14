@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { stageDroppedFilePath, useComposerActions } from '@/app/chat/hooks/use-composer-actions'
 import { uploadComposerAttachment } from '@/app/session/hooks/use-prompt-actions'
-import type { HermesStagedUpload } from '@/global'
+import type { AnakotStagedUpload } from '@/global'
 import {
   $composerAttachments, clearSessionDraft, type ComposerAttachment, stashSessionDraft, takeSessionDraft
 } from '@/store/composer'
@@ -13,14 +13,14 @@ import { clearWebappSession, seedWebappSession } from '@/test/webapp-session'
 
 import { installBrowserDesktopBridge } from './browser-desktop-bridge'
 
-const source: HermesStagedUpload = {
+const source: AnakotStagedUpload = {
   install_id: '11111111111111111111111111111111',
-  path: '/srv/hermes/profiles/owner/uploads/web-123-notes.txt',
-  profile_home: '/srv/hermes/profiles/owner'
+  path: '/srv/anakot/profiles/owner/uploads/web-123-notes.txt',
+  profile_home: '/srv/anakot/profiles/owner'
 }
 
 const sourceName = source.path.split('/').pop()!
-const refText = '@file:/srv/hermes/profiles/owner/attachments/web-123-notes.txt'
+const refText = '@file:/srv/anakot/profiles/owner/attachments/web-123-notes.txt'
 const file = () => new File(['payload'], 'notes.txt', { type: 'text/plain' })
 const pastedText = 'Pasted notes\nこんにちは 🌍'
 
@@ -31,7 +31,7 @@ const rawAttachment = (path = source.path): ComposerAttachment => ({
 const attached = () => ({ attached: true, ref_text: refText, uploaded: true })
 
 async function installBrowser(withProvenance = true) {
-  Reflect.deleteProperty(window, 'hermesDesktop')
+  Reflect.deleteProperty(window, 'anakotDesktop')
   seedWebappSession('test-token')
 
   const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -53,7 +53,7 @@ async function installBrowser(withProvenance = true) {
 
   vi.stubGlobal('fetch', fetchMock)
   expect(installBrowserDesktopBridge()).toBe(true)
-  $connection.set(await window.hermesDesktop.getConnection('owner'))
+  $connection.set(await window.anakotDesktop.getConnection('owner'))
 
   return fetchMock
 }
@@ -65,9 +65,9 @@ afterEach(() => {
   clearSessionDraft('staged-attachment-contract')
   $sessions.set([])
   $connection.set(null)
-  Reflect.deleteProperty(window, 'hermesDesktop')
+  Reflect.deleteProperty(window, 'anakotDesktop')
   clearWebappSession()
-  document.documentElement.removeAttribute('data-hermes-desktop-host')
+  document.documentElement.removeAttribute('data-anakot-desktop-host')
   vi.unstubAllGlobals()
   vi.restoreAllMocks()
 })
@@ -128,7 +128,7 @@ describe('browser staged attachment transport', () => {
         // A restored draft must not rely on the browser bridge's transient map.
         stashSessionDraft('staged-attachment-contract', 'draft', $composerAttachments.get())
         attachment = takeSessionDraft('staged-attachment-contract').attachments[0]!
-        window.hermesDesktop.getStagedFileForAttach = () => undefined
+        window.anakotDesktop.getStagedFileForAttach = () => undefined
       }
 
       // The supplied requester can be an explicitly routed tile/edit owner.
@@ -246,7 +246,7 @@ describe('browser staged attachment transport', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it.each(['another Hermes backend', 'Profile not found'])(
+  it.each(['another Anakot backend', 'Profile not found'])(
     'does not replace an authoritative %s rejection with a byte-upload fallback',
     async message => {
       const fetchMock = await installBrowser()
@@ -276,8 +276,8 @@ describe('browser staged attachment transport', () => {
     expect(installBrowserDesktopBridge()).toBe(true)
 
     for (const stage of [
-      () => window.hermesDesktop.stageFileForAttach!(file()),
-      () => window.hermesDesktop.savePastedText(pastedText)
+      () => window.anakotDesktop.stageFileForAttach!(file()),
+      () => window.anakotDesktop.savePastedText(pastedText)
     ]) {
       const failure: unknown = await stage().catch((error: unknown) => error)
       expect(failure).toBeInstanceOf(Error)
@@ -352,7 +352,7 @@ describe('browser staged attachment transport', () => {
     { remote: false, terminalBackend: 'docker', upload: true }
   ])('preserves native attachment transport: %j', async ({ remote, terminalBackend, upload }) => {
     const readFileDataUrl = vi.fn(async () => 'data:text/plain;base64,cGF5bG9hZA==')
-    Object.defineProperty(window, 'hermesDesktop', { configurable: true, value: { readFileDataUrl } })
+    Object.defineProperty(window, 'anakotDesktop', { configurable: true, value: { readFileDataUrl } })
     const requestGateway = vi.fn(async () => attached() as never)
     const path = '/native/notes.txt'
     await uploadComposerAttachment(rawAttachment(path), {

@@ -68,7 +68,7 @@ function sourceTree(modules) {
 function inputKey({ base, source }) {
   const output = execFileSync(python, [join(repo, 'scripts/ci/desktop_build_cache.py'), 'describe',
     '--source', source, '--cache', join(base, 'cache'), '--producer', 'desktop-production'], {
-    cwd: base, encoding: 'utf8', env: { ...process.env, GITHUB_OUTPUT: '', HERMES_HOME: join(base, 'home') },
+    cwd: base, encoding: 'utf8', env: { ...process.env, GITHUB_OUTPUT: '', ANAKOT_HOME: join(base, 'home') },
   })
   return JSON.parse(output).restore_keys[0]
 }

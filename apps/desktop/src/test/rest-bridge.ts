@@ -1,12 +1,12 @@
 import { vi } from 'vitest'
 
-import type { HermesApiRequest } from '@/global'
+import type { AnakotApiRequest } from '@/global'
 
-/** Install a fake `window.hermesDesktop.api`, the preload bridge every REST helper sends through. */
-export function installRestBridge(answer: (request: HermesApiRequest) => object) {
-  const api = vi.fn(async (request: HermesApiRequest) => answer(request))
+/** Install a fake `window.anakotDesktop.api`, the preload bridge every REST helper sends through. */
+export function installRestBridge(answer: (request: AnakotApiRequest) => object) {
+  const api = vi.fn(async (request: AnakotApiRequest) => answer(request))
 
-  Object.defineProperty(window, 'hermesDesktop', { configurable: true, value: { api } })
+  Object.defineProperty(window, 'anakotDesktop', { configurable: true, value: { api } })
 
   return api
 }

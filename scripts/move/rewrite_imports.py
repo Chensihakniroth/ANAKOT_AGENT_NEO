@@ -2,10 +2,10 @@
 
 Usage: python scripts/move/rewrite_imports.py --from-commit <A> [--paths P ...] [--check]
 
-Imports: ``import a`` becomes ``from hermes_agent import a`` (same bound name; the lint rejects
-``import hermes_agent.a as a``), except in a ``try`` whose handler catches ModuleNotFoundError or reads
+Imports: ``import a`` becomes ``from anakot_agent import a`` (same bound name; the lint rejects
+``import anakot_agent.a as a``), except in a ``try`` whose handler catches ModuleNotFoundError or reads
 ``exc.name``, and in a function that removes modules from ``sys.modules``: there the from-form changes
-the exception or skips the re-import, so ``import hermes_agent.a as a  # noqa: PLR0402`` is written.
+the exception or skips the re-import, so ``import anakot_agent.a as a  # noqa: PLR0402`` is written.
 ``import a.b`` binds the new root and its uses are respelled. ``from a import x`` changes its module.
 
 Strings change only where the code takes a module name (decision D47, see ``sinks.py``): import
@@ -48,7 +48,7 @@ DYNAMIC, STRING_REF, BY_PATH, FILE_MATH, BY_HAND_KIND, MODULE_STRING, MODULE_TAB
     IMPORT, OTHER = ("dynamic-import", "string-module-ref", "by-path", "file-math", "by-hand", "module-string",
                      "module-table", "code-string", "kept-name", "import", "other")
 GENERATE_HINT = ("next: after `just move-docs`, run `just move-generate`: generated files embed code and docstrings "
-                 "this move rewrote (apps/shared/src/gateway-contract.*, tests/hermes_cli/serve_handler_ledger.json)")
+                 "this move rewrote (apps/shared/src/gateway-contract.*, tests/anakot_cli/serve_handler_ledger.json)")
 NOQA = "PLR0402"
 _DASH_M = re.compile(r"(?<![\w-])(-m(?:\s+|[\"'],\s*[\"']))([A-Za-z_][\w.-]*)")
 _DASH_C = re.compile(r"(?<![\w-])-c\s+([\"'])(.+?)(?<!\\)\1", re.DOTALL)
@@ -207,7 +207,7 @@ class Plan:
         for name in (module, self.new(module)):
             if name is not None and function in self.helpers.get(name, {}):
                 return self.helpers[name][function]
-        return NAMED_HELPERS.get(f"{module.removeprefix('hermes_agent.')}.{function}", {})
+        return NAMED_HELPERS.get(f"{module.removeprefix('anakot_agent.')}.{function}", {})
 
 
 @dataclass
@@ -289,7 +289,7 @@ class _Rewriter(cst.CSTTransformer):
     # Imports and the names they bind.
 
     def leave_Import(self, original: cst.Import, updated: cst.Import):
-        """``import a`` -> ``from hermes_agent import a``; ``import a.b`` -> ``import hermes_agent.a.b``.
+        """``import a`` -> ``from anakot_agent import a``; ``import a.b`` -> ``import anakot_agent.a.b``.
 
         A multi-name statement is split in the order of its names, so each module still loads in the same order.
         """
@@ -408,7 +408,7 @@ class _Rewriter(cst.CSTTransformer):
         return cst.parse_expression(new)
 
     def leave_Call(self, original: cst.Call, updated: cst.Call) -> cst.Call:
-        """``__import__("a.b").b.X`` -> ``__import__("hermes_agent.a.b", fromlist=["X"]).X``."""
+        """``__import__("a.b").b.X`` -> ``__import__("anakot_agent.a.b", fromlist=["X"]).X``."""
         chain = self.found.chains.get(id(original))
         if chain is None or updated.args[0].value.deep_equals(original.args[0].value):
             return updated
@@ -847,7 +847,7 @@ def _candidates(root: Path, paths: list[str], plan: Plan) -> list[str]:
 
 def update_moves(root: Path, renames: dict[str, str], write: bool) -> int:
     """Add this move's old names to the compat MOVES table; earlier keys follow their target's new name."""
-    tracked = git(root, "ls-files", "*hermes_agent/compat/moves.py").split()
+    tracked = git(root, "ls-files", "*anakot_agent/compat/moves.py").split()
     if not tracked:
         return 0
     file = root / tracked[0]
@@ -877,7 +877,7 @@ def _module_names(file: Path) -> tuple[set[str], set[str]] | None:
 
 
 def _moves_table(root: Path) -> dict[str, str]:
-    tracked = git(root, "ls-files", "*hermes_agent/compat/moves.py").split()
+    tracked = git(root, "ls-files", "*anakot_agent/compat/moves.py").split()
     if not tracked or not (root / tracked[0]).is_file():
         return {}
     node = next((n for n in ast.parse((root / tracked[0]).read_text(encoding="utf-8-sig")).body

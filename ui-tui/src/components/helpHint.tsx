@@ -1,4 +1,4 @@
-import { Box, Text } from '@hermes/ink'
+import { Box, Text } from '@anakot/ink'
 
 import { hotkeys } from '../content/hotkeys.js'
 import { useT } from '../i18n/useT.js'

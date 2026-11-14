@@ -1,4 +1,4 @@
-import type { GatewayEvent } from '@hermes/shared'
+import type { GatewayEvent } from '@anakot/shared'
 import { QueryClient } from '@tanstack/react-query'
 import { act, cleanup, renderHook, waitFor } from '@testing-library/react'
 import { atom } from 'nanostores'
@@ -365,7 +365,7 @@ describe('useAutoSpeakReplies — final reply after tool calls', () => {
     clearOwnedSpeechTurnsForTests()
     $autoSpeakReplies.set(false)
     setVoicePlaybackState({ ...IDLE_STATE })
-    delete (window as { hermesDesktop?: unknown }).hermesDesktop
+    delete (window as { anakotDesktop?: unknown }).anakotDesktop
     vi.clearAllMocks()
   })
 
@@ -388,7 +388,7 @@ describe('useAutoSpeakReplies — final reply after tool calls', () => {
       return won
     }
 
-    ;(window as { hermesDesktop?: unknown }).hermesDesktop = {
+    ;(window as { anakotDesktop?: unknown }).anakotDesktop = {
       claimAmbientCue,
       notify: vi.fn(async () => undefined)
     }
@@ -457,7 +457,7 @@ describe('useAutoSpeakReplies — final reply after tool calls', () => {
           activeSessionIdRef: cache.activeSessionIdRef,
           hydrateFromStoredSession: vi.fn(async () => undefined),
           queryClient: queryClient.current,
-          refreshHermesConfig: vi.fn(async () => undefined),
+          refreshAnakotConfig: vi.fn(async () => undefined),
           refreshSessions: vi.fn(async () => undefined),
           sessionStateByRuntimeIdRef: cache.sessionStateByRuntimeIdRef,
           updateSessionState: cache.updateSessionState

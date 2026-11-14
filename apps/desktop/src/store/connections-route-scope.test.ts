@@ -1,18 +1,18 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
-import type { DesktopConnectionsRegistry, HermesConnection } from '@/global'
-import type * as Hermes from '@/hermes'
+import type { DesktopConnectionsRegistry, AnakotConnection } from '@/global'
+import type * as Anakot from '@/anakot'
 
 vi.mock('@/app/contrib/hooks/use-background-sync', () => ({ resetLiveRuntimeTracking: vi.fn() }))
-vi.mock('@/hermes', async importOriginal => {
-  const actual = await importOriginal<typeof Hermes>()
+vi.mock('@/anakot', async importOriginal => {
+  const actual = await importOriginal<typeof Anakot>()
 
   return {
     ...actual,
     getProfiles: vi.fn(async () => ({ profiles: [{ name: 'default' }] })),
     getStarmapGraph: vi.fn(async () => ({ nodes: [], edges: [] })),
-    hermesApi: vi.fn(async () => ({ current: 'default', profiles: [{ name: 'default' }] })),
-    HermesGateway: class {
+    anakotApi: vi.fn(async () => ({ current: 'default', profiles: [{ name: 'default' }] })),
+    AnakotGateway: class {
       connectionState = 'closed'
       wsUrl = ''
       connect = async (url: string) => {
@@ -62,7 +62,7 @@ const registry: DesktopConnectionsRegistry = {
   ]
 }
 
-function descriptor(connectionId: string, profile = 'default'): HermesConnection {
+function descriptor(connectionId: string, profile = 'default'): AnakotConnection {
   return {
     connectionId,
     profile,
@@ -87,7 +87,7 @@ beforeEach(async () => {
   _resetConnectionsForTests()
   getConnectionFor.mockReset()
   getConnectionFor.mockImplementation(async ({ connectionId, profile }) => descriptor(connectionId, profile))
-  Object.defineProperty(window, 'hermesDesktop', {
+  Object.defineProperty(window, 'anakotDesktop', {
     configurable: true,
     value: {
       getConnectionFor,

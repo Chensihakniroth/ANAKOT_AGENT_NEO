@@ -12,7 +12,7 @@ import threading
 
 import pytest
 
-import hermes_state_loop_guard as guard
+import anakot_state_loop_guard as guard
 
 # Loop-side reads that stay on the loop on purpose (``(module, function)`` of the caller), each because
 # it is paired, in one loop step, with loop-only state:
@@ -37,7 +37,7 @@ KEPT_ON_LOOP = {
 # turn). Their direct reads (the innermost caller of the store) must never be on the loop again.
 MOVED_OFF_LOOP = {('gateway/session_cron.py', 'operation'), ('gateway/session_cron.py', '_read_admission'),
                   ('gateway/session_authority.py', '_claim_next'), ('gateway/session_results.py', 'admission_result')}
-HOT_READS = {('hermes_state_runtime.py', 'get_session_admission'), ('hermes_state_runtime.py', 'list_session_admissions'),
+HOT_READS = {('anakot_state_runtime.py', 'get_session_admission'), ('anakot_state_runtime.py', 'list_session_admissions'),
              ('gateway/session_results.py', 'admission_result')}
 
 
@@ -58,7 +58,7 @@ def _site(record):
 
 
 def test_guard_is_inert_until_installed(tmp_path):
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
     guard.uninstall()
     assert not getattr(SessionDB, '_loop_guard_installed', False)
     db = SessionDB(tmp_path / 'state.db')
@@ -73,7 +73,7 @@ def test_guard_is_inert_until_installed(tmp_path):
 
 
 def test_raise_mode_refuses_on_the_loop_thread_and_allows_workers(tmp_path):
-    from hermes_state import SessionDB
+    from anakot_state import SessionDB
     db = SessionDB(tmp_path / 'state.db')
     guard.install('raise')
 
@@ -97,12 +97,12 @@ def test_gateway_startup_installs_the_guard_from_config_yaml(tmp_path, monkeypat
     from gateway import run
     from gateway.run_startup_liveness import start_loop_liveness_guards
     (tmp_path / 'config.yaml').write_text('gateway:\n  sessiondb_loop_guard: warn\n', encoding='utf-8')
-    monkeypatch.setattr(run, '_hermes_home', tmp_path)
+    monkeypatch.setattr(run, '_anakot_home', tmp_path)
     owner = SimpleNamespace(config=SimpleNamespace(loop_watchdog=False))
     loop = asyncio.new_event_loop()
     try:
         start_loop_liveness_guards(owner, loop)
-        from hermes_state import SessionDB
+        from anakot_state import SessionDB
         assert SessionDB._loop_guard_installed and guard._state['mode'] == 'warn'
         guard.uninstall()
         (tmp_path / 'config.yaml').write_text('gateway: {}\n', encoding='utf-8')
@@ -127,10 +127,10 @@ async def test_cron_run_and_inbound_turn_touch_sessiondb_on_the_loop_only_where_
     from gateway.session_ingress_context import register_transport_home
     from tests.gateway.test_command_bypass_active_session import _StubAdapter
 
-    monkeypatch.setenv('HERMES_HOME', str(tmp_path))
+    monkeypatch.setenv('ANAKOT_HOME', str(tmp_path))
     monkeypatch.setenv('TELEGRAM_ALLOWED_USERS', '42')
-    monkeypatch.setattr('gateway.run._hermes_home', tmp_path)
-    monkeypatch.setattr('hermes_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
+    monkeypatch.setattr('gateway.run._anakot_home', tmp_path)
+    monkeypatch.setattr('anakot_state.DEFAULT_DB_PATH', tmp_path / 'state.db')
     monkeypatch.setattr(run, '_load_gateway_config', lambda *a: {'model': {}, 'platform_toolsets': {'cli': []}})
     monkeypatch.setattr(jobs, 'get_job', lambda jid: {'id': jid, 'prompt': 'p', 'model': 'm', 'name': 'job'})
     release = threading.Event()

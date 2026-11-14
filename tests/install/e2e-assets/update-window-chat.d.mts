@@ -2,8 +2,8 @@ import type { BackendProcess } from '../../../tests-js/scripts/desktop-smoke-pro
 import type { ElectronApplication, Page } from '../../../tests-js/scripts/e2e-driver-deps.ts'
 
 export interface UpdateWindowIdentity {
-  hermesRoot: string
-  hermesHome?: string
+  anakotRoot: string
+  anakotHome?: string
 }
 
 export interface UpdateWindowChatOptions {

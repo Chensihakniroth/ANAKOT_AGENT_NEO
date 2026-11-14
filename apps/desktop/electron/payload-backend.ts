@@ -34,7 +34,7 @@ export function bundledPayload(
     storePython: path.join(root, runtime.storePython),
     sitePackages: path.join(root, runtime.sitePackages),
     commands,
-    shim: commands.hermes
+    shim: commands.anakot
   }
 }
 
@@ -63,11 +63,11 @@ export function payloadPycacheEnv(
 
   const cache = env.XDG_CACHE_HOME || path.posix.join(env.HOME || os.homedir(), '.cache')
 
-  return { PYTHONPYCACHEPREFIX: env.PYTHONPYCACHEPREFIX || path.posix.join(cache, 'hermes-pycache') }
+  return { PYTHONPYCACHEPREFIX: env.PYTHONPYCACHEPREFIX || path.posix.join(cache, 'anakot-pycache') }
 }
 
 /**
- * The bundled shim is the Hermes CLI, not an interpreter, so it rejects the
+ * The bundled shim is the Anakot CLI, not an interpreter, so it rejects the
  * ticket bridge's `-P -u -c`. Ticket minting runs the payload python against
  * the same import closure and bytecode cache the shim gives the CLI.
  */
@@ -104,7 +104,7 @@ export function requireBundledPayload(mechanism: string, resourcesPath = process
 //
 // The CLI owns the channel records; Electron only reads the install id for
 // `update.installs.<sha16>/` bookkeeping. Channel resolution itself lives in
-// hermes_cli/update_channel.py — main.ts keys canary/stable off the baked
+// anakot_cli/update_channel.py — main.ts keys canary/stable off the baked
 // install stamp tag directly.
 
 export type UpdateChannel = 'stable' | 'main' | 'canary'

@@ -31,7 +31,7 @@ def assignment(tmp_path, monkeypatch, *, finite=True, unattended=False, yolo=Fal
 def test_child_executes_under_finite_policy_and_preserves_receipt(tmp_path, monkeypatch, unattended):
     from agent import managed_worker as worker
     from gateway.session_finite import finite_turn_required, unattended_turn
-    from hermes_scope import Fence, current_scope
+    from anakot_scope import Fence, current_scope
     from tools.approval import _yolo_active, clear_session
     frame, _ = assignment(tmp_path, monkeypatch, unattended=unattended)
     frame['scope'].update(epoch=3, generation=8)  # distinct, so a swapped fence is caught
@@ -153,7 +153,7 @@ async def test_stop_during_environment_preparation_prevents_bootstrap(tmp_path, 
         def interrupt(self):
             self.stop.set()
         async def next_frame(self, *args, **kwargs):
-            from hermes_state_runtime import RuntimeStoreError
+            from anakot_state_runtime import RuntimeStoreError
             assert self.stop.is_set(), 'pending Stop was not adopted'
             raise RuntimeStoreError('managed_worker_stopped')
         def close(self): pass

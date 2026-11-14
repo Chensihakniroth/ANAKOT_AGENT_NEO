@@ -1,5 +1,5 @@
-#ifndef HERMES_HUD_MODIFIER_GESTURE_H
-#define HERMES_HUD_MODIFIER_GESTURE_H
+#ifndef ANAKOT_HUD_MODIFIER_GESTURE_H
+#define ANAKOT_HUD_MODIFIER_GESTURE_H
 #include <stdbool.h>
 #include <stdint.h>
 

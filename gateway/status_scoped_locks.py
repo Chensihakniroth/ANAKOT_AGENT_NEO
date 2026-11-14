@@ -19,7 +19,7 @@ def scoped_lock_pid_is_ours(record: dict[str, Any]) -> bool:
     namespace's PID (often 1): from outside, that number is init or nothing, and the live owner
     reads as dead (#123081). A stamp from another namespace is never probed; a record with no
     stamp (written before it existed, or on a platform without namespaces) keeps the pid probe."""
-    from hermes_state_pidns import persistent_record_pidns_checkable
+    from anakot_state_pidns import persistent_record_pidns_checkable
     return persistent_record_pidns_checkable(record.get("pidns"))
 
 
@@ -42,7 +42,7 @@ def _foreign_owner_is_live(existing: dict[str, Any]) -> bool:
     process-kind owner (setup worker, dashboard) that never takes that flock, stays live: unknown is
     not dead."""
     from gateway.runtime_ownership import runtime_lock_held_elsewhere
-    home, metadata = existing.get("hermes_home"), existing.get("metadata")
+    home, metadata = existing.get("anakot_home"), existing.get("metadata")
     if not isinstance(home, str) or not home.strip():
         return True
     if isinstance(metadata, dict) and metadata.get("owner_kind") == "process":
@@ -65,7 +65,7 @@ def _scoped_lock_record_is_stale(existing: dict[str, Any], existing_pid: Optiona
         _status.logger.warning(
             "Scoped lock for %s is held by PID %s in another PID namespace (%s), whose gateway.lock "
             "in %s is held or cannot be checked; treating it as live.", existing.get("scope") or "?",
-            existing_pid, existing.get("pidns"), existing.get("hermes_home") or "an unrecorded home")
+            existing_pid, existing.get("pidns"), existing.get("anakot_home") or "an unrecorded home")
         return False
     if existing_pid is None or not _status._pid_exists(existing_pid):
         return True

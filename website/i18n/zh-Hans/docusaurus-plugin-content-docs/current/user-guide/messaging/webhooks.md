@@ -1,12 +1,12 @@
 ---
 sidebar_position: 13
 title: "Webhooks"
-description: "接收来自 GitHub、GitLab 等服务的事件以触发 Hermes agent 运行"
+description: "接收来自 GitHub、GitLab 等服务的事件以触发 Anakot agent 运行"
 ---
 
 # Webhooks
 
-接收来自外部服务（GitHub、GitLab、JIRA、Stripe 等）的事件，并自动触发 Hermes agent 运行。Webhook 适配器运行一个 HTTP 服务器，接受 POST 请求、验证 HMAC 签名、将 payload（载荷）转换为 agent prompt（提示词），并将响应路由回来源或其他已配置的平台。
+接收来自外部服务（GitHub、GitLab、JIRA、Stripe 等）的事件，并自动触发 Anakot agent 运行。Webhook 适配器运行一个 HTTP 服务器，接受 POST 请求、验证 HMAC 签名、将 payload（载荷）转换为 agent prompt（提示词），并将响应路由回来源或其他已配置的平台。
 
 agent 处理事件后，可通过在 PR 上发布评论、向 Telegram/Discord 发送消息或记录结果来响应。
 
@@ -15,7 +15,7 @@ agent 处理事件后，可通过在 PR 上发布评论、向 Telegram/Discord �
 <div style={{position: 'relative', width: '100%', aspectRatio: '16 / 9', marginBottom: '1.5rem'}}>
   <iframe
     src="https://www.youtube.com/embed/WNYe5mD4fY8"
-    title="Hermes Agent — Webhooks Tutorial"
+    title="Anakot Agent — Webhooks Tutorial"
     style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0}}
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
@@ -26,8 +26,8 @@ agent 处理事件后，可通过在 PR 上发布评论、向 Telegram/Discord �
 
 ## 快速开始
 
-1. 通过 `hermes gateway setup` 或环境变量启用
-2. 在 `config.yaml` 中定义路由，**或**使用 `hermes webhook subscribe` 动态创建
+1. 通过 `anakot gateway setup` 或环境变量启用
+2. 在 `config.yaml` 中定义路由，**或**使用 `anakot webhook subscribe` 动态创建
 3. 将你的服务指向 `http://your-server:8644/webhooks/<route-name>`
 
 ---
@@ -39,14 +39,14 @@ agent 处理事件后，可通过在 PR 上发布评论、向 Telegram/Discord �
 ### 通过设置向导
 
 ```bash
-hermes gateway setup
+anakot gateway setup
 ```
 
 按照提示启用 webhooks、设置端口和全局 HMAC secret。
 
 ### 通过环境变量
 
-添加到 `~/.hermes/.env`：
+添加到 `~/.anakot/.env`：
 
 ```bash
 WEBHOOK_ENABLED=true
@@ -80,10 +80,10 @@ curl http://localhost:8644/health
 |----------|----------|-------------|
 | `events` | 否 | 要接受的事件类型列表（例如 `["pull_request"]`）。若为空，则接受所有事件。事件类型从 `X-GitHub-Event`、`X-GitLab-Event` 或 payload 中的 `event_type` 读取。 |
 | `secret` | **是** | 用于签名验证的 HMAC secret。若路由未设置，则回退到全局 `secret`。仅用于测试时可设为 `"INSECURE_NO_AUTH"`（跳过验证）。 |
-| `signature` | 否 | 将路由固定到一种签名方案：`generic`（`X-Webhook-Signature-V2` + `X-Webhook-Timestamp`，或 Standard Webhooks / Svix 请求头）、`github`（`X-Hub-Signature-256`）、`gitlab`（`X-Gitlab-Token`，或以 Standard Webhooks 请求头发送的 GitLab 签名令牌）或 `linear`（`Linear-Signature`）。其他请求头一律返回 `401`。省略时接受所有支持的方案（引入此键之前的行为）。`hermes webhook subscribe` 为新路由写入 `signature: generic`。建议设置，参见[固定签名方案](#pin-the-signature-scheme)。 |
+| `signature` | 否 | 将路由固定到一种签名方案：`generic`（`X-Webhook-Signature-V2` + `X-Webhook-Timestamp`，或 Standard Webhooks / Svix 请求头）、`github`（`X-Hub-Signature-256`）、`gitlab`（`X-Gitlab-Token`，或以 Standard Webhooks 请求头发送的 GitLab 签名令牌）或 `linear`（`Linear-Signature`）。其他请求头一律返回 `401`。省略时接受所有支持的方案（引入此键之前的行为）。`anakot webhook subscribe` 为新路由写入 `signature: generic`。建议设置，参见[固定签名方案](#pin-the-signature-scheme)。 |
 | `prompt` | 否 | 使用点号表示法访问 payload 字段的模板字符串（例如 `{pull_request.title}`）。若省略，则将完整 JSON payload 转储到 prompt 中。 |
 | `filters` | 否 | 声明式 payload 过滤器，在认证/请求体/事件过滤之后、agent 或直接投递之前求值。不匹配时返回 `{"status":"ignored","reason":"filter"}`（HTTP 200）。 |
-| `script` | 否 | 位于 `~/.hermes/scripts/` 下的过滤/转换脚本。webhook payload 以 JSON 形式通过 stdin 传入。stdout 为 JSON 对象时会在模板渲染前替换 payload；文本 stdout 以 `script_output` 形式暴露；空 stdout、`[SILENT]` 或非零退出码会忽略该 webhook。 |
+| `script` | 否 | 位于 `~/.anakot/scripts/` 下的过滤/转换脚本。webhook payload 以 JSON 形式通过 stdin 传入。stdout 为 JSON 对象时会在模板渲染前替换 payload；文本 stdout 以 `script_output` 形式暴露；空 stdout、`[SILENT]` 或非零退出码会忽略该 webhook。 |
 | `skills` | 否 | agent 运行时加载的 skill 名称列表。 |
 | `deliver` | 否 | 响应发送目标：`github_comment`、`telegram`、`discord`、`slack`、`signal`、`sms`、`whatsapp`、`matrix`、`mattermost`、`homeassistant`（插件）、`email`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`，或 `log`（默认）。 |
 | `deliver_extra` | 否 | 额外的投递配置——键取决于 `deliver` 类型（例如 `repo`、`pr_number`、`chat_id`）。值支持与 `prompt` 相同的 `{dot.notation}` 模板语法。 |
@@ -141,12 +141,12 @@ platforms:
           secret: "todoist-secret"
           filters:
             - field: "payload.labels"
-              contains: "hermes"
+              contains: "anakot"
             - any:
                 - field: "payload.priority"
                   equals: 4
                 - field: "payload.project_id"
-                  in_file: "~/.hermes/data/todoist/watchlist.json"
+                  in_file: "~/.anakot/data/todoist/watchlist.json"
           prompt: "Todoist task changed: {payload.content}"
 ```
 
@@ -165,18 +165,18 @@ platforms:
 
 ### 脚本过滤与转换 {#script-filters-and-transforms}
 
-当声明式过滤器不够用时，使用 `script`。脚本必须位于当前 profile 的 `~/.hermes/scripts/` 目录下；相对路径在该目录内解析，且禁止路径穿越到目录之外。`.sh` 和 `.bash` 脚本用 bash 运行，其他扩展名用当前 Python 解释器运行。
+当声明式过滤器不够用时，使用 `script`。脚本必须位于当前 profile 的 `~/.anakot/scripts/` 目录下；相对路径在该目录内解析，且禁止路径穿越到目录之外。`.sh` 和 `.bash` 脚本用 bash 运行，其他扩展名用当前 Python 解释器运行。
 
 路由 payload 以 JSON 形式发送到 stdin：
 
 ```python
-# ~/.hermes/scripts/todoist-hermes-label.py
+# ~/.anakot/scripts/todoist-anakot-label.py
 import json
 import sys
 
 payload = json.load(sys.stdin)
 labels = payload.get("payload", {}).get("labels", [])
-if "hermes" not in labels:
+if "anakot" not in labels:
     print("[SILENT]")
     raise SystemExit(0)
 
@@ -188,7 +188,7 @@ print(json.dumps(payload))
 
 - stdout 为 JSON 对象时，替换 `prompt` 和 `deliver_extra` 使用的 payload。
 - 非 JSON 文本 stdout 会以 `script_output` 字段加入 payload。
-- 空 stdout、精确的 `[SILENT]`、`{"__hermes_ignore__": true}`、超时、脚本缺失或非零退出码，均返回 HTTP 200 及 `{"status":"ignored","reason":"script"}`。
+- 空 stdout、精确的 `[SILENT]`、`{"__anakot_ignore__": true}`、超时、脚本缺失或非零退出码，均返回 HTTP 200 及 `{"status":"ignored","reason":"script"}`。
 
 ### Prompt 模板
 
@@ -245,7 +245,7 @@ webhooks:
 
 ### 2. 添加路由配置
 
-按照上方示例，将 `github-pr` 路由添加到 `~/.hermes/config.yaml`。
+按照上方示例，将 `github-pr` 路由添加到 `~/.anakot/config.yaml`。
 
 ### 3. 确保 `gh` CLI 已认证
 
@@ -257,7 +257,7 @@ gh auth login
 
 ### 4. 测试
 
-在仓库中打开一个 pull request。webhook 触发后，Hermes 处理事件并在 PR 上发布审查评论。
+在仓库中打开一个 pull request。webhook 触发后，Anakot 处理事件并在 PR 上发布审查评论。
 
 ---
 
@@ -369,7 +369,7 @@ platforms:
 ### 示例：通过 CLI 动态订阅
 
 ```bash
-hermes webhook subscribe antenna-matches \
+anakot webhook subscribe antenna-matches \
   --deliver telegram \
   --deliver-chat-id "123456789" \
   --deliver-only \
@@ -431,7 +431,7 @@ platforms:
 ### 通过 CLI
 
 ```bash
-hermes webhook subscribe pr-feedback \
+anakot webhook subscribe pr-feedback \
   --events "pull_request_review" \
   --signature github \
   --cron-job "pr-review-sweeper" \
@@ -451,12 +451,12 @@ hermes webhook subscribe pr-feedback \
 
 ## 动态订阅（CLI） {#dynamic-subscriptions}
 
-除了 `config.yaml` 中的静态路由，还可以使用 `hermes webhook` CLI 命令动态创建 webhook 订阅。当 agent 本身需要设置事件驱动触发器时，这尤为有用。
+除了 `config.yaml` 中的静态路由，还可以使用 `anakot webhook` CLI 命令动态创建 webhook 订阅。当 agent 本身需要设置事件驱动触发器时，这尤为有用。
 
 ### 创建订阅
 
 ```bash
-hermes webhook subscribe github-issues \
+anakot webhook subscribe github-issues \
   --events "issues" \
   --signature github \
   --prompt "New issue #{issue.number}: {issue.title}\nBy: {issue.user.login}\n\n{issue.body}" \
@@ -474,27 +474,27 @@ hermes webhook subscribe github-issues \
 ### 列出订阅
 
 ```bash
-hermes webhook list
+anakot webhook list
 ```
 
 ### 删除订阅
 
 ```bash
-hermes webhook remove github-issues
+anakot webhook remove github-issues
 ```
 
 ### 测试订阅
 
 ```bash
-hermes webhook test github-issues
-hermes webhook test github-issues --payload '{"issue": {"number": 42, "title": "Test"}}'
+anakot webhook test github-issues
+anakot webhook test github-issues --payload '{"issue": {"number": 42, "title": "Test"}}'
 ```
 
 `test` 按路由 `signature` 固定的方案签名：`github` 用 `X-Hub-Signature-256`，`gitlab` 用 `X-Gitlab-Token`，`linear` 用 `Linear-Signature`，`generic` 或未固定的路由用 `X-Webhook-Signature-V2` + `X-Webhook-Timestamp`。
 
 ### 动态订阅的工作原理
 
-- 订阅存储在 `~/.hermes/webhook_subscriptions.json`
+- 订阅存储在 `~/.anakot/webhook_subscriptions.json`
 - webhook 适配器在每次收到请求时热重载该文件（基于 mtime 检测，开销可忽略不计）
 - `config.yaml` 中的静态路由始终优先于同名的动态订阅
 - 动态订阅与静态路由使用相同的格式和功能（events、prompt 模板、skills、delivery）
@@ -502,7 +502,7 @@ hermes webhook test github-issues --payload '{"issue": {"number": 42, "title": "
 
 ### agent 驱动的订阅
 
-agent 可通过 terminal 工具在 `webhook-subscriptions` skill 的引导下创建订阅。向 agent 请求"为 GitHub issues 设置 webhook"，它将运行相应的 `hermes webhook subscribe` 命令。
+agent 可通过 terminal 工具在 `webhook-subscriptions` skill 的引导下创建订阅。向 agent 请求"为 GitHub issues 设置 webhook"，它将运行相应的 `anakot webhook subscribe` 命令。
 
 ---
 
@@ -606,7 +606,7 @@ Webhook payload 包含攻击者可控的数据——PR 标题、commit 消息、
 
 ### Agent 未响应
 
-- 在前台运行 gateway 以查看日志：`hermes gateway run`
+- 在前台运行 gateway 以查看日志：`anakot gateway run`
 - 检查 prompt 模板是否正确渲染
 - 验证投递目标已配置并连接
 

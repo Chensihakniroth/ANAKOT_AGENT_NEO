@@ -15,7 +15,7 @@ describe('UrlEmbed with embeds off', () => {
   beforeEach(() => {
     fetchLinkTitle.mockClear()
     $embedMode.set('off')
-    ;(window as unknown as { hermesDesktop: object }).hermesDesktop = {
+    ;(window as unknown as { anakotDesktop: object }).anakotDesktop = {
       fetchLinkTitle,
       openExternal: vi.fn().mockResolvedValue(undefined)
     }
@@ -24,7 +24,7 @@ describe('UrlEmbed with embeds off', () => {
   afterEach(() => {
     cleanup()
     $embedMode.set('ask')
-    delete (window as unknown as { hermesDesktop?: object }).hermesDesktop
+    delete (window as unknown as { anakotDesktop?: object }).anakotDesktop
   })
 
   it('renders the source URL as a plain link without fetching the provider page', async () => {

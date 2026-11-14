@@ -187,7 +187,7 @@ function getLinkTitleSession() {
     return linkTitleSession
   }
 
-  linkTitleSession = session.fromPartition('hermes:link-titles', { cache: false })
+  linkTitleSession = session.fromPartition('anakot:link-titles', { cache: false })
   linkTitleSession.webRequest.onBeforeRequest((details, callback) => {
     if (RENDER_TITLE_BLOCKED_RESOURCES.has(details.resourceType)) {
       return callback({ cancel: true })

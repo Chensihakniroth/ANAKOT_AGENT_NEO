@@ -39,7 +39,7 @@ function withinBudget<T>(work: Promise<T>, budgetMs: number): Promise<T> {
 
   const expired = new Promise<never>((_, reject) => {
     timer = setTimeout(
-      () => reject(new Error(`the app-global Hermes backend did not respond within ${budgetMs}ms`)),
+      () => reject(new Error(`the app-global Anakot backend did not respond within ${budgetMs}ms`)),
       budgetMs
     )
   })
@@ -54,7 +54,7 @@ export function createGlobalRemoteSessionRoute(deps: GlobalRemoteSessionDeps) {
     const remote = await deps.resolveGlobalRemote()
 
     if (!remote) {
-      throw new Error('The app-global Hermes backend is not remote.')
+      throw new Error('The app-global Anakot backend is not remote.')
     }
 
     await deps.waitReady(remote)
@@ -109,7 +109,7 @@ type FetchPublicJson = (url: string, options?: { timeoutMs?: number }) => Promis
 
 export async function probeRemoteAuthMode(rawUrl: string, fetchPublicJson: FetchPublicJson) {
   // Determine how a remote gateway expects callers to authenticate, WITHOUT
-  // sending any credentials. ``/api/status`` is public on every Hermes
+  // sending any credentials. ``/api/status`` is public on every Anakot
   // gateway (it backs the portal liveness probe) and reports:
   //   auth_required: true  → OAuth gate is engaged (cookie + ws-ticket auth)
   //   auth_required: false → loopback/--insecure: legacy session-token auth

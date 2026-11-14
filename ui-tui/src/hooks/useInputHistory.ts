@@ -1,4 +1,4 @@
-import * as inputHistory from '@hermes/shared/prompt-history'
+import * as inputHistory from '@anakot/shared/prompt-history'
 import { useRef, useState } from 'react'
 
 export function useInputHistory() {

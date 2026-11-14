@@ -1,6 +1,6 @@
 """Start the gateway listener with the Webapp on or off; report what a browser and a native client get.
 
-Run as ``python webapp_listener_peer.py on|off <port> <dist> [macos]`` with an isolated ``HERMES_HOME``;
+Run as ``python webapp_listener_peer.py on|off <port> <dist> [macos]`` with an isolated ``ANAKOT_HOME``;
 ``macos`` takes the launch path of macOS and the BSDs (the printed link) on any host. Writes
 ``receipt.json`` there (the gateway redirects stdout). No external inference: the model points at a closed
 port and no turn is submitted.
@@ -60,7 +60,7 @@ async def sockets_across_sign_out(runner, client, origin, ask):
     from websockets.asyncio.client import connect
 
     from gateway.runtime_bootstrap import TicketStore
-    from hermes_cli import web_host_terminal, web_server
+    from anakot_cli import web_host_terminal, web_server
     from tests.gateway.fixtures.local_recovery_probe import rpc
 
     # A harmless program stands in for the user's login shell.
@@ -72,7 +72,7 @@ async def sockets_across_sign_out(runner, client, origin, ask):
         return (await client.post(f"/api/webapp/socket-ticket?socket={socket}", headers=session)).json()["ticket"]
 
     def chat_protocols(value):
-        return ["hermes-gateway-v1", f"hermes-gateway-ticket.{value}"]
+        return ["anakot-gateway-v1", f"anakot-gateway-ticket.{value}"]
 
     report = {
         "terminal_refuses_session_token": await _upgrade_refusal(
@@ -110,10 +110,10 @@ async def probe(mode, port, dist, platform):
     from gateway.run_runtime import start_gateway_runtime_api
     from gateway.session_authority import initialize_session_authority
     from gateway.webapp_listener import TOKEN_PATH
-    import hermes_cli.webapp
+    import anakot_cli.webapp
     from tests.gateway.fixtures.local_recovery_probe import rpc
 
-    home = Path(os.environ["HERMES_HOME"])
+    home = Path(os.environ["ANAKOT_HOME"])
     webapp_block = f"webapp:\n  enabled: true\n  port: {port}\n" if mode == "on" else ""
     (home / "config.yaml").write_text(
         "gateway:\n  multiplex_profiles: false\nmodel:\n  provider: custom\n  default: no-inference\n"
@@ -123,7 +123,7 @@ async def probe(mode, port, dist, platform):
         (home / TOKEN_PATH).parent.mkdir(mode=0o700, parents=True, exist_ok=True)
         (home / TOKEN_PATH).write_text(SEEDED_TOKEN + "\n", encoding="utf-8")
         (home / TOKEN_PATH).chmod(0o600)
-    hermes_cli.webapp.webapp_dist_dir = lambda _root: Path(dist)  # the built bundle, without a build
+    anakot_cli.webapp.webapp_dist_dir = lambda _root: Path(dist)  # the built bundle, without a build
     runner = GatewayRunner()
     runner.session_control_server = GatewayControlServer(home)  # verbs only; not listening
     # Set by the gateway bootstrap, which this fixture skips; the gateway is up.
@@ -133,7 +133,7 @@ async def probe(mode, port, dist, platform):
     await start_gateway_runtime_api(runner)
     links_checked = follow_launch_path(runner, home, platform)
     api = runner.session_api
-    from hermes_cli import web_server
+    from anakot_cli import web_server
 
     def ask(verb):
         raw = json.dumps({"protocol": 1, "verb": verb, "id": 1, "params": {}}).encode()
@@ -158,7 +158,7 @@ async def probe(mode, port, dist, platform):
                 ticket = minted.json()["ticket"]
                 url = origin.replace("http:", "ws:") + "/api/ws?native_dial=browser"
                 async with connect(url, origin=origin,
-                                   subprotocols=["hermes-gateway-v1", f"hermes-gateway-ticket.{ticket}"]) as ws:
+                                   subprotocols=["anakot-gateway-v1", f"anakot-gateway-ticket.{ticket}"]) as ws:
                     created = await rpc(ws, "session.create", request_id="browser-create", source="gui",
                                         toolsets=[])
                     report["browser_session"] = "result" in created
@@ -170,7 +170,7 @@ async def probe(mode, port, dist, platform):
                 report["launch_private"] = launched["result"]["private"]
                 report["launch_printed_for_the_user"] = not links_checked
                 ticket = url.split("#ticket=", 1)[1]
-                handoff = {"X-Hermes-Window-Ticket": ticket, "Origin": origin}
+                handoff = {"X-Anakot-Window-Ticket": ticket, "Origin": origin}
                 redeemed = await client.post("/webapp/window-session", headers=handoff)
                 report["handoff_status"] = redeemed.status_code
                 report["handoff_gives_credential"] = redeemed.status_code == 200 and (
@@ -189,7 +189,7 @@ async def probe(mode, port, dist, platform):
 
 
 def main():
-    receipt = Path(os.environ["HERMES_HOME"]) / "receipt.json"
+    receipt = Path(os.environ["ANAKOT_HOME"]) / "receipt.json"
     try:
         receipt.write_text(json.dumps(asyncio.run(probe(
             sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else "this platform"))))

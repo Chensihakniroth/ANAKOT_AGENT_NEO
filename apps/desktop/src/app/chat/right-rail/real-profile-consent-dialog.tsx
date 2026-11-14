@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import type { HermesConnection } from '@/global'
-import { saveHermesConfigRecord } from '@/hermes'
+import type { AnakotConnection } from '@/global'
+import { saveAnakotConfigRecord } from '@/anakot'
 import { useI18n } from '@/i18n'
 import { Check, Globe } from '@/lib/icons'
 import { claimPreviewSigninsSync, syncPreviewSignins } from '@/lib/preview-signins'
@@ -26,7 +26,7 @@ import {
 } from '@/store/real-profile-consent'
 import { $connection } from '@/store/session'
 
-import { hermesConfigCacheWriter, useHermesConfigRecord } from '../../hooks/use-config-record'
+import { anakotConfigCacheWriter, useAnakotConfigRecord } from '../../hooks/use-config-record'
 
 interface RealProfileConsentDialogProps {
   /** The Browser tab this pane renders — used only to claim the prompt so
@@ -37,7 +37,7 @@ interface RealProfileConsentDialogProps {
 interface RealProfilePromptGate {
   claim: null | string
   configLoaded: boolean
-  connection: HermesConnection | null
+  connection: AnakotConnection | null
   dismissed: boolean
   enabled: boolean
   muted: boolean
@@ -88,8 +88,8 @@ export function RealProfileConsentDialog({ tabId }: RealProfileConsentDialogProp
   const muted = useStore($realProfilePromptMuted)
   const claim = useStore($realProfilePromptClaim)
   const connection = useStore($connection)
-  const { data: config, writeScope } = useHermesConfigRecord()
-  const setConfig = hermesConfigCacheWriter()
+  const { data: config, writeScope } = useAnakotConfigRecord()
+  const setConfig = anakotConfigCacheWriter()
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export function RealProfileConsentDialog({ tabId }: RealProfileConsentDialogProp
     try {
       // Sparse patch: PUT /api/config deep-merges, and echoing the cached
       // snapshot would overwrite keys other surfaces changed since it loaded.
-      await saveHermesConfigRecord({ browser: { use_real_profile: true } }, writeScope)
+      await saveAnakotConfigRecord({ browser: { use_real_profile: true } }, writeScope)
 
       notify({ kind: 'info', title: copy.enabledTitle, message: copy.enabledMessage })
       // After the save, so the backend's own consent check sees it: signs this Browser tab in too.

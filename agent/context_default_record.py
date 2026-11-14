@@ -23,8 +23,8 @@ _MAX_RECORDS = 512
 
 
 def _key(model, base_url) -> tuple[str, str, str]:
-    from hermes_constants import hermes_home_key
-    return hermes_home_key(), str(model or "").strip(), str(base_url or "").strip().rstrip("/")
+    from anakot_constants import anakot_home_key
+    return anakot_home_key(), str(model or "").strip(), str(base_url or "").strip().rstrip("/")
 
 
 def mark_context_defaulted() -> None:

@@ -3,7 +3,7 @@ name: antemuse
 title: Antemuse
 repo: https://github.com/roosiq/antemuse-plugin
 sha: b19cca81d5a5ff90553e1ad715f042b9a3564a83
-description: "The agent takes a walk, daydreams, dreams, doomscrolls, or gets unstuck: a bounded change to how it works, with a dose rather than a duration. Walks step through WordNet, dreams recombine FrameNet roles, daydreams draw on stored memories, doomscrolls on live feeds. No model calls on the state path. Disclosure — By default, once per session, reads the last 14 days of your Hermes session messages (read-only) and your MEMORY.md/USER.md as daydream and dream material (turn off with the `session_scan` setting); dream reads commit subjects from the current git repository (or the repos you list in `dream_projects`); doomscroll fetches public RSS feeds from fixed news and comedy sites."
+description: "The agent takes a walk, daydreams, dreams, doomscrolls, or gets unstuck: a bounded change to how it works, with a dose rather than a duration. Walks step through WordNet, dreams recombine FrameNet roles, daydreams draw on stored memories, doomscrolls on live feeds. No model calls on the state path. Disclosure — By default, once per session, reads the last 14 days of your Anakot session messages (read-only) and your MEMORY.md/USER.md as daydream and dream material (turn off with the `session_scan` setting); dream reads commit subjects from the current git repository (or the repos you list in `dream_projects`); doomscroll fetches public RSS feeds from fixed news and comedy sites."
 maintainer: roosiq
 tier: community
 category: general

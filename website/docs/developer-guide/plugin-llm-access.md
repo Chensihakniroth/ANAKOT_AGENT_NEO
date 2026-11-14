@@ -84,7 +84,7 @@ model couldn't produce valid JSON, `result.parsed` is `None` and
   objects.
 * **Host-owned credentials.** OAuth tokens, refresh flows, the
   credential pool, per-task aux overrides — every credential
-  concept Hermes already has applies. The plugin never sees a
+  concept Anakot already has applies. The plugin never sees a
   token; the host attributes the call back through `result.audit`.
 * **Bounded.** Single sync or async call. No streaming, no tool
   loops, no conversation state to manage. State the input, get the
@@ -186,11 +186,11 @@ def _paste_to_tasks(ctx, raw_args: str) -> str:
 ```
 
 A third worked example, this time with image input, lives in the
-[`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins/tree/main/plugin-llm-example)
+[`anakot-example-plugins`](https://github.com/NousResearch/anakot-example-plugins/tree/main/plugin-llm-example)
 repo (companion repo for reference plugins — not bundled with
-hermes-agent itself). For the async surface (`acomplete()` /
+anakot-agent itself). For the async surface (`acomplete()` /
 `acomplete_structured()` with `asyncio.gather()`), see
-[`plugin-llm-async-example`](https://github.com/NousResearch/hermes-example-plugins/tree/main/plugin-llm-async-example)
+[`plugin-llm-async-example`](https://github.com/NousResearch/anakot-example-plugins/tree/main/plugin-llm-async-example)
 in the same repo.
 
 ## When to use which
@@ -215,7 +215,7 @@ timeout, vision routing — is the same across all four.
 ```python
 result = ctx.llm.complete(
     messages=[{"role": "user", "content": "Hi"}],
-    provider=None,         # optional, gated — Hermes provider id (e.g. "openrouter")
+    provider=None,         # optional, gated — Anakot provider id (e.g. "openrouter")
     model=None,            # optional, gated — whatever string that provider expects
     temperature=None,
     max_tokens=None,
@@ -319,14 +319,14 @@ auxiliary:
 Plugins may supply provider/model registration defaults for their own
 tasks. Operator configuration in `auxiliary.<task>` overrides those
 defaults and controls the deployment choice. A registered task is a
-first-class slot on every model-assignment surface: the `hermes model` →
+first-class slot on every model-assignment surface: the `anakot model` →
 *Configure auxiliary models* picker, the dashboard Models page, and Desktop
 Settings → Models → Auxiliary all list it (after the built-in tasks, under
 the plugin's `display_name`) and can pin, reset, or flag it as a stale
 provider pin like any built-in. A plugin can only use a task
 it registered itself; unknown or foreign task names fail before provider
 invocation. `allow_task_override: true` is an explicit operator grant for
-using Hermes built-in auxiliary tasks; it does not permit another plugin's
+using Anakot built-in auxiliary tasks; it does not permit another plugin's
 tasks. Omit `task=` (or use `"auto"`) to keep the active main provider/model.
 
 #### From the plugin's frontend: a plugin RPC method
@@ -522,9 +522,9 @@ plugins:
   entries:
     my-plugin:
       llm:
-        # Allow this plugin to choose a different Hermes provider
-        # (must be one Hermes already knows about — same names as
-        # `hermes model` and config.yaml model.provider).
+        # Allow this plugin to choose a different Anakot provider
+        # (must be one Anakot already knows about — same names as
+        # `anakot model` and config.yaml model.provider).
         allow_provider_override: true
 
         # Optionally restrict which providers. Use ["*"] for any.
@@ -537,7 +537,7 @@ plugins:
 
         # Optionally restrict which models. Use ["*"] for any.
         # Models are matched literally against whatever string the
-        # plugin sends — Hermes does not look anything up.
+        # plugin sends — Anakot does not look anything up.
         allowed_models:
           - openai/gpt-4o-mini
           - anthropic/claude-3-5-haiku
@@ -591,13 +591,13 @@ don't have to:
 * **Provider resolution.** Reads `model.provider` + `model.model`
   from the user's config (or the explicit overrides when trusted).
 * **Auth.** Pulls API keys, OAuth tokens, or refresh tokens from
-  `~/.hermes/auth.json` / env, including the credential pool when
+  `~/.anakot/auth.json` / env, including the credential pool when
   one is configured. The plugin never sees them.
 * **Vision routing.** When image input is supplied and the user's
   active text model is text-only, the host falls back to the
   configured vision model automatically.
 * **Fallback chain.** If the user's primary provider 5xxs or 429s,
-  the request goes through Hermes' usual aggregator-aware fallback
+  the request goes through Anakot' usual aggregator-aware fallback
   before it returns an error to the plugin.
 * **Timeout.** Honours your `timeout=` argument, falling back to
   `auxiliary.<task>.timeout` config or the global aux default.
@@ -724,7 +724,7 @@ past the turn. Treat `fork_session` as optional: it returns `None` when the requ
 (no `llm.session_fork` grant, a bad, expired or spent token, a tool outside the allowlist), and it
 is not available everywhere. Under `plugins.isolation: host` a third-party plugin's
 `ctx.fork_session` exists but raises `PluginHostUnsupported` (a `RuntimeError`), because the handle
-tracks a thread of the live session agent inside the Hermes process. A plugin that degrades to
+tracks a thread of the live session agent inside the Anakot process. A plugin that degrades to
 "no fork" on `None` or an exception keeps working in both places.
 :::
 
@@ -732,7 +732,7 @@ tracks a thread of the live session agent inside the Hermes process. A plugin th
 bounded background copy of the session's agent instead: the same
 system prompt, `tools[]`, memory and conversation, on the warm prompt
 cache, working through a multi-step prompt that may call the plugin's
-own tools it names. It is the pattern Hermes uses for its own background
+own tools it names. It is the pattern Anakot uses for its own background
 memory/skill review, opened to plugins. A typical use: after a turn
 that created or edited a skill, ask the fork whether the skill is worth
 sharing, and let it call the plugin's own tool that offers the share.
@@ -795,12 +795,12 @@ when nothing was started.
 * `tools` lists the tool names the fork may call, drawn from the fork
   allowlist: the names whose call reaches the handler this plugin
   registered with `register_tool` (the name's current registration is
-  this plugin's, and Hermes dispatches it to the tool registry), plus
-  the core tools Hermes marks fork-safe in one central list (currently
+  this plugin's, and Anakot dispatches it to the tool registry), plus
+  the core tools Anakot marks fork-safe in one central list (currently
   none). Every other tool is outside it: another plugin's tools, every
   MCP tool, and every core tool not marked fork-safe, including
   `delegate_task`, `message_agent`, `cronjob_manage` and the Kanban
-  tools. A name Hermes dispatches before the tool registry is outside
+  tools. A name Anakot dispatches before the tool registry is outside
   it even when the plugin registered it, because the call would never
   reach the plugin's handler: an agent-level tool, a legacy alias, the
   Tool Search bridge, any `connectors__<connector>__<tool>` name, and
@@ -819,7 +819,7 @@ when nothing was started.
   (cache parity); calls outside the list are refused at dispatch with a
   message naming the allowed tools.
 * A deferred tool is called through `tool_call`, and the plugin does not
-  need to know which of its tools are deferred: Hermes appends one line
+  need to know which of its tools are deferred: Anakot appends one line
   to the prompt telling the model to call the tool through `tool_call`
   with its name, followed by the tool's parameters. Inside the fork
   `tool_call` only carries a call to a named tool: a `tool_call` to any
@@ -871,7 +871,7 @@ when nothing was started.
   lane with `inherit_from="background_review"` follows the user's review
   model only under `allow_task_override` ([Inheriting a built-in
   slot](#inheriting-a-built-in-slot)).
-* On a runtime Hermes manages locally (the bundled llama-server), the fork
+* On a runtime Anakot manages locally (the bundled llama-server), the fork
   waits for the machine to go idle like the background review
   (`outcome == "deferred"`); a newer deferred fork of the same plugin for
   the same session replaces the queued one (`"superseded"`).
@@ -909,11 +909,11 @@ the turn-scoped `pre_api_request` / `post_api_request`.
 Experimental, like `fork_session` (see the note [above](#forking-the-sessions-own-agent-ctxfork_session)).
 `ctx.register_idle_task(name, fn, *, interval_hours, min_idle_hours=2, first_run="defer")` runs a
 session-less job of the plugin on the skill curator's idle schedule; the full rules are in
-[Run a job when Hermes is idle](./plugins/index.md#run-a-job-when-hermes-is-idle-ctxregister_idle_task).
+[Run a job when Anakot is idle](./plugins/index.md#run-a-job-when-anakot-is-idle-ctxregister_idle_task).
 The contract a task's `fn` is written against:
 
 * `fn` runs on its own thread, in the profile that registered it. The host's poll (gateway
-  housekeeping, CLI/TUI startup, the `hermes serve` maintenance tick) starts it and returns at
+  housekeeping, CLI/TUI startup, the `anakot serve` maintenance tick) starts it and returns at
   once; it never waits for the run and sets no time limit of its own.
 * Keep a run short: give it its own time limit, and work in small batches with a checkpoint in the
   plugin's data so the next run picks up where this one stopped.
@@ -923,7 +923,7 @@ The contract a task's `fn` is written against:
   process), no new run starts and the gateway waits a few seconds for a run in flight, then stops
   without it. Plugin code cannot be stopped and `fn` gets no stop signal, so a run still going goes
   on in the background; when it ends it records nothing (the task's state stays as it was before
-  the run, so the task runs again later) and releases its claim. Hermes guarantees only that no
+  the run, so the task runs again later) and releases its claim. Anakot guarantees only that no
   run starts and no task state is written after the stop; keep a run short.
 * No second run of a task starts while one is in flight. A claim whose process has died (a crash
   or a kill) is taken over at the next poll; a claim whose owner cannot be checked (one written on
@@ -934,7 +934,7 @@ The contract a task's `fn` is written against:
 
 ## Where this fits in the plugin surface
 
-Existing `ctx.*` methods extend an existing Hermes subsystem:
+Existing `ctx.*` methods extend an existing Anakot subsystem:
 
 | `ctx.register_tool` | adds a tool the agent can call |
 | `ctx.register_platform` | wires a new gateway adapter |
@@ -955,7 +955,7 @@ own model call — for any reason, structured or not — `ctx.llm`.
 * Implementation: [`agent/plugin_llm.py`](https://github.com/NousResearch/hermes-agent/blob/main/agent/plugin_llm.py)
 * Tests: [`tests/agent/test_plugin_llm.py`](https://github.com/NousResearch/hermes-agent/blob/main/tests/agent/test_plugin_llm.py)
 * Reference plugins (companion repo):
-  * [`plugin-llm-example`](https://github.com/NousResearch/hermes-example-plugins/tree/main/plugin-llm-example) — sync structured extraction with image input
-  * [`plugin-llm-async-example`](https://github.com/NousResearch/hermes-example-plugins/tree/main/plugin-llm-async-example) — async with `asyncio.gather()`
+  * [`plugin-llm-example`](https://github.com/NousResearch/anakot-example-plugins/tree/main/plugin-llm-example) — sync structured extraction with image input
+  * [`plugin-llm-async-example`](https://github.com/NousResearch/anakot-example-plugins/tree/main/plugin-llm-async-example) — async with `asyncio.gather()`
 * Auxiliary client (the engine under the hood): see
   [Provider Runtime](./provider-runtime.md).

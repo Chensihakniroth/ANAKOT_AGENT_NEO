@@ -1,1 +1,1 @@
-# Hermes plugins package
+# Anakot plugins package

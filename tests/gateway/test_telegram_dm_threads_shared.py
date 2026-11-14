@@ -12,8 +12,8 @@ from tests.gateway.test_base_topic_sessions import DummyTelegramAdapter
 
 
 def _store(tmp_path, monkeypatch, extra):
-    import hermes_state
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
+    import anakot_state
+    monkeypatch.setattr(anakot_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     config = GatewayConfig(platforms={Platform.TELEGRAM: PlatformConfig(enabled=True, token="t", extra=extra)})
     return SessionStore(sessions_dir=tmp_path, config=config)
 

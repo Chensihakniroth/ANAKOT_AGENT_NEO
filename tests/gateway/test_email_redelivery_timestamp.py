@@ -9,7 +9,7 @@ from unittest.mock import patch
 import pytest
 
 ENV = {
-    'EMAIL_ADDRESS': 'hermes@test.com', 'EMAIL_PASSWORD': 'secret', 'EMAIL_IMAP_HOST': 'imap.test.com',
+    'EMAIL_ADDRESS': 'anakot@test.com', 'EMAIL_PASSWORD': 'secret', 'EMAIL_IMAP_HOST': 'imap.test.com',
     'EMAIL_IMAP_PORT': '993', 'EMAIL_SMTP_HOST': 'smtp.test.com', 'EMAIL_SMTP_PORT': '587',
     'EMAIL_ALLOWED_USERS': 'owner@example.test',
 }
@@ -38,8 +38,8 @@ async def test_refetched_email_after_restart_is_its_committed_admission(tmp_path
     from gateway.run import GatewayRunner
     from gateway.session_authority import SessionAuthority, initialize_session_authority
     from gateway.session_ingress_context import native_callback
-    from hermes_constants import get_hermes_home
-    from hermes_state_runtime import (RuntimeStoreError, claim_session_input, list_session_admissions,
+    from anakot_constants import get_anakot_home
+    from anakot_state_runtime import (RuntimeStoreError, claim_session_input, list_session_admissions,
                                       settle_session_input)
     from plugins.platforms.email.adapter import EmailAdapter
     monkeypatch.setattr(SessionAuthority, '_schedule', lambda self, ref: None)
@@ -51,7 +51,7 @@ async def test_refetched_email_after_restart_is_its_committed_admission(tmp_path
         runner._wire_adapter_handlers(adapter)
 
         async def admit(event):
-            with native_callback(runner, event, get_hermes_home()):
+            with native_callback(runner, event, get_anakot_home()):
                 return await authority.admit_native(event)
         try:
             first = await admit(await _fetch(adapter, _mail()))

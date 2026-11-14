@@ -36,13 +36,13 @@ pytestmark = [
 
 @pytest.fixture()
 def payload_tree(tmp_path: Path):
-    """A miniature payload: bin/, repo snapshot with a stub hermes_cli,
+    """A miniature payload: bin/, repo snapshot with a stub anakot_cli,
     venv site-packages, and a REAL interpreter at the fake store path."""
     bin_dir = tmp_path / "stage" / "bin"
     py_dir = tmp_path / "stage" / "tools" / "py-1"
     repo = tmp_path / "stage" / "repo"
     site = tmp_path / "stage" / "venv" / "Lib" / "site-packages"
-    for d in (bin_dir, py_dir, repo / "hermes_cli", repo / "hermes_agent" / "compat", repo / "pm", site):
+    for d in (bin_dir, py_dir, repo / "anakot_cli", repo / "anakot_agent" / "compat", repo / "pm", site):
         d.mkdir(parents=True, exist_ok=True)
 
     # A real interpreter at the shebang's target: the launcher will create
@@ -66,20 +66,20 @@ def payload_tree(tmp_path: Path):
     )
 
     # Exercise the real bootstrap before the fixture entry point.
-    for relative in ("hermes_bootstrap.py", "hermes_constants.py", "hermes_cli/__init__.py",
-                     "hermes_agent/__init__.py", "hermes_agent/compat/__init__.py",
-                     "hermes_agent/compat/finder.py", "hermes_agent/compat/moves.py",
-                     "pm/environments.py", "pm/filesystem.py", "hermes_cli/runtime_state.py",
-                     "hermes_cli/_early_recovery.py", "hermes_cli/_parser.py",
+    for relative in ("anakot_bootstrap.py", "anakot_constants.py", "anakot_cli/__init__.py",
+                     "anakot_agent/__init__.py", "anakot_agent/compat/__init__.py",
+                     "anakot_agent/compat/finder.py", "anakot_agent/compat/moves.py",
+                     "pm/environments.py", "pm/filesystem.py", "anakot_cli/runtime_state.py",
+                     "anakot_cli/_early_recovery.py", "anakot_cli/_parser.py",
                      # prepare_launch returns early for a fixture repo (no .git), but the bootstrap
                      # imports these two before it can tell.
-                     "hermes_cli/venv_sync.py", "hermes_cli/steward.py"):
+                     "anakot_cli/venv_sync.py", "anakot_cli/steward.py"):
         shutil.copy2(_REPO / relative, repo / relative)
-    (repo / "hermes_cli" / "main.py").write_text(
+    (repo / "anakot_cli" / "main.py").write_text(
         "import os, sys\n"
         "def main():\n"
-        "    import hermes_cli, stubdep\n"
-        "    assert sys.argv[0].lower().endswith('hermes.exe'), sys.argv[0]\n"
+        "    import anakot_cli, stubdep\n"
+        "    assert sys.argv[0].lower().endswith('anakot.exe'), sys.argv[0]\n"
         "    assert sys.argv[1:] == ['--version'], sys.argv\n"
         "    print('OK', os.environ.get('PYTHONHOME'))\n"
         "    return 7\n",
@@ -96,10 +96,10 @@ def payload_tree(tmp_path: Path):
 def _mint(bin_dir: Path, wrapper: Path, specs) -> list[str]:
     env = dict(
         os.environ,
-        HERMES_MINT_BIN_DIR=str(bin_dir),
-        HERMES_MINT_SPECS=json.dumps(specs),
-        HERMES_MINT_WRAPPER=str(wrapper),
-        HERMES_MINT_PYTHON=r"<launcher_dir>\..\tools\py-1\python.exe",
+        ANAKOT_MINT_BIN_DIR=str(bin_dir),
+        ANAKOT_MINT_SPECS=json.dumps(specs),
+        ANAKOT_MINT_WRAPPER=str(wrapper),
+        ANAKOT_MINT_PYTHON=r"<launcher_dir>\..\tools\py-1\python.exe",
     )
     proc = subprocess.run([sys.executable, str(_MINT)], capture_output=True, text=True, env=env, check=False)
     assert proc.returncode == 0, proc.stderr
@@ -108,7 +108,7 @@ def _mint(bin_dir: Path, wrapper: Path, specs) -> list[str]:
 
 def _render_wrapper(tmp_path: Path) -> Path:
     from scripts.build.launchers import render_wrapper
-    text = render_wrapper("hermes_cli.main:main", "../repo", "../venv/Lib/site-packages")
+    text = render_wrapper("anakot_cli.main:main", "../repo", "../venv/Lib/site-packages")
     out = tmp_path / "wrapper.py"
     out.write_text(text, encoding="utf-8")
     return out
@@ -116,15 +116,15 @@ def _render_wrapper(tmp_path: Path) -> Path:
 
 def test_mint_writes_exactly_one_named_exe_per_spec(payload_tree, tmp_path):
     wrapper = _render_wrapper(tmp_path)
-    out = _mint(payload_tree["bin"], wrapper, [{"name": "hermes", "module": "hermes_cli.main", "func": "main"}])
-    assert out == ["hermes.exe"] or out == [str(payload_tree["bin"] / "hermes.exe")]
-    assert sorted(p.name for p in payload_tree["bin"].iterdir()) == ["hermes.exe"], "no versioned twin may remain"
+    out = _mint(payload_tree["bin"], wrapper, [{"name": "anakot", "module": "anakot_cli.main", "func": "main"}])
+    assert out == ["anakot.exe"] or out == [str(payload_tree["bin"] / "anakot.exe")]
+    assert sorted(p.name for p in payload_tree["bin"].iterdir()) == ["anakot.exe"], "no versioned twin may remain"
 
 
 def test_minted_launcher_shebang_carries_the_launcher_dir_placeholder(payload_tree, tmp_path):
     wrapper = _render_wrapper(tmp_path)
-    _mint(payload_tree["bin"], wrapper, [{"name": "hermes", "module": "hermes_cli.main", "func": "main"}])
-    exe = payload_tree["bin"] / "hermes.exe"
+    _mint(payload_tree["bin"], wrapper, [{"name": "anakot", "module": "anakot_cli.main", "func": "main"}])
+    exe = payload_tree["bin"] / "anakot.exe"
     blob = exe.read_bytes()
     shebang = blob[blob.rfind(b"#!"):]
     assert shebang.startswith(b"#!<launcher_dir>\\..\\tools\\py-1\\python.exe\n"), shebang[:60]
@@ -132,14 +132,14 @@ def test_minted_launcher_shebang_carries_the_launcher_dir_placeholder(payload_tr
 
 def test_minted_launcher_runs_relocated_and_forwards_exit_code(payload_tree, tmp_path):
     wrapper = _render_wrapper(tmp_path)
-    _mint(payload_tree["bin"], wrapper, [{"name": "hermes", "module": "hermes_cli.main", "func": "main"}])
+    _mint(payload_tree["bin"], wrapper, [{"name": "anakot", "module": "anakot_cli.main", "func": "main"}])
 
     # RELOCATE the whole tree before running: the launcher must resolve the
     # interpreter and the payload paths relative to its own dir, wherever
     # the install lands.
     moved = payload_tree["tmp"] / "moved-install"
     shutil.move(str(payload_tree["root"]), str(moved))
-    exe = moved / "bin" / "hermes.exe"
+    exe = moved / "bin" / "anakot.exe"
 
     env = {k: v for k, v in os.environ.items() if k not in ("PYTHONPATH", "PYTHONHOME", "PYTHONPYCACHEPREFIX")}
     env["LOCALAPPDATA"] = str(payload_tree["tmp"] / "lad")
@@ -148,20 +148,20 @@ def test_minted_launcher_runs_relocated_and_forwards_exit_code(payload_tree, tmp
     assert proc.stdout.strip() == "OK None"  # PYTHONHOME was dropped
 
     # The default pycache prefix kept bytecode out of the (sealed) repo.
-    assert (payload_tree["tmp"] / "lad" / "hermes" / "pycache").exists()
-    assert not (moved / "repo" / "hermes_cli" / "__pycache__").exists()
+    assert (payload_tree["tmp"] / "lad" / "anakot" / "pycache").exists()
+    assert not (moved / "repo" / "anakot_cli" / "__pycache__").exists()
 
 
 def test_mint_rejects_a_non_launcher_dir_shebang(tmp_path):
     env = dict(
         os.environ,
-        HERMES_MINT_BIN_DIR=str(tmp_path),
-        HERMES_MINT_SPECS=json.dumps([{"name": "hermes", "module": "m", "func": "main"}]),
-        HERMES_MINT_PYTHON=r"C:\abs\python.exe",
+        ANAKOT_MINT_BIN_DIR=str(tmp_path),
+        ANAKOT_MINT_SPECS=json.dumps([{"name": "anakot", "module": "m", "func": "main"}]),
+        ANAKOT_MINT_PYTHON=r"C:\abs\python.exe",
     )
     wrapper = tmp_path / "w.py"
     wrapper.write_text("x = 1\n", encoding="utf-8")
-    env["HERMES_MINT_WRAPPER"] = str(wrapper)
+    env["ANAKOT_MINT_WRAPPER"] = str(wrapper)
     proc = subprocess.run([sys.executable, str(_MINT)], capture_output=True, text=True, env=env, check=False)
     assert proc.returncode != 0
     assert "launcher_dir" in proc.stderr

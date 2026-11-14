@@ -3,7 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// Relative, not `@hermes/shared`: the electron bundle is built by esbuild with
+// Relative, not `@anakot/shared`: the electron bundle is built by esbuild with
 // no tsconfig path resolution (see scripts/bundle-electron-main.mjs), so a bare
 // specifier would typecheck and then fail to bundle.
 import {
@@ -20,7 +20,7 @@ const DEFAULT_FETCH_TIMEOUT_MS = 30_000
 const ATTACHMENT_UPLOAD_DEFAULT_MAX_BYTES = 256 * 1024 * 1024
 const TEXT_PREVIEW_SOURCE_MAX_BYTES = 64 * 1024 * 1024
 // Renderer-supplied composer writes (pasted/dropped images, large text pastes)
-// land on disk under userData/HERMES_HOME; cap them like the attach reader so
+// land on disk under userData/ANAKOT_HOME; cap them like the attach reader so
 // one IPC call can't allocate or write unbounded bytes in the main process.
 const COMPOSER_IMAGE_MAX_BYTES = ATTACHMENT_UPLOAD_DEFAULT_MAX_BYTES
 const COMPOSER_PASTE_MAX_BYTES = TEXT_PREVIEW_SOURCE_MAX_BYTES
@@ -32,10 +32,10 @@ function dataUrlReadMaxBytesFromMb(maxMb) {
 const SAFE_ENV_SUFFIXES = new Set(['dist', 'example', 'sample', 'template'])
 const SENSITIVE_EXTENSIONS = new Set(['.kdbx', '.p12', '.pem', '.pfx'])
 
-// Credential stores under a Hermes home or a profile home, relative POSIX paths.
+// Credential stores under a Anakot home or a profile home, relative POSIX paths.
 // Mirrors agent/file_safety.py _CREDENTIAL_FILE_NAMES / _READ_DENIED_DIRS (the
-// canonical read guard) plus hermes_cli/home_data_layout.py SECRET_CACHE_STORES.
-const HERMES_CREDENTIAL_FILES = new Set([
+// canonical read guard) plus anakot_cli/home_data_layout.py SECRET_CACHE_STORES.
+const ANAKOT_CREDENTIAL_FILES = new Set([
   '.env',
   'auth.json',
   'auth.lock',
@@ -52,7 +52,7 @@ const HERMES_CREDENTIAL_FILES = new Set([
   'runtime/photon-sidecar.json'
 ])
 
-const HERMES_CREDENTIAL_DIRS = ['mcp-tokens', 'browser-profile', 'vault', 'webapp']
+const ANAKOT_CREDENTIAL_DIRS = ['mcp-tokens', 'browser-profile', 'vault', 'webapp']
 
 // Owner-only mode for userData files that carry credentials (the encrypted
 // gateway token in connection.json, and the URL/SSH fields alongside it).
@@ -209,10 +209,10 @@ function encryptDesktopSecret(value, safeStorageApi, options: { allowPlainText?:
     }
 
     throw new Error(
-      'Secure token storage is unavailable (no OS keyring service was found), so Hermes Desktop cannot save remote gateway tokens. ' +
+      'Secure token storage is unavailable (no OS keyring service was found), so Anakot Desktop cannot save remote gateway tokens. ' +
         'Either enable an OS keyring (e.g. GNOME Keyring or KWallet providing org.freedesktop.secrets) and try again, ' +
         'confirm the plain-text storage option when prompted in Settings → Gateway, ' +
-        'or set HERMES_DESKTOP_REMOTE_URL and HERMES_DESKTOP_REMOTE_TOKEN in your environment.'
+        'or set ANAKOT_DESKTOP_REMOTE_URL and ANAKOT_DESKTOP_REMOTE_TOKEN in your environment.'
     )
   }
 
@@ -225,7 +225,7 @@ function encryptDesktopSecret(value, safeStorageApi, options: { allowPlainText?:
     const detail = error instanceof Error && error.message ? ` (${error.message})` : ''
     throw new Error(
       `Failed to encrypt the remote gateway token for secure storage${detail}. ` +
-        'Set HERMES_DESKTOP_REMOTE_URL and HERMES_DESKTOP_REMOTE_TOKEN in your environment as a fallback.'
+        'Set ANAKOT_DESKTOP_REMOTE_URL and ANAKOT_DESKTOP_REMOTE_TOKEN in your environment as a fallback.'
     )
   }
 }
@@ -243,7 +243,7 @@ function encryptDesktopSecret(value, safeStorageApi, options: { allowPlainText?:
 // so the caller (and tests) can distinguish "enabled" from "left untouched".
 // Never throws: a failure here is non-fatal — encryption simply stays
 // unavailable and the user can fall back to the plain-text opt-in or the
-// HERMES_DESKTOP_REMOTE_* env vars.
+// ANAKOT_DESKTOP_REMOTE_* env vars.
 function enableBasicPasswordStoreEncryption({ platform, passwordStoreSwitch, safeStorageApi }: any = {}) {
   if (platform !== 'linux' || passwordStoreSwitch !== 'basic') {
     return false
@@ -315,33 +315,33 @@ function normalizeSensitivePath(filePath) {
     .toLowerCase()
 }
 
-let hermesHomes: string[] = []
+let anakotHomes: string[] = []
 // Store targets only move when a home, profile or store is re-linked, so the
 // realpath sweep runs at most once per window instead of on every preview,
 // media-stream and image read (~17 realpaths per home and profile).
 const RELOCATED_STORES_TTL_MS = 1000
 let relocatedStoresCache: null | { at: number; stores: string[] } = null
 
-/** Register the Hermes home whose credential stores (and every profile's under
+/** Register the Anakot home whose credential stores (and every profile's under
  *  `profiles/<name>/`) preview reads must refuse. Both the given spelling and
  *  its realpath are kept, since callers check the requested and the real path. */
-function setSensitiveHermesHome(hermesHome: null | string | undefined) {
+function setSensitiveAnakotHome(anakotHome: null | string | undefined) {
   relocatedStoresCache = null
 
-  if (!hermesHome) {
-    hermesHomes = []
+  if (!anakotHome) {
+    anakotHomes = []
 
     return
   }
 
-  const homes = [path.resolve(hermesHome)]
-  const real = realpathOrNull(hermesHome)
+  const homes = [path.resolve(anakotHome)]
+  const real = realpathOrNull(anakotHome)
 
   if (real) {
     homes.push(real)
   }
 
-  hermesHomes = [...new Set(homes)]
+  anakotHomes = [...new Set(homes)]
 }
 
 function realpathOrNull(filePath: string): null | string {
@@ -363,7 +363,7 @@ function credentialStoreRel(normalized: string, root: string): null | string {
 }
 
 function isCredentialStoreRel(rel: string): boolean {
-  return HERMES_CREDENTIAL_FILES.has(rel) || HERMES_CREDENTIAL_DIRS.some(dir => rel === dir || rel.startsWith(`${dir}/`))
+  return ANAKOT_CREDENTIAL_FILES.has(rel) || ANAKOT_CREDENTIAL_DIRS.some(dir => rel === dir || rel.startsWith(`${dir}/`))
 }
 
 // Where each home's and profile's stores really live: a symlinked profile home,
@@ -379,7 +379,7 @@ function relocatedCredentialStores(): string[] {
 
   const stores: string[] = []
 
-  for (const home of hermesHomes) {
+  for (const home of anakotHomes) {
     let profiles: string[] = []
 
     try {
@@ -389,7 +389,7 @@ function relocatedCredentialStores(): string[] {
     }
 
     for (const base of [home, ...profiles]) {
-      for (const rel of [...HERMES_CREDENTIAL_FILES, ...HERMES_CREDENTIAL_DIRS]) {
+      for (const rel of [...ANAKOT_CREDENTIAL_FILES, ...ANAKOT_CREDENTIAL_DIRS]) {
         const real = realpathOrNull(path.join(base, rel))
 
         if (real) {
@@ -404,10 +404,10 @@ function relocatedCredentialStores(): string[] {
   return stores
 }
 
-function hermesCredentialStoreReason(normalized: string): null | string {
-  const reason = 'Hermes credential stores are blocked.'
+function anakotCredentialStoreReason(normalized: string): null | string {
+  const reason = 'Anakot credential stores are blocked.'
 
-  for (const home of hermesHomes) {
+  for (const home of anakotHomes) {
     const rel = credentialStoreRel(normalized, normalizeSensitivePath(home).replace(/\/+$/, ''))
 
     if (rel !== null && isCredentialStoreRel(rel)) {
@@ -466,7 +466,7 @@ function sensitiveFileBlockReason(filePath) {
     return `${basename} is blocked because it may include auth credentials.`
   }
 
-  return hermesCredentialStoreReason(normalized)
+  return anakotCredentialStoreReason(normalized)
 }
 
 function ipcPathError(code: any, message: string): Error & { code: any } {
@@ -617,14 +617,14 @@ function resolveRequestedPathForIpc(filePath, options: { purpose?: string; baseD
  * Candidate absolute paths to retry when a preview/download target could not
  * be resolved against the agent's working directory. Attachment references
  * stored in chat history are frequently HOME-relative (e.g.
- * "AppData/Local/hermes/attachments/foo.xlsx" on Windows, or
- * ".hermes/attachments/foo.xlsx" elsewhere) rather than relative to cwd
- * (#115609). Pure and DI-testable: takes `home`/`hermesHome` as arguments
+ * "AppData/Local/anakot/attachments/foo.xlsx" on Windows, or
+ * ".anakot/attachments/foo.xlsx" elsewhere) rather than relative to cwd
+ * (#115609). Pure and DI-testable: takes `home`/`anakotHome` as arguments
  * instead of reaching for `app.getPath('home')` / a module-level constant.
  * Returns an empty array for absolute paths, `file:` URLs, and empty input —
  * those already had their one real resolution attempt upstream.
  */
-function homeRelativeAttachmentCandidates(raw, home, hermesHome) {
+function homeRelativeAttachmentCandidates(raw, home, anakotHome) {
   const trimmed = String(raw || '').trim()
 
   if (!trimmed || /^file:/i.test(trimmed) || path.isAbsolute(trimmed)) {
@@ -633,7 +633,7 @@ function homeRelativeAttachmentCandidates(raw, home, hermesHome) {
 
   const normalized = trimmed.replace(/\\/g, '/')
 
-  return [path.join(home, normalized), path.join(hermesHome, 'attachments', path.basename(normalized))]
+  return [path.join(home, normalized), path.join(anakotHome, 'attachments', path.basename(normalized))]
 }
 
 async function statForIpc(fsImpl: { promises: { stat: typeof fs.promises.stat } }, resolvedPath, purpose, typeLabel) {
@@ -829,7 +829,7 @@ export {
   SAFE_STORAGE_ENCODING,
   SECRET_FILE_MODE,
   sensitiveFileBlockReason,
-  setSensitiveHermesHome,
+  setSensitiveAnakotHome,
   TEXT_PREVIEW_SOURCE_MAX_BYTES,
   tightenSecretFileMode,
   writeSecretFileAtomic

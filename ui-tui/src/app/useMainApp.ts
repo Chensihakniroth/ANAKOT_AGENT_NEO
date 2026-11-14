@@ -7,9 +7,9 @@ import {
   useSelection,
   useStdout,
   useTerminalTitle
-} from '@hermes/ink'
-import { sharedControlParams } from '@hermes/shared/gateway-canonical'
-import type { SessionControlSnapshot } from '@hermes/shared/gateway-events'
+} from '@anakot/ink'
+import { sharedControlParams } from '@anakot/shared/gateway-canonical'
+import type { SessionControlSnapshot } from '@anakot/shared/gateway-events'
 import type {
   AnyGatewayEvent,
   ClarifyLockResponse,
@@ -19,8 +19,8 @@ import type {
   SharedControlRespondResponse,
   SubagentListResponse,
   TerminalResizeResponse
-} from '@hermes/shared/gateway-types'
-import { JSON_RPC_METHOD_NOT_FOUND, type ServerRequest } from '@hermes/shared/json-rpc-channel'
+} from '@anakot/shared/gateway-types'
+import { JSON_RPC_METHOD_NOT_FOUND, type ServerRequest } from '@anakot/shared/json-rpc-channel'
 import { useStore } from '@nanostores/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -381,7 +381,7 @@ export function useMainApp(gw: GatewayClient) {
   const lastUserMsgRef = useRef(lastUserMsg)
   const recoverSidRef = useRef<null | string>(null)
   const recoveryAtRef = useRef<number[]>([])
-  // "Hermes stopped and could not be restarted" is said once per outage; reset on gateway.ready.
+  // "Anakot stopped and could not be restarted" is said once per outage; reset on gateway.ready.
   const gaveUpRef = useRef(false)
   const msgIdsRef = useRef(new WeakMap<Msg, string>())
   const msgIdSeqRef = useRef(0)
@@ -787,7 +787,7 @@ export function useMainApp(gw: GatewayClient) {
           tab: composeTabTitle(marker, ui.sessionTitle, '', ''),
           window: composeTabTitle(marker, ui.sessionTitle, model, tabCwd ? shortCwd(tabCwd, 24) : '')
         }
-      : 'Hermes'
+      : 'Anakot'
   )
 
   useEffect(() => {
@@ -1583,7 +1583,7 @@ export function useMainApp(gw: GatewayClient) {
   // randomly disappear when the live tail scrolls offscreen.
   const appProgress = useMemo(() => ({ showProgressArea }), [showProgressArea])
 
-  const cwd = ui.info?.cwd || process.env.HERMES_CWD || process.cwd()
+  const cwd = ui.info?.cwd || process.env.ANAKOT_CWD || process.cwd()
   const gitBranch = useGitBranch(cwd)
 
   const appStatus = useMemo(

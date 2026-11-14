@@ -78,9 +78,9 @@ describe('turning read-aloud off stops the reply being read', () => {
     [
       'from another window',
       () => {
-        localStorage.setItem('hermes.desktop.autoSpeakReplies', 'false')
+        localStorage.setItem('anakot.desktop.autoSpeakReplies', 'false')
         window.dispatchEvent(
-          new StorageEvent('storage', { key: 'hermes.desktop.autoSpeakReplies', newValue: 'false', oldValue: 'true' })
+          new StorageEvent('storage', { key: 'anakot.desktop.autoSpeakReplies', newValue: 'false', oldValue: 'true' })
         )
       }
     ]
