@@ -189,6 +189,20 @@ if [ "$WITH_JS" = 1 ]; then
     fi
     say "package manager: $PNPM"
     $PNPM install
+
+    # pnpm skips dependency install scripts without approval, and Electron's binary arrives exactly
+    # that way -- silently, in a non-interactive run, with no warning printed. The later symptom is
+    # "Electron failed to install correctly" at launch, which reads as a broken checkout. Electron's
+    # own installer is the deterministic fix: no interactive `pnpm approve-builds`, and no edit to a
+    # repo-owned manifest that the next regenerate would have to replay.
+    for electron_dir in apps/desktop/node_modules/electron node_modules/electron; do
+        if [ -f "$electron_dir/install.js" ] && [ ! -d "$electron_dir/dist" ]; then
+            say "fetching the Electron binary (pnpm skipped its install script; ~320 MB)"
+            node "$electron_dir/install.js" \
+                || warn "Electron's installer failed — the desktop app cannot start until it succeeds"
+            break
+        fi
+    done
 fi
 
 # ─── 4. an isolated dev home ─────────────────────────────────────────────────
