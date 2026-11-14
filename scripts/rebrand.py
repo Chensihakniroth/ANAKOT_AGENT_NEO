@@ -410,8 +410,12 @@ def verify_completeness(path_changes: list[tuple[str, str]]) -> list[str]:
     pending_src = {src for src, _ in path_changes}
     try:
         listed = subprocess.run(
-            ["git", "ls-files", "-z"], cwd=REPO, capture_output=True, text=True, check=True,
+            ["git", "ls-files", "-z"], cwd=REPO, capture_output=True, text=True,
+            check=True, timeout=120,
         ).stdout
+    except subprocess.TimeoutExpired:
+        # Loud, not silent: "we could not check" must never read as "nothing to report".
+        return ["git ls-files timed out after 120s; completeness could not be verified"]
     except (OSError, subprocess.CalledProcessError):
         return []  # not a checkout (a plain tree copy): completeness is undefined, not failed
     missing = []
