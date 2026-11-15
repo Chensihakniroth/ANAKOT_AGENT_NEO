@@ -19,12 +19,12 @@ which fork-local work must survive it".
 
 ---
 
-## v2 status (2026-11-13)
+## v2 status (2026-11-16)
 
 > **Fork topology.** `git merge-base main upstream/main` returns **nothing** — v2 is a snapshot import
 > (root commit `238ab19e`, *feat: initial release of Anakot Agent Neo*, 2026-11-12), so the two trees
 > are parallel histories. An ahead/behind count is therefore meaningless:
-> `git rev-list --left-right --count main...upstream/main` reports `14 70744`, where 70,744 is
+> `git rev-list --left-right --count main...upstream/main` reports `17 73214`, where 73,214 is
 > upstream's *entire* history, not a measure of debt. Compare trees and subsystems instead.
 
 | Fact | Value |
@@ -32,11 +32,13 @@ which fork-local work must survive it".
 | Fork remote (`origin`) | `https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git` |
 | Upstream remote | `https://github.com/NousResearch/hermes-agent.git` (already configured) |
 | Snapshot baseline | `eaac327f` (2026-11-11) — closest upstream commit by byte-identical file count (9,087 of ~24.8k) |
-| Upstream head at this scan | `9d94f822` (2026-11-13) |
-| Window since baseline | 2,546 commits (2,491 excluding merges) |
+| Upstream head at this scan | `be73ce8e76` (2026-11-15) |
+| Previous scan head | `9d94f822` (2026-11-13) — ancestor of the current tip, so this is a clean linear addition |
+| New since the previous scan | 2,470 commits (2,297 excluding merges) |
+| Window since baseline | 5,016 commits (4,788 excluding merges) |
 | Upstream velocity | ~16.4k commits / 30 days |
-| Fork-local commits | 14 (listed below) |
-| Differing paths vs upstream head | 17,326 (798 added / 1,534 deleted / 11,805 modified / 3,189 renamed) |
+| Fork-local commits | 17 (listed below) |
+| Differing paths vs upstream head | re-measure with `git diff --name-status` before quoting |
 | Rebrand mechanism | `scripts/rebrand.py` (`--check` / `--apply` / `--verify` / `--rebaseline`) |
 
 Rename detection is skipped at this scale, so most added/deleted pairs are the rebrand's
@@ -49,6 +51,13 @@ merge/revert 1), leaving **803 signal commits**, of which **311 land in tracked 
 Those collapse into **300 behavioural clusters**; the newest **70** are seeded into the table below as
 `PENDING` — the initial work queue, not the whole backlog. Re-run the filtered refresh command to
 surface the rest when the table drains.
+
+**Scan result for the 2026-11-16 window** (`9d94f822..be73ce8e76`, 2,470 commits / 2,297 non-merge):
+**772 filtered as noise** (catalog/maintenance 242, test-only 233, chore 205, docs 77, style 6,
+ci 6, build 2, revert 1), leaving **1,525 signal commits**, of which **1,293 land in tracked
+subsystems** and collapse into **1,262 behavioural clusters**. The newest **70** are seeded in the
+second tracking table below. Concentration by area (files touched across tracked commits): cli 605,
+tools 533, agent 370, gateway 365, desktop 215, plugins 207, cron 62.
 
 The concentration matters more than the raw count: **193 of the 311 land in `gateway`** (186 once
 collapsed to clusters) — a handful of long chains (voice-note echo, `/stop`/`/new` mid-stream,
@@ -178,10 +187,91 @@ it has not been triaged yet.
 
 ---
 
+## Tracking table — 2026-11-16 window (9d94f822..be73ce8e76)
+
+Seeded from the 2026-11-16 scan — the newest commit of each behavioural cluster in the
+`9d94f822..be73ce8e76` window. These are **disjoint** from the 2026-11-13 table above (that window was
+`eaac327f..9d94f822`), so both queues stay live. Empty `Notes` means untriaged.
+
+| SHA | Date | Description | Status | Notes |
+|-----|------|-------------|--------|-------|
+| fbc65ec989 | 2026-11-15 | fix(approval): fail closed on over-nested eval inside carried payloads | `PENDING` | |
+| fb48931764 | 2026-11-15 | fix(cron): exempt Stop-Process -WhatIf only for a single plain statement | `PENDING` | |
+| f66b6cddb3 | 2026-11-15 | fix(gateway): a reply's attachments follow its text onto the reconnected adapter | `PENDING` | |
+| f3661de135 | 2026-11-15 | Update cron/jobs.py | `PENDING` | |
+| e4783c505b | 2026-11-15 | fix(redact): mask a key that an overlapping prefix match hid | `PENDING` | |
+| ce4de3cdc2 | 2026-11-15 | fix(tts): a command provider never receives the caller's output path | `PENDING` | |
+| cbdc6af748 | 2026-11-15 | fix(approval): an fd redirection between osascript -e arguments does not end the command | `PENDING` | |
+| c066ed4dcd | 2026-11-15 | fix(approval): split >&/>\| redirects and fd-input operators between osascript -e args | `PENDING` | |
+| b2c6bc4e1e | 2026-11-15 | fix(usage): provider limits first, Nous balance apart | `PENDING` | |
+| b0f072515b | 2026-11-15 | fix(approval): keep a quoted glob char literal when dequoting rm operands | `PENDING` | |
+| aa561bbc02 | 2026-11-15 | fix(approval): a CR before -Include ends main's rm drive-root delete too | `PENDING` | |
+| a11598f389 | 2026-11-15 | fix(redact): recover a key swallowed by a skipped glued candidate | `PENDING` | |
+| 9fb34895ba | 2026-11-15 | fix(approval): a .md file name is not the md verb in the registry-write rule | `PENDING` | |
+| 8c784998a6 | 2026-11-15 | fix(redact): step over contained matches when looking for a swallowed key | `PENDING` | |
+| 8ad7e62d4f | 2026-11-15 | fix(redact): keep a template DB URL query password from hiding a ; sibling | `PENDING` | |
+| 893c3948aa | 2026-11-15 | fix(cron): check spps, the Stop-Process alias, against the gateway PID | `PENDING` | |
+| 7defffc296 | 2026-11-15 | fix(lint): clear the findings ruff preview reports | `PENDING` | |
+| 7c644207d1 | 2026-11-15 | fix(approval): flag AppleScript text-element assignment as risky | `PENDING` | |
+| 76e07759df | 2026-11-15 | refactor(approval): move the git global-option grammar to tools/approval_git_options.py | `PENDING` | |
+| 71b871d40e | 2026-11-15 | fix(threat-patterns): keep forget_rules unbounded for the raw-line scanners | `PENDING` | |
+| 70ae41f8dc | 2026-11-15 | fix(dashboard): run the locked-root /api/fs read guard off the event loop | `PENDING` | |
+| 6cea8f027b | 2026-11-15 | fix(skills): print the third-party notice after the file list on unprompted installs | `PENDING` | |
+| 617bba2512 | 2026-11-15 | fix(cron): a trailing-colon parameter takes -WhatIf as its value | `PENDING` | |
+| 5dc14e15ba | 2026-11-15 | fix(approval): peel leading redirections and abbreviated sudo long options; hardline rm.exe | `PENDING` | |
+| 51dfa80e89 | 2026-11-15 | fix(cron): scrub pre-upgrade stamps on idle sibling jobs when a run saves | `PENDING` | |
+| 50632609bf | 2026-11-15 | refactor(approval): move the quoted-newline mask into approval_quoted_newlines | `PENDING` | |
+| 5047796127 | 2026-11-15 | fix(approval): let the collapse tail own quote pairs after a quoted system dir | `PENDING` | |
+| 5009935d40 | 2026-11-15 | refactor(approval): move the variation-selector matcher into approval_variation_selectors | `PENDING` | |
+| 5008e6a83c | 2026-11-15 | fix(threat-patterns): anchor the long-word forget branch at whitespace; let CRLF wrap a negator | `PENDING` | |
+| 445d699ab2 | 2026-11-15 | fix(redact): accept configparser's `:` delimiter in credential-store INI lines | `PENDING` | |
+| 3e6cfbaf98 | 2026-11-15 | fix(redact): run the INI pass before the netrc scan so `password =a b` masks whole | `PENDING` | |
+| 3d5c4eaa4b | 2026-11-15 | fix(redact): end a DB URL query password only at &, # or whitespace | `PENDING` | |
+| 34c4c497d4 | 2026-11-15 | refactor(approval): fold the dequoted-verb yields into one filter | `PENDING` | |
+| 2fd57b4403 | 2026-11-15 | fix(redact): treat PowerShell gc and -Path:<file> reads as credential-file reads | `PENDING` | |
+| 2a51b76696 | 2026-11-15 | fix(plugins): demote plugin-guard findings inside Python docstrings | `PENDING` | |
+| 260e4331a4 | 2026-11-15 | fix(approval): flag a bare ~/.ssh create/link target anywhere in the command | `PENDING` | |
+| 25654c4f1f | 2026-11-15 | fix(approval): quoted or escaped > never makes a real & a redirection; ordinal text selectors | `PENDING` | |
+| 234bd742d2 | 2026-11-15 | fix(approval): read git option substitutions nested up to four levels as one word | `PENDING` | |
+| 1f72a86a40 | 2026-11-15 | refactor(approval): import _split_env_string from approval_env_split directly | `PENDING` | |
+| 10905ca004 | 2026-11-15 | refactor(approval): move the span-keeping shell lexer to tools/approval_shell_tokens.py | `PENDING` | |
+| feac245d8e | 2026-11-14 | fix(post_update): migration backups are owner-only | `PENDING` | |
+| fdbfd1b86e | 2026-11-14 | fix(threat-patterns): make the negated-forget mask linear on emphasis runs | `PENDING` | |
+| fd773ff54a | 2026-11-14 | fix(gateway): the restart watcher judges the old gateway by pid and start time | `PENDING` | |
+| fd0655ab84 | 2026-11-14 | fix(redact): mask quoted/spaced credential-store values, cover ~/.aws/config and _netrc | `PENDING` | |
+| fcabfe38bc | 2026-11-14 | fix(gateway): keep primary re-login hint on the resolved backup account | `PENDING` | |
+| fc73b06fb9 | 2026-11-14 | fix(redact): stop DB URL query scan at quotes/angle brackets; keep templates | `PENDING` | |
+| fc562d87b7 | 2026-11-14 | fix(plugins): a docstring sharing its line with code, or read back as data, stays critical | `PENDING` | |
+| fb98fd527c | 2026-11-14 | fix(skills): keep hardlinked siblings in the background-scan scope; tolerate symlink loops | `PENDING` | |
+| faa5ad003d | 2026-11-14 | fix(redact): URL query mask drops the _value suffix like the JSON rule; pin closed-list names | `PENDING` | |
+| fa8a9e79ac | 2026-11-14 | refactor(desktop): move the global-remote session route out of main.ts | `PENDING` | |
+| f81385553e | 2026-11-14 | fix(redact): keep == comparisons out of spaced config-assignment passes | `PENDING` | |
+| f7cd1f45b2 | 2026-11-14 | fix(gateway): a non-forced restart or update never stops a gateway still doing work | `PENDING` | |
+| f6f389fee3 | 2026-11-14 | refactor(cron): scan a path's written bodies in a helper | `PENDING` | |
+| f670c8b4a8 | 2026-11-14 | fix(telegram): a comment and the video, voice or file sent right after it are one turn | `PENDING` | |
+| f61bc58e5b | 2026-11-14 | fix(approval): stop the DELETE WHERE lookahead at shell redirections | `PENDING` | |
+| f3e3bade84 | 2026-11-14 | fix(approval): a glued redirect still ends the socat/nc command word | `PENDING` | |
+| f25aed52f6 | 2026-11-14 | fix(gateway): load the restart watcher builder with the gateway module | `PENDING` | |
+| f24c795aa2 | 2026-11-14 | fix(desktop): resolve a relocated Hermes .env in the credential-store sweep | `PENDING` | |
+| f218799808 | 2026-11-14 | fix(gateway): catch a profile refusal raised on scope entry, per event | `PENDING` | |
+| f1ecb5e08f | 2026-11-14 | fix(signal): clear the 👀 actually sent even if the auth verdict flips mid-turn | `PENDING` | |
+| f17cecbdf3 | 2026-11-14 | refactor(telegram): move legacy-edit bookkeeping out of edit_message | `PENDING` | |
+| f144ad5433 | 2026-11-14 | fix(redact): mask bare Grafana glsa_/glc_ tokens | `PENDING` | |
+| ee63c99341 | 2026-11-14 | fix(cron): scan heredoc bodies a command writes and then executes | `PENDING` | |
+| ee40506d07 | 2026-11-14 | fix(update): a restart left pending survives into the completion process, by (pid, start time), and reconciles as pending | `PENDING` | |
+| ed828d4c5e | 2026-11-14 | fix(code-exec): mask env-dump lines in execute_code output | `PENDING` | |
+| ed6c244abe | 2026-11-14 | fix(approval): keep the Windows hardline scan linear on runs of bare CRs | `PENDING` | |
+| ed3ffe8095 | 2026-11-14 | fix(telegram): split replies can drop the first-part anchor with opt-in extra.anchor_multipart_replies | `PENDING` | |
+| ed1f43c1f3 | 2026-11-14 | fix(context): surface SSRF and secret-URL refusals in @url references | `PENDING` | |
+| ec460b1e5a | 2026-11-14 | feat(security): opt-in security.redact_phone_numbers keeps E.164 numbers in chat replies | `PENDING` | |
+| ebfa8435b5 | 2026-11-14 | refactor(desktop): Bot Mode sidebar scope lives in its own module | `PENDING` | |
+
+---
+
 ## Fork-local commits (must survive every sync)
 
-These 14 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they are
-re-applied.
+These 17 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they
+are re-applied.
 
 | SHA | Date | Subject | Why it exists |
 |-----|------|---------|---------------|
@@ -199,6 +289,9 @@ re-applied.
 | `ce266c24` | 2026-11-13 | fix(catalog): read the compatibility field the catalog actually publishes | Remote-producer field name (`requires_hermes`) is protected |
 | `c5a437db` | 2026-11-13 | feat(desktop): port the Free Model Suite plugin (v1 -> v2) | Exclusive plugin desktop half recovered from v1 |
 | `8d1ab28d` | 2026-11-13 | test(guards): fail when an exclusive plugin ships incomplete or unreadable | Guard for the exclusive-plugin class |
+| `9b0cfdf2` | 2026-11-13 | docs(upstream): add the v2 porting ledger with a measured baseline | This file — regenerate restores it only if the carry list includes it |
+| `0be8c3ed` | 2026-11-15 | feat(desktop): add GUI-only desktop variant | A `desktop` build variant: bundled payload with no TUI/web frontends planted |
+| `c36521d9` | 2026-11-16 | fix(desktop): teach the build stamp about the desktop variant | The variant must stamp as `bundled` (the stamp's own mechanism table) |
 
 ---
 
@@ -212,6 +305,20 @@ re-applied.
 | Exclusive-plugin guard | `scripts/ci/check_exclusive_plugins.py` (run by `scripts/check`) | Fails when a fork-only plugin ships an incomplete or unreadable half |
 | Free Model Suite (desktop half) | `apps/desktop/src/plugins/free-model-suite/` | Recovered from v1; no upstream counterpart |
 | Hikari Pixel persona | `SOUL.md` / system prompt | Fork identity, not an upstream feature |
+
+---
+
+## Cycle tree for this scan
+
+| Item | Value |
+|------|-------|
+| Branch | `update/upstream-2026-11-16` |
+| Worktree | `D:/School/PROJECT/anakot-next3` |
+| Tip | `be73ce8e76` — fresh `upstream/main`, pre-rebrand |
+| Safety tag | `backup/pre-update-2026-11-16` -> `c36521d908` (`main`) |
+
+The tree is a **pristine upstream checkout**: no rebrand applied, no fork files carried yet. The
+regenerate (carry list -> `rebrand.py --apply` -> `--verify` -> re-lock -> residue) has not run.
 
 ---
 
@@ -236,6 +343,25 @@ both trees as a conflict, and `--allow-unrelated-histories` scales the conflict 
 ---
 
 ## Porting log
+
+### 2026-11-16 — cycle opened; window re-scanned
+
+- Fetched `upstream/main` to `be73ce8e76` (2026-11-15). The ledger's recorded head `9d94f822` is an
+  ancestor, so the 2,470 new commits are a linear addition — not a rewrite.
+- Created the fresh cycle tree `update/upstream-2026-11-16` in worktree `anakot-next3`, checked out at
+  the pristine upstream tip, plus safety tag `backup/pre-update-2026-11-16` at `main` (`c36521d908`).
+- Re-scanned `9d94f822..be73ce8e76`: 2,470 commits (2,297 non-merge) -> 772 noise ->
+  1,525 signal -> 1,293 in tracked subsystems -> 1,262 clusters; seeded the newest 70.
+- Corrected the fork-local commit count 14 -> 17 (the ledger itself, plus the two
+  `desktop`-variant commits, had never been listed).
+- **Known tooling gap:** the workflow's `scripts/carry_list.py` and `scripts/lock_decide.py` do not
+  exist in this repo (only `rebrand.py`, `fix_lock_identity.py`, `find_lost_customizations.py` and
+  `dev-install.sh`, and those live on the update branches, not `main`). The carry list must be
+  computed another way until they are added.
+- **Not done:** the regenerate itself (carry, `--apply`, `--verify`, re-lock, residue, gates,
+  suite, smoke). The tree is upstream-only.
+
+---
 
 ### 2026-11-13 — v2 ledger created; baseline established
 
