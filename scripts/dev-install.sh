@@ -10,6 +10,11 @@
 #   scripts/dev-install.sh --run-desktop          # JS deps, then build and open the desktop app
 #   scripts/dev-install.sh --shortcut             # a Desktop icon that launches this dev build
 #   scripts/dev-install.sh --pack                 # JS deps, then package the desktop app (no launch)
+#   scripts/dev-install.sh --check                # report every missing prerequisite, change nothing
+#
+# Prerequisites: git and uv always; node >= 26 with pnpm for --js, --pack and --run-desktop. All of
+# them are resolved and reported together before any work starts, so a missing tool costs seconds
+# and names its own install line instead of surfacing twenty minutes later as somebody else's error.
 #
 # Why this exists. A regenerated fork tree cannot be set up the documented way:
 #   * Lockfiles are exempt from the rebrand, so the tree arrives with each uv lock still naming the
@@ -36,9 +41,10 @@ RUN_DESKTOP=0
 SHORTCUT=0
 PACK=0
 FULL_CLONE=0
+CHECK=0
 
 usage() {
-    sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
@@ -54,6 +60,7 @@ while [ $# -gt 0 ]; do
         --shortcut)  SHORTCUT=1; WITH_JS=1; shift ;;
         --pack)      PACK=1; WITH_JS=1; shift ;;
         --full)      FULL_CLONE=1; shift ;;
+        --check)    CHECK=1; shift ;;
         -h|--help)   usage 0 ;;
         *)           echo "unknown argument: $1" >&2; usage 2 ;;
     esac
@@ -92,6 +99,138 @@ to_msys_path() {
     printf '%s' "$p"
 }
 
+
+# ─── 0. prerequisites ────────────────────────────────────────────────────────
+# Resolve every tool this run needs BEFORE any work starts, from well-known install paths as well as
+# PATH. Two reasons, both learned the hard way: a fresh VM used to pay for the whole Python env
+# before learning it had no pnpm, and the installers (winget, `npm -g`, uv's own) only prepend PATH
+# for *new* shells -- so a run that installs a tool and carries on would still not see what it added.
+resolve_uv() {
+    UV_BIN="$(command -v uv 2>/dev/null || true)"
+    [ -n "$UV_BIN" ] && return 0
+    local candidate
+    for candidate in "$HOME/.local/bin/uv.exe" "$HOME/.local/bin/uv" \
+                     "$HOME"/.anakot/tools/uv-*/uv* \
+                     "$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"/uv-*/uv*; do
+        if [ ! -d "$candidate" ] && shim_runnable "$candidate"; then UV_BIN="$candidate"; return 0; fi
+    done
+    return 0
+}
+
+resolve_node() {
+    local candidate
+    local tools_msys
+    node_bin=""
+    node_msys=""
+    tools_msys="$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"
+    for candidate in "$tools_msys"/node-*-win32-x64 \
+                     "$(to_msys_path "${ProgramFiles:-C:/Program Files}")/nodejs"; do
+        if [ -x "$candidate/node.exe" ] || [ -x "$candidate/bin/node" ]; then
+            node_bin="$candidate"
+            break
+        fi
+    done
+    if [ -n "$node_bin" ]; then
+        node_msys="$(to_msys_path "$node_bin")"
+        export PATH="$node_msys:$PATH"
+    fi
+    NODE_VERSION="$(node --version 2>/dev/null || echo none)"
+}
+
+# MSYS reports no execute bit for a `.cmd`/`.bat` shim, which is exactly how `npm install -g pnpm`
+# puts itself on Windows -- so on that host existence is the test, and the execute bit everywhere else.
+shim_runnable() {
+    [ -x "$1" ] || { [ "$is_windows" = 1 ] && [ -f "$1" ]; }
+}
+
+resolve_pnpm() {
+    local candidate
+    local name
+    local tools_msys
+    local found=""
+    pnpm_msys=""
+    tools_msys="$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"
+    # The bundled copy is the version the lockfile was written with, so it is tried first; the
+    # global-shim locations after it are what makes an `npm install -g pnpm` visible in THIS run.
+    for candidate in "$tools_msys"/pnpm-* \
+                     "$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/node" \
+                     "$(to_msys_path "${APPDATA:-$HOME/AppData/Roaming}")/npm" \
+                     "$HOME/.local/bin"; do
+        for name in pnpm.exe pnpm.cmd pnpm; do
+            if shim_runnable "$candidate/$name"; then
+                found="$candidate/$name"
+                break
+            fi
+        done
+        if [ -n "$found" ]; then
+            pnpm_msys="$(to_msys_path "$candidate")"
+            export PATH="$pnpm_msys:$PATH"
+            break
+        fi
+    done
+    if [ -n "$found" ]; then
+        # The full path rather than the bare name: bash resolves `pnpm` through PATH without ever
+        # trying the `.cmd` suffix, so a global shim would sit on PATH and still not start.
+        PNPM="$found"
+    elif command -v pnpm >/dev/null 2>&1; then
+        PNPM="pnpm"
+    elif command -v corepack >/dev/null 2>&1; then
+        PNPM="corepack pnpm"   # corepack used to ship with node; kept for machines that still have it
+    else
+        PNPM=""
+    fi
+}
+
+# Report the whole toolchain in one pass and return the number of missing pieces. --check runs this
+# and stops, so the same code decides "can this machine install the tree?" and "is it installed?".
+preflight() {
+    local failures=0
+    printf '  git       %s\n' "$(git --version 2>/dev/null || echo MISSING)"
+    resolve_uv
+    if [ -n "$UV_BIN" ]; then
+        printf '  uv        %s\n' "$("$UV_BIN" --version 2>/dev/null || printf '%s' "$UV_BIN")"
+    else
+        failures=$((failures + 1))
+        printf '  uv        MISSING -- install it:\n'
+        printf '              Windows:   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"\n'
+        printf '              Linux/mac: curl -LsSf https://astral.sh/uv/install.sh | sh\n'
+    fi
+    if [ "$WITH_JS" = 1 ] || [ "$CHECK" = 1 ]; then
+        resolve_node
+        case "$NODE_VERSION" in
+            v26.*|v[3-9][0-9].*)
+                printf '  node      %s\n' "$NODE_VERSION" ;;
+            none)
+                failures=$((failures + 1))
+                printf '  node      MISSING -- install Node 26 or newer:\n'
+                printf '              Windows: winget install --id OpenJS.NodeJS    Linux/mac: nvm install 26\n' ;;
+            *)
+                failures=$((failures + 1))
+                printf '  node      %s is older than the "engines.node >= 26" the JS tree declares\n' "$NODE_VERSION"
+                printf '              Windows: winget install --id OpenJS.NodeJS    Linux/mac: nvm install 26\n' ;;
+        esac
+        resolve_pnpm
+        if [ -n "$PNPM" ]; then
+            printf '  pnpm      %s\n' "$PNPM"
+        else
+            failures=$((failures + 1))
+            # Node 26 stopped bundling corepack, so a fresh Node install has nothing to stand in.
+            printf '  pnpm      MISSING -- install it: npm install -g pnpm\n'
+        fi
+    fi
+    return "$failures"
+}
+
+say "checking prerequisites"
+if ! preflight; then
+    printf '\n'
+    die "missing prerequisite(s) listed above -- nothing has been changed yet. Install the line(s) and re-run."
+fi
+if [ "$CHECK" = 1 ]; then
+    say "all prerequisites present"
+    exit 0
+fi
+
 # ─── 1. locate or create the checkout ────────────────────────────────────────
 if [ -z "$DIR" ]; then
     DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -119,21 +258,8 @@ cd "$DIR"
 say "at $(git rev-parse --short HEAD 2>/dev/null || echo '<no git>') ($(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo detached))"
 
 # ─── 2. Python environment, from the repo lock ───────────────────────────────
-UV_BIN="$(command -v uv 2>/dev/null || true)"
-if [ -z "$UV_BIN" ]; then
-    # A tree that has bootstrapped once leaves a pinned uv under the Anakot tools dir. On a fresh
-    # box that is the difference between a one-command dev install and a toolchain detour.
-    tools_msys="$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"
-    for candidate in "$HOME"/.anakot/tools/uv-*/uv* "$tools_msys"/uv-*/uv*; do
-        if [ -x "$candidate" ] && [ ! -d "$candidate" ]; then UV_BIN="$candidate"; break; fi
-    done
-fi
-if [ -z "$UV_BIN" ]; then
-    die "uv not found. Install it first:
-      Windows:  powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"
-      Linux/mac: curl -LsSf https://astral.sh/uv/install.sh | sh
-    then re-run this script."
-fi
+# uv was resolved and reported by the preflight above; there is no second look-up on purpose, so
+# the uv that vetted the locks is provably the uv that syncs the tree.
 say "uv: $("$UV_BIN" --version 2>/dev/null || echo "$UV_BIN")"
 # The rebrand does not touch lockfiles, so a regenerated tree arrives with locks that still name
 # the upstream project. uv then refuses every strict entry point (this sync, pm's staging, the
@@ -159,49 +285,7 @@ fi
 
 # ─── 3. JS dependencies (optional) ───────────────────────────────────────────
 if [ "$WITH_JS" = 1 ]; then
-    tools_msys="$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/tools"
-
-    node_bin=""
-    node_msys=""
-    for candidate in "$tools_msys"/node-*-win32-x64; do
-        if [ -x "$candidate/node.exe" ] || [ -x "$candidate/bin/node" ]; then
-            node_bin="$candidate"
-            break
-        fi
-    done
-    if [ -n "$node_bin" ]; then
-        node_msys="$(to_msys_path "$node_bin")"
-        export PATH="$node_msys:$PATH"
-    fi
-
-    # Anakot bundles pnpm the same way it bundles node, and the bundled version is the one the
-    # lockfile was written with. A machine that already has the app therefore needs no separate
-    # pnpm install -- which is the difference between this working on a fresh VM and dying with
-    # "pnpm: not recognized".
-    pnpm_msys=""
-    for candidate in "$tools_msys"/pnpm-* \
-                     "$(to_msys_path "${LOCALAPPDATA:-$HOME/AppData/Local}")/anakot/node"; do
-        if [ -x "$candidate/pnpm.exe" ] || [ -x "$candidate/pnpm" ] || [ -x "$candidate/pnpm.cmd" ]; then
-            pnpm_msys="$(to_msys_path "$candidate")"
-            export PATH="$pnpm_msys:$PATH"
-            break
-        fi
-    done
-
-    have_node="$(node --version 2>/dev/null || echo none)"
-    say "JS deps with node $have_node"
-    case "$have_node" in
-        v26.*|v[3-9][0-9].*) : ;;
-        *) warn "package.json requires node >= 26; pnpm install will abort before reading anything" ;;
-    esac
-
-    if command -v pnpm >/dev/null 2>&1; then
-        PNPM="pnpm"
-    elif command -v corepack >/dev/null 2>&1; then
-        PNPM="corepack pnpm"   # corepack ships with Node, so even a bare install can get here
-    else
-        die "pnpm not found and no corepack to stand in. Install it with: npm install -g pnpm"
-    fi
+    say "JS deps with node $NODE_VERSION"
     say "package manager: $PNPM"
     $PNPM install
 

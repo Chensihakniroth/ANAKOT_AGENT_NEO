@@ -8,6 +8,12 @@
     on its own is often "not recognized" even though git works. This wrapper finds bash from the
     git install and forwards the options in PowerShell spelling.
 
+    Prerequisites are git, uv, and -- for -Js, -Desktop and -Pack -- Node 26 or newer with pnpm.
+    They are resolved and reported together before any work starts, so a missing tool costs seconds
+    and names its own install line instead of surfacing twenty minutes later. Node 26 no longer
+    bundles corepack, which is why pnpm is a prerequisite in its own right on a fresh machine.
+    -Check reports what is missing and changes nothing; -Tools installs the missing pieces first.
+
     If PowerShell refuses to load this file ("running scripts is disabled on this system"), the
     execution policy is blocking it, not the script — run either of these instead:
 
@@ -15,10 +21,11 @@
         Set-ExecutionPolicy -Scope CurrentUser RemoteSigned     # once, then this works normally
 
 .EXAMPLE
+    .\scripts\dev-install.ps1 -Check        # what is this machine missing? nothing is changed
+    .\scripts\dev-install.ps1 -Pack -Tools  # install any missing prerequisite, then package the app
     .\scripts\dev-install.ps1 -Run
-    .\scripts\dev-install.ps1 -Dir D:\anakot-dev -Ref update/upstream-2026-11-14 -Js -SeedHome
+    .\scripts\dev-install.ps1 -Dir D:\anakot-dev -Ref update/upstream-2026-11-15 -Js -SeedHome
     .\scripts\dev-install.ps1 -Desktop      # install JS deps, then build and open the desktop app
-    .\scripts\dev-install.ps1 -Pack         # install JS deps, then package the desktop app (no launch)
 #>
 [CmdletBinding()]
 param(
@@ -28,6 +35,8 @@ param(
     [switch]$Pack,
     [switch]$Js,
     [switch]$SeedHome,
+    [switch]$Check,
+    [switch]$Tools,
     [string]$Dir,
     [string]$Ref,
     [string]$HomePath
@@ -53,10 +62,77 @@ function Find-Bash {
     return $null
 }
 
+function Get-ToolPath {
+    # PATH first, then the well-known install locations: winget and `npm -g` only refresh PATH for
+    # the *next* shell, so a run that installs a tool and carries on has to find it by path.
+    param([string]$Name, [string[]]$Candidates = @())
+    $onPath = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($onPath) { return $onPath.Source }
+    foreach ($c in $Candidates) { if ($c -and (Test-Path -LiteralPath $c)) { return $c } }
+    return $null
+}
+
+function Get-NodeMajor {
+    param([string]$Exe)
+    if (-not $Exe) { return 0 }
+    try {
+        $raw = & $Exe --version 2>$null
+        if (-not $raw) { return 0 }
+        return [int]("$raw".TrimStart('v').Split('.')[0])
+    } catch { return 0 }
+}
+
+function Install-WingetPackage {
+    param([string]$Id, [string]$Label)
+    Write-Host "    $Label" -ForegroundColor Cyan
+    $winget = Get-Command winget -ErrorAction SilentlyContinue
+    if (-not $winget) {
+        Write-Host "    [x] winget not available -- install $Id yourself, then re-run" -ForegroundColor Red
+        return
+    }
+    winget install --id $Id -e --source winget --accept-package-agreements --accept-source-agreements
+}
+
+function Install-Prerequisites {
+    Write-Host '==> installing missing prerequisites' -ForegroundColor Cyan
+
+    $git = Get-ToolPath 'git.exe' @((Join-Path $env:ProgramFiles 'Git\cmd\git.exe'))
+    if (-not $git) { Install-WingetPackage 'Git.Git' 'git (also provides the bash this runs in)' }
+
+    $node = Get-ToolPath 'node.exe' @((Join-Path $env:ProgramFiles 'nodejs\node.exe'))
+    if ((Get-NodeMajor $node) -lt 26) {
+        Install-WingetPackage 'OpenJS.NodeJS' 'Node.js 26+ (the JS tree requires it)'
+        $node = Join-Path $env:ProgramFiles 'nodejs\node.exe'
+    }
+
+    $pnpm = Get-ToolPath 'pnpm.cmd' @((Join-Path $env:APPDATA 'npm\pnpm.cmd'),
+                                      (Join-Path $env:ProgramFiles 'nodejs\pnpm.cmd'))
+    if (-not $pnpm) {
+        $npm = Get-ToolPath 'npm.cmd' @((Join-Path $env:ProgramFiles 'nodejs\npm.cmd'))
+        if ($npm) {
+            Write-Host '    pnpm' -ForegroundColor Cyan
+            & $npm install -g pnpm
+        } else {
+            Write-Host '    [x] npm not found -- install Node.js before pnpm' -ForegroundColor Red
+        }
+    }
+
+    $uv = Get-ToolPath 'uv.exe' @((Join-Path $env:USERPROFILE '.local\bin\uv.exe'))
+    if (-not $uv) {
+        Write-Host '    uv' -ForegroundColor Cyan
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
+    }
+
+    Write-Host ''
+}
+
+if ($Tools) { Install-Prerequisites }
+
 $bash = Find-Bash
 if (-not $bash) {
     Write-Host '[x] could not locate bash.exe.' -ForegroundColor Red
     Write-Host '    Install Git for Windows (winget install --id Git.Git), then re-run this.' -ForegroundColor Red
+    if (-not $Tools) { Write-Host '    Or re-run it with -Tools and it will install git first.' -ForegroundColor Yellow }
     exit 1
 }
 
@@ -66,7 +142,10 @@ if (-not (Test-Path -LiteralPath $script)) {
     exit 1
 }
 
+# --check resolves the whole toolchain, prints it and exits before reading or writing anything, so
+# it is safe to run on a machine you are not ready to install on.
 $bashArgs = @($script)
+if ($Check)    { $bashArgs += '--check' }
 if ($Ref)      { $bashArgs += @('--ref',  $Ref) }
 if ($Dir)      { $bashArgs += @('--dir',  $Dir) }
 if ($HomePath) { $bashArgs += @('--home', $HomePath) }
