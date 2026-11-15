@@ -19,12 +19,22 @@ const variants = {
     display: 'Anakot Agent',
     kebab: 'anakot-bundled',
     pascal: 'AnakotBundled'
+  },
+  // The desktop-GUI-only bundle. It deliberately shares `bundled`'s identity
+  // (one app, one update feed, one MSIX identity, one userData dir) and
+  // differs only in its payload: the TUI and browser-dashboard frontends are
+  // never built or planted into it. The variant name exists so a build request
+  // and its prepared.json can never be confused with a full bundle.
+  desktop: {
+    display: 'Anakot Agent',
+    kebab: 'anakot-bundled',
+    pascal: 'AnakotBundled'
   }
 }
 
 const variant = process.env.ANAKOT_DESKTOP_VARIANT || ''
-if (!['', 'light', 'bundled', 'store'].includes(variant)) {
-  throw new Error(`Unknown ANAKOT_DESKTOP_VARIANT ${variant}. expected one of (empty), light, bundled, store`)
+if (!['', 'light', 'bundled', 'desktop', 'store'].includes(variant)) {
+  throw new Error(`Unknown ANAKOT_DESKTOP_VARIANT ${variant}. expected one of (empty), light, bundled, desktop, store`)
 }
 
 // 'store' is a Store-submission packaging identity layered on the bundled

@@ -72,8 +72,8 @@ if (commitBuild) {
   console.error('[stage-msixbundle] --tag=<vX.Y.Z> is required')
   process.exit(1)
 }
-if (!['bundled', 'light'].includes(variant)) {
-  console.error(`[stage-msixbundle] --variant must be 'bundled' or 'light', got '${variant}'`)
+if (!['bundled', 'desktop', 'light'].includes(variant)) {
+  console.error(`[stage-msixbundle] --variant must be 'bundled', 'desktop', or 'light', got '${variant}'`)
   process.exit(1)
 }
 if (process.platform !== 'win32') {

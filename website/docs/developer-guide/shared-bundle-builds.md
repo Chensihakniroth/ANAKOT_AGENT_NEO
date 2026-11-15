@@ -56,13 +56,21 @@ python -m scripts.bundles.desktop --tag=vX.Y.Z
 
 Without `--prepared`, `desktop.py` requires exactly one of `--tag` or `--commit`. Commit builds
 require the full commit SHA and matching checkout HEAD. `--variant` accepts
-`bundled`, `store`, or `light`, with `bundled` as the default. `--repo` selects
+`bundled`, `desktop`, `store`, or `light`, with `bundled` as the default. `--repo` selects
 the checkout. Arguments after `--` go to the prepared Electron Builder wrapper;
 they cannot replace the admitted target, tools, output or packaging configuration.
 
+`desktop` is the GUI-only bundle: the same application and release feed as
+`bundled` (it stamps as `bundled`, sharing `userData`, the MSIX identity and the
+App Installer feed), but its payload is assembled with **no frontends** — the TUI
+and browser-dashboard products are neither built nor planted, so
+`anakot_cli/tui_dist` and `anakot_cli/web_dist` never enter the app. The Desktop
+serves its own dashboard from its Electron renderer dist, so it reads neither.
+
 The driver first prepares the complete dependency set: managed tools, the locked
 Node workspace union, icon environment, Electron-native bindings, packaging
-utilities, and (except for light) the application and independent PM environments.
+utilities, and (except for light and desktop) the TUI and web frontend workspaces,
+plus (except for light) the application and independent PM environments.
 Only then does it compile products, assemble the payload, and package Electron.
 MSIX metadata, signing, notarization, and package formats remain adapter work.
 

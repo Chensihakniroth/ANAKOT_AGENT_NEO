@@ -263,6 +263,32 @@ test('packaging isolates boot metadata and executable names without renaming rel
   }
 })
 
+test('desktop inherits the bundled app identity and release feed', async (): Promise<void> => {
+  const bundled: ProductIdentity = await identityForVariant('bundled')
+  const desktop: ProductIdentity = await identityForVariant('desktop')
+
+  // The GUI-only bundle is the SAME product, only leaner (no TUI, no browser
+  // dashboard frontends in its payload). Every OS-visible marker and the release
+  // feed must stay identical: a distinct identity would fragment userData and
+  // strand desktop users on a channel nothing publishes to.
+  for (const field of [
+    'displayName',
+    'appId',
+    'appNamePascal',
+    'artifactNamePascal',
+    'windowsExecutableName',
+    'cliName',
+    'msixAppIdWithOrg'
+  ] as const) {
+    assert.equal(desktop[field], bundled[field], `${field} must match the bundled product`)
+  }
+
+  assert.equal(desktop.channel, bundled.channel)
+  assert.equal(desktop.light, false)
+  assert.equal(desktop.store, false)
+  assert.deepEqual(desktop, bundled)
+})
+
 test('store inherits the bundled app identity (shared userData) but swaps the MSIX packaging identity', async (): Promise<void> => {
   const bundled: ProductIdentity = await identityForVariant('bundled')
   const store: ProductIdentity = await identityForVariant('store')

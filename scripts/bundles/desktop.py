@@ -109,12 +109,20 @@ def _build_prepared(prepared, builder_args: list[str], variant: str | None) -> N
     run([str(prepared.icon_python), "-I", str(repo / "scripts/generate_icons.py"),
          "--source", str(repo), "--out", str(icons)], cwd=repo, env=env)
     if variant != "light":
-        run([node, "scripts/build/tui.mjs", "--source", str(repo), "--out", str(products / "tui")], cwd=repo, env=env)
-        run([node, "scripts/build/web.mjs", "--source", str(repo), "--icons", str(products / "icons"),
-             "--out", str(products / "web")], cwd=repo, env=env)
+        # `desktop` is the GUI-only bundle: the agent payload is assembled with
+        # NO frontends planted, so anakot_cli/{tui_dist,web_dist} never enter the
+        # app. Both products are built only for the variants that ship them — the
+        # Desktop serves its dashboard from its own Electron renderer dist, so it
+        # reads neither one.
+        frontends = {}
+        if variant != "desktop":
+            run([node, "scripts/build/tui.mjs", "--source", str(repo), "--out", str(products / "tui")], cwd=repo, env=env)
+            run([node, "scripts/build/web.mjs", "--source", str(repo), "--icons", str(products / "icons"),
+                 "--out", str(products / "web")], cwd=repo, env=env)
+            frontends = {"tui": products / "tui", "web": products / "web"}
         if prepared.payload is None:
             raise ValueError("payload dependencies were not prepared")
-        if finish_native(prepared.payload, {"tui": products / "tui", "web": products / "web"}):
+        if finish_native(prepared.payload, frontends):
             raise RuntimeError("prepared payload assembly failed")
     from scripts.bundles.desktop_prepare import require_source
     require_source(repo, request.commit)
@@ -147,7 +155,7 @@ def main() -> None:
                              "version comes from the target pyproject, no tag is referenced")
     parser.add_argument("--release-commit", help="Admitted commit for a stable tag not created until green")
     parser.add_argument("--channel-request", type=Path, help="Immutable admitted channel request JSON")
-    parser.add_argument("--variant", choices=["bundled", "store", "light"])
+    parser.add_argument("--variant", choices=["bundled", "desktop", "store", "light"])
     parser.add_argument("--repo", type=Path, default=ROOT)
     parser.add_argument("--work", type=Path)
     parser.add_argument("--cache", type=Path)

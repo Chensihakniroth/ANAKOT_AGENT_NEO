@@ -122,7 +122,7 @@ class BuildRequest:
             bundle_env = channel_request["bundleEnv"]
         if variant == "store" and (commit or not tag or channel_for_tag(tag) != "stable"):
             raise ValueError("Store packaging requires a stable release tag")
-        if variant not in {"bundled", "store", "light"}:
+        if variant not in {"bundled", "desktop", "store", "light"}:
             raise ValueError("invalid desktop variant")
         if bool(tag) == bool(commit):
             raise ValueError("exactly one of --tag or --commit is required")
@@ -196,7 +196,9 @@ class BuildRequest:
         return hashlib.sha256(json.dumps(self.data(), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
     def workspaces(self) -> list[str]:
-        return ["apps/desktop"] + ([] if self.variant == "light" else ["ui-tui", "web"])
+        """Frontend workspaces are installed only for the variants that plant them."""
+        frontends = () if self.variant in ("light", "desktop") else ("ui-tui", "web")
+        return ["apps/desktop", *frontends]
 
 
 @dataclass(frozen=True)

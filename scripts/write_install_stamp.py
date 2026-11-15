@@ -227,6 +227,12 @@ def build_stamp(
     #               different MSIX packaging identity. Stamps as 'bundled'
     #               so the bundled shape logic (shared userData, steward-
     #               owned updates, no in-app updater) holds for it too.
+    #   desktop   — the desktop-GUI-only bundle: the bundled payload with no
+    #               TUI and no browser-dashboard frontends planted. It stamps
+    #               as 'bundled' for the same reason 'store' does — it IS a
+    #               bundled desktop install (one app, one feed), only leaner;
+    #               stamping 'desktop' would make bundled-shape readers treat
+    #               it as an unknown distribution.
     #   runtime   — a self-contained CLI runtime with NO Electron app around
     #               it (the Termux .deb). It is sealed like 'bundled' but
     #               must not stamp as one: 'bundled' readers locate an
@@ -234,12 +240,12 @@ def build_stamp(
     #               and a tree without one is damage to them.
     # Release artifacts pin a tag. Commit builds never enter an update channel.
     variant = os.environ.get("ANAKOT_DESKTOP_VARIANT", "").strip()
-    if variant not in ("", "bootstrap", "bundled", "light", "store", "runtime"):
+    if variant not in ("", "bootstrap", "bundled", "desktop", "light", "store", "runtime"):
         raise SystemExit(
             f"write_install_stamp: unknown ANAKOT_DESKTOP_VARIANT {variant!r} "
-            "(expected unset, 'bootstrap', 'bundled', 'light', 'store', or 'runtime')"
+            "(expected unset, 'bootstrap', 'bundled', 'desktop', 'light', 'store', or 'runtime')"
         )
-    payload = "bundled" if variant == "store" else (variant or "bootstrap")
+    payload = "bundled" if variant in ("store", "desktop") else (variant or "bootstrap")
     tag = os.environ.get("ANAKOT_PAYLOAD_TAG") or None
 
     _stable_tag = re.compile(r"^v(0|[1-9]\d{0,2})\.\d+\.\d+$")

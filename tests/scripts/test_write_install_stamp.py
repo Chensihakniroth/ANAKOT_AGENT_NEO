@@ -15,6 +15,10 @@ import pytest
     ("bundled", "desktop-app", "app-installer", "bundled", "v0.18.0"),
     ("bundled", "desktop-app", "microsoft-store", "bundled", "v0.18.0"),
     ("bundled", "desktop-app", "external", "bundled", "v0.18.0"),
+    # The GUI-only bundle stamps as 'bundled': bundled-shape readers (shared
+    # userData, steward-owned updates, the App Installer feed) must treat it as
+    # a normal bundled desktop install, not an unknown distribution.
+    ("desktop", "desktop-app", "app-installer", "bundled", "v0.18.0"),
     ("light", "desktop-app", "electron-updater", "light", "v0.18.0"),
     ("runtime", "apt-termux", "external", "runtime", "v0.18.0"),
 ])

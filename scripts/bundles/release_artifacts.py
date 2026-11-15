@@ -336,7 +336,11 @@ def publish_canary_appinstaller(root: Path, *, tag: str, variant: str, bundle: P
 
     if not is_canary_tag(tag):
         raise ValueError("Only canary feeds publish directly; stable requires accepted candidates")
-    if variant not in ("bundled", "light"):
+    # 'desktop' shares the bundled product's identity and feed directory, so its
+    # canary publishes to the same App Installer pointer bundled does — one
+    # product, one channel. Only Store (its own packaging identity) and commit
+    # builds (no feed at all) are excluded.
+    if variant not in ("bundled", "desktop", "light"):
         raise ValueError("Store and commit builds have no App Installer feed")
     if not public_base:
         raise ValueError("Public feed base URL is required")
@@ -412,7 +416,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--store-only", action="store_true")
     for name in ("identity", "publisher", "version", "self-uri", "artifact-uri"):
         parser.add_argument(f"--{name}")
-    parser.add_argument("--variant", choices=["bundled", "light"])
+    parser.add_argument("--variant", choices=["bundled", "desktop", "light"])
     parser.add_argument("--bundle", type=Path)
     args = parser.parse_args(argv)
     if args.command == "publish-appinstaller":

@@ -187,7 +187,7 @@ function main() {
     )
   }
 
-  const bundled = ['bundled', 'store'].includes(process.env.ANAKOT_DESKTOP_VARIANT)
+  const bundled = ['bundled', 'desktop', 'store'].includes(process.env.ANAKOT_DESKTOP_VARIANT)
   const payload = bundled
     ? stageDesktopLaunchers(join(OUT_DIR, 'agent-payload'))
     : null

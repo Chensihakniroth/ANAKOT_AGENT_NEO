@@ -129,7 +129,7 @@ module.exports = {
       from: 'build/install-stamp.json',
       to: 'install-stamp.json'
     },
-    ...(['bundled', 'store'].includes(process.env.ANAKOT_DESKTOP_VARIANT || '')
+    ...(['bundled', 'desktop', 'store'].includes(process.env.ANAKOT_DESKTOP_VARIANT || '')
       ? [{ from: 'build/agent-payload', to: 'agent-payload' }]
       : []),
     {

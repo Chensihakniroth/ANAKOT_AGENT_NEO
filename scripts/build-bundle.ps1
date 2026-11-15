@@ -3,13 +3,22 @@
   Build the desktop MSIX for the commit checked out here, on this machine.
 
 .DESCRIPTION
-  scripts\build-bundle.ps1             Sideload MSIX (bundled variant) for this machine's architecture.
-  scripts\build-bundle.ps1 -Store      Microsoft Store MSIX (Store identity).
+  scripts/build-bundle.ps1                      Sideload MSIX (bundled variant) for this machine's architecture.
+  scripts/build-bundle.ps1 -Variant desktop     Sideload MSIX, GUI-only payload (no TUI / browser dashboard).
+  scripts/build-bundle.ps1 -Store               Microsoft Store MSIX (Store identity).
 
   The commit does not need to be pushed. The checkout must be clean: the build
-  packages HEAD. Output goes to apps\desktop\release\. The script removes the
-  AZURE_SIGN_* variables from the build, so the packages are unsigned even when
-  your shell has release signing set.
+  packages HEAD. Output goes to the release directory under apps/desktop. The
+  script removes the AZURE_SIGN_* variables from the build, so the packages are
+  unsigned even when your shell has release signing set. An unsigned MSIX
+  installs only with Developer Mode (or a sideloading policy) enabled.
+
+  -Variant bundled (the default) ships the full payload, including the TUI and
+  browser-dashboard frontends. -Variant desktop shares bundled's app identity,
+  MSIX identity and update feed but plants no frontends. -Variant light makes a
+  remote-only client with no bundled agent at all. -Store ignores -Variant: a
+  Store package is always prepared as bundled, then packaged under the Store
+  identity.
 
   -Store needs a stable release tag. This script makes a local claim tag
   (rc.<N>-vX.Y.Z) for the next patch version, builds with it, and deletes it
@@ -27,6 +36,11 @@
 .PARAMETER Store
   Build the Store package instead of the sideload package.
 
+.PARAMETER Variant
+  Sideload payload variant: bundled (the default), desktop (GUI-only payload with
+  no TUI or browser-dashboard frontends), or light (remote-only client with no
+  bundled agent). Ignored with -Store, which always prepares bundled.
+
 .PARAMETER Python
   Python 3.11+ to run the driver. Default: the first suitable python on PATH.
 
@@ -36,6 +50,8 @@
 [CmdletBinding()]
 param(
   [switch]$Store,
+  [ValidateSet('bundled', 'desktop', 'light')]
+  [string]$Variant = 'bundled',
   [string]$Python = '',
   [string]$Remote = 'origin'
 )
@@ -148,8 +164,10 @@ try {
     & $py scripts/bundles/desktop.py --prepared (Join-Path $work 'prepared.json') --variant store
     if ($LASTEXITCODE) { Fail "Store packaging failed (exit $LASTEXITCODE)" }
   } else {
-    Write-Host "build-bundle: building $sha (sideload)"
-    & $py scripts/bundles/desktop.py --commit $sha --variant bundled --clean
+    Write-Host "build-bundle: building $sha (sideload, variant $Variant)"
+    # Shell value must not silently contradict the requested variant.
+    $env:ANAKOT_DESKTOP_VARIANT = $Variant
+    & $py scripts/bundles/desktop.py --commit $sha --variant $Variant --clean
     if ($LASTEXITCODE) { Fail "build failed (exit $LASTEXITCODE)" }
   }
 } finally {
