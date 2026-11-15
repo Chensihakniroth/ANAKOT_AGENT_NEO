@@ -339,3 +339,7 @@ infografico/
 /pm/.lock.json.lock
 
 apps/desktop/.dist-build*
+
+# Generated per-checkout by scripts/dev-install.sh -- the launchers the Desktop shortcut targets
+/anakot-dev.cmd
+/anakot-dev-packaged.cmd

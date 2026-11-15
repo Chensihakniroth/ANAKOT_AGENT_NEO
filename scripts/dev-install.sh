@@ -9,7 +9,7 @@
 #   scripts/dev-install.sh --run                  # launch the CLI against the dev home when done
 #   scripts/dev-install.sh --run-desktop          # JS deps, then build and open the desktop app
 #   scripts/dev-install.sh --shortcut             # a Desktop icon that launches this dev build
-#   scripts/dev-install.sh --pack                 # JS deps, then package the desktop app (no launch)
+#   scripts/dev-install.sh --pack                 # JS deps, package the app, put a Desktop icon on it
 #   scripts/dev-install.sh --check                # report every missing prerequisite, change nothing
 #
 # Prerequisites: git and uv always; node >= 26 with pnpm for --js, --pack and --run-desktop. All of
@@ -98,6 +98,10 @@ to_msys_path() {
     fi
     printf '%s' "$p"
 }
+
+# Windows spelling of a path, for anything handed to a native Windows process: a generated .cmd, a
+# .lnk, a powershell.exe -File argument. cygpath ships with the git bash this script runs in.
+win() { cygpath -w "$1" 2>/dev/null || printf '%s' "$1"; }
 
 
 # ─── 0. prerequisites ────────────────────────────────────────────────────────
@@ -421,7 +425,6 @@ if [ "$SHORTCUT" = 1 ]; then
         # A .lnk cannot carry environment, and this app needs ANAKOT_HOME (a launch-only key read from
         # its own process env, never from a .env) plus the bundled Node/pnpm. So the shortcut points at
         # a .cmd that sets all three, then starts the app: an icon that needs no typing and no shell.
-        win() { cygpath -w "$1" 2>/dev/null || printf '%s' "$1"; }
         path_pre="$(win "$node_bin")"
         [ -n "$pnpm_msys" ] && path_pre="$path_pre;$(win "$pnpm_msys")"
         launcher="$DIR/anakot-dev.cmd"
@@ -459,6 +462,26 @@ if [ "$PACK" = 1 ]; then
     if [ -n "$artifact" ]; then
         say "packaged app: $artifact"
         say "start it with ANAKOT_HOME=\"$DEV_HOME\" \"$artifact\""
+        # An icon that needs nothing typed and no shell. A .lnk cannot carry environment variables and
+        # the app takes ANAKOT_HOME from its own process env, so the shortcut points at a two-line
+        # launcher that sets it and starts the packaged exe -- the same reason the source-mode
+        # --shortcut exists, pointed at the artifact instead of a dev server.
+        if [ "$is_windows" = 1 ]; then
+            launcher="$DIR/anakot-dev-packaged.cmd"
+            {
+                printf '@echo off\r\n'
+                printf 'set "ANAKOT_HOME=%s"\r\n' "$(win "$DEV_HOME")"
+                printf 'start "" "%s"\r\n' "$(win "$artifact")"
+            } > "$launcher"
+            ps_args=(-NoProfile -ExecutionPolicy Bypass -File "$(win "$DIR/scripts/dev-desktop-shortcut.ps1")"
+                     -CmdPath "$(win "$launcher")" -Name "Anakot Dev" -IconPath "$(win "$artifact")")
+            [ -n "${ANAKOT_SHORTCUT_DIR:-}" ] && ps_args+=(-OutDir "$(win "$ANAKOT_SHORTCUT_DIR")")
+            if powershell.exe "${ps_args[@]}"; then
+                say "double-click \"Anakot Dev\" on the Desktop to start the packaged app"
+            else
+                warn "could not create the Desktop shortcut (the launcher above still works: $launcher)"
+            fi
+        fi
     else
         warn "the pack finished but no artifact was found under $DIR/apps/desktop/release"
     fi

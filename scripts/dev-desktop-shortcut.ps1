@@ -16,12 +16,17 @@
 
 .PARAMETER OutDir
     Where to write the shortcut. Defaults to the user's Desktop.
+
+.PARAMETER IconPath
+    File to take the icon from (the packaged Anakot.exe, for a packaged build). Defaults to a
+    generic shell32 icon, which is what a source-mode dev build gets.
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$CmdPath,
     [string]$Name = 'Anakot Dev',
-    [string]$OutDir
+    [string]$OutDir,
+    [string]$IconPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -43,7 +48,11 @@ $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($link)
 $shortcut.TargetPath = (Resolve-Path -LiteralPath $CmdPath).Path
 $shortcut.WorkingDirectory = Split-Path -Parent (Resolve-Path -LiteralPath $CmdPath).Path
-$shortcut.IconLocation = "$env:SystemRoot\System32\shell32.dll,13"
+$icon = "$env:SystemRoot\System32\shell32.dll,13"
+if ($IconPath -and (Test-Path -LiteralPath $IconPath)) {
+    $icon = "$((Resolve-Path -LiteralPath $IconPath).Path),0"
+}
+$shortcut.IconLocation = $icon
 $shortcut.Description = 'Anakot (dev build)'
 $shortcut.Save()
 
