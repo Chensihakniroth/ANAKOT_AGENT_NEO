@@ -65,6 +65,7 @@ if ($failed) { exit 1 }
 FETCHED_AS_STRING = (
     REPO_ROOT / "scripts/install.ps1",
     REPO_ROOT / "scripts/update-test/anakot-update-rehearsal.ps1",
+    REPO_ROOT / "scripts/dev-bootstrap.ps1",
 )
 
 

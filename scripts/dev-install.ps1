@@ -82,6 +82,21 @@ function Get-NodeMajor {
     } catch { return 0 }
 }
 
+function Get-BundledTool {
+    # Anakot stages its own node/pnpm under ...\anakot\tools, and the staged copy is the version
+    # the locks were written with. A machine that already has the app needs no system install --
+    # without this, -Tools sees the *system* node (often an older one) and adds another.
+    param([string]$Pattern)
+    foreach ($root in @((Join-Path $env:LOCALAPPDATA 'anakot\tools'),
+                        (Join-Path $env:USERPROFILE '.anakot\tools'))) {
+        if (-not (Test-Path -LiteralPath $root)) { continue }
+        $hit = Get-ChildItem -Path (Join-Path $root $Pattern) -ErrorAction SilentlyContinue |
+               Sort-Object Name -Descending | Select-Object -First 1
+        if ($hit) { return $hit.FullName }
+    }
+    return $null
+}
+
 function Get-PnpmPin {
     # The repo pins its toolchain exactly: pm/lock.json carries packages.pnpm.version and a pnpm
     # preinstall guard refuses to run under any other version, so `npm install -g pnpm` (latest) is
@@ -115,14 +130,17 @@ function Install-Prerequisites {
     $git = Get-ToolPath 'git.exe' @((Join-Path $env:ProgramFiles 'Git\cmd\git.exe'))
     if (-not $git) { Install-WingetPackage 'Git.Git' 'git (also provides the bash this runs in)' }
 
-    $node = Get-ToolPath 'node.exe' @((Join-Path $env:ProgramFiles 'nodejs\node.exe'))
+    $node = Get-ToolPath 'node.exe' @((Get-BundledTool 'node-*\node.exe'),
+                                      (Join-Path $env:ProgramFiles 'nodejs\node.exe'))
     if ((Get-NodeMajor $node) -lt 26) {
         Install-WingetPackage 'OpenJS.NodeJS' 'Node.js 26+ (the JS tree requires it)'
         $node = Join-Path $env:ProgramFiles 'nodejs\node.exe'
     }
 
     $pin = Get-PnpmPin
-    $pnpm = Get-ToolPath 'pnpm.cmd' @((Join-Path $env:APPDATA 'npm\pnpm.cmd'),
+    $pnpm = Get-ToolPath 'pnpm.cmd' @((Get-BundledTool 'pnpm-*\pnpm.exe'),
+                                      (Get-BundledTool 'pnpm-*\pnpm.cmd'),
+                                      (Join-Path $env:APPDATA 'npm\pnpm.cmd'),
                                       (Join-Path $env:ProgramFiles 'nodejs\pnpm.cmd'))
     if ($pnpm -and $pin -and (Get-PnpmVersion $pnpm) -ne $pin) {
         Write-Host "    pnpm $(Get-PnpmVersion $pnpm) does not match the repo pin $pin" -ForegroundColor Yellow
