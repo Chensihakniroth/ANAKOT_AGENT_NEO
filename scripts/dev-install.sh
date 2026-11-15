@@ -101,6 +101,36 @@ to_msys_path() {
 
 
 # ─── 0. prerequisites ────────────────────────────────────────────────────────
+# The repo pins its toolchain exactly -- pm/lock.json carries packages.pnpm.version and a pnpm
+# preinstall guard refuses to run under any other version. Reading it early needs a JSON reader
+# before the env exists, so this borrows whatever interpreter is reachable, uv included.
+json_value() {
+    local file="$1" code="$2" out=""
+    if [ -n "${PY:-}" ] && [ -x "${PY:-}" ]; then
+        out="$("$PY" -c "$code" "$file" 2>/dev/null || true)"
+    elif command -v python3 >/dev/null 2>&1; then
+        out="$(python3 -c "$code" "$file" 2>/dev/null || true)"
+    elif command -v python >/dev/null 2>&1; then
+        out="$(python -c "$code" "$file" 2>/dev/null || true)"
+    else
+        out="$("$UV_BIN" run --no-project python -c "$code" "$file" 2>/dev/null || true)"
+    fi
+    printf '%s' "$out"
+}
+
+PNPM_PIN_CODE='import json,sys;print(json.load(open(sys.argv[1],encoding="utf-8-sig"))["packages"]["pnpm"]["version"])'
+
+pnpm_pin() {
+    local lock=""
+    if [ -n "${DIR:-}" ] && [ -f "$DIR/pm/lock.json" ]; then
+        lock="$DIR/pm/lock.json"
+    elif [ -f "$(dirname "$0")/../pm/lock.json" ]; then
+        lock="$(dirname "$0")/../pm/lock.json"
+    fi
+    [ -n "$lock" ] || return 0
+    json_value "$lock" "$PNPM_PIN_CODE"
+}
+
 # Resolve every tool this run needs BEFORE any work starts, from well-known install paths as well as
 # PATH. Two reasons, both learned the hard way: a fresh VM used to pay for the whole Python env
 # before learning it had no pnpm, and the installers (winget, `npm -g`, uv's own) only prepend PATH
@@ -185,6 +215,7 @@ resolve_pnpm() {
 # and stops, so the same code decides "can this machine install the tree?" and "is it installed?".
 preflight() {
     local failures=0
+    local pin pnpm_version
     printf '  git       %s\n' "$(git --version 2>/dev/null || echo MISSING)"
     resolve_uv
     if [ -n "$UV_BIN" ]; then
@@ -210,12 +241,21 @@ preflight() {
                 printf '              Windows: winget install --id OpenJS.NodeJS    Linux/mac: nvm install 26\n' ;;
         esac
         resolve_pnpm
-        if [ -n "$PNPM" ]; then
-            printf '  pnpm      %s\n' "$PNPM"
-        else
+        pin="$(pnpm_pin)"
+        pnpm_version=""
+        [ -n "$PNPM" ] && pnpm_version="$("$PNPM" --version 2>/dev/null || echo unknown)"
+        if [ -z "$PNPM" ]; then
             failures=$((failures + 1))
             # Node 26 stopped bundling corepack, so a fresh Node install has nothing to stand in.
-            printf '  pnpm      MISSING -- install it: npm install -g pnpm\n'
+            # The install line carries the repo's pin when it is readable: `latest` is the version
+            # pnpm's own preinstall guard then refuses.
+            printf '  pnpm      MISSING -- install it: npm install -g pnpm%s\n' "${pin:+@$pin}"
+        else
+            printf '  pnpm      %s\n' "$pnpm_version"
+            if [ -n "$pin" ] && [ "$pnpm_version" != "$pin" ]; then
+                # Deliberately not a failure: the JS step installs the pinned version itself.
+                printf '              note: the repo pins pnpm %s (pm/lock.json); the pinned one will be installed before the JS step\n' "$pin"
+            fi
         fi
     fi
     return "$failures"
@@ -287,6 +327,28 @@ fi
 if [ "$WITH_JS" = 1 ]; then
     say "JS deps with node $NODE_VERSION"
     say "package manager: $PNPM"
+
+    # The repo pins pnpm exactly and enforces it from a preinstall guard, so a mismatched pnpm fails
+    # inside `pnpm install` with a lifecycle-script error that arrives after the JS step has begun.
+    # Install the pinned version up front instead; the shim path is replaced in place, so the pnpm
+    # resolved above becomes the pinned one without a second look-up.
+    pin="$(pnpm_pin)"
+    have_pnpm="$("$PNPM" --version 2>/dev/null || echo unknown)"
+    if [ -n "$pin" ] && [ "$have_pnpm" != "$pin" ]; then
+        say "pnpm $have_pnpm is not the repo's pin ($pin) -- installing pnpm@$pin"
+        npm_bin="$(command -v npm 2>/dev/null || true)"
+        if [ -z "$npm_bin" ] && [ -n "$node_msys" ] && shim_runnable "$node_msys/npm.cmd"; then
+            npm_bin="$node_msys/npm.cmd"
+        fi
+        [ -n "$npm_bin" ] || die "the repo pins pnpm $pin (pm/lock.json) and npm is not available to
+    install it. Install Node 26+ (it ships npm), then re-run; or source ./activate for the pinned copy."
+        "$npm_bin" install -g "pnpm@$pin" || die "could not install pnpm@$pin"
+        have_pnpm="$("$PNPM" --version 2>/dev/null || echo unknown)"
+        if [ "$have_pnpm" != "$pin" ]; then
+            warn "pnpm reports $have_pnpm after installing $pin; pnpm install will refuse to run"
+        fi
+    fi
+
     $PNPM install
 
     # pnpm skips dependency install scripts without approval, and Electron's binary arrives exactly

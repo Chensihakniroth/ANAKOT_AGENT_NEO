@@ -82,6 +82,22 @@ function Get-NodeMajor {
     } catch { return 0 }
 }
 
+function Get-PnpmPin {
+    # The repo pins its toolchain exactly: pm/lock.json carries packages.pnpm.version and a pnpm
+    # preinstall guard refuses to run under any other version, so `npm install -g pnpm` (latest) is
+    # the wrong install -- it fails inside `pnpm install` after the JS step has already started.
+    $lock = Join-Path $PSScriptRoot '..\pm\lock.json'
+    if (-not (Test-Path -LiteralPath $lock)) { return $null }
+    try { return (Get-Content -LiteralPath $lock -Raw | ConvertFrom-Json).packages.pnpm.version }
+    catch { return $null }
+}
+
+function Get-PnpmVersion {
+    param([string]$Exe)
+    if (-not $Exe) { return '' }
+    try { $v = & $Exe --version 2>$null; return "$v".Trim() } catch { return '' }
+}
+
 function Install-WingetPackage {
     param([string]$Id, [string]$Label)
     Write-Host "    $Label" -ForegroundColor Cyan
@@ -105,13 +121,19 @@ function Install-Prerequisites {
         $node = Join-Path $env:ProgramFiles 'nodejs\node.exe'
     }
 
+    $pin = Get-PnpmPin
     $pnpm = Get-ToolPath 'pnpm.cmd' @((Join-Path $env:APPDATA 'npm\pnpm.cmd'),
                                       (Join-Path $env:ProgramFiles 'nodejs\pnpm.cmd'))
+    if ($pnpm -and $pin -and (Get-PnpmVersion $pnpm) -ne $pin) {
+        Write-Host "    pnpm $(Get-PnpmVersion $pnpm) does not match the repo pin $pin" -ForegroundColor Yellow
+        $pnpm = $null
+    }
     if (-not $pnpm) {
         $npm = Get-ToolPath 'npm.cmd' @((Join-Path $env:ProgramFiles 'nodejs\npm.cmd'))
         if ($npm) {
-            Write-Host '    pnpm' -ForegroundColor Cyan
-            & $npm install -g pnpm
+            $spec = if ($pin) { "pnpm@$pin" } else { 'pnpm' }
+            Write-Host "    $spec" -ForegroundColor Cyan
+            & $npm install -g $spec
         } else {
             Write-Host '    [x] npm not found -- install Node.js before pnpm' -ForegroundColor Red
         }
