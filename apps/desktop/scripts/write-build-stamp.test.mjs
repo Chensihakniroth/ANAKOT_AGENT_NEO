@@ -106,6 +106,28 @@ test('bundled stamp carries the builder contract and refuses an unstaged payload
   assert.equal(buildStampPayload(baseStamp, { ANAKOT_DESKTOP_VARIANT: 'light' }, 'darwin', { runtime }).runtime, undefined)
 })
 
+test('desktop stamps as bundled with the bundled update owner and refuses an unstaged payload', () => {
+  const env = { ANAKOT_DESKTOP_VARIANT: 'desktop' }
+
+  assert.throws(() => buildStampPayload(baseStamp, env, 'darwin'), /payload/)
+  assert.deepEqual(buildStampPayload(baseStamp, env, 'darwin', { runtime }).runtime, runtime)
+
+  for (const [platform, mechanism] of [['win32', 'app-installer'], ['darwin', 'electron-updater']]) {
+    const stamp = buildStampPayload(baseStamp, env, platform, { runtime })
+
+    // The GUI-only bundle is a leaner build of the SAME product: it must stay
+    // indistinguishable from a bundled install to every bundled-shape reader
+    // (installShape, payload-backend, desktop-uninstall) and share its feed.
+    assert.equal(stamp.payload, 'bundled', 'desktop must stamp as bundled')
+    assert.equal(stamp.updateMechanism, mechanism)
+  }
+
+  assert.throws(
+    () => buildStampPayload(baseStamp, { ANAKOT_DESKTOP_VARIANT: 'chonky' }, 'win32', { runtime }),
+    /Unknown desktop variant/
+  )
+})
+
 test('source builds declare the same artifact schema, without a payload', () => {
   const stamp = buildStampPayload(baseStamp, {})
   assert.equal(stamp.payload, 'bootstrap')

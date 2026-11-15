@@ -248,22 +248,30 @@ export function buildStampPayload(stamp, env = process.env, platform = process.p
   }
   if (variant === 'bundled') base.receiverProtocol = 1
 
+  // `desktop` is the GUI-only payload of the same bundled product, so it takes
+  // the bundled update owner (the OS App Installer on Windows) — it shares that
+  // product's app identity, feed and MSIX identity.
+  const bundledMechanism = { win32: 'app-installer', darwin: 'electron-updater' }[platform] || 'external'
   const updateMechanism = {
     '': 'self',
     bootstrap: 'self',
     store: 'microsoft-store',
-    bundled: { win32: 'app-installer', darwin: 'electron-updater' }[platform] || 'external',
+    bundled: bundledMechanism,
+    desktop: bundledMechanism,
     light: platform === 'darwin' ? 'electron-updater' : 'external'
   }[variant]
   if (!updateMechanism) throw new Error(`Unknown desktop variant: ${variant}`)
   if (channelBuild && updateMechanism === 'external') throw new Error('Channel builds require a supported native update owner')
-  const bundled = variant === 'bundled' || variant === 'store'
+  // Variants that ship the payload launch contract. `desktop` and `store` also
+  // stamp as 'bundled' below so every bundled-shape reader (installShape,
+  // payload-backend, uninstall) keeps treating them as a real bundled install.
+  const bundled = variant === 'bundled' || variant === 'desktop' || variant === 'store'
   if (bundled && !payload?.runtime?.commands?.anakot) {
     throw new Error('PM payload has no completed launch contract; stage the bundle before packaging')
   }
   return {
     ...base,
-    payload: variant === "store" ? "bundled" : variant || "bootstrap",
+    payload: bundled ? 'bundled' : variant || 'bootstrap',
     distribution: "desktop-app",
 
     updateMechanism: commitBuild ? 'external' : updateMechanism,
