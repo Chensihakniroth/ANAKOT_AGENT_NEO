@@ -103,6 +103,17 @@ SKIP_PATHS = (
     "web/dist/",
     "website/build/",
     "website/.docusaurus/",
+    # Gitignored build output that still sits in a working copy: the PM/uv cache and the Rust
+    # target tree are ~10.3k files of vendored sources (numpy's Hermite polynomials, Google's
+    # ``dhermes`` TODOs, the Hermes Paketklasse shipping service). Scanning them is pure cost —
+    # they were 42% of a 34,970-file walk and the reason a full --apply felt slow — and a
+    # rewrite there is discarded the moment they regenerate.
+    ".build/",
+    "apps/bootstrap-installer/src-tauri/target/",
+    # The porting ledger quotes upstream's own paths and identifiers (``hermes_cli/`` ->
+    # ``anakot_cli/``, ``scripts/hermes_sync.py``) as history. Rewriting it would falsify the
+    # record it exists to keep, so it is source-of-truth text, not a rename target.
+    "UPSTREAM_PORTING.md",
 )
 # Never rewritten even if they contain "hermes": binary-ish sources, locks.
 SKIP_FILES = {"pnpm-lock.yaml", "uv.lock", "package-lock.json", "yarn.lock"}
