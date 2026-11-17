@@ -74,10 +74,18 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
         <div className="flex-1 overflow-y-auto px-6 pt-2 pb-4">
           {/* Progress line + bar; the count shimmers while the install runs.
               pt-2 matches the log header's py-2 so the "steps complete" line and
-              the "Live output" header share a baseline. */}
+              the "Live output" header share a baseline.
+
+              The shimmering count carries its own brighter colour on purpose:
+              tw-shimmer paints the run with a gradient whose low stop is
+              currentColor, so inheriting text-muted-foreground put its floor at
+              ~5.3:1 and a thin glyph (the leading digit) read as missing. At
+              foreground/80 the floor measures 6.4:1 and the sweep still reads as
+              live (peak ~8:1). Not the ~7:1 a naive sRGB estimate gives: Tailwind
+              compiles the /80 to color-mix(in oklab, ...), which lands lower. */}
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-              <span className={clsx(bootstrap.status === 'running' && 'shimmer')}>
+              <span className={clsx(bootstrap.status === 'running' && 'shimmer text-foreground/80')}>
                 {progress.done} of {progress.total} steps complete
               </span>
               <span className="tabular-nums">{pct}%</span>

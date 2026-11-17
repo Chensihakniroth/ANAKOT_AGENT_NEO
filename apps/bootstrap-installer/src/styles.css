@@ -52,36 +52,46 @@
 }
 
 /*
- * Dark appearance — Nous dark seeds.
+ * Dark appearance — EVA-01 seeds.
  *
  * The imported desktop :root.dark only flips the per-mode mix knobs + neutral
  * chrome; the seed COLORS are normally painted at runtime by the desktop's
- * applyTheme(). The installer has no theme runtime, so we mirror them here from
- * apps/desktop/src/themes/presets.ts (nousTheme.darkColors). The whole
- * --ui-* / --dt-* chain in the imported stylesheet derives from these seeds, so
- * flipping them is enough — we only additionally override the few tokens
- * applyTheme() sets inline that DON'T derive from a seed (primary-foreground on
- * the cream accent, destructive). Unlayered on purpose so it wins over the
- * imported @layer base :root light seeds. Keep in sync with nousTheme.darkColors
- * if that palette is retuned.
+ * applyTheme(). The installer has no theme runtime, so it supplies them here.
+ *
+ * These are deliberately NOT nousTheme.darkColors (the desktop ships the Nous
+ * blue). Anakot Setup ships the Evangelion Unit-01 scheme instead: purple armor
+ * with a neon-green accent. Palette: purple2 #523874 (deep armor), purple1
+ * #711f8c (armor), green0 #33ff00 (neon), black0 #1f1d1c (joints). Every tier
+ * between those is a color-mix step of the sourced colors, never a new hex. The
+ * whole --ui-* / --dt-* chain in the imported stylesheet derives from these
+ * seeds, so flipping them re-skins the app; we only additionally override the
+ * few tokens applyTheme() sets inline that DON'T derive from a seed
+ * (primary-foreground, destructive). Unlayered on purpose so it wins over the
+ * imported @layer base :root light seeds.
  */
 :root.dark {
   color-scheme: dark;
 
   --theme-foreground: #ffe6cb;
   --theme-primary: #ffe6cb;
-  --theme-secondary: #1b45a4;
-  --theme-accent-soft: #1540b1;
-  --theme-midground: #0053fd;
+  --theme-secondary: #711f8c;
+  --theme-accent-soft: #711f8c;
+  --theme-midground: #33ff00;
   --theme-warm: #ffe6cb;
-  --theme-background-seed: #0d2f86;
-  --theme-sidebar-seed: #09286f;
-  --theme-card-seed: #12378f;
-  --theme-elevated-seed: #123a96;
-  --theme-bubble-seed: #143b91;
+  --theme-background-seed: #523874;
+  --theme-sidebar-seed: color-mix(in srgb, #523874 88%, #1f1d1c);
+  --theme-card-seed: color-mix(in srgb, #523874 80%, #711f8c);
+  --theme-elevated-seed: color-mix(in srgb, #523874 68%, #711f8c);
+  --theme-bubble-seed: color-mix(in srgb, #523874 72%, #711f8c);
 
-  /* Non-derived shadcn tokens applyTheme() paints inline (Nous dark values). */
-  --dt-primary-foreground: #0d2f86;
+  /* Non-derived shadcn tokens applyTheme() paints inline. */
+  --dt-primary-foreground: #523874;
   --dt-destructive: #c0473a;
   --dt-destructive-foreground: #fef2f2;
+
+  /* The tertiary text ramp is 54% of --ui-base in the imported sheet, tuned
+     against the darker Nous blue. On EVA-01's lighter purple it composites to
+     4.1:1 against the canvas — under AA for body text — so the installer raises
+     the ramp to 66% (~5.3:1). Primary (94%) and secondary (74%) already pass. */
+  --ui-text-tertiary: color-mix(in srgb, var(--ui-base) 66%, transparent);
 }
