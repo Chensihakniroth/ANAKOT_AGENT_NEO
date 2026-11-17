@@ -1144,8 +1144,10 @@ def _perform_uninstall(
 
 
 _REINSTALL_HINT = {
-    True: "  iex (irm https://hermes-agent.nousresearch.com/install.ps1)",
-    False: "  curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash"}
+    True: ("  git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git;"
+           " cd ANAKOT_AGENT_NEO; ./setup-anakot.ps1"),
+    False: ("  git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git"
+            " && cd ANAKOT_AGENT_NEO && ./setup-anakot.sh")}
 # windows -> [(line, color or None)]
 _RELOAD_HINT = {
     True: [("Open a new terminal (PowerShell / Windows Terminal) to pick up", Colors.YELLOW),
