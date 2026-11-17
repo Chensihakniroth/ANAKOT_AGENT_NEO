@@ -69,6 +69,35 @@
  * (primary-foreground, destructive). Unlayered on purpose so it wins over the
  * imported @layer base :root light seeds.
  */
+
+/* Light appearance — EVA-01 armor, lit.
+ *
+ * The imported desktop :root carries upstream's white + Nous-blue seeds, so on a
+ * light-mode Windows the installer would show someone else's product. These are
+ * the same armor palette in its light end: pale lavender surfaces, deep purple
+ * ink, EVA purple as the action colour, and the neon darkened to #1f7000 where
+ * #33ff00 cannot clear AA on a pale surface. Unlayered, so they win. */
+:root {
+  color-scheme: light;
+
+  --theme-foreground: #241533;
+  --theme-primary: #711f8c;
+  --theme-secondary: #e9dff2;
+  --theme-accent-soft: #efe3f6;
+  --theme-midground: #1f7000;
+  --theme-warm: #711f8c;
+  --theme-background-seed: #f5eef8;
+  --theme-sidebar-seed: #ece1f4;
+  --theme-card-seed: #fbf7fd;
+  --theme-elevated-seed: #fbf7fd;
+  --theme-bubble-seed: #e2d2ee;
+
+  --dt-primary-foreground: #fdf7ff;
+  --dt-destructive: #b3352c;
+  --dt-destructive-foreground: #fff5f5;
+}
+
+/* Dark appearance — EVA-01 seeds (the values the desktop's applyTheme() paints). */
 :root.dark {
   color-scheme: dark;
 

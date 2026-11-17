@@ -1,10 +1,15 @@
 import { getCurrentWindow, type Theme } from '@tauri-apps/api/window'
 
 /*
- * OS appearance follower.
+ * OS appearance follower, in EVA-01's colours.
  *
- * The installer ships no in-app theme switcher, so it tracks the system the
- * way the desktop overlays do. Two Tauri realities shape this:
+ * The installer has no in-app theme switcher, so it tracks the system the way the
+ * desktop overlays do. What differs from upstream is the palette on each side:
+ * styles.css carries an EVA-01 seed set for BOTH `:root` (light — pale armor,
+ * deep purple ink) and `:root.dark` (the measured dark canvas), so a light-mode
+ * Windows gets the fork's identity instead of the stock white-and-blue sheet.
+ *
+ * Two Tauri realities shape this:
  *
  *   1. The strict `script-src 'self'` CSP (tauri.conf.json) forbids an inline
  *      pre-paint <script> in index.html, so the earliest hook we get is this
@@ -15,8 +20,8 @@ import { getCurrentWindow, type Theme } from '@tauri-apps/api/window'
  *      that and fall back to the media query only outside Tauri (e.g. plain
  *      `vite preview`).
  *
- * We only flip the `.dark` class + `color-scheme`; the dark seed values live in
- * styles.css (:root.dark), mirroring apps/desktop's applyTheme() palette.
+ * We only flip the `.dark` class + `color-scheme`; the seed values live in
+ * styles.css, mirroring apps/desktop's applyTheme() palette.
  */
 
 const prefersDark = (): boolean => window.matchMedia('(prefers-color-scheme: dark)').matches

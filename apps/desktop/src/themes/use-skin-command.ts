@@ -4,11 +4,12 @@ import { useTheme } from './context'
 
 // Old names land on a shipped theme so muscle memory works. `gold`/`anakot`
 // only ever meant the classic gold look, so they reach Classic Anakot; `default`
-// stays Nous because it is also the stock config value, which Desktop reads as
-// "the Desktop default" everywhere else (boot, backend sync, setTheme).
+// reaches the fork's own palette because it is also the stock config value,
+// which Desktop reads as "the Desktop default" everywhere else (boot, backend
+// sync, setTheme). Keep this equal to DEFAULT_SKIN_NAME.
 const ALIASES: Record<string, string> = {
   ares: 'ember',
-  default: 'nous',
+  default: 'eva',
   gold: 'classic',
   anakot: 'classic',
   'nous-light': 'nous'
