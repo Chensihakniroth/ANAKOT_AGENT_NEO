@@ -632,6 +632,19 @@ The default removal can preserve configuration and user data. `--full` also
 removes data. `--data` removes user data without deleting package-owned code.
 These modes are destructive; make a backup first.
 
+If you installed with the `Anakot-Setup` bootstrap installer on Windows, the same
+executable removes the installation:
+
+```powershell
+.\Anakot-Setup.exe --uninstall          # removes the install, keeps your data
+.\Anakot-Setup.exe --uninstall --full   # also removes configuration and data
+```
+
+It drives the same removal as `anakot uninstall --yes [--full]` — stopping the
+gateway, restoring `PATH`, and leaving profiles alone unless `--full` — and shows
+progress in its own window. Removal is never the default: a bare launch of
+`Anakot-Setup.exe` sets up or updates, never removes.
+
 For MSIX/Store, use Windows Settings → Apps → Installed apps. For macOS,
 quit Anakot and move its app bundle to Trash. Docker, Nix, and Termux use the
 same manager that installed them. Their package files are not removed by the
