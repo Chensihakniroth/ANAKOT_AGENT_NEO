@@ -324,6 +324,28 @@ describe('VersionHero bundle banners', () => {
     expect(screen.queryByRole('button', { name: en.updates.bundleSwapPendingAction })).toBeNull()
   })
 
+  // The banner is the only in-app route to a fresh installer, so it must land on OUR repo:
+  // a rebrand pass that leaves an upstream domain here silently sends users to the wrong product.
+  it('out-of-sync: the installer link points at our own repo, never an upstream domain', () => {
+    const openExternal = vi.fn()
+    const original = window.anakotDesktop
+    Object.defineProperty(window, 'anakotDesktop', {
+      configurable: true,
+      value: { ...original, openExternal, relaunchApp: vi.fn().mockResolvedValue(undefined) }
+    })
+
+    render(<VersionHero version={version({ bundleOutOfSync: true })} />)
+
+    const link = screen.getByRole('link', { name: en.updates.bundleOutOfSyncAction })
+    const href = link.getAttribute('href') ?? ''
+
+    expect(href).toContain('github.com/Chensihakniroth/')
+    expect(href).not.toContain('nousresearch')
+
+    fireEvent.click(link)
+    expect(openExternal).toHaveBeenCalledWith(href)
+  })
+
   it('a pending swap wins over the out-of-sync banner — restart, not reinstall', () => {
     stubRelaunch()
 

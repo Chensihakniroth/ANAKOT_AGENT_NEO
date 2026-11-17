@@ -25,8 +25,11 @@ import {
   type UpdateTarget
 } from '@/store/updates'
 
-const RELEASE_NOTES_URL = 'https://github.com/NousResearch/hermes-agent/releases'
-const INSTALLER_URL = 'https://hermes-agent.nousresearch.com/'
+/** This fork's own repo. The updater feed is separate (config `updates.desktop_feed_base_url`);
+ *  these two are the user-facing "get the app" destinations and must stay on our origin. */
+const REPO_URL = 'https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO'
+const RELEASE_NOTES_URL = `${REPO_URL}/releases`
+const INSTALLER_URL = REPO_URL
 
 export type UpdateStatusTone = 'idle' | 'available' | 'error' | 'unsupported'
 
