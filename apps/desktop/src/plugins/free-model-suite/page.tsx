@@ -44,8 +44,8 @@ export function FreeModelSuitePage() {
   })
 
   const groups = useMemo(
-    () => filterFreeModelGroups(catalog.data?.providers ?? [], search),
-    [catalog.data?.providers, search]
+    () => filterFreeModelGroups(catalog.data?.providers ?? [], search, copy.stealth),
+    [catalog.data?.providers, copy.stealth, search]
   )
 
   const total = useMemo(() => freeModelCount(groups), [groups])
@@ -135,26 +135,31 @@ export function FreeModelSuitePage() {
           ) : (
             <div className="grid gap-5 pb-2">
               {groups.map(group => (
-                <section className="grid gap-2" key={group.provider.slug}>
+                <section className="grid gap-2" key={group.id}>
                   <div className="flex items-baseline gap-2 border-b border-(--ui-stroke-secondary)/30 pb-1.5">
-                    <h2 className="text-xs font-semibold text-(--ui-text-primary)">{group.provider.name}</h2>
+                    <h2 className="text-xs font-semibold text-(--ui-text-primary)">{group.label}</h2>
                     <span className="font-mono text-[0.62rem] text-(--ui-text-tertiary)">
-                      {group.provider.slug} · {group.models.length}
+                      {group.slug ? `${group.slug} · ${group.entries.length}` : group.entries.length}
                     </span>
-                    {group.provider.free_tier && (
+                    {group.freeTier && (
                       <span className="ml-auto text-[0.6rem] font-semibold tracking-wide text-emerald-600 uppercase dark:text-emerald-400">
-                        Free tier
+                        {copy.freeTier}
                       </span>
                     )}
                   </div>
+                  {group.stealth && (
+                    <p className="text-[0.65rem] text-(--ui-text-tertiary)">{copy.stealthNote}</p>
+                  )}
                   <div className="grid gap-1.5">
-                    {group.models.map(model => (
+                    {group.entries.map(entry => (
                       <ModelRow
-                        current={catalog.data?.provider === group.provider.slug && catalog.data?.model === model}
-                        key={model}
-                        model={model}
+                        current={
+                          catalog.data?.provider === entry.provider.slug && catalog.data?.model === entry.model
+                        }
+                        key={`${entry.provider.slug}:${entry.model}`}
+                        model={entry.model}
                         onApply={(provider, selected) => void apply(provider, selected)}
-                        provider={group.provider}
+                        provider={entry.provider}
                       />
                     ))}
                   </div>

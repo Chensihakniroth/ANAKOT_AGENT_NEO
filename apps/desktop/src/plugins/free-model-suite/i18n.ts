@@ -10,6 +10,7 @@ const en = {
   emptyHelp: 'Connect a provider in Settings, then refresh this page.',
   failed: 'Free model probe failed',
   footer: 'A probe is stateless: it creates no session, runs no tools, and never changes your default model.',
+  freeTier: 'Free tier',
   loading: 'Loading free models…',
   noResults: 'No free models match your search',
   open: 'Free Models: Open',
@@ -20,6 +21,9 @@ const en = {
   run: 'Run test',
   running: 'Testing…',
   search: 'Search models or providers…',
+  stealth: 'Stealth',
+  stealthNote:
+    'Unnamed preview SKUs. Free by convention, and rotated by the provider without notice — test one before switching to it.',
   switchFailed: 'Could not apply the model',
   switched: 'Default model updated',
   title: 'Free Model Suite',
@@ -32,18 +36,40 @@ const en = {
 
 type Messages = typeof en
 
-function bind(t: PluginTranslate): Messages {
-  return {
-    ...en,
-    description: (count: number) => t('description', count),
-    toolCalls: (count: number) => t('toolCalls', count)
-  }
+/**
+ * Every leaf is resolved through `t()`, so a locale bundle actually localizes it. Spreading `...en`
+ * instead — as this file used to — re-wraps only the keys it names and serves English for the rest,
+ * which left every translation below dead.
+ */
+type Bound<T> = {
+  [K in keyof T]: T[K] extends (...args: infer A) => string ? (...args: A) => string : string
 }
 
-export function useFreeModels(): Messages {
+function bind(t: PluginTranslate, template: Messages): Bound<Messages> {
+  const out = {} as Record<string, unknown>
+
+  for (const [key, value] of Object.entries(template)) {
+    if (typeof value === 'function') {
+      out[key] = (...args: unknown[]) => t(key, ...args)
+
+      continue
+    }
+
+    // `translateFrom` answers with the key itself when no bundle is registered yet — an isolated
+    // component test, or a render before the plugin's `register` runs. The English template is the
+    // better fallback there, so `Current` never degrades into `current`.
+    const resolved = t(key)
+
+    out[key] = resolved === key ? value : resolved
+  }
+
+  return out as Bound<Messages>
+}
+
+export function useFreeModels(): Bound<Messages> {
   const t = usePluginI18n('free-model-suite')
 
-  return useMemo(() => bind(t), [t])
+  return useMemo(() => bind(t, en), [t])
 }
 
 const ja = {
@@ -56,6 +82,7 @@ const ja = {
   empty: '無料モデルが見つかりません',
   emptyHelp: '設定でプロバイダーを接続してから、このページを更新してください。',
   failed: '無料モデルのテストに失敗しました',
+  freeTier: '無料枠',
   noResults: '検索条件に一致する無料モデルはありません',
   open: '無料モデル: 開く',
   probe: 'モデルをテスト',
@@ -64,6 +91,9 @@ const ja = {
   run: 'テスト',
   running: 'テスト中…',
   search: 'モデルまたはプロバイダーを検索…',
+  stealth: 'ステルス',
+  stealthNote:
+    '名称未公開のプレビュー SKU。慣例的に無料ですが、プロバイダーが予告なく入れ替えます — 切り替える前にテストしてください。',
   switchFailed: 'モデルを適用できませんでした',
   switched: '既定モデルを更新しました',
   test: 'テスト',
@@ -81,6 +111,7 @@ const zh = {
   empty: '未找到免费模型',
   emptyHelp: '请先在设置中连接提供商，然后刷新此页面。',
   failed: '免费模型测试失败',
+  freeTier: '免费额度',
   noResults: '没有免费模型符合搜索条件',
   open: '免费模型：打开',
   probe: '测试模型',
@@ -89,6 +120,8 @@ const zh = {
   run: '测试',
   running: '测试中…',
   search: '搜索模型或提供商…',
+  stealth: '隐身',
+  stealthNote: '未公开名称的预览 SKU。按惯例免费,但提供商会随时替换 — 切换前请先测试。',
   switchFailed: '无法应用模型',
   switched: '默认模型已更新',
   test: '测试',
@@ -106,9 +139,12 @@ const zhHant = {
   empty: '找不到免費模型',
   emptyHelp: '請先在設定中連線供應商，再重新整理此頁面。',
   failed: '免費模型測試失敗',
+  freeTier: '免費額度',
   noResults: '沒有免費模型符合搜尋條件',
   open: '免費模型：開啟',
   search: '搜尋模型或供應商…',
+  stealth: '隱身',
+  stealthNote: '未公開名稱的預覽 SKU。依慣例免費,但供應商會隨時替換 — 切換前請先測試。',
   switchFailed: '無法套用模型',
   switched: '預設模型已更新',
   test: '測試',
