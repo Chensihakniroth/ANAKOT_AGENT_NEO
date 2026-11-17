@@ -9,6 +9,7 @@ import {
   type BootstrapStateModel,
   openLogDir,
   startInstall,
+  startUninstall,
   startUpdate
 } from '../store'
 
@@ -42,23 +43,32 @@ export default function Failure({ bootstrap }: FailureProps) {
           }
         >
           <span>
-            <span>{isUpdate ? 'Update didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
+            <span>{isUpdate ? 'Update didn\u2019t finish' : mode === 'uninstall' ? 'Uninstall didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
           </span>
-          <span aria-hidden="true">{isUpdate ? 'Update didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
+          <span aria-hidden="true">{isUpdate ? 'Update didn\u2019t finish' : mode === 'uninstall' ? 'Uninstall didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
         </p>
 
         <p className="m-0 mx-auto max-w-xl text-center text-sm leading-normal tracking-tight text-muted-foreground">
           {bootstrap.error ??
             (isUpdate
               ? 'Something went wrong during the update.'
-              : 'Something went wrong during installation.')}
+              : mode === 'uninstall'
+                ? 'Something went wrong during the uninstall.'
+                : 'Something went wrong during installation.')}
         </p>
       </div>
 
       <div className="flex items-center gap-3">
-        <Button className="gap-1.5" onClick={() => void (isUpdate ? startUpdate() : startInstall())}>
+        <Button
+          className="gap-1.5"
+          // Retrying must retry the SAME flow: falling through to startInstall()
+          // here would reinstall the app a failed uninstall was removing.
+          onClick={() =>
+            void (isUpdate ? startUpdate() : mode === 'uninstall' ? startUninstall() : startInstall())
+          }
+        >
           <RefreshCw />
-          {isUpdate ? 'Retry update' : 'Retry install'}
+          {isUpdate ? 'Retry update' : mode === 'uninstall' ? 'Retry uninstall' : 'Retry install'}
         </Button>
         <Button className="gap-1.5" onClick={() => void openLogDir()} variant="text">
           <FileText />

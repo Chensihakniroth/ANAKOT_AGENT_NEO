@@ -51,11 +51,21 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
   }, [bootstrap.status])
 
   const isUpdate = mode === 'update'
-  const title = bootstrap.status === 'completed' ? 'Done' : isUpdate ? 'Updating Anakot' : 'Setting up Anakot Agent'
+  const isUninstall = mode === 'uninstall'
+
+  const title = isUpdate
+    ? 'Updating Anakot'
+    : isUninstall
+      ? 'Removing Anakot'
+      : bootstrap.status === 'completed'
+        ? 'Done'
+        : 'Setting up Anakot Agent'
 
   const description = isUpdate
     ? 'Anakot is updating to the latest version — this only takes a moment.'
-    : 'This is a one-time setup. The Anakot installer is downloading dependencies and configuring your machine. Subsequent launches will skip this step.'
+    : isUninstall
+      ? 'Running the Anakot uninstaller. This window closes when it finishes.'
+      : 'This is a one-time setup. The Anakot installer is downloading dependencies and configuring your machine. Subsequent launches will skip this step.'
 
   const pct = Math.round(progress.fraction * 100)
 
@@ -169,7 +179,10 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
           <ChevronRight className={clsx('transition-transform', showLogs && 'rotate-90')} size={12} />
         </button>
 
-        {bootstrap.status === 'running' && (
+        {/* No Cancel during an uninstall: a half-removed installation is not a
+            state we can hand back to the user, and the CLI has no safe abort.
+            The window closes itself when the run finishes. */}
+        {bootstrap.status === 'running' && !isUninstall && (
           <Button onClick={() => void cancelInstall()} size="sm" variant="outline">
             Cancel
           </Button>
