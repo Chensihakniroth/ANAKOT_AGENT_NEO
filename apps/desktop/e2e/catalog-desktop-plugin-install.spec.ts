@@ -18,7 +18,7 @@ import { pathToFileURL } from 'node:url'
 import { type MockBackendFixture, setupMockBackend, waitForAppReady } from './fixtures'
 import { expect, test } from './test'
 
-const CATALOG_FEED = 'https://nousresearch.github.io/anakot-agent/docs/api/plugins.json'
+const CATALOG_FEED = 'https://nousresearch.github.io/hermes-agent/docs/api/plugins.json'
 const NAME = 'accent-picker'
 const INSTALL_ORIGIN = '.anakot-origin.json'
 

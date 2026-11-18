@@ -51,9 +51,12 @@ export interface CatalogEntry {
   search: string
 }
 
-// The public domain redirects here without CORS headers on the redirect.
-// Use the docs' actual static host, not GitHub's API or repository endpoints.
-const CATALOG_BASE = 'https://nousresearch.github.io/anakot-agent/docs/api'
+// The Anakot-branded static hosts under `nousresearch.github.io/anakot-agent`
+// publish no catalog snapshots (404), so this Desktop browses the upstream
+// Hermes snapshots instead: same schema, same generator, served with
+// `Access-Control-Allow-Origin: *`. Use the docs' static host, not GitHub's
+// API or repository endpoints.
+const CATALOG_BASE = 'https://nousresearch.github.io/hermes-agent/docs/api'
 /** A download with no new bytes for this long is aborted (inactivity, not total time). */
 const CATALOG_STALL_MS = 60_000
 const text = (value: unknown): string => (typeof value === 'string' ? value : '')
