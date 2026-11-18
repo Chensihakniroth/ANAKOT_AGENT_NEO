@@ -51,12 +51,24 @@ export interface CatalogEntry {
   search: string
 }
 
-// The Anakot-branded static hosts under `nousresearch.github.io/anakot-agent`
-// publish no catalog snapshots (404), so this Desktop browses the upstream
-// Hermes snapshots instead: same schema, same generator, served with
-// `Access-Control-Allow-Origin: *`. Use the docs' static host, not GitHub's
-// API or repository endpoints.
-const CATALOG_BASE = 'https://nousresearch.github.io/hermes-agent/docs/api'
+/**
+ * Ordered hosts for the published snapshots (`<base>/skills.json`,
+ * `<base>/plugins.json`). A rung is trusted only after it serves the file, so a
+ * deployment going dark degrades to the next one instead of an error card: the
+ * canonical docs domain fronts the static host, and the static host answers
+ * directly when that front door breaks. Both send `Access-Control-Allow-Origin`
+ * (a renderer fetch needs it), and both publish the same generator output.
+ *
+ * Do not "rebrand" a rung to a path that publishes nothing: this list once held
+ * `nousresearch.github.io/anakot-agent/docs/api`, which 404s, and every new
+ * install got "Catalog HTTP 404" on Skills and Plugins. Adding a rung is cheap;
+ * a rung that cannot serve data is not a rung.
+ */
+const CATALOG_HOSTS = [
+  'https://hermes-agent.nousresearch.com/docs/api',
+  'https://nousresearch.github.io/hermes-agent/docs/api'
+] as const
+
 /** A download with no new bytes for this long is aborted (inactivity, not total time). */
 const CATALOG_STALL_MS = 60_000
 const text = (value: unknown): string => (typeof value === 'string' ? value : '')
@@ -211,7 +223,26 @@ export function parseCatalog(kind: CatalogKind, data: unknown): CatalogEntry[] {
   return [...entries.values()]
 }
 
+/** A host that cannot serve the snapshot hands the ladder a reason, never a retry loop. */
+type CatalogAttempt = { entries: CatalogEntry[] } | { unavailable: string }
+
 export async function fetchCatalog(kind: CatalogKind): Promise<CatalogEntry[]> {
+  let unavailable = ''
+
+  for (const host of CATALOG_HOSTS) {
+    const attempt = await downloadCatalog(kind, `${host}/${kind}.json`)
+
+    if ('entries' in attempt) {
+      return attempt.entries
+    }
+
+    unavailable = attempt.unavailable
+  }
+
+  throw new Error(unavailable)
+}
+
+async function downloadCatalog(kind: CatalogKind, url: string): Promise<CatalogAttempt> {
   // Bound inactivity, not total transfer time: a large skills snapshot can
   // take minutes on a healthy slow connection. Headers and each body chunk
   // get the same deadline; an actually stalled download still terminates.
@@ -226,18 +257,30 @@ export async function fetchCatalog(kind: CatalogKind): Promise<CatalogEntry[]> {
   armDeadline()
 
   try {
-    // Same published snapshots as the docs galleries; no per-entry fan-out.
-    const response = await fetch(`${CATALOG_BASE}/${kind}.json`, {
-      credentials: 'omit',
-      signal: controller.signal
-    })
+    let response: Response
+
+    try {
+      response = await fetch(url, {
+        credentials: 'omit',
+        signal: controller.signal
+      })
+    } catch (error) {
+      // A stall says nothing about the host, and retrying a 66 MB snapshot on
+      // the next rung would double the wait the user already sat through.
+      if (controller.signal.aborted) {
+        throw error
+      }
+
+      // Unreachable / CORS-blocked / DNS: this host has no verdict to give.
+      return { unavailable: `Catalog host unreachable: ${url}` }
+    }
 
     if (!response.ok) {
-      throw new Error(`Catalog HTTP ${response.status}`)
+      return { unavailable: `Catalog HTTP ${response.status}` }
     }
 
     if (!response.body) {
-      return parseCatalog(kind, await response.json())
+      return { entries: parseCatalog(kind, await response.json()) }
     }
 
     const reader = response.body.getReader()
@@ -266,7 +309,7 @@ export async function fetchCatalog(kind: CatalogKind): Promise<CatalogEntry[]> {
     clearTimeout(timer)
     chunks.push(decoder.decode())
 
-    return parseCatalog(kind, JSON.parse(chunks.join('')))
+    return { entries: parseCatalog(kind, JSON.parse(chunks.join(''))) }
   } catch (error) {
     // Chromium can turn our abort into "The user aborted a request." The
     // controller, not that browser-dependent exception name, owns the cause.

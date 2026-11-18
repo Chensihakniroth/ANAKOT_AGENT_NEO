@@ -119,9 +119,32 @@ describe('public catalog data', () => {
 
     expect(await fetchCatalog(kind)).toEqual(parseCatalog(kind, rows))
     expect(fetch).toHaveBeenCalledExactlyOnceWith(
-      `https://nousresearch.github.io/hermes-agent/docs/api/${kind}.json`,
+      `https://hermes-agent.nousresearch.com/docs/api/${kind}.json`,
       expect.objectContaining({ credentials: 'omit', signal: expect.any(AbortSignal) })
     )
+  })
+
+  it('falls to the next published host when the first one stops serving snapshots', async () => {
+    const rows = [{ name: 'weather', identifier: 'official/weather', source: 'official' }]
+
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 404 })
+      .mockResolvedValueOnce({ ok: true, json: async () => rows })
+
+    vi.stubGlobal('fetch', fetch)
+
+    await expect(fetchCatalog('skills')).resolves.toEqual(parseCatalog('skills', rows))
+    expect(fetch.mock.calls.map(([url]) => url)).toEqual([
+      'https://hermes-agent.nousresearch.com/docs/api/skills.json',
+      'https://nousresearch.github.io/hermes-agent/docs/api/skills.json'
+    ])
+  })
+
+  it('reports the last host status when every published host is down', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 503 }))
+
+    await expect(fetchCatalog('plugins')).rejects.toThrow('Catalog HTTP 503')
   })
 
   it('only renders plugin images hosted on GitHub so the browser never fans out to third-party hosts', () => {
