@@ -868,7 +868,7 @@ def target_bytes(art: IconArt, kind: str, arg: object) -> bytes:
         frames = [img.resize((s, s), Image.LANCZOS) for s in (16, 32, 64, 128, 256, 512, 1024)]
         img.save(buf, format="ICNS", append_images=frames[1:])
     elif kind == "icns_from_png":
-        # Hand-made artwork (the DMG volume: girl on a drive) shipped as ICNS.
+        # Hand-made artwork (the DMG volume: Anakot mark on a drive) shipped as ICNS.
         img = Image.open(art.source / arg).convert("RGBA")
         assert img.size == (1024, 1024), f"{arg} must be 1024x1024"
         frames = [img.resize((s, s), Image.LANCZOS) for s in (16, 32, 64, 128, 256, 512, 1024)]
