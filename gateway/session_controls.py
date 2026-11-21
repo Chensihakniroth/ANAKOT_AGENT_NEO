@@ -325,6 +325,13 @@ class AuthorityConnection:
             if method in _PROFILE_IMPLICIT:
                 params = {key: value for key, value in params.items() if key != 'profile'}
         ref = SessionRef(self.actor.profile_id, params.get('session_id', ''))
+        if (ref.session_id and not getattr(self.authority, 'retiring', False)
+                and ref.session_id not in getattr(self.authority, 'sessions', {})):
+            # A canonical LOCAL physical segment id (the history picker / Desktop supplies the reset
+            # or compression tip, #139306) resolves to its receipt owner here, before any handler or
+            # ``authorize`` reads ``ref``: only the owner is an id a restore or an admission may name.
+            from gateway.session_local_recovery import local_owner_ref
+            ref = local_owner_ref(self.authority, ref)
         from tui_gateway.contracts.registry import (
             CANONICAL_METHODS, METHODS, canonical_param_problems, check_params_accepted, check_result,
             unknown_method_message,

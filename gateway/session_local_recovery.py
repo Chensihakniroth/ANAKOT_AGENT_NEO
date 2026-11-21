@@ -126,6 +126,21 @@ def owned_receipt(authority, sid):
     return receipt, source, route, _checked_entry(authority, receipt, source, route)
 
 
+def local_owner_ref(authority, ref):
+    """*ref* resolved to the conversation its stored local receipt owns.
+
+    A compression or reset advances a local conversation's physical transcript, and the history picker
+    and the Desktop address it by that physical tip (``list_sessions`` projects the lineage onto it,
+    #139306), but only the creation receipt's logical owner is an id a turn, an admission or a
+    restore may name: the receipt is stored under the owner, so the tip itself is refused
+    ``storage_unavailable``. A ref that is not a segment of a held receipt -- the owner itself, a
+    messaging row, or an unknown id -- is returned unchanged."""
+    from anakot_state_local import local_lineage_owner
+    with authority.db._read_ctx() as conn:
+        owner = local_lineage_owner(conn, ref.session_id)
+    return ref if owner == ref.session_id else SessionRef(ref.profile_id, owner)
+
+
 def restorable_receipt(authority, sid):
     """*sid*'s receipt and entry once ``restore_local_session``'s checks on the stored receipt pass,
     judged read-only: ``owned_receipt`` plus the stored policy and lineage. A compression catch-up
@@ -438,10 +453,13 @@ def restore_completion_route(runner, session_key):
     from gateway.run import _parse_session_key
     from gateway.session_authorities import active_authority
     authority, parsed = active_authority(runner), _parse_session_key(session_key) or {}
-    if authority is None or parsed.get('platform') != Platform.LOCAL.value or parsed['chat_id'] in authority.sessions:
+    if authority is None or parsed.get('platform') != Platform.LOCAL.value:
+        return
+    ref = local_owner_ref(authority, SessionRef(authority.profile_id, parsed['chat_id']))
+    if ref.session_id in authority.sessions:
         return
     with contextlib.suppress(RuntimeStoreError):
-        restore_local_session(authority, parsed['chat_id'])
+        restore_local_session(authority, ref.session_id)
 
 
 def release_handed_off_receipts(db, *, epoch):
