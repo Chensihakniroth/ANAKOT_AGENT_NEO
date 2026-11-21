@@ -5,7 +5,7 @@ description: "Video waifu companion that reacts to agent activity in real time â
 maintainer: thewaifuai
 tier: community
 category: desktop
-requires_anakot: ">=0.13"
+requires_hermes: ">=0.13"
 version: "3.2.0"
 screenshots:
   - https://raw.githubusercontent.com/waifuai/waifu-sprites/143e960984f5d108fcb537cfb523f3b1946e5011/docs/screenshots/dashboard-overlay.png

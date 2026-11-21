@@ -6,7 +6,7 @@ description: "Post-quantum crypto guard. Stops the agent from writing quantum-vu
 maintainer: Akanimoh12
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Akanimoh12/shorguard/tree/ad949b682249e5c9401eaf3b5c0ffe244d668b33#readme
 version: "0.1.0"
 title: "Shorguard — post-quantum crypto guard"

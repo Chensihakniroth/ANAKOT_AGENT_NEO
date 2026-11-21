@@ -6,7 +6,7 @@ description: "A Anakot Desktop pane for the built-in memory: see what the focuse
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Adolanium/anakot-memory-pane#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Adolanium/anakot-memory-pane/4ba8ae3577249d3c9a0f3ad6f8336f43bda3bbf4/assets/catalog-banner.png

@@ -9,12 +9,14 @@ import type {
   RelayLinksResponse,
   TelegramOnboardingApplyResponse,
   TelegramOnboardingStartResponse,
-  TelegramOnboardingStatusResponse,
+  TelegramOnboardingStatusResponse
+} from '@/types/anakot'
+import type {
   WebhookCreatePayload,
   WebhookCreateResponse,
   WebhookEnableResponse,
   WebhooksResponse
-} from '@/types/anakot'
+} from '@/types/webhooks'
 
 import { anakotApi, profileScoped } from './client'
 

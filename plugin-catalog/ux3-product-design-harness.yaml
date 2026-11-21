@@ -18,7 +18,7 @@ description: >-
 maintainer: cis2042
 tier: community
 category: general
-requires_anakot: ">=0.22.4"
+requires_hermes: ">=0.22.4"
 docs_url: https://github.com/cis2042/ux3-product-design-harness/blob/48965c6b501f61ebbb8130c9c2e4f9af08922b9f/README.md
 readme: true
 platforms: []

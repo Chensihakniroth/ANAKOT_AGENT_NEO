@@ -7,7 +7,7 @@ description: "Gentle check-ins, journaling and an Unstuck Coach with your own In
 maintainer: KyaniteLabs
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.3.0"
 docs_url: https://github.com/KyaniteLabs/Innerscape/blob/709dc6a5ad77f8dd99a4e58e43bf2e450143ce8d/plugins/innerscape-anakot/README.md
 readme: true

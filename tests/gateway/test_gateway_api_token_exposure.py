@@ -1,7 +1,7 @@
 """The always-on gateway HTTP listener must not hand its bearer token to any loopback peer.
 
 Local clients authenticate with single-use tickets minted on the owner-only control socket
-(SO_PEERCRED). ``GET /`` on the dashboard SPA injects ``window.__ANAKOT_SESSION_TOKEN__``
+(SO_PEERCRED). ``GET /`` on the dashboard SPA injects ``window.__HERMES_SESSION_TOKEN__``
 whenever the auth gate is off, and the gateway listener runs gate-off on loopback, so any
 other OS user on the host could read the token and use every ``/api/*`` route
 (``/api/env/reveal``) and ``/api/ws?token=`` without ever touching the socket.

@@ -6,7 +6,7 @@ description: "Spoiler-safe reading companion: open a local EPUB, remember how fa
 maintainer: kaizen-builds
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/kaizen-builds/dramatis/blob/506418bb44641df502cb4eb7fe3d52900d0aeed6/README.md
 version: "1.0.0"
 readme: true

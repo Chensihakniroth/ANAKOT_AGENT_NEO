@@ -7,7 +7,7 @@ description: "Native Anatomy community gallery with search, local favorites and 
 maintainer: DanRudy33
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [macos]
 readme: true
 docs_url: https://github.com/danrudy33/anatomy-museum#readme

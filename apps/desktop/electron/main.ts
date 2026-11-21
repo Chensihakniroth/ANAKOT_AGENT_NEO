@@ -1,5 +1,6 @@
 import { type ChildProcess, execFileSync, spawn } from 'node:child_process'
 
+import { createGlobalRemoteSessionRoute, probeRemoteAuthMode } from './global-remote-session-route'
 import type { GatewayEndpoint } from './local-gateway'
 import { configurePythonGatewayTicketClient, createLocalGatewayDials, createStaleGatewayRestarter, ensureLocalGateway, gatewayOwnerProfile, localGatewayDial, nativeGatewayHttpHeaders, redialLocalGateway, runGatewayEnsure, runGatewayOwnerRestart } from './local-gateway'
 import { closeGatewayTicketBridges, createGatewayTicketResolver } from './local-gateway-python'
@@ -65,6 +66,7 @@ import {
 } from './app-version'
 import { runAppInstallerChecker } from './appinstaller-checker'
 import { installApplicationMenuAfterFirstWindow } from './application-menu-startup'
+import { joinBackendApiUrl } from './backend-api-url'
 import { stopBackendChild as stopBackendChildImpl, waitForBackendExit } from './backend-child'
 import {
   execText,
@@ -215,7 +217,7 @@ import { buildRemoteBlock } from './connection-remote-block'
 import { liveWindowState, overlayWindowState } from './connection-window-state'
 import { describeCrashReason, installCrashForensics } from './crash-forensics'
 import { adoptServedDashboardToken } from './dashboard-token'
-import { resolveDesktopAnakotHome, resolveDesktopUserData } from './data-paths'
+import { resolveDesktopUserData } from './data-paths'
 import { registerDeepLinkProtocol as registerDeepLinkProtocolWith } from './deep-link-protocol'
 import { loadOrCreateInstallationId, sshOwnershipId } from './desktop-installation'
 import { formatDesktopLogLine, formatLogStamp } from './desktop-log-line'
@@ -292,6 +294,8 @@ import {
   assertExistingPathForOpen,
   ATTACHMENT_UPLOAD_DEFAULT_MAX_BYTES,
   clampDataUrlReadMaxMb,
+  composerImageBufferFromIpc,
+  composerPasteTextFromIpc,
   DATA_URL_READ_DEFAULT_MAX_MB,
   dataUrlReadMaxBytesFromMb,
   DEFAULT_FETCH_TIMEOUT_MS,
@@ -357,6 +361,7 @@ import { resolveDesktopClientVersion } from './local-runtime-version'
 import { localSkinProfileKey, registerLocalSkinIpc } from './local-skin'
 import { ACTIVE_LOG_POLL_MS, planLogRotation, reclaimActiveLogIfOversized } from './log-rotation'
 import { registerMachineProfile } from './machine-profile'
+import { resolveMainAnakotHome } from './main-anakot-home'
 import { createMainProcessLagWatchdog } from './main-process-lag-watchdog'
 import { activateWindow, ensureMainWindow, shouldQuitOnLastChatClosed } from './main-window-lifecycle'
 import {
@@ -724,7 +729,6 @@ import {
   shouldSurfaceErrorForRendererStackCookieCrashLoop,
   writeGpuStackCookieMarker
 } from './windows-stack-cookie-fallback'
-import { readWindowsUserEnvVar } from './windows-user-env'
 import { isPackagedInstallPath as isPackagedInstallPathUnderRoots } from './workspace-cwd'
 import { readWslWindowsClipboardImage } from './wsl-clipboard-image'
 import { resolvePickerDefaultPath, setActiveGatewayProfile, setWslBridgeProfileState } from './wsl-path-bridge'
@@ -1255,11 +1259,7 @@ if (INSTALL_STAMP) {
 
 const DESKTOP_PROFILE_CONFIG_PATH: string = path.join(app.getPath('userData'), 'active-profile.json')
 
-const ANAKOT_HOME: string = resolveDesktopAnakotHome({
-  home: app.getPath('home'),
-  directoryExists,
-  readWindowsHome: (): string | null => readWindowsUserEnvVar('ANAKOT_HOME')
-})
+const ANAKOT_HOME: string = resolveMainAnakotHome(app.getPath('home'))
 
 // #77311: `desktop.electron_flags` and the renderer heap ceiling
 // (`desktop.renderer_max_old_space_mb`) used to reach Chromium only through
@@ -4412,7 +4412,7 @@ async function handOffWindowsBootstrapRecovery(reason) {
     env: {
       ...process.env,
       ANAKOT_HOME,
-      ANAKOT_INSTALL_ROOT: updateRoot
+      HERMES_INSTALL_ROOT: updateRoot
     },
     detached: true,
     stdio: 'ignore'
@@ -5226,7 +5226,7 @@ function fetchJson(url, token, options: any = {}) {
               ...headersForRemoteRequest(url),
               ...(options.headers || {}),
               'Content-Type': contentType,
-              ...(nativeHeaders || { 'X-Anakot-Session-Token': token }),
+              ...(nativeHeaders || { 'X-Hermes-Session-Token': token }),
               // RFC 8252 native flow authenticates the gated gateway with a bearer
               // token instead of the loopback session-token header. When
               // ``options.bearer`` is set we send Authorization: Bearer <token>;
@@ -5310,7 +5310,7 @@ function fetchJson(url, token, options: any = {}) {
 function fetchPublicJson(url, options: any = {}) {
   // Credential-free JSON GET/POST for public gateway endpoints
   // (``/api/status``, ``/api/auth/providers``). Unlike ``fetchJson`` it sends
-  // NO ``X-Anakot-Session-Token`` header — used by the auth-mode probe before
+  // NO ``X-Hermes-Session-Token`` header — used by the auth-mode probe before
   // any credentials exist, and any time we must not leak a token to an
   // endpoint that doesn't need one.
   return withRetry(
@@ -6846,7 +6846,7 @@ function safeFrameOrigin(frame: { origin?: string } | null | undefined): string 
 // Nous Research) instead of a static session token. The auth model is
 // fundamentally different from the token path:
 //
-//   * REST is authed by HttpOnly session cookies (``anakot_session_at``),
+//   * REST is authed by HttpOnly session cookies (``hermes_session_at``),
 //     established by a browser redirect round-trip (/login → IDP →
 //     /auth/callback sets cookies). We cannot read the HttpOnly cookie value
 //     in JS — instead we let an Electron BrowserWindow complete the round
@@ -6858,7 +6858,7 @@ function safeFrameOrigin(frame: { origin?: string } | null | undefined): string 
 //     path is unconditionally rejected by gated gateways.
 //   * Nous Portal now issues a 24h ROTATING, reuse-detected refresh token
 //     alongside the ~15-min access token (Portal NAS #293 / anakot #37247).
-//     Both are set as HttpOnly cookies (``anakot_session_at`` ~15 min,
+//     Both are set as HttpOnly cookies (``hermes_session_at`` ~15 min,
 //     ``anakot_session_rt`` 24h). When the AT cookie lapses but the RT cookie
 //     is still alive, the gateway middleware transparently rotates a fresh AT
 //     on the next authenticated request — so connectivity must NOT be gated on
@@ -7480,7 +7480,7 @@ async function saveGatewayFile(payload: GatewayFileSavePayload = {}): Promise<Ga
   return saveGatewayDownload(requestPaths, ctx, {
     ...deps,
     download: async (requestPath: string, context: GatewayFileSaveContext): Promise<GatewayFileSaveResult> => {
-      const url: string = `${connection.baseUrl}${requestPath}`
+      const url: string = joinBackendApiUrl(connection.baseUrl, requestPath)
 
       if (connection.authMode === 'oauth') {
         return requestWithOauthFallback(connection.baseUrl, {
@@ -9905,72 +9905,15 @@ async function requestJsonForProfile(profile: string, path: string, method: stri
   return fetchJsonForBackend(conn, path, { method, body, timeoutMs: DEFAULT_FETCH_TIMEOUT_MS })
 }
 
-async function probeRemoteAuthMode(rawUrl) {
-  // Determine how a remote gateway expects callers to authenticate, WITHOUT
-  // sending any credentials. ``/api/status`` is public on every Anakot
-  // gateway (it backs the portal liveness probe) and reports:
-  //   auth_required: true  → OAuth gate is engaged (cookie + ws-ticket auth)
-  //   auth_required: false → loopback/--insecure: legacy session-token auth
-  // ``/api/auth/providers`` (also public, only meaningful when gated) gives
-  // the human-facing provider name(s) for the login button label.
-  //
-  // The settings UI calls this as the user types a URL so it can render an
-  // OAuth login button vs a session-token entry box. Network/parse failures
-  // surface as ``reachable: false`` rather than throwing, so a half-typed or
-  // unreachable URL degrades to "can't tell yet" instead of a hard error.
-  const baseUrl = normalizeRemoteBaseUrl(rawUrl)
-
-  let status
-
-  try {
-    status = await fetchPublicJson(`${baseUrl}/api/status`, { timeoutMs: 8_000 })
-  } catch (error: any) {
-    return {
-      baseUrl,
-      reachable: false,
-      authMode: 'unknown',
-      providers: [],
-      version: null,
-      error: error instanceof Error ? error.message : String(error)
-    }
-  }
-
-  const authRequired = authModeFromStatus(status) === 'oauth'
-  let providers = []
-
-  if (authRequired) {
-    // Best-effort: a gated gateway exposes the registered providers so the
-    // button can read "Sign in with Nous Research" instead of a generic
-    // label, and so a username/password provider can be distinguished from
-    // an OAuth-redirect one (``supports_password``). A failure here doesn't
-    // change the auth mode, so swallow it.
-    try {
-      const body = (await fetchPublicJson(`${baseUrl}/api/auth/providers`, { timeoutMs: 8_000 })) as any
-
-      if (Array.isArray(body?.providers)) {
-        providers = body.providers
-          .filter(p => p && typeof p === 'object')
-          .map(p => ({
-            name: String(p.name || ''),
-            displayName: String(p.display_name || p.name || ''),
-            supportsPassword: Boolean(p.supports_password)
-          }))
-          .filter(p => p.name)
-      }
-    } catch {
-      // Provider listing is optional metadata; the auth mode is already known.
-    }
-  }
-
-  return {
-    baseUrl,
-    reachable: true,
-    authMode: authRequired ? 'oauth' : 'token',
-    providers,
-    version: status?.version || null,
-    error: null
-  }
-}
+const globalRemoteSessions = createGlobalRemoteSessionRoute({
+  globalRemoteActive,
+  primaryHasRemoteOverride: () => Boolean(profileHasRemoteOverride(primaryProfileKey())),
+  request: (conn, path, method, body) => fetchJsonForBackend(conn, path, { method, body, timeoutMs: DEFAULT_FETCH_TIMEOUT_MS }),
+  requestPrimary: (path, method, body) => requestJsonForProfile(null, path, method, body as string),
+  resolveGlobalRemote: () => resolveRemoteBackend(null),
+  resolvePrimary: () => ensureBackend(null, { passive: true }),
+  waitReady: conn => waitForRemoteAnakot(conn)
+})
 
 async function testDesktopConnectionConfig(input: any = {}) {
   if (input.mode === 'ssh') {
@@ -10150,6 +10093,7 @@ function resetBootProgressForReconnect() {
 function resetAnakotConnectionState({ soft = false }: { soft?: boolean } = {}): void {
   backendStartFailure = null
   remoteReauthFailure = null
+  globalRemoteSessions.reset()
   remoteLiveness.clear()
   // The next startAnakot() re-reads active-profile.json for its launch profile.
   primaryProfilePin.clear()
@@ -14961,16 +14905,15 @@ async function getJsonForBackend(descriptor, path, opts: any = {}) {
   return fetchJsonForBackend(descriptor, path, opts)
 }
 
-// Any-method REST call against a resolved backend descriptor — the descriptor
-// analogue of the anakot:api handler's own auth split: OAuth backends prefer a
-// native bearer (cookieless RFC 8252 flow) and fall back to the OAuth cookie
-// partition; token/local descriptors use the static session-token header.
+// Any-method REST call against a resolved backend descriptor, the one sink for renderer-routed paths (so the
+// join refuses any path that would move the credentials off the backend origin). OAuth backends prefer a native
+// bearer (cookieless RFC 8252) and fall back to the cookie partition; token/local use the session-token header.
 async function fetchJsonForBackend(
   descriptor,
   path,
   opts: { method?: string; body?: unknown; upload?: unknown; timeoutMs?: number; profileScoped?: boolean } = {}
 ) {
-  const url = `${descriptor.baseUrl}${path}`
+  const url = joinBackendApiUrl(descriptor.baseUrl, path)
 
   // A native grant names one profile and the gateway refuses `all`: assemble the unified
   // session lists, project tree and PR scan from one read per profile, each carrying that
@@ -15025,7 +14968,7 @@ async function fetchJsonForBackend(
   })
 }
 
-ipcMain.handle('anakot:connection-config:probe', async (_event, rawUrl) => probeRemoteAuthMode(rawUrl))
+ipcMain.handle('anakot:connection-config:probe', async (_event, rawUrl) => probeRemoteAuthMode(rawUrl, fetchPublicJson))
 ipcMain.handle('anakot:connection-config:oauth-login', async (_event, rawUrl, rawOpts) => {
   // Capability-gated login (RFC 8252). Probe the gateway's public /api/status
   // for supported auth_flows and /api/auth/providers for provider capabilities:
@@ -15538,12 +15481,12 @@ async function interceptSessionRequestForRemote(request, registryConnectionId = 
       const path = `${pathname}?${passthroughParams.toString()}`
 
       if (method === 'GET') {
-        return fetchJsonForProfile(null, path)
+        return globalRemoteSessions.request(path, method)
       }
 
       const body = request.body && typeof request.body === 'object' ? { ...request.body, profile } : { profile }
 
-      return requestJsonForProfile(null, path, method, body)
+      return globalRemoteSessions.request(path, method, body)
     }
 
     return undefined
@@ -15618,7 +15561,9 @@ async function fetchProfilesSessionSlice(searchParams, remoteProfiles, registryS
       return remoteSessionList(requested, searchParams)
     }
 
-    return fetchPrimaryProfileSessions(searchParams, fetchJsonForProfile)
+    return fetchPrimaryProfileSessions(searchParams, fetchJsonForProfile, {
+      aggregate: globalRemoteSessions.fetchOptions()
+    })
   }
 
   return mergeRemoteProfileSessions(searchParams, remoteProfiles, registrySources, pinnedConnectionId)
@@ -15635,10 +15580,13 @@ async function mergeRemoteProfileSessions(searchParams, remoteProfiles, registry
   const offset = Math.max(0, Number(searchParams.get('offset')) || 0)
   const order = searchParams.get('order') === 'created' ? 'started_at' : 'last_active'
 
-  const base = (await fetchPrimaryProfileSessions(searchParams, fetchJsonForProfile, { prefixForMerge: true })) as any
+  const base = (await fetchPrimaryProfileSessions(searchParams, fetchJsonForProfile, {
+    prefixForMerge: true,
+    aggregate: globalRemoteSessions.fetchOptions()
+  })) as any
 
   if (pinned) {
-    await tagPrimaryAggregateRows(base, () => ensureBackend(null, { passive: true }), pinned)
+    await tagPrimaryAggregateRows(base, globalRemoteSessions.aggregateBackend, pinned)
   }
 
   // Over-fetch each remote from offset 0 (limit+offset rows) so the merged window
@@ -15739,7 +15687,9 @@ async function reusedPrimarySshDescriptor(registry, connectionId: string) {
 
 // RT-42: install_id of the backend the primary session aggregate reads (see the module).
 const primaryBackendInstallId = createPrimaryInstallIdResolver({
-  resolve: () => ensureBackend(null, { passive: true }),
+  // The backend the aggregate was read from (the app-global remote in mixed mode), so its rows
+  // are not counted again when that server is also a registry source.
+  resolve: () => globalRemoteSessions.aggregateBackend(),
   status: descriptor => getJsonForBackend(descriptor, '/api/status', { timeoutMs: 2_000 }),
   ttlMs: INSTALL_ID_TTL_MS,
   negativeTtlMs: INSTALL_ID_NEGATIVE_TTL_MS
@@ -16220,25 +16170,13 @@ ipcMain.handle('anakot:capturePreview', async (_event, payload) => {
 })
 
 ipcMain.handle('anakot:saveImageBuffer', async (_event, payload) => {
-  const data = payload?.data
-
-  if (!data) {
-    throw new Error('saveImageBuffer: missing data')
-  }
-
-  const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data)
+  const buffer = composerImageBufferFromIpc(payload?.data)
 
   return writeComposerImage(buffer, payload?.ext || '.png', payload?.name)
 })
 
 ipcMain.handle('anakot:savePastedText', async (_event, payload) => {
-  const text = typeof payload?.text === 'string' ? payload.text : ''
-
-  if (!text) {
-    throw new Error('savePastedText: missing text')
-  }
-
-  return writeComposerPaste(ANAKOT_HOME, text)
+  return writeComposerPaste(ANAKOT_HOME, composerPasteTextFromIpc(payload?.text))
 })
 
 ipcMain.handle('anakot:saveClipboardImage', async () => {

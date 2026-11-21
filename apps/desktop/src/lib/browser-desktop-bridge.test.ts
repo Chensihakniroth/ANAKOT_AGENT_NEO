@@ -105,7 +105,7 @@ describe('browser-hosted Desktop bridge', () => {
     const [requestUrl, init] = fetchMock.mock.calls[0] as [URL, RequestInit]
     expect(requestUrl.pathname).toBe('/anakot/api/status')
     expect(init.credentials).toBe('same-origin')
-    expect(new Headers(init.headers).has('X-Anakot-Session-Token')).toBe(false)
+    expect(new Headers(init.headers).has('X-Hermes-Session-Token')).toBe(false)
 
     const connection = await win.anakotDesktop!.getConnection()
     // The gateway store routes this connection's requests onto the window's socket by its id.
@@ -479,7 +479,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(requestUrl.pathname).toBe('/anakot/api/config')
     expect(requestUrl.searchParams.get('view')).toBe('desktop')
     expect(requestUrl.searchParams.get('profile')).toBe('worker-a')
-    expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe('served-token')
+    expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe('served-token')
   })
 
   it('routes Git through the browser transport and resolves the profile at call time', async () => {
@@ -505,7 +505,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(listUrl.pathname).toBe('/anakot/api/git/worktrees')
     expect(listUrl.searchParams.get('path')).toBe('/srv/my repo')
     expect(listUrl.searchParams.get('profile')).toBe('launch-profile')
-    expect(new Headers(listInit.headers).get('X-Anakot-Session-Token')).toBe('served-token')
+    expect(new Headers(listInit.headers).get('X-Hermes-Session-Token')).toBe('served-token')
 
     $connection.set({ profile: 'active-profile' } as never)
     await expect(git.review.diff('/srv/my repo', 'a b.txt', 'uncommitted', null, false)).resolves.toBe(
@@ -550,7 +550,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(requestUrl.pathname).toBe('/api/fs/read-text')
     expect(requestUrl.searchParams.get('path')).toBe('/tmp/example.txt')
     expect(requestUrl.searchParams.get('profile')).toBe('active-files')
-    expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe('served-token')
+    expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe('served-token')
   })
 
   // Downloads and media elements cannot send the session header, and the
@@ -618,7 +618,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(requestUrl.searchParams.get('session_id')).toBe('origin-session')
     expect(init.method).toBe('HEAD')
     expect(init.credentials).toBe('same-origin')
-    expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe(token || null)
+    expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe(token || null)
     expect(downloads).toHaveLength(1)
     const url = new URL(downloads[0].href)
     expect(url.origin).toBe(window.location.origin)
@@ -678,7 +678,7 @@ describe('browser-hosted Desktop bridge', () => {
 
     for (const [input, init] of fetchMock.mock.calls as [URL, RequestInit][]) {
       expect(input.pathname).toBe('/anakot/api/files/ticket')
-      expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe(token)
+      expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe(token)
     }
 
     expect(fetchMock).toHaveBeenCalledTimes(token ? 5 : 0)
@@ -748,7 +748,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(requestUrl.searchParams.get('profile')).toBe('explicit-file-profile')
     expect(init.method).toBe('POST')
     expect(init.credentials).toBe('same-origin')
-    expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe('served-token')
+    expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe('served-token')
     expect((init.body as FormData).get('file')).toBeInstanceOf(File)
     expect(document.querySelector('input[type="file"]')).toBeNull()
   })
@@ -1096,7 +1096,7 @@ describe('browser-hosted Desktop bridge', () => {
     expect(mint.searchParams.get('socket')).toBe('host-terminal')
     expect(init.method).toBe('POST')
     expect(init.credentials).toBe('same-origin')
-    expect(new Headers(init.headers).has('X-Anakot-Session-Token')).toBe(false)
+    expect(new Headers(init.headers).has('X-Hermes-Session-Token')).toBe(false)
     expect(new URL(dialed[0]).searchParams.get('ticket')).toBe('shell-ticket')
   })
 

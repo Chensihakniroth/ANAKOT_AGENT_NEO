@@ -74,7 +74,7 @@ def _active_manifests() -> Iterator:
         _get_disabled_plugins, _get_enabled_plugins, collect_directory_manifests, discover_entrypoint_manifests,
         gate_manifest, resolve_manifest_winners,
     )
-    from anakot_cli.plugins_manifest import manifest_key, requires_anakot_error
+    from anakot_cli.plugins_manifest import manifest_key, requires_hermes_error
 
     manifests = collect_directory_manifests()
     # Same merge as PluginManager._discover_and_load_inner: a directory install keeps its identity.
@@ -83,7 +83,7 @@ def _active_manifests() -> Iterator:
     disabled, enabled = _get_disabled_plugins(), _get_enabled_plugins()
     for manifest in resolve_manifest_winners(manifests).values():
         verdict = gate_manifest(manifest, disabled, enabled)
-        if (verdict.action != "placeholder" or verdict.enabled) and requires_anakot_error(manifest) is None:
+        if (verdict.action != "placeholder" or verdict.enabled) and requires_hermes_error(manifest) is None:
             yield manifest
     memory = _selected_memory_provider_manifest()
     if memory is not None:

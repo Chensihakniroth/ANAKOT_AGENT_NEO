@@ -7,7 +7,6 @@ import {
   __resetBackendSkinSync,
   ingestBackendSkin
 } from './backend-sync'
-import { DEFAULT_SKIN_NAME } from './presets'
 
 const skin = (name: string) => ({
   name,
@@ -108,11 +107,9 @@ describe('ingestBackendSkin', () => {
     ingestBackendSkin(skinWithCSS('default', 'body { background: red; }'), { apply: true })
 
     expect($backendThemes.get().default).toBeUndefined()
-    // setTheme normalizes `default` → DEFAULT_SKIN_NAME, so the CSS must be
-    // findable under that name when the theme is derived. Asserted through the
-    // constant: which skin is the default is a branding decision, not a law of
-    // this file.
-    expect($backendCustomCSS.get()[DEFAULT_SKIN_NAME]).toBe('body { background: red; }')
+    // setTheme normalizes `default` → DEFAULT_SKIN_NAME ('nous'), so the CSS
+    // must be findable under that name when the theme is derived.
+    expect($backendCustomCSS.get().nous).toBe('body { background: red; }')
   })
 
   it('clears customCSS when a built-in-named skin drops the field', () => {

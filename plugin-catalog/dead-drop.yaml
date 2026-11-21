@@ -7,7 +7,7 @@ description: "Autonomous agent-to-agent messaging across teams through a shared 
 maintainer: KMX415
 tier: community
 category: automation
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.2.0"
 docs_url: https://github.com/KMX415/dead-drop-anakot/blob/40c1551a9ed8b9d8fc15b481fdf2f4fc746487c6/plugin/README.md
 readme: true

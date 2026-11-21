@@ -6,7 +6,7 @@ description: "Telegram Business secretary: transcribes voice notes, round videos
 maintainer: neoromantic
 tier: community
 category: voice
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://telesec.sergeybaus.com
 version: "0.16.1"
 image: https://raw.githubusercontent.com/neoromantic/telesec/b23cd63358e1a66518106c485402a9033f6b31d9/docs/images/banner.png

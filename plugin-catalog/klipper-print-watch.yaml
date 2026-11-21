@@ -5,7 +5,7 @@ description: "Each watch run costs 0 tokens, and the unmanned run holds no tools
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-klipper-print-watch#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-klipper-print-watch/1dd1391c171afd92825ec07a81b1efbaca5c64e0/assets/catalog-banner.png

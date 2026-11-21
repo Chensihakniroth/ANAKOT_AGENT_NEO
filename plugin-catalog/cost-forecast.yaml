@@ -8,7 +8,7 @@ description: "Quotes a task's cost before it runs and stops for your OK when it 
 maintainer: mr-jude-justin
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/mr-jude-justin/anakot-plugin/blob/dce09d9bf4fca14467246cb90ee87b6ef34c792b/plugin/README.md
 readme: true
 platforms: []

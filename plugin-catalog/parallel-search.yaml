@@ -8,7 +8,7 @@ description: >-
 maintainer: georgeatparallel
 tier: community
 category: web
-requires_anakot: ">=0.20.1"
+requires_hermes: ">=0.20.1"
 docs_url: https://github.com/parallel-web/search-mcp#anakot-agent
 version: "0.1.2"
 platforms: []

@@ -6,7 +6,7 @@ description: "Cheap-model subagent (quick_run) with a dollar cap, auto-escalatio
 maintainer: Aoyama
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 capabilities:
   provides_tools:

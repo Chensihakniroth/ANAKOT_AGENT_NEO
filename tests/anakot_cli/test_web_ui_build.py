@@ -60,7 +60,7 @@ def test_web_failure_is_not_success_even_with_an_old_dist(source_products, fatal
     assert acquired == ["pnpm"]
     assert [event["step"] for event in _events(root)] == ["deps", "web"]
     assert dist.read_text() == "old product"
-    assert not (root / "anakot_cli/web_dist/anakot-build.json").exists()
+    assert not (root / "anakot_cli/web_dist/hermes-build.json").exists()
 
 
 @pytest.mark.platforms("posix")
@@ -70,7 +70,7 @@ def test_failed_preparation_never_runs_web_compilation(source_products):
     assert not _build_web_ui(root / "web", fatal=True)
     assert acquired == ["pnpm"]
     assert _events(root) == []
-    assert not (root / "anakot_cli/web_dist/anakot-build.json").exists()
+    assert not (root / "anakot_cli/web_dist/hermes-build.json").exists()
 
 
 @pytest.mark.platforms("linux")

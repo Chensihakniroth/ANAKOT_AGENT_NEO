@@ -16,4 +16,4 @@ capabilities:
   provides_hooks:
     - pre_tool_call
     - post_approval_response
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"

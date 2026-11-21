@@ -440,6 +440,8 @@ anakot plugins enable my-plugin              # add to allow-list
 anakot plugins disable my-plugin             # remove from allow-list + add to disabled (bundled platforms:
                                              # either spelling works, e.g. photon-platform or platforms/photon)
 anakot plugins capabilities [my-plugin]      # declared vs granted capabilities
+anakot plugins idle-tasks [my-plugin]        # background idle jobs plugins registered: last run, next run
+anakot plugins idle-tasks my-plugin --pause suggest   # stop one until --resume
 anakot plugins check-updates                 # read-only: is any installed plugin outdated?
 anakot plugins adopt my-plugin               # track a self-cloned plugin dir (read its git origin)
 anakot plugins trust-update-url my-plugin    # confirm a changed update_url after review
@@ -451,6 +453,9 @@ Anakot records Git install source and revision in `.install-metadata.json`.
 Unpinned tracked installs compare the saved source's remote HEAD, or a matching
 saved `update_url` feed. Pinned installs remain pinned. Self-cloned directories
 need `anakot plugins adopt NAME` before they become tracked installations.
+A plugin directory that is a link to a checkout somewhere else is never
+tracked, because Anakot does not change files outside the plugins directory:
+pull updates in that checkout, and delete the link to remove the plugin.
 Manually copied or provenance-drifted directories receive diagnostic guidance.
 Pip entry-point plugins can report an owning distribution's available version;
 that check does not turn them into Git-managed installs.
@@ -646,8 +651,8 @@ working but are **deprecated** in favor of the consent flow:
 
 A gate is open when *either* the capability is granted *or* the legacy key is
 set — existing configs keep working unchanged.
-`llm.side_question` has no legacy key: it is open only when declared and
-granted through the consent flow.
+`llm.side_question` and `llm.session_fork` have no legacy key: each is open
+only when declared and granted through the consent flow.
 
 :::warning Not a sandbox
 Capabilities are a **consent and audit layer**, not isolation. Plugins run as
@@ -935,6 +940,10 @@ What changes in `host` mode:
   model-provider profiles that build their own SDK client (`create_client`), terminal backends (the
   backend's commands fail with this reason; the `singularity` plugin is one), streaming and websocket
   dashboard endpoints, and plugins that monkeypatch Anakot modules. Run those with `isolation: in_process`.
+- **No cookies.** A hosted plugin's API answers are served from the gateway's own address, so Anakot
+  drops any `Set-Cookie` header they carry (logging it once per plugin) rather than let a plugin set or
+  overwrite the dashboard's cookies. This also applies to another profile's plugins, which always run in
+  a host.
 
 **Locking it for a shared deployment.** `plugins.isolation` is ordinary profile config, so whoever can
 edit a profile's `config.yaml` can turn it off. When the profiles belong to people you are isolating from
@@ -1155,6 +1164,104 @@ Hooks, tools and injected turns of every chat and every local session (CLI, TUI,
 - `input()` gets end-of-file: the gateway has no terminal. Ask through a tool result or a slash command.
 
 In the classic CLI process itself (for example a plugin slash command), `ctx.session_cwd()` is the launch directory and `ctx.session_surface()` is `"cli"`.
+
+## A plugin with its own chat client
+
+A plugin can add a command (`anakot <name>`, through `ctx.register_cli_command`) that starts its own chat frontend. The frontend attaches to the profile's shared gateway with `anakot gateway attach --json` (see [Programmatic integration](../../developer-guide/programmatic-integration.md)).
+
+The command exists only when the plugin runs inside the Anakot process (`plugins.isolation: in_process`, the default). With `plugins.isolation: host`, Anakot skips `ctx.register_cli_command`, and `anakot <name>` is not a command.
+
+Three imports do what the Anakot terminal client's launcher does around its own client:
+
+- `anakot_cli.gateway_chat.shell_client_env()` returns the allowlisted variables of the shell that ran your command, as a dict. Call it in the launcher, before you change the environment, and send the dict as `client_env` on `session.create`. The session's commands then run with the user's `PATH`, virtual environment and toolchain variables. Names that look like credentials are left out, and the gateway filters the dict again by its own rules.
+- `anakot_cli.chat_launch.anakot_command(args)` returns the argv that runs this Anakot install with `args`. It needs no `PYTHONPATH`; the child serves the profile named by the inherited `ANAKOT_HOME`. Give it to your frontend for `anakot gateway attach`, instead of `anakot` from `PATH` (which may be another install) or `sys.executable` (which an update may replace).
+- `anakot_cli.chat_launch.print_exit_summary(session_id, command=...)` prints the lines Anakot shows when a chat ends: how to resume the session, its id, title, message count and tokens. Call it after your frontend exits, with your own command name. It prints nothing for a session with no messages. The lines name two ways to resume, `--resume <id>` (a short id) and `-c "<title>"`, so your command must accept both.
+
+```python
+import json
+import os
+import subprocess
+import tempfile
+
+
+def _arguments(parser):
+    # The exit summary prints `anakot my-client --resume <id>` and `anakot my-client -c "<title>"`.
+    parser.add_argument("--resume", "-r", metavar="ID")
+    parser.add_argument("--continue", "-c", dest="title", metavar="TITLE")
+
+
+def _session_to_resume(args):
+    wanted = args.resume or args.title
+    if not wanted:
+        return None  # a new chat: a new profile has no session store to open yet
+    from anakot_constants import get_anakot_home
+    from anakot_state import SessionDB
+
+    db = SessionDB(db_path=get_anakot_home() / "state.db", read_only=True)
+    try:
+        # The summary prints a short id: resolve_session_id takes a unique prefix.
+        found = db.resolve_session_id(args.resume) if args.resume else db.resolve_session_by_title(args.title)
+    finally:
+        db.close()
+    if not found:
+        raise SystemExit(f"anakot my-client: no session matches {wanted!r}")
+    return found
+
+
+def _run_chat(args):
+    from anakot_cli.chat_launch import anakot_command, print_exit_summary
+    from anakot_cli.gateway_chat import shell_client_env
+
+    env = dict(os.environ)
+    env["MY_CLIENT_ENV"] = json.dumps(shell_client_env())
+    env["MY_ATTACH_COMMAND"] = json.dumps(anakot_command(["gateway", "attach", "--json", "--start"]))
+    env["MY_RESUME"] = _session_to_resume(args) or ""  # the frontend sends it with session.resume
+    # One file for this launch: the frontend writes {"session_id": ...} there for the session it shows.
+    fd, session_file = tempfile.mkstemp(prefix="my-client-", suffix=".json")
+    os.close(fd)
+    env["MY_SESSION_FILE"] = session_file
+    try:
+        subprocess.run(["my-client"], env=env)
+        with open(session_file, encoding="utf-8") as f:
+            shown = f.read()
+    finally:
+        os.unlink(session_file)
+    if shown:  # empty when the client left before it opened a session
+        print_exit_summary(json.loads(shown)["session_id"], command="anakot my-client")
+
+
+def register(ctx):
+    ctx.register_cli_command("my-client", "Chat in my client", _arguments, _run_chat)
+```
+
+### `-w`: run the session in a fresh worktree
+
+The same launcher can offer `-w` the way `anakot --tui -w` does. It calls three functions from `anakot_cli.session_worktree`:
+
+- `create()` before the client starts. It makes a new git worktree of the repository the user is in, under `<repo>/.worktrees/`, on its own `anakot/` branch. It returns `{"path", "branch", "repo_root", "base"}`, or `None` when no tree could be made (it has already printed why). Send `path` as the `cwd` of `session.create`.
+- `restore(session_id)` before the client attaches to a resumed session. Pass the full session id. When that session ran in a `-w` tree that an earlier quit removed, it makes the tree again at the same path and returns the path. Otherwise it returns `None`. Without it, the gateway refuses every turn of that session with `workspace_unavailable`.
+- `finish(info, session_id, ask=...)` after the client exits, in a `finally` block, so a client that fails to start does not leave the tree behind. Pass `ask=True` after a clean exit: a tree with uncommitted or unpushed work then gets a keep / archive / discard question on the terminal. Call it only after your client has given the terminal back. A clean tree that nothing still uses is removed with its branch. A kept tree is handed to `session_id`, so Anakot keeps it while that session can be resumed.
+
+Do not make the tree yourself with `git worktree add`. Anakot regularly removes old idle trees under `.worktrees/`. It keeps a locked tree only when the lock reason is one Anakot wrote, so it can remove your tree while a stored session still runs in it.
+
+```python
+import os
+
+from anakot_cli.session_worktree import create, finish, restore
+
+resume = _session_to_resume(args)  # the full session id, from the launcher above
+info = create() if args.worktree else None
+if args.worktree and info is None:
+    raise SystemExit(1)
+if resume and not args.worktree:
+    restore(resume)
+code, session_id = None, resume
+try:
+    code, session_id = run_my_client(cwd=info["path"] if info else os.getcwd(), resume=resume)
+finally:
+    if info:  # also when the client did not start, or Ctrl+C reached the launcher
+        finish(info, session_id, ask=code == 0)
+```
 
 ## Calling MCP servers from plugins
 

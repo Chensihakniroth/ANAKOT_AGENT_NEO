@@ -5,7 +5,7 @@ description: "Linkup web search: live cited search (fast/standard/deep), URL-to-
 maintainer: LinkupPlatform
 tier: community
 category: web
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/LinkupPlatform/linkup-anakot-plugin#readme
 version: "1.0.1"
 image: "https://raw.githubusercontent.com/LinkupPlatform/linkup-anakot-plugin/d83d1162f2941e51bb4cbf34841b4c6b3305081c/docs/banner.png"

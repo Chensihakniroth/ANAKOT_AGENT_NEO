@@ -782,25 +782,23 @@ describe('PluginsTab catalog UX', () => {
     const fetchCatalog = vi
       .fn()
       .mockResolvedValueOnce({ ok: false, status: 503 })
-      .mockResolvedValueOnce({ ok: false, status: 503 })
       .mockResolvedValue({ ok: true, json: async () => [weatherEntry] })
 
     vi.stubGlobal('fetch', fetchCatalog)
     const view = renderPlugins({ profile: null })
 
-    // Both published hosts are tried before the tab shows its error card.
     expect(await screen.findByText('Catalog HTTP 503')).toBeTruthy()
-    expect(fetchCatalog).toHaveBeenCalledTimes(2)
+    expect(fetchCatalog).toHaveBeenCalledTimes(1)
     view.unmount()
     await act(async () => {
       renderPlugins({ profile: null })
     })
-    expect(fetchCatalog).toHaveBeenCalledTimes(2)
+    expect(fetchCatalog).toHaveBeenCalledTimes(1)
     expect(screen.getByText('Catalog HTTP 503')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
 
     expect(await screen.findByRole('heading', { name: weatherEntry.name })).toBeTruthy()
-    expect(fetchCatalog).toHaveBeenCalledTimes(3)
+    expect(fetchCatalog).toHaveBeenCalledTimes(2)
   })
 
   it('shows an Update chip when the catalog pin moved past the installed SHA', () => {

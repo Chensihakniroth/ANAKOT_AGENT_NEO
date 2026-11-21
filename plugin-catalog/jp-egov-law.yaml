@@ -8,7 +8,7 @@ category: tools
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-egov-law#readme
 version: 0.1.11
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-egov-law/2e96dd28108250b374160077d6e1d9fa4dea55f1/assets/catalog-banner.png
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 platforms: []
 capabilities:
   provides_tools:

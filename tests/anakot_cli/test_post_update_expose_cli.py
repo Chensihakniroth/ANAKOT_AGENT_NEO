@@ -51,7 +51,7 @@ def fake_install(tmp_path, monkeypatch):
     (root / "venv" / "bin" / "python").write_text("#!fake\n", encoding="utf-8")
     (root / "anakot").write_text("# entrypoint\n", encoding="utf-8")
     (root / "run_agent.py").write_text("# agent\n", encoding="utf-8")
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     store = tmp_path / "tools"
     store.mkdir()
     monkeypatch.setenv("ANAKOT_RUNTIME_DIR", str(store))
@@ -70,7 +70,7 @@ def test_windows_converges_on_the_installer_user_bin(create, monkeypatch, tmp_pa
     calls = []
     monkeypatch.setattr(_launchers, "_expose_windows_user_bin",
                         lambda root, *, create: calls.append(create) or {"ok": True, "written": []})
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(tmp_path))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(tmp_path))
     assert _launchers.expose_cli(create=create) == {"ok": True, "written": []}
     assert calls == [create]
 
@@ -380,7 +380,7 @@ class TestExposeCli:
         (tmp_path / "tools" / "facts.json").unlink()
         bare = tmp_path / "sealed"
         bare.mkdir()
-        monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(bare))
+        monkeypatch.setenv("HERMES_INSTALL_ROOT", str(bare))
         result = _launchers.expose_cli()
         assert result == {"ok": True, "skipped": "no-store-python"}
 
@@ -399,7 +399,7 @@ class TestExposeCli:
         _write_bundled_stamp(payload / "repo")
         for name in ("anakot", "anakot-agent", "anakot-acp"):
             (payload / "bin" / name).write_text("\x7fELF fake shim\n", encoding="utf-8")
-        monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(payload / "repo"))
+        monkeypatch.setenv("HERMES_INSTALL_ROOT", str(payload / "repo"))
         if not create:
             monkeypatch.setattr("anakot_cli.config.load_config", lambda: pytest.fail("repair read config"))
         result = _launchers.expose_cli(create=create)
@@ -420,7 +420,7 @@ class TestExposeCli:
         (parent / "bin" / "anakot").write_text("#!/bin/sh\n# installer launcher\n", encoding="utf-8")
         checkout = parent / "anakot-agent"
         checkout.mkdir()
-        monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(checkout))
+        monkeypatch.setenv("HERMES_INSTALL_ROOT", str(checkout))
         result = _launchers.expose_cli()
         assert result == {"ok": True, "skipped": "no-store-python"}
         assert _launchers._is_bundled_payload(checkout) is False
@@ -464,7 +464,7 @@ def test_direct_packaged_cli_exposes_shims_before_electron(tmp_path):
         shim.write_text(f'#!/bin/sh\nexec {shlex.join([sys.executable, "-I", "-c", code])} "$@"\n', encoding="utf-8")
         shim.chmod(0o755)
     env = dict(os.environ, HOME=str(home), ANAKOT_HOME=str(home / ".anakot"),
-               ANAKOT_INSTALL_ROOT=str(repo), ANAKOT_RUNTIME_DIR=str(tmp_path / "tools"))
+               HERMES_INSTALL_ROOT=str(repo), ANAKOT_RUNTIME_DIR=str(tmp_path / "tools"))
     # Execute the package CLI directly. No Electron process or linking helper runs.
     # `--help` reaches main()'s boot bootstrap (which owns expose_cli) before argparse
     # exits; `--version` is answered on the pre-import fast path and never gets there.

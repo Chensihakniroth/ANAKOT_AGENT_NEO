@@ -249,13 +249,13 @@ def _declared_requirements(manifest: Any) -> tuple[str, ...]:
 
 
 def anakot_fit_error(manifest: Any) -> Optional[str]:
-    """Why this Anakot is not one the plugin accepts: ``requires_anakot``, then the plugin's own
+    """Why this Anakot is not one the plugin accepts: ``requires_hermes``, then the plugin's own
     requirement on ``anakot-agent``. PM's build leaves such a plugin out by the same gate
     (``pm.workspace.anakot_fit_error``), so it is skipped here rather than imported without its
     dependencies, and loads again once Anakot fits."""
-    from anakot_cli.plugins_manifest import requires_anakot_error
+    from anakot_cli.plugins_manifest import requires_hermes_error
 
-    reason = requires_anakot_error(manifest)
+    reason = requires_hermes_error(manifest)
     path = getattr(manifest, "path", None)
     if reason or not path or not Path(path).is_dir():
         return reason
@@ -375,7 +375,7 @@ class PluginLoaderMixin:
             failed = next((p.manifest for p in self._plugins.values()
                            if p.error and not p.enabled and p.manifest.kind == "platform"
                            and self._platform_name_from_manifest(p.manifest) == platform_name), None)
-            # Re-gate: a placeholder (disabled, not enabled, catalog-removed) or a requires_anakot mismatch
+            # Re-gate: a placeholder (disabled, not enabled, catalog-removed) or a requires_hermes mismatch
             # carries the same error-set shape as a failed load but must never be imported.
             if failed is None or anakot_fit_error(failed) or gate_manifest(
                     failed, _get_disabled_plugins(), _get_enabled_plugins()).action not in ("defer", "load"):
@@ -839,11 +839,6 @@ class PluginLoaderMixin:
         module.__package__ = module_name
         module.__path__ = [str(plugin_dir)]  # type: ignore[attr-defined]
         sys.modules[module_name] = module
-        # Hermes-era plugin modules may import ``hermes_*`` names at load time;
-        # alias them to the Anakot runtime before executing third-party code.
-        from anakot_cli.plugin_legacy_compat import install as _install_legacy_plugin_names
-
-        _install_legacy_plugin_names()
         try:
             spec.loader.exec_module(module)
         except BaseException:

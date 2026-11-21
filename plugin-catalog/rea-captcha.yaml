@@ -6,7 +6,7 @@ description: "Inspect captured browser verification evidence locally when an age
 maintainer: masakaai
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/masakaai/rea-captcha/tree/bac84a628e989d330b807974789cde0ec689be18/integrations/anakot
 version: "0.3.1"
 platforms: []

@@ -6,7 +6,7 @@ description: "Twitch chat for Anakot Agent that treats chat as untrusted input. 
 maintainer: Reza Harirchian
 tier: community
 category: platform
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/RezaHarirchian/anakot-tallyhand#readme
 version: "0.1.1"
 capabilities:

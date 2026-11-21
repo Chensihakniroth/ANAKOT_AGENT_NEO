@@ -6,7 +6,7 @@ description: "Per-user tool permissions for Anakot on messaging platforms and we
 maintainer: yuzuru99
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/yuzuru99/anakot-clearance#readme
 version: "1.1.0"
 readme: true

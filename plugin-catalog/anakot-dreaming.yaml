@@ -5,7 +5,7 @@ description: "Nightly deterministic memory consolidation (\"dreaming\"): corrobo
 maintainer: itpartypattaya
 tier: community
 category: memory
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/itpartypattaya/anakot-dreaming/blob/21878d3ec8752283dd7ee69a803c63bb989c1740/README.md
 version: "3.8.6"
 image: "https://raw.githubusercontent.com/itpartypattaya/anakot-dreaming/21878d3ec8752283dd7ee69a803c63bb989c1740/docs/banner.png"

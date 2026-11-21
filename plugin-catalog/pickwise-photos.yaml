@@ -6,7 +6,7 @@ description: "A correction tool, not an art critic: culls a folder of photos loc
 maintainer: ardianreffa
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ardianreffa/pickwise-photos#readme
 version: "0.2.1"
 platforms: []

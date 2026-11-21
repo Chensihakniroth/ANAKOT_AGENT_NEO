@@ -417,14 +417,14 @@ class TestRequiresAnakot:
         from anakot_cli.plugins_manifest import version_satisfies
         assert version_satisfies(spec, current) is expected
 
-    def test_unsatisfied_requires_anakot_skips_without_importing(self, anakot_home, monkeypatch):
-        """A too-new ``requires_anakot`` records an error and never runs register(); a satisfied one loads."""
+    def test_unsatisfied_requires_hermes_skips_without_importing(self, anakot_home, monkeypatch):
+        """A too-new ``requires_hermes`` records an error and never runs register(); a satisfied one loads."""
         import sys
         from anakot_cli import plugins_manifest
         monkeypatch.setattr(plugins_manifest, "running_anakot_version", lambda: "1.2.3")
-        _write_plugin(anakot_home / "plugins", "future", manifest_extra={"requires_anakot": ">=99.0"},
+        _write_plugin(anakot_home / "plugins", "future", manifest_extra={"requires_hermes": ">=99.0"},
                       register_body="import sys; sys._rh_future = True")
-        _write_plugin(anakot_home / "plugins", "current", manifest_extra={"requires_anakot": ">=1.2,<2"},
+        _write_plugin(anakot_home / "plugins", "current", manifest_extra={"requires_hermes": ">=1.2,<2"},
                       register_body="import sys; sys._rh_current = True")
         _enable(anakot_home, ["future", "current"])
         try:

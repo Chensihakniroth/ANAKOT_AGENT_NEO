@@ -76,7 +76,7 @@ python -m pm.build_env --source . --out .venv --group dev --group test
 PM 不会自动删除已有目录。不要通过原始 pip 或 uv 命令修改 Anakot 环境。
 
 测试 runner 自动发现仓库的 `.venv`。它会清除 `PYTHONPATH`，因此 pytest 必须安装在解释器自身的环境中。
-也可将 `--out` 指向仓库外的新路径，再将 `ANAKOT_PYTHON` 设为该环境的解释器。
+也可将 `--out` 指向仓库外的新路径，再将 `HERMES_PYTHON` 设为该环境的解释器。
 Windows 上通过 Bash 运行 `scripts/run_tests.sh`，并预先准备本机 C++ 编译环境。
 
 独立测试环境不替代 PM 工具存储或应用的依赖选择。不要修改签名应用的载荷。
@@ -95,7 +95,7 @@ npm run build:fast --prefix website
 `npx`、`npm exec` 和 `npm run` 仍可使用，因此 MCP 服务器和工具照常启动。但 `engine-strict` 作用于整个检出目录：这些目录本身，以及通过根目录 `.npmrc` 作用于所有没有自己 `package.json` 的位置（`agent/`、`tools/`、Docker 镜像的 `/opt/anakot`）。在这些位置，如果 `npx` 要安装的包或它带入的任一非可选依赖声明的 `engines` 与当前 Node 或 npm 不符，`npx` 会拒绝安装，而在检出目录之外只会警告。
 
 图标从 `assets/nous-girl-*.svg` 和 `assets/backgrounds/` 生成。
-`node scripts/generate-icons.mjs` 使用 Anakot 运行时 Python（`ANAKOT_PYTHON`，否则为 PATH 上的 `python`）渲染图标：Pillow 和 resvg-py 是核心依赖。不要提交生成的 PNG/ICO/ICNS 文件。
+`node scripts/generate-icons.mjs` 使用 Anakot 运行时 Python（`HERMES_PYTHON`，否则为 PATH 上的 `python`）渲染图标：Pillow 和 resvg-py 是核心依赖。不要提交生成的 PNG/ICO/ICNS 文件。
 
 ### 运行测试
 

@@ -5,7 +5,7 @@ description: "Community plugin that rewrites Anakot terminal commands through RT
 maintainer: petertaras
 tier: community
 category: tools
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 version: "0.1.1"
 docs_url: https://github.com/petertaras/anakot-rtk-rewrite-with-docker-support#readme
 platforms: [linux, macos]

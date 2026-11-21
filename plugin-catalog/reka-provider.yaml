@@ -15,7 +15,7 @@ description: >-
 maintainer: reka-ai
 tier: verified
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://developer.reka.ai/integrations/agents#anakot
 version: "1.0.3"
 readme: true

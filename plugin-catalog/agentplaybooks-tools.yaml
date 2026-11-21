@@ -18,7 +18,7 @@ description: >-
 maintainer: matebenyovszky
 tier: community
 category: tools
-requires_anakot: ">=0.22.4"
+requires_hermes: ">=0.22.4"
 version: "0.2.1"
 docs_url: https://github.com/matebenyovszky/agentplaybooks/tree/b0b9bcc242a5b68ca2f1a6e13a4b22ca035e6264/packages/anakot-portable/agentplaybooks-tools
 image: https://raw.githubusercontent.com/matebenyovszky/agentplaybooks/b0b9bcc242a5b68ca2f1a6e13a4b22ca035e6264/public/plugin-catalog/anakot-tools.png

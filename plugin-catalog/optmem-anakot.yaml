@@ -6,7 +6,7 @@ description: "Independent Anakot integration of Victor Taelin's OptMem design: l
 maintainer: rarf
 tier: community
 category: memory
-requires_anakot: ">=0.21.2"
+requires_hermes: ">=0.21.2"
 docs_url: https://github.com/rarf/optmem-anakot-plugin/blob/2868af6620bf07958f833ca354fbeecf2a56b265/README.md
 version: "0.3.3"
 image: https://raw.githubusercontent.com/rarf/optmem-anakot-plugin/2868af6620bf07958f833ca354fbeecf2a56b265/docs/assets/catalog-banner-card.png

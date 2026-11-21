@@ -13,7 +13,7 @@ description: >-
 maintainer: neekimyong
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/neekimyong/anakot-lang-tr#readme
 version: "1.0.0"
 platforms: []

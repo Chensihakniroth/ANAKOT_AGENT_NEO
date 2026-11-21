@@ -130,7 +130,7 @@ def test_unsafe_key_paths_are_rejected(key):
 
 
 def test_redaction_masks_tokens_and_host_field_passwords():
-    text = ("ANAKOT_DASHBOARD_SESSION_TOKEN=abc X-Anakot-Session-Token: def "
+    text = ("ANAKOT_DASHBOARD_SESSION_TOKEN=abc X-Hermes-Session-Token: def "
             "Authorization: Bearer ghi /x?token=jkl me@box:secret me@box:22")
     out = redact_secrets(text)
     for secret in ("abc", "def", "ghi", "jkl", "secret"):

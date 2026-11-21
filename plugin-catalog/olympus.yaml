@@ -7,7 +7,7 @@ maintainer: AIEngineerX
 tier: community
 category: desktop
 version: "2.1.1"
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/AIEngineerX/Olympus/tree/501d8d980b9268db584a2797e2562272caa59f35
 screenshots:
   - https://raw.githubusercontent.com/AIEngineerX/Olympus/501d8d980b9268db584a2797e2562272caa59f35/screenshots/agents.png

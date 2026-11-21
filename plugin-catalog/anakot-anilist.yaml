@@ -41,7 +41,7 @@ description: "AniList tracker for Anakot Desktop — airing countdowns, a season
 maintainer: BatataBF
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/BatataBF/anakot-anilist#readme
 version: "0.9.0"
 platforms: []

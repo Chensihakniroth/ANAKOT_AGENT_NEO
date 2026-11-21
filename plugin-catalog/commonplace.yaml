@@ -13,4 +13,4 @@ capabilities:
   provides_middleware: []
   requires_env: []
 subdir: commonplace
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"

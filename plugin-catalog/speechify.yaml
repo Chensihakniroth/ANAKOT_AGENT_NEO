@@ -6,7 +6,7 @@ description: "The official Speechify text-to-speech provider (tts.provider: spee
 maintainer: Lokeshm24
 tier: community
 category: voice
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Speechify-AI/anakot-speechify#readme
 version: "0.1.2"
 known_issues:

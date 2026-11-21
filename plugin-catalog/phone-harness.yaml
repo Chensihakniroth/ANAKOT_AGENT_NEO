@@ -8,7 +8,7 @@ maintainer: ShawnPana
 tier: community
 category: tools
 version: "0.1.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/phone-harness/phone-harness/tree/main/integrations/anakot#readme
 image: https://raw.githubusercontent.com/phone-harness/phone-harness/549d300e317a76ec8f493600cb04c69ba4f9d97d/integrations/anakot/assets/banner.png
 capabilities:

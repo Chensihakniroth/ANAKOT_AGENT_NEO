@@ -8,7 +8,7 @@ description: "Manage your project's development lifecycle all in one place: your
 maintainer: jerrod-storm
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0-dev.24"
 docs_url: https://github.com/creature-workshop/creature-workshop-plugin/blob/main/README.md
 platforms:

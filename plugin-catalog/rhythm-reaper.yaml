@@ -5,7 +5,7 @@ description: "A hip-hop producer desk — 41 lanes across seven families (founda
 maintainer: D0xedDevi0
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 image: https://raw.githubusercontent.com/D0xedDevi0/anakot-rhythm-reaper/a772a54118d45142e47566ee1d853a2837afb551/docs/banner.png
 screenshots:

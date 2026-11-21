@@ -4,7 +4,7 @@ repo: https://github.com/takaolovely/anakot-walrus-memory
 sha: 324b0a150b74165402fdea52639062c9dd28a4a5
 subdir: plugin
 version: "0.3.0"
-requires_anakot: ">=0.16.0"
+requires_hermes: ">=0.16.0"
 maintainer: takaolovely
 tier: community
 category: tools

@@ -59,12 +59,12 @@ def test_html_cannot_authorize_privileged_sibling_routes(monkeypatch, tmp_path, 
     monkeypatch.delenv("ANAKOT_SERVE_HEADLESS", raising=False)
     mount_spa(spa)
     html = TestClient(spa).get("/").text
-    match = re.search(r'__ANAKOT_SESSION_TOKEN__\s*=\s*("[^"]*")', html)
+    match = re.search(r'__HERMES_SESSION_TOKEN__\s*=\s*("[^"]*")', html)
     exposed = json.loads(match[1]) if match else ""
     client = TestClient(server.app, base_url="http://testclient")
     if operation == "file":
         response = client.get("/api/fs/read-text", params={"path": str(tmp_path / "index.html")},
-                              headers={"X-Anakot-Session-Token": exposed})
+                              headers={"X-Hermes-Session-Token": exposed})
         assert response.status_code == 401
     else:
         query = {"token": exposed}

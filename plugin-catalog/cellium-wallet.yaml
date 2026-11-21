@@ -5,5 +5,5 @@ description: "Connect Anakot to a Cellium agent for wallet operations, swaps, br
 maintainer: xjubiliance
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 version: "0.1.0"

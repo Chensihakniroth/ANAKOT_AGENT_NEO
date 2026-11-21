@@ -5,7 +5,7 @@ description: "Self-hosted long-term memory through a post-cortex daemon (https:/
 maintainer: julymetodiev
 tier: community
 category: memory
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.2.0"
 docs_url: https://github.com/julymetodiev/anakot-plugin-post-cortex#readme
 readme: true

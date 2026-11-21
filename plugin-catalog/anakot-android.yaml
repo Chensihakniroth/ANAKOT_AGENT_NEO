@@ -6,7 +6,7 @@ description: "Remote Android device control for Anakot Agent: 58 android_* tools
 maintainer: TechFlipsi
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/TechFlipsi/FlipsiBridge
 readme: true
 image: https://raw.githubusercontent.com/TechFlipsi/FlipsiBridge/5f185b2d5ac8b88d127815c13ee31970d31f678a/docs/img/fb-chat.png

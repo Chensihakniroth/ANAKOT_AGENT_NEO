@@ -6,7 +6,7 @@ description: "Evidence-gated answering with a provenance hierarchy, for any loca
 maintainer: zvporter-ops
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/zvporter-ops/coldstart#readme
 version: "0.3.1"
 readme: true

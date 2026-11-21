@@ -9,7 +9,7 @@ maintainer: ActVox
 tier: community
 category: automation
 docs_url: https://github.com/ActVox/actvox-plugins/tree/main/anakot
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 readme: true
 platforms: []
 known_issues:

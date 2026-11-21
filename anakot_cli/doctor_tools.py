@@ -460,7 +460,7 @@ def _check_npm_audit(should_fix: bool, f: Finding) -> None:
     for tool, tree, label, audit_extra in (
         # The root package.json itself (js-yaml, semver, eslint tooling). See #122223.
         (pnpm_bin, PROJECT_ROOT, "Root npm package", ["--filter", "."]),
-        # `{./X}...`: the workspace and the sibling workspaces it depends on (apps/shared, anakot-ink).
+        # `{./X}...`: the workspace and the sibling workspaces it depends on (apps/shared, hermes-ink).
         (pnpm_bin, PROJECT_ROOT / "web", "web workspace", ["--filter", "{./web}..."]),
         (pnpm_bin, PROJECT_ROOT / "ui-tui", "ui-tui workspace", ["--filter", "{./ui-tui}..."]),
         (npm_bin, whatsapp_bridge_dir, "WhatsApp bridge", []),

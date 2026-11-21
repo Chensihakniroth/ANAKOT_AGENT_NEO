@@ -93,7 +93,7 @@ results["native_burst"] = {"codes": codes, "provider_calls": idp.calls}
 
 # (2) cookie gate path: 4 concurrent gated requests with an expired AT + one stale RT
 idp.calls = 0
-ck = "anakot_session_at=expired-at; anakot_session_rt=cookie-stale; anakot_session_provider=stub"
+ck = "hermes_session_at=expired-at; anakot_session_rt=cookie-stale; anakot_session_provider=stub"
 with ThreadPoolExecutor(4) as pool:
     codes = sorted(pool.map(lambda _: http("/api/auth/me", headers={"cookie": ck}), range(4)))
 results["cookie_burst"] = {"codes": codes, "provider_calls": idp.calls}

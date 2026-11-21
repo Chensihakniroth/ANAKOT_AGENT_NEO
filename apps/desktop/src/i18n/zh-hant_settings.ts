@@ -823,6 +823,9 @@ export const zhHantSettings = {
       voiceShortcutHintTitle: '語音錄製快捷鍵',
       voiceShortcutHintDesc:
         '請在「設定 → 鍵盤快捷鍵」中設定語音錄製快捷鍵（「Start / stop voice conversation」）。voice.record_key 設定僅適用於 CLI 和 TUI。',
+      desktopReadAloudTitle: '在此應用程式中朗讀回覆',
+      desktopReadAloudDesc:
+        '在 Desktop 中朗讀每則完成的回覆。與輸入框按鈕是同一個開關；對所有開啟的視窗生效，關閉後會立即停止正在朗讀的回覆。下方的「朗讀回覆」用於訊息平台和 CLI。',
       showOptions: '顯示選項'
     },
     hudModifier: {
@@ -996,7 +999,7 @@ export const zhHantSettings = {
         'SSH 驗證失敗。請將金鑰載入 ssh-agent（ssh-add），或在 ~/.ssh/config 中設定 IdentityFile——Anakot 以非互動方式執行 ssh。',
       sshErrHostKey: '自上次連線以來主機金鑰已變更。請確認這是預期的，然後執行 ssh-keygen -R <host> 並重新連線。',
       sshErrNotInstalled:
-        '遠端主機上未安裝 Anakot。請在遠端安裝（git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git && cd ANAKOT_AGENT_NEO && ./setup-anakot.sh）或設定 Anakot 路徑。',
+        '遠端主機上未安裝 Anakot。請在遠端安裝（curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sh）或設定 Anakot 路徑。',
       sshErrPlatform: '不支援的遠端平台。Anakot Desktop 的 SSH 模式支援 Linux、macOS 和 Windows 遠端主機。',
       sshErrTimeout: 'SSH 連線逾時。主機可能無法存取或處於睡眠狀態。',
       sshErrUpdateRequired: '使用 Desktop SSH 連線前，請更新遠端主機上的 Anakot。',

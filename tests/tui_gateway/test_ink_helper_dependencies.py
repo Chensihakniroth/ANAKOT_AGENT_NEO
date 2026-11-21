@@ -1,8 +1,8 @@
 """Ink's Python helpers boot PM's committed dependency generation themselves (regression for #138878).
 
 Ink runs ``ui-tui/scripts/gateway_bootstrap.py`` (``localGatewayBootstrap.ts``) and
-``ui-tui/scripts/clipboard_image.py`` (``imageAttachments.ts``) on ``ANAKOT_PYTHON`` with
-``PYTHONPATH=<root>`` only. On a source install ``ANAKOT_PYTHON`` is PM's store Python, which owns no
+``ui-tui/scripts/clipboard_image.py`` (``imageAttachments.ts``) on ``HERMES_PYTHON`` with
+``PYTHONPATH=<root>`` only. On a source install ``HERMES_PYTHON`` is PM's store Python, which owns no
 packages, so the launcher's own activation never reaches these children. Each child here runs with
 ``-S`` -- the test interpreter's site-packages are out of reach, exactly like the store Python's --
 and its dependencies are importable only through a generation committed in the temp ANAKOT_HOME.
@@ -42,9 +42,9 @@ def _commit_generation() -> None:
 
 
 def _ink_child(script: str, *args: str, scripts: Path = _SCRIPTS, **env: str) -> subprocess.CompletedProcess:
-    """Exactly what localGatewayBootstrap.ts runs: PYTHONPATH and ANAKOT_PYTHON_SRC_ROOT name the Python root."""
+    """Exactly what localGatewayBootstrap.ts runs: PYTHONPATH and HERMES_PYTHON_SRC_ROOT name the Python root."""
     child_env = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
-    child_env.update(PYTHONPATH=str(_ROOT), ANAKOT_PYTHON_SRC_ROOT=str(_ROOT), **env)
+    child_env.update(PYTHONPATH=str(_ROOT), HERMES_PYTHON_SRC_ROOT=str(_ROOT), **env)
     return subprocess.run([sys.executable, "-S", str(scripts / script), *args], cwd=_ROOT,
                           env=child_env, capture_output=True, text=True, timeout=60, check=False)
 
@@ -85,7 +85,7 @@ def test_packaged_gateway_bootstrap_boots_the_root_it_is_given_or_names_why_it_c
 def _store_python_child(script: str, *args: str) -> subprocess.CompletedProcess:
     """The helper on PM's store Python: a non-venv interpreter living under the runtime dir."""
     child_env = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
-    child_env.update(PYTHONPATH=str(_ROOT), ANAKOT_PYTHON_SRC_ROOT=str(_ROOT),
+    child_env.update(PYTHONPATH=str(_ROOT), HERMES_PYTHON_SRC_ROOT=str(_ROOT),
                      ANAKOT_RUNTIME_DIR=str(Path(sys.base_prefix).resolve().parent))
     python = getattr(sys, "_base_executable", sys.executable)
     return subprocess.run([python, "-S", str(_SCRIPTS / script), *args], cwd=_ROOT, env=child_env,

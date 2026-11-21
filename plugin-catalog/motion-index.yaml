@@ -5,7 +5,7 @@ description: "Browse 49 motion-graphics styles as live previews in a Anakot Desk
 maintainer: minutechreview
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.1.0"
 title: "Motion Index"
 platforms: []

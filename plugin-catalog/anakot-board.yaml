@@ -6,7 +6,7 @@ description: "A Miro-like board the agent draws with its own tools and you edit 
 maintainer: skk2010
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 version: "1.9.3"
 docs_url: https://github.com/skk2010/anakot-board-plugin
 image: https://raw.githubusercontent.com/skk2010/anakot-board-plugin/feb66592881bf76198cd8d790fd1dae25e5057f6/assets/card.png

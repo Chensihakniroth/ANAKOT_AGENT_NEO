@@ -7,7 +7,7 @@ description: "Directory-scoped native TUI tabs when the public core capability c
 maintainer: cryptobredda
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "1.1.0"
 docs_url: https://github.com/cryptobredda/anakot-cli-tabs#readme
 image: https://raw.githubusercontent.com/cryptobredda/anakot-cli-tabs/8568381f410535660086e59215ba106de9f0c058/docs/tabs-demo.png

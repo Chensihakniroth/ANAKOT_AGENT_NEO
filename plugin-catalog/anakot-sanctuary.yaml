@@ -7,7 +7,7 @@ description: "Watch your Anakot Agent work: five animated characters wake up whe
 maintainer: Med34000
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Med34000/anakot-sanctuary#readme
 version: "2.7.3"
 image: https://raw.githubusercontent.com/Med34000/anakot-sanctuary/79c77390b9d926fa50c9973152f801c7127c8238/docs/catalog/banner.jpg

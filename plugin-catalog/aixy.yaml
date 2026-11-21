@@ -20,7 +20,7 @@ description: >-
 maintainer: aixy-tech
 tier: community
 category: models
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.1.2"
 docs_url: https://github.com/aixy-tech/aixy-anakot-plugin#readme
 platforms: []

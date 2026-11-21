@@ -935,7 +935,7 @@ A build-time collision check prevents plugin packages from shadowing core anakot
 ### Dev Shell
 
 The flake provides an editable Python venv with the `dev` dependency group, running
-on the interpreter `pm/lock.json` pins. `ANAKOT_PYTHON` and `VIRTUAL_ENV` point at it,
+on the interpreter `pm/lock.json` pins. `HERMES_PYTHON` and `VIRTUAL_ENV` point at it,
 and it needs no `PYTHONPATH`. It does not install
 Python dependencies into a repository-local `.venv`. The shell also provides
 Node.js and runtime tools. Its pnpm hook refreshes JS workspaces when their inputs change.
@@ -948,7 +948,7 @@ state, because both commands read the same one by default.
 ```bash
 cd anakot-agent
 nix develop
-"$ANAKOT_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
+"$HERMES_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
 anakot-checkout --version
 ANAKOT_HOME="$PWD/.scratch/home" anakot-checkout chat
 ```

@@ -7,7 +7,7 @@ description: "Your own WHOOP data in Anakot: today's recovery, HRV, resting hear
 maintainer: solmonger
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/solmonger/anakot-whoop#readme
 image: https://raw.githubusercontent.com/solmonger/anakot-whoop/ea30c764a44fc792b66e34061331f2948356cc03/docs/media/banner.png
 screenshots:

@@ -6,7 +6,7 @@ description: 'Generative ambient in the Anakot Desktop status bar with the sessi
 maintainer: discodirector
 tier: community
 category: desktop
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 version: "0.1.0"
 docs_url: https://github.com/discodirector/idm-session-radio
 image: https://raw.githubusercontent.com/discodirector/idm-session-radio/28049184e695661b98568334333bfe8493eb96fa/assets/banner.png

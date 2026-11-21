@@ -3,7 +3,7 @@ title: Anakot Receipts
 repo: https://github.com/iket72183-collab/anakot-receipts
 sha: ec4894ef57c4d344dd84d2343cf66f5772d4196c
 version: "0.1.0"
-requires_anakot: ">=0.22.4"
+requires_hermes: ">=0.22.4"
 maintainer: iket72183-collab
 tier: community
 category: tools

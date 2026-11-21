@@ -11,7 +11,7 @@ category: tools
 docs_url: https://github.com/RegeneratusLabs/ethics-filter#readme
 readme: true
 platforms: [linux, macos, windows]
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 capabilities:
   provides_tools:
     - ethics_evaluate

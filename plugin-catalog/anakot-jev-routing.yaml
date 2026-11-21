@@ -8,7 +8,7 @@ tier: community
 category: models
 docs_url: https://github.com/apoapostolov/anakot-agent-awesome-plugins/tree/main/public/anakot-jev-routing
 version: "1.1.0"
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 image: https://raw.githubusercontent.com/apoapostolov/anakot-agent-awesome-plugins/06a53646587c33174a0fbfbb3713eca90bbb8586/public/anakot-jev-routing/docs/hero.png
 platforms: []
 capabilities:

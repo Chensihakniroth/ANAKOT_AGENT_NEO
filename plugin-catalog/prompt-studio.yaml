@@ -5,7 +5,7 @@ description: "Step-by-step prompt builder for Anakot Desktop (F4): option cards 
 maintainer: bwoliveira
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/bwoliveira/prompt-studio#readme
 version: "1.10.0"
 image: https://raw.githubusercontent.com/bwoliveira/prompt-studio/a95df2abb0b3b7ffc98b3f4ceb8565008c311f77/docs/images/banner.png

@@ -7,7 +7,7 @@ description: "Map local repositories and retrieve task-focused source excerpts w
 maintainer: anthony-maio
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.1.0"
 docs_url: https://github.com/anthony-maio/cartograph/blob/e2e06db1c79f3de60760d9045ae6908ddf4e4b21/assets/anakot/README.md
 known_issues:

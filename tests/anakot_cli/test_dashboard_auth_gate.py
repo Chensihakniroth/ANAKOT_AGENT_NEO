@@ -407,7 +407,7 @@ def test_desktop_ssh_backend_serves_session_token_requests_despite_public_url(mo
             ssh_session_token=ssh_token,
         )
         client = TestClient(web_server.app, base_url="http://127.0.0.1")
-        with_token = client.get("/api/profiles", headers={"X-Anakot-Session-Token": ssh_token})
+        with_token = client.get("/api/profiles", headers={"X-Hermes-Session-Token": ssh_token})
         assert with_token.status_code == 200, with_token.text
         without_token = client.get("/api/profiles")
         assert without_token.status_code == 401

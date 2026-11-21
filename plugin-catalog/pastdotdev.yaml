@@ -7,7 +7,7 @@ description: "past.dev memory provider: recall before each turn from source-trac
 maintainer: pastdotdev
 tier: community
 category: memory
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/pastdotdev/anakot-plugin#readme
 capabilities:
   provides_tools: []

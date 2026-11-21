@@ -5,7 +5,7 @@ description: "Teach a desktop computer_use click-flow once, rehearse it with a c
 maintainer: LucianaiB2004
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/LucianaiB2004/anakot-afterimage/blob/46c58bd45d95104bff69037738c485c159943ab8/README.md
 version: "0.1.0"
 title: Afterimage

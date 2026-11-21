@@ -16,7 +16,7 @@ description: >-
 maintainer: madpower2000
 tier: community
 category: automation
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/madpower2000/anakot-telegram-notify
 version: "1.1.3"
 platforms: []

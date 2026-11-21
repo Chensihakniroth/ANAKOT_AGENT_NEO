@@ -7,7 +7,7 @@ description: "Local, source-backed long-term memory: recalls what you told an ag
 maintainer: "410979729"
 tier: community
 category: memory
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "4.0.3"
 docs_url: https://github.com/410979729/scope-recall-anakot/blob/424e5703df73ea594e7a121a260371a15ab7c7ee/docs/install/anakot.md
 readme: true

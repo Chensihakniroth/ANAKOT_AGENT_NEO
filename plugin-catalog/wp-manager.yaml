@@ -19,7 +19,7 @@ description: >-
 maintainer: danieljwonder
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/danieljwonder/wp-manager#readme
 platforms: []
 screenshots:

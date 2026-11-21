@@ -6,7 +6,7 @@ description: "Plants fake credential files on your machine and blocks a hijacked
 maintainer: pgreyy
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/pgreyy/customs/blob/8363fe0d10d49f2321eb652d00b62e9c816f910d/README.md
 version: "0.6.5"
 platforms: [linux]

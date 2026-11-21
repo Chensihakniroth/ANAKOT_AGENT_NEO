@@ -6,7 +6,7 @@
  * Two delivery modes, one surface:
  *  - bundled (`src/plugins/<name>/`): the import resolves here via alias;
  *  - runtime-fetched (plugin host, next phase): the loader injects this same
- *    object as `window.__ANAKOT_PLUGIN_SDK__` and maps the import to it, so a
+ *    object as `window.__HERMES_PLUGIN_SDK__` and maps the import to it, so a
  *    published plugin builds against the types with the SDK marked external.
  *
  * Capability tiers (WoW-style):
@@ -1951,8 +1951,8 @@ export type { StatusResponse } from '@/types/anakot'
 export type { GatewayEvent as RpcEvent } from '@anakot/shared'
 /** Bot Screen wire shapes, generated from `tui_gateway/contracts/display.py`. */
 export type { DisplayLease, DisplayObserveResult, DisplayStatus, DisplayThumbnailResult } from '@anakot/shared'
-/** `session.list` / `profiles.list` session rows, generated from `tui_gateway/contracts`. */
-export type { ProfileSessionPreview, SessionListRow } from '@anakot/shared'
+/** Profile creation and session rows, generated from `tui_gateway/contracts`. */
+export type { ProfilesCreateResult, ProfileSessionPreview, SessionListRow } from '@anakot/shared'
 /** THE compact-number formatter — every user-facing count/token figure goes
  *  through here (1230 → "1.2k", 1_500_000 → "1.5M"). Don't hand-roll `/1000`. */
 export { compactNumber } from '@anakot/shared'

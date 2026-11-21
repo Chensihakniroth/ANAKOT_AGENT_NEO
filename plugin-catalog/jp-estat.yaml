@@ -5,7 +5,7 @@ description: "Japanese government statistics from the e-Stat API: search tables 
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.4'
+requires_hermes: '>=0.21.4'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-estat#readme
 version: 0.1.4
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-estat/2cf442a83be2ed90b0a07cc4e8707d591f1e9196/assets/catalog-banner.png

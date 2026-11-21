@@ -6,7 +6,7 @@ description: "A personal cockpit for Anakot Agent. When a session produces somet
 maintainer: sahindemirbas
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/sahindemirbas/kokpit/blob/main/docs/anakot-plugin.md
 version: "0.4.0"
 title: Kokpit

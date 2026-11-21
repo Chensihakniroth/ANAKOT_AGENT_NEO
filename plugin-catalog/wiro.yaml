@@ -17,7 +17,7 @@ description: >-
 maintainer: wiroai
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/wiroai/Wiro-Anakot#readme
 version: "1.0.0"
 capabilities:

@@ -7,7 +7,7 @@ maintainer: buildngrowsv
 tier: community
 category: tools
 description: "Connect Anakot to Genflick creative and business workspaces for films, series, music videos, ads and marketing, with email-link sign-in and host-owned OAuth. Disclosure — tool calls send your prompts, project inputs and media requests to Genflick's hosted MCP server at genflick.com (which may pass work to its own downstream providers), its tools can spend from your Genflick account and publish ads, social posts and outreach; the package sets `trust: full`, so Anakot does not prompt per tool and Genflick enforces its own approvals (credit confirmation above the account's threshold, exact-post approval before publishing, Stop), sign-in needs a hand-added `mcp_servers.genflick` OAuth entry in config.yaml, and the bundled skill may read the Genflick sign-in email through your connected mailbox tools and open its link."
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/buildngrowsv/genflick-anakot/blob/96ff116f0fcad08caa75940c46dd741bf16ee6ea/README.md
 readme: true
 capabilities:

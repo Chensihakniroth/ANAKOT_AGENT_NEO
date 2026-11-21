@@ -7,7 +7,7 @@ description: "Conxt governed memory provider — recall before each turn (person
 maintainer: conxtdevelopmentteam
 tier: community
 category: memory
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/conxtdevelopmentteam/anakot-conxt#readme
 readme: true
 capabilities:

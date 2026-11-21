@@ -8,7 +8,7 @@ description: "An on-call engineer that never sleeps. Alerts trigger a read-only 
 maintainer: MuhammadMurtuzaHussain
 tier: community
 category: automation
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/MuhammadMurtuzaHussain/Anakot-Hackathon/blob/857ff062407f620f16edd2824bbe61570c2a4cfb/night-shift/README.md
 screenshots:
   - https://raw.githubusercontent.com/MuhammadMurtuzaHussain/Anakot-Hackathon/857ff062407f620f16edd2824bbe61570c2a4cfb/docs/screenshots/card-proposed.png

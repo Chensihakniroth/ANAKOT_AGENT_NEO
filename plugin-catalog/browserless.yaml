@@ -12,7 +12,7 @@ maintainer: browserless
 tier: community
 category: web
 docs_url: https://github.com/browserless/browserless-mcp/tree/600a5d689fa3f5bdcb5676ffc063b56d18e9bd7c/anakot
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.2"
 image: https://raw.githubusercontent.com/browserless/browserless-mcp/600a5d689fa3f5bdcb5676ffc063b56d18e9bd7c/anakot/assets/banner.jpg
 readme: true

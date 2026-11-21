@@ -6,7 +6,7 @@ description: "Hyprland computer use through the hypruse CLI: controls from the a
 maintainer: IlyasKhallouki
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/IlyasKhallouki/hypruse/blob/bcb047e4416f5fb79d29e4df0ce62f6a760a8e8c/integrations/anakot/anakot_hypruse/README.md
 version: "0.1.0"
 title: "hypruse"

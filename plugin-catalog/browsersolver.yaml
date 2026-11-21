@@ -7,7 +7,7 @@ description: "Fetch web pages behind Cloudflare, DataDome and similar protection
 maintainer: browsersolver
 tier: community
 category: web
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/browsersolver/anakot-plugin-browsersolver#readme
 readme: true
 platforms: []

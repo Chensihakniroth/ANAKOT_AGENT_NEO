@@ -19,7 +19,7 @@ description: >-
 maintainer: NikolaosArgy
 tier: community
 category: tools
-requires_anakot: ">=0.22"
+requires_hermes: ">=0.22"
 docs_url: https://github.com/NikolaosArgy/anakot-speckle/blob/c642a186274b6e89d3d4690eff9a3d45cf9a7ff6/README.md
 screenshots:
   - https://raw.githubusercontent.com/NikolaosArgy/anakot-speckle/c642a186274b6e89d3d4690eff9a3d45cf9a7ff6/assets/screenshots/model-in-pane.jpg

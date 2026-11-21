@@ -5,7 +5,7 @@ description: "Anakot stops repeating its own mistakes: learns every terminal com
 maintainer: 0xNomind
 tier: community
 category: tools
-requires_anakot: ">=0.23"
+requires_hermes: ">=0.23"
 version: "0.1.1"
 docs_url: https://github.com/0xNomind/precog#readme
 image: https://raw.githubusercontent.com/0xNomind/precog/6f989a2bdf257c35bfc9feb81eaf1ebc3ab77afb/assets/dashboard.jpg

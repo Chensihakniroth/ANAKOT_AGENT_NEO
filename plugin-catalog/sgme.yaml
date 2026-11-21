@@ -7,7 +7,7 @@ description: "SGME (拾光记忆) self-hosted long-term memory engine — tagged
 maintainer: freehul
 tier: community
 category: memory
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/freehul/sgme/blob/main/AI-INSTALL/README.md
 image: https://raw.githubusercontent.com/freehul/sgme/f12c9bfa2cc9f4a59420376cb91176abb882948b/assets/selling-point-01-trace.png
 screenshots:

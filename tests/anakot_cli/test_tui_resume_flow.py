@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 import pytest
-from anakot_cli import main_tui_launch
+from anakot_cli import main_tui_launch, session_worktree
 
 
 def _args(**overrides):
@@ -64,7 +64,7 @@ def test_exit_after_oneshot_flushes_stdio_and_calls_os_exit(
 
 
 def test_launch_tui_exports_model_provider_and_toolsets(monkeypatch, main_mod):
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     captured = {}
     active_path_during_call = None
 
@@ -111,7 +111,7 @@ def test_launch_tui_prefers_launch_cwd_over_inherited_anakot_cwd(monkeypatch, ma
     launch = tmp_path / "launch-project"
     stale.mkdir()
     launch.mkdir()
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     monkeypatch.setenv("ANAKOT_CWD", str(stale))
     monkeypatch.chdir(launch)
 
@@ -137,12 +137,12 @@ def test_launch_tui_worktree_still_outranks_the_launch_cwd(monkeypatch, main_mod
     launch = tmp_path / "launch-project"
     worktree.mkdir()
     launch.mkdir()
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     monkeypatch.setenv("ANAKOT_CWD", str(tmp_path))
     monkeypatch.chdir(launch)
 
     captured = {}
-    monkeypatch.setattr(main_tui_launch, "_setup_tui_worktree", lambda: {"path": str(worktree)})
+    monkeypatch.setattr(session_worktree, "create", lambda: {"path": str(worktree)})
     monkeypatch.setattr(main_tui_launch, "_make_tui_argv",
         lambda tui_dir, tui_dev, notices=None: (["node", "dist/entry.js"], Path(".")),
     )
@@ -172,7 +172,7 @@ def test_launch_tui_local_session_starts_in_launch_dir_not_terminal_cwd(monkeypa
         f"terminal:\n  backend: {backend}\n  cwd: {configured}\n", encoding="utf-8")
     monkeypatch.delenv("TERMINAL_ENV", raising=False)
     monkeypatch.delenv("TERMINAL_CWD", raising=False)
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     monkeypatch.setenv("ANAKOT_TUI_CWD", str(tmp_path))  # stale, from an outer launcher
     monkeypatch.chdir(launch)
 
@@ -203,7 +203,7 @@ def test_launch_tui_bypass_without_model_refuses_before_the_tui_starts(monkeypat
     say "pass --model" before spawning the TUI, as classic chat does."""
     monkeypatch.setenv(flag, "1")
     monkeypatch.delenv("ANAKOT_MODEL", raising=False)
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)  # never resolve a python over the real PATH
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)  # never resolve a python over the real PATH
     monkeypatch.setattr(main_tui_launch, "_make_tui_argv",
                         lambda tui_dir, tui_dev, notices=None: (["node", "dist/entry.js"], Path(".")))
     spawned = []

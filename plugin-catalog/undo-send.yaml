@@ -7,7 +7,7 @@ description: "Undo Send for your agent: outward-facing actions (anakot send / im
 maintainer: helenn-szn
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/helenn-szn/undo-send#readme
 readme: true
 platforms: []

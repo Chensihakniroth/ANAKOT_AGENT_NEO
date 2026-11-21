@@ -5,7 +5,7 @@ description: "Italian (Italiano) language pack for Anakot Agent — UI translati
 maintainer: Lazzdaycod
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Lazzdaycod/anakot-lang-it#readme
 version: "1.0.0"
 platforms: []

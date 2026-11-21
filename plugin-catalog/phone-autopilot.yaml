@@ -7,7 +7,7 @@ maintainer: jupist
 tier: community
 category: automation
 version: "0.1.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/jupist/phone-autopilot#readme
 platforms: []
 capabilities:

@@ -57,7 +57,7 @@ def test_desktop_build_reaches_the_managed_payload_with_commit_ref(tmp_path, mon
     assert env.get("ANAKOT_PAYLOAD_TAG", "") == ""
     assert env["ANAKOT_BUILD_COMMIT"] == sha
     assert env["GITHUB_SHA"] == sha
-    assert env["ANAKOT_PYTHON"] == str(binaries["python"])
+    assert env["HERMES_PYTHON"] == str(binaries["python"])
     assert env["ANAKOT_PAYLOAD_VERSION"] == "0.1.2"
     assert json.loads(env["ANAKOT_BUNDLE_ENV_JSON"]) == defaults
     assert "BUILD_NUMBER" not in env

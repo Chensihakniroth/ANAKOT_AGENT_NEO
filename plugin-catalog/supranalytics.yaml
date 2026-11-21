@@ -8,7 +8,7 @@ maintainer: aniketmohite
 tier: community
 category: tools
 docs_url: https://supranalytics.app/docs/mcp
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 capabilities:

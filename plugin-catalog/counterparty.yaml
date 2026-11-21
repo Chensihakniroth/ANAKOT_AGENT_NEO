@@ -7,7 +7,7 @@ maintainer: Mattbusel
 tier: community
 category: tools
 version: "0.1.1"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Mattbusel/anakot-counterparty
 image: https://raw.githubusercontent.com/Mattbusel/anakot-counterparty/5527f523a33ccc71bcd7ea8a65c00538e4b42fdf/assets/card.png
 readme: true

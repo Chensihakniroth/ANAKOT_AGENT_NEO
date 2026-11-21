@@ -93,7 +93,7 @@ describe('browser-hosted Desktop voice streams', () => {
     expect(others).toEqual([])
     expect(mint.url.pathname).toBe('/api/webapp/socket-ticket')
     expect(mint.url.searchParams.get('socket')).toBe('transcribe-stream')
-    expect(new Headers(mint.init?.headers).get('X-Anakot-Session-Token')).toBe('served-token')
+    expect(new Headers(mint.init?.headers).get('X-Hermes-Session-Token')).toBe('served-token')
   })
 
   it('leaves the gateway socket on its own ticket', async () => {

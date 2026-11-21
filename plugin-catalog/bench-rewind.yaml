@@ -7,7 +7,7 @@ tier: community
 category: tools
 title: "Bench Rewind"
 docs_url: https://github.com/rusty4444/anakot-bench-rewind#readme
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.1.0"
 platforms: [linux, macos]
 screenshots:

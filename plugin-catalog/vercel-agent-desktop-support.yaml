@@ -9,7 +9,7 @@ tier: community
 category: automation
 docs_url: https://github.com/apoapostolov/anakot-agent-awesome-plugins/tree/main/public/vercel-agent-desktop-support
 version: "1.0.2"
-requires_anakot: ">=0.18.1"
+requires_hermes: ">=0.18.1"
 platforms: [windows]
 capabilities:
   provides_tools: [desktop_status, desktop_apps, desktop_snapshot, desktop_find, desktop_act, desktop_window, desktop_clipboard, desktop_batch, desktop_install]

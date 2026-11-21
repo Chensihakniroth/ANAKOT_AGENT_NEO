@@ -6,7 +6,7 @@ description: "Complete a packet of fillable PDFs inside Anakot Desktop. See each
 maintainer: ladyFaye1998
 tier: community
 category: desktop
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/ladyFaye1998/anakot-formwork#readme
 version: "0.1.0"
 readme: true

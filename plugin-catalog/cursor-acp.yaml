@@ -5,7 +5,7 @@ description: "Use your Cursor subscription models (Claude Opus/Sonnet 5.5, Compo
 maintainer: neerazz
 tier: community
 category: models
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/neerazz/anakot-cursor-acp#readme
 version: "0.1.2"
 readme: true

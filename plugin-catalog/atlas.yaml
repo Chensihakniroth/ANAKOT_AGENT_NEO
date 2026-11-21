@@ -7,7 +7,7 @@ description: "Keeps your Pursuits current across your AI Harnesses (Claude Code,
 maintainer: zhaidarbek
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/zhaidarbek/anakot-atlas/blob/main/atlas/README.md
 version: "0.1.0"
 platforms: [linux]

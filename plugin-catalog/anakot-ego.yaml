@@ -9,10 +9,10 @@ maintainer: Shawn Yuan
 tier: community
 category: tools
 docs_url: https://github.com/loop2zero/anakot-ego/tree/main/plugins/anakot-ego
-# plugin.json has no requires_anakot field (catalog rule 14). This entry is
+# plugin.json has no requires_hermes field (catalog rule 14). This entry is
 # the only floor. Live installer that will run validate: Anakot Agent v0.23.0
 # (2026.9.24). Do not raise this above 0.23.0 until a newer Anakot is confirmed.
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 # The plugin process runs wherever Anakot runs (Linux or macOS). The daemon
 # and ego(lite) need macOS. Empty would mean "all platforms".

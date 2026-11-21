@@ -6,7 +6,7 @@ description: "Shows the pages a turn searched or fetched as a 'Searched N pages'
 maintainer: ShowUNow
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/ShowUNow/anakot-search-sources#readme
 version: "0.2.0"
 platforms:

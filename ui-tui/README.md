@@ -16,7 +16,7 @@ The client entrypoint is `src/entry.tsx`. It exits early if `stdin` is not a TTY
 python -m tui_gateway.entry
 ```
 
-Interpreter resolution uses `ANAKOT_PYTHON`, supplied by the CLI launcher or
+Interpreter resolution uses `HERMES_PYTHON`, supplied by the CLI launcher or
 Nix wrapper. Direct development runs without that value use `python3` on PATH,
 or `python` on Windows. The TUI does not search `PYTHON`, `VIRTUAL_ENV`, or
 checkout venv directories for a different interpreter.
@@ -355,7 +355,7 @@ Current color overrides:
 
 ```text
 ui-tui/
-  packages/anakot-ink/   forked Ink renderer (local dep)
+  packages/hermes-ink/   forked Ink renderer (local dep)
   src/
     entry.tsx            TTY gate + render()
     app.tsx              top-level Ink tree, composes src/app/*
@@ -497,7 +497,7 @@ ui-tui/
       paste.ts                   bracketed paste snippet token regex
 
     types/
-      anakot-ink.d.ts            type declarations for @anakot/ink
+      hermes-ink.d.ts            type declarations for @anakot/ink
 
     __tests__/                   vitest suite
 ```

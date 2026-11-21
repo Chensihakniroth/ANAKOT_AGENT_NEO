@@ -16,7 +16,7 @@ description: >-
 maintainer: Obscurify-ai
 tier: community
 category: models
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Obscurify-ai/anakot-obscurify-provider#readme
 version: "1.0.0"
 image: https://raw.githubusercontent.com/Obscurify-ai/anakot-obscurify-provider/72ce6f5cf6d297c01d23198a84c21b561fa0698c/docs/card.png

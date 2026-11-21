@@ -26,7 +26,7 @@ tier: community
 category: tools
 docs_url: https://github.com/ctmakc/anakot-redactgate#readme
 version: "1.0.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 image: https://raw.githubusercontent.com/ctmakc/anakot-redactgate/d4bb87d78381d0514cd8dd74525fea98a5b46d62/docs/banner.png
 screenshots:
   - https://raw.githubusercontent.com/ctmakc/anakot-redactgate/d4bb87d78381d0514cd8dd74525fea98a5b46d62/docs/screenshots/01-status-harden.png

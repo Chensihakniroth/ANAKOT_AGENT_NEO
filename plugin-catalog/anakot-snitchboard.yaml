@@ -50,7 +50,7 @@ description: >-
 maintainer: NeumannTechTips
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/NeumannTechTips/anakot-snitchboard/blob/6104d95d461f420bd1b897a9a685f184c332bbea/README.md
 platforms: [linux]
 image: https://raw.githubusercontent.com/NeumannTechTips/anakot-snitchboard/6104d95d461f420bd1b897a9a685f184c332bbea/docs/assets/banner.png

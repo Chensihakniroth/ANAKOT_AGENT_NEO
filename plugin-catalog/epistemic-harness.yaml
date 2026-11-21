@@ -7,7 +7,7 @@ description: "Helps a Anakot agent record a prediction before a selected check, 
 maintainer: quangphucqp
 tier: community
 category: general
-requires_anakot: ">=0.21,<1.0"
+requires_hermes: ">=0.21,<1.0"
 platforms:
   - linux
   - macos

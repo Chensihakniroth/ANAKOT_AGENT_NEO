@@ -24,7 +24,7 @@ description: >-
 maintainer: AgentMadeThis
 tier: community
 category: platform
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/AgentMadeThis/anakot-pocket/tree/224c9f9b57509ce03da7c9663bd8298a56d1376e/plugin
 readme: true
 platforms: [linux]

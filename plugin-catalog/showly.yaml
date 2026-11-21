@@ -7,7 +7,7 @@ description: "Preview, publish, and manage websites hosted on Showly from Anakot
 maintainer: cuboteam
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.7.2"
 docs_url: https://showly.ai/docs/mcp/overview
 platforms: []

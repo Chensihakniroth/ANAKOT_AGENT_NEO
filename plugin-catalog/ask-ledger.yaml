@@ -8,7 +8,7 @@ description: "Keeps a durable ledger of what you asked and promised: each messag
 maintainer: bhaskarduvvuri
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/bhaskarduvvuri/anakot-ask-ledger#readme
 platforms: [linux, macos]
 capabilities:

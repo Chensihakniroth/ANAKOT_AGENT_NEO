@@ -5,7 +5,7 @@ description: "Microsoft-Decision-1 (Azure AI Foundry System One) decision provid
 maintainer: guglxni
 tier: community
 category: automation
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/guglxni/ms-decision-provider#readme
 platforms: []
 capabilities:

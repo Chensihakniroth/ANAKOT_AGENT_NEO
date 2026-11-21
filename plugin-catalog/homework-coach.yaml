@@ -6,7 +6,7 @@ description: "Homework photos and teacher updates become checked daily math prac
 maintainer: andrewjsoukup
 tier: community
 category: tools
-requires_anakot: '>=0.22.5'
+requires_hermes: '>=0.22.5'
 version: "0.2.4"
 docs_url: https://github.com/andrewjsoukup/homework-coach#readme
 image: https://raw.githubusercontent.com/andrewjsoukup/homework-coach/79ff46a3567c72995b58acfb63d8ec7640f028ac/docs/screenshots/banner.png

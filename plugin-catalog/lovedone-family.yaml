@@ -9,7 +9,7 @@ maintainer: Terahertz, Inc.
 tier: community
 category: tools
 docs_url: https://inbox.lovedone.app/agents
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: false
 platforms: []
 capabilities:

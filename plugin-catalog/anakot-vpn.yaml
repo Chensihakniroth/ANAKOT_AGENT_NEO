@@ -5,7 +5,7 @@ description: "Named network exits for the agent's browser: ask it to browse from
 maintainer: Maytrella007
 tier: community
 category: web
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Maytrella007/Anakot-VPN#readme
 version: "0.3.0"
 platforms:

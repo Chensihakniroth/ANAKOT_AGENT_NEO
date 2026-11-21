@@ -6,7 +6,7 @@ description: "Owner-approved universal phone pairing and bundled read-only Live 
 maintainer: tony-simons-aiowa
 tier: community
 category: platform
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.3.1"
 readme: true
 platforms: [linux, macos]

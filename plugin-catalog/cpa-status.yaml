@@ -6,7 +6,7 @@ description: "/cpa in chat for CLIProxyAPI (CPA) pools: account health per provi
 maintainer: duu261
 tier: community
 category: models
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/duu261/anakot-cliproxyapi-provider#cpa-pool-status-companion-plugin
 version: "0.8.1"
 capabilities:

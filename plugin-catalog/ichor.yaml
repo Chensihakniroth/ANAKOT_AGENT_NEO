@@ -6,7 +6,7 @@ description: "Catches the moments you correct Anakot (a correction, /retry or /u
 maintainer: mystiquemide
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.2"
 screenshots:
   - https://github.com/mystiquemide/ichor/releases/download/v0.1.2/ichor-card.png

@@ -5,7 +5,7 @@ description: "Watch public wallets and draw live on-chain money flows as glowing
 maintainer: ayinmodeolarewaju-bot
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "1.1.0"
 title: Flowlight
 docs_url: https://github.com/ayinmodeolarewaju-bot/anakot-flowlight

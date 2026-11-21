@@ -7,7 +7,7 @@ description: "[ALPHA] Experimental Anakot guardrail (prototype, not standalone s
 maintainer: elianjuan-g
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/elianjuan-g/anakot-manas-aegis
 known_issues:
   - "Alpha release: prototype guardrail, not standalone security; opt-in, test environments only."

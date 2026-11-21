@@ -5,7 +5,7 @@ import { isBrowserHostedDesktop } from './platform'
 
 type HostWindow = Window & {
   __ANAKOT_AUTH_REQUIRED__?: boolean
-  __ANAKOT_SESSION_TOKEN__?: string
+  __HERMES_SESSION_TOKEN__?: string
   __ANAKOT_UI_SURFACE__?: string
 }
 
@@ -13,7 +13,7 @@ describe('isBrowserHostedDesktop', () => {
   beforeEach(() => {
     document.documentElement.removeAttribute('data-anakot-desktop-host')
     const win = window as HostWindow
-    delete win.__ANAKOT_SESSION_TOKEN__
+    delete win.__HERMES_SESSION_TOKEN__
     delete win.__ANAKOT_AUTH_REQUIRED__
     delete win.__ANAKOT_UI_SURFACE__
   })
@@ -39,7 +39,7 @@ describe('isBrowserHostedDesktop', () => {
   // has no gateway route (the ticket route is the Webapp's): it must not install a bridge that can
   // never connect.
   it('does not treat a bare injected session token as a browser host', () => {
-    ;(window as HostWindow).__ANAKOT_SESSION_TOKEN__ = 'served-token'
+    ;(window as HostWindow).__HERMES_SESSION_TOKEN__ = 'served-token'
     expect(isBrowserHostedDesktop()).toBe(false)
   })
 

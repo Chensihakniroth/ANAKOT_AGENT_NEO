@@ -5,7 +5,7 @@ description: "Source-linked Anakot hackathon and catalog preflight with explicit
 maintainer: "Brianmacu-BMS"
 tier: "community"
 category: "tools"
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.3.0"
 platforms: ["linux"]
 capabilities:

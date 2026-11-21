@@ -8,7 +8,7 @@ description: "Code memory on every Anakot turn, with no tool call. Before the mo
 maintainer: dfrostar
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://docs.neuralmind.uk/use-cases/anakot-agent
 readme: true
 platforms: []

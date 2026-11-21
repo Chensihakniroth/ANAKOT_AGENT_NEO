@@ -22,7 +22,7 @@ description: >-
 maintainer: justrunme
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.2"
 image: https://raw.githubusercontent.com/justrunme/anakot-airlock-plugin/a35cf831045450e4f207a6843e2cbf912151236c/docs/img/banner.jpg
 docs_url: https://github.com/justrunme/anakot-airlock-plugin

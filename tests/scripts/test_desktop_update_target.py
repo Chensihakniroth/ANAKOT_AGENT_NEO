@@ -31,7 +31,7 @@ def main():
     previous = receipt.read_text(encoding='utf-8') if receipt.exists() else ''
     with receipt.open('a', encoding='utf-8') as stream:
         stream.write(json.dumps({'argv': sys.argv[1:], 'home': os.environ.get('ANAKOT_HOME'),
-                                 'install_root': os.environ.get('ANAKOT_INSTALL_ROOT'),
+                                 'install_root': os.environ.get('HERMES_INSTALL_ROOT'),
                                  'cwd': os.getcwd()}) + '\\n')
     print('Desktop build failed') if os.environ.get('HANDOFF_EXIT') else None
     sys.exit(int(os.environ['HANDOFF_EXIT']) if 'HANDOFF_EXIT' in os.environ else (1 if not previous else 0))
@@ -69,7 +69,7 @@ def _run_handoff(tmp_path, target, *, windows=False, inherited_home=True, modern
         **os.environ,
         "HOME": str(tmp_path),
         "TMPDIR": str(tmp_path),
-        "ANAKOT_INSTALL_ROOT": str(install),
+        "HERMES_INSTALL_ROOT": str(install),
         "HANDOFF_CAPTURE": str(capture),
     }
     env.pop("PYTHONPATH", None)

@@ -182,8 +182,9 @@ def _build_child_env(*, rpc_endpoint: str, rpc_token: str, tmpdir: str,
     _pp_parts = [tmpdir]
     if _runtime_path is not None:
         _pp_parts.append(_runtime_path)
-    if _uses_anakot_python_environment(child_python):
-        _pp_parts.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    if _uses_hermes_python_environment(child_python):
+        from anakot_cli._startup_fast import project_root_str
+        _pp_parts.append(project_root_str())
     elif child_python not in _external_env_logged:
         # Surface once per interpreter so "import anakot_constants fails" is diagnosable.
         _external_env_logged.add(child_python)
@@ -252,7 +253,7 @@ def _python_environment_prefix(python_path: str) -> str:
     return ""
 
 
-def _uses_anakot_python_environment(python_path: str) -> bool:
+def _uses_hermes_python_environment(python_path: str) -> bool:
     """Whether *python_path* belongs to Anakot's active Python environment. Short-circuits when
     it IS the running interpreter (by path or realpath — covers ``uv run`` venvs) so no probe
     runs on the default strict path and a flaky probe can never drop the anakot root."""

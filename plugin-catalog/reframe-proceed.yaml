@@ -19,4 +19,4 @@ capabilities:
   provides_hooks: []
   provides_middleware: []
   requires_env: []
-requires_anakot: ">=0.20.4"
+requires_hermes: ">=0.20.4"

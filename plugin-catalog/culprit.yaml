@@ -7,7 +7,7 @@ description: "git bisect for your agent. Records a snapshot after every tool cal
 maintainer: Rizal
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/d0txyz/anakot-culprit/tree/9dd7662ceb0d25475fac878cc1499207426c660b#readme
 readme: true
 platforms: []

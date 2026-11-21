@@ -7,7 +7,7 @@ maintainer: offense-research
 tier: community
 category: tools
 title: Compound Security
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 capabilities:
   provides_tools: []

@@ -7,7 +7,7 @@ description: "Checks each group in a CSV report against a pinned source and seal
 maintainer: Venkat-RJ
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 platforms: [macos, linux]
 capabilities:
   provides_tools: [tallyseal_check]

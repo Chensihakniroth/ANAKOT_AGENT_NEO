@@ -6,7 +6,7 @@ description: "Each morning one letter arrives with yesterday's pageviews, visito
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.4'
+requires_hermes: '>=0.21.4'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-umami-digest#readme
 version: '0.1.0'
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-umami-digest/b20529c1c87791749b49c3b3f03838dcb62397cd/assets/catalog-banner.png

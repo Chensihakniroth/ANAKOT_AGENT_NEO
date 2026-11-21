@@ -8,7 +8,7 @@ description: >-
 maintainer: ngelik
 tier: community
 category: voice
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://www.ttsbuddy.com/docs/developers/anakot-plugin
 version: "0.2.0"
 readme: true

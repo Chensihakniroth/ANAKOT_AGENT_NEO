@@ -121,10 +121,12 @@ def anakot_npmrc() -> Path | None:
 
 
 def user_npmrc(env: Mapping[str, str]) -> Path:
-    """The user npmrc Anakot's npm and pnpm children read: ``npm_config_userconfig`` (any case),
-    else ``anakot_npmrc()`` (``source_build_env`` points ``NPM_CONFIG_USERCONFIG`` at it), else
-    ``~/.npmrc``. As npm's userconfig, the Anakot file replaces ``~/.npmrc``; the two never merge."""
-    explicit = next((value for key, value in env.items() if key.lower() == "npm_config_userconfig" and value), "")
+    """The user npmrc Anakot's npm and pnpm children read: a non-empty ``npm_config_userconfig``
+    (that exact name first, as pnpm and the desktop read it, then any case), else ``anakot_npmrc()``
+    (``source_build_env`` points ``NPM_CONFIG_USERCONFIG`` at it), else ``~/.npmrc``. As npm's
+    userconfig, the Anakot file replaces ``~/.npmrc``; the two never merge."""
+    names = sorted((key for key in env if key.lower() == "npm_config_userconfig"), key=lambda key: key != "npm_config_userconfig")
+    explicit = next((env[key] for key in names if env[key]), "")
     if explicit:
         return Path(explicit).expanduser()
     return anakot_npmrc() or Path.home() / ".npmrc"

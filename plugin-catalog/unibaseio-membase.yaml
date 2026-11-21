@@ -7,7 +7,7 @@ description: "Long-term memory for you and your AI from Membase (membase.com, by
 maintainer: unibaseio
 tier: community
 category: memory
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.3.0"
 docs_url: https://github.com/unibaseio/membase/tree/main/integrations/anakot#readme
 readme: true

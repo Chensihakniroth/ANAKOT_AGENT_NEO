@@ -7,7 +7,7 @@ description: "Durable progress checkpoints for long, budget-capped Anakot runs: 
 maintainer: mbgulden
 tier: community
 category: automation
-requires_anakot: ">=0.20.5"
+requires_hermes: ">=0.20.5"
 version: "0.3.0"
 docs_url: https://github.com/mbgulden/agent-checkpoint/blob/a2bff52e6528260a27aea8de0e3032d3c3ce4887/README.md
 platforms: []

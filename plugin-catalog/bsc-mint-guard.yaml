@@ -6,7 +6,7 @@ description: "Safety-check a BSC ERC-721 free mint before you mint. Read-only on
 maintainer: Fuma Ops II
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "1.0.0"
 screenshots: []
 readme: true

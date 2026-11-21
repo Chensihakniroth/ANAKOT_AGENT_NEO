@@ -50,7 +50,7 @@ runs:
         _SOURCE: ${{ steps.source.outputs.source }}
       run: |
         set -euo pipefail
-        "$ANAKOT_PYTHON" - <<'PY'
+        "$HERMES_PYTHON" - <<'PY'
         import os
         from pathlib import Path
         from pm import build_environment

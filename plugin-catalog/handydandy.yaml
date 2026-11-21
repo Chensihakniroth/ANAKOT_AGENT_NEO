@@ -6,7 +6,7 @@ description: "Session-size notices and structured handoffs for long Anakot sessi
 maintainer: Deploy Axiom
 tier: community
 category: automation
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.4.1"
 readme: true
 platforms: [macos, linux]

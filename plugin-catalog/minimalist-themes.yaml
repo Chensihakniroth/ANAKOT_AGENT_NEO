@@ -6,7 +6,7 @@ description: "Eighteen warm, readable palettes for Anakot Desktop, assigned nati
 maintainer: mykeura
 tier: community
 category: desktop
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 docs_url: https://github.com/mykeura/minimalist-themes-for-anakot#readme
 version: "1.5.1"
 image: https://raw.githubusercontent.com/mykeura/minimalist-themes-for-anakot/54fa3ffb9728a42faf842758f20aa64c01acdb76/images/minimalist-themes.png

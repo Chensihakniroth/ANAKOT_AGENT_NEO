@@ -6,7 +6,7 @@ description: Practice mate in one to four or play Anakot with piece odds on an i
 maintainer: oppai
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.2.0"
 capabilities:
   provides_tools:

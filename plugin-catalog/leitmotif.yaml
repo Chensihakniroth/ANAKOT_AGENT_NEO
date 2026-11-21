@@ -5,7 +5,7 @@ description: "Hear what your agent is doing. Every tool call becomes a short mus
 maintainer: JustSteez
 tier: community
 category: voice
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/JustSteez/anakot-leitmotif#readme
 version: "0.1.1"
 readme: true

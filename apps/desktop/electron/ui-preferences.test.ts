@@ -13,7 +13,7 @@ import { readUiPreferences, uiPreferencesPath, uiPreferencesRoot, writeUiPrefere
 // Native Desktop (this module) and the Webapp's Python server must land on ONE
 // file and merge into it without losing each other's keys (#145213).
 const repo = path.resolve(import.meta.dirname, '../../..')
-const python = process.env.ANAKOT_PYTHON || 'python3'
+const python = process.env.HERMES_PYTHON || 'python3'
 const homes: string[] = []
 
 afterEach(() => {

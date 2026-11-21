@@ -3,7 +3,6 @@ import { act, cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { useTheme } from './context'
-import { DEFAULT_SKIN_NAME } from './presets'
 import { skinToDesktopTheme } from './skin'
 
 // What the gateway and the Electron bridge report for a STOCK config
@@ -72,22 +71,19 @@ describe('Classic Anakot is an explicit Desktop pick, never inferred from stock 
   it.each([
     ['display.skin: default', stockDefaultSkin],
     ['display.skin unset', null]
-  ])(
-    'a stock user (%s) with no Desktop pick paints the default skin on boot, connect and relaunch',
-    async (_label, local) => {
-      let run = await launch(local)
-      expect(run.bootPaint).toBe(DEFAULT_SKIN_NAME)
-      run.connect()
-      run.connect() // reconnect re-seed
-      expect(run.api.theme?.themeName).toBe(DEFAULT_SKIN_NAME)
-      expect(paintedSkin()).toBe(DEFAULT_SKIN_NAME)
+  ])('a stock user (%s) with no Desktop pick paints Nous on boot, connect and relaunch', async (_label, local) => {
+    let run = await launch(local)
+    expect(run.bootPaint).toBe('nous')
+    run.connect()
+    run.connect() // reconnect re-seed
+    expect(run.api.theme?.themeName).toBe('nous')
+    expect(paintedSkin()).toBe('nous')
 
-      run = await launch(local)
-      expect(run.bootPaint).toBe(DEFAULT_SKIN_NAME)
-      run.connect()
-      expect(paintedSkin()).toBe(DEFAULT_SKIN_NAME)
-    }
-  )
+    run = await launch(local)
+    expect(run.bootPaint).toBe('nous')
+    run.connect()
+    expect(paintedSkin()).toBe('nous')
+  })
 
   it('a Classic pick paints gold/navy (dark mode) and survives connect, reconnect and relaunch; a later Nous pick sticks', async () => {
     let run = await launch(stockDefaultSkin)
@@ -109,8 +105,6 @@ describe('Classic Anakot is an explicit Desktop pick, never inferred from stock 
     expect(paintedSkin()).toBe('classic')
     expect(cssVar('--theme-background-seed')).toBe('#1a1a2e')
 
-    // `nous` is now a NON-default pick, which is exactly what makes this a real
-    // persistence assertion rather than a restatement of the default.
     act(() => run.api.theme?.setTheme('nous'))
     run = await launch(stockDefaultSkin)
     run.connect()
@@ -118,7 +112,7 @@ describe('Classic Anakot is an explicit Desktop pick, never inferred from stock 
     expect(paintedSkin()).toBe('nous')
   })
 
-  it('/skin gold and /skin anakot select Classic; /skin default stays the Desktop default', async () => {
+  it('/skin gold and /skin anakot select Classic; /skin default stays the Desktop default (Nous)', async () => {
     const run = await launch(stockDefaultSkin)
 
     act(() => void run.api.skin?.('gold'))
@@ -129,7 +123,7 @@ describe('Classic Anakot is an explicit Desktop pick, never inferred from stock 
     expect(run.api.theme?.themeName).toBe('classic')
 
     act(() => void run.api.skin?.('default'))
-    expect(run.api.theme?.themeName).toBe(DEFAULT_SKIN_NAME)
+    expect(run.api.theme?.themeName).toBe('nous')
   })
 
   it('a cache left by the reverted #130015 build (CLI `default` as "Classic Anakot") shows ONE Classic and is purged', async () => {

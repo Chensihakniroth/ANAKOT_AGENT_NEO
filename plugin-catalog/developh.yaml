@@ -8,7 +8,7 @@ maintainer: Developh
 tier: community
 category: web
 docs_url: https://github.com/Developh/skills#readme
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

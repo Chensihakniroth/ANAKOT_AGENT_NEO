@@ -60,8 +60,8 @@ def test_source_build_uses_selected_python_for_isolated_icon_child(tmp_path, mon
     monkeypatch.syspath_prepend(str(selected))
 
     env = source_build_env()
-    assert env["ANAKOT_PYTHON"] == str(venv_python(venv))
-    subprocess.run([env["ANAKOT_PYTHON"], "-I", "-c",
+    assert env["HERMES_PYTHON"] == str(venv_python(venv))
+    subprocess.run([env["HERMES_PYTHON"], "-I", "-c",
                     "import icon_dependency; assert icon_dependency.ready"], check=True)
 
 
@@ -102,7 +102,7 @@ def source_checkout(tmp_path, monkeypatch):
     monkeypatch.setenv("ANAKOT_RUNTIME_DIR", str(tmp_path / "tools"))
     monkeypatch.setenv("ANAKOT_DISABLE_LAZY_INSTALLS", "0")
     monkeypatch.setenv("ESBUILD_BINARY_PATH", "/wrong/esbuild")
-    monkeypatch.setenv("ANAKOT_PYTHON", "/wrong/python")
+    monkeypatch.setenv("HERMES_PYTHON", "/wrong/python")
     (home / "npmrc").write_text(
         "fund=false\nnode-get-windows-binary-host-mirror=https://mirror.invalid/get-windows/\n"
         "//registry.invalid/:_authToken=npmrc-secret\nelectron-mirror=${MIRROR_BASE}/electron/\n"
@@ -150,7 +150,7 @@ def source_checkout(tmp_path, monkeypatch):
     (root / "log.mjs").write_text(
         "import { appendFileSync } from 'node:fs';\n"
         "appendFileSync('events.jsonl', JSON.stringify({step: process.argv[2], "
-        "python: process.env.ANAKOT_PYTHON, ci: process.env.CI, "
+        "python: process.env.HERMES_PYTHON, ci: process.env.CI, "
         "esbuild: process.env.ESBUILD_BINARY_PATH, "
         "npmrc: process.env.NPM_CONFIG_USERCONFIG, store: process.env.pnpm_config_store_dir, "
         "mirror: process.env.npm_config_node_get_windows_binary_host_mirror, "
@@ -244,7 +244,7 @@ def test_preparation_reuses_only_the_exact_completed_workspace_union(source_chec
     prepare_source_dependencies(root, ("ui-tui", "web"), env=env)
     first = _events(root)
     assert [event["step"] for event in first] == ["deps"]
-    assert first[0]["python"] == env["ANAKOT_PYTHON"]
+    assert first[0]["python"] == env["HERMES_PYTHON"]
     assert first[0]["ci"] == "1"
     assert "esbuild" not in first[0]
     assert first[0]["npmrc"] == str(Path(os.environ["ANAKOT_HOME"]) / "npmrc")

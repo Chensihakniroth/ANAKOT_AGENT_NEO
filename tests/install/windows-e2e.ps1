@@ -124,7 +124,7 @@ $env:PYTHONIOENCODING = "utf-8"
 $OutputEncoding = [Console]::OutputEncoding
 
 # One PM tool store per leg. setup-pm exports ANAKOT_RUNTIME_DIR (its own
-# store) and ANAKOT_PYTHON for this job's tooling. A user's machine has one
+# store) and HERMES_PYTHON for this job's tooling. A user's machine has one
 # store, <ANAKOT_HOME>\tools, and the desktop smoke already launches the app
 # that way (smoke-env.mjs drops every ANAKOT_* override). When install.ps1
 # and `anakot update` saw the job's store while the smoke did not, a leg
@@ -133,8 +133,8 @@ $OutputEncoding = [Console]::OutputEncoding
 # update, chat) sees the job's variables; the driver keeps setup-pm only
 # through $DriverPython. PATH keeps setup-pm's tools, as older installers
 # expect uv/ripgrep there.
-$DriverPython = if ($env:ANAKOT_PYTHON) { $env:ANAKOT_PYTHON } else { (Get-Command python.exe -ErrorAction Stop).Source }
-foreach ($jobOnly in @('ANAKOT_RUNTIME_DIR', 'ANAKOT_PYTHON', 'VIRTUAL_ENV')) {
+$DriverPython = if ($env:HERMES_PYTHON) { $env:HERMES_PYTHON } else { (Get-Command python.exe -ErrorAction Stop).Source }
+foreach ($jobOnly in @('ANAKOT_RUNTIME_DIR', 'HERMES_PYTHON', 'VIRTUAL_ENV')) {
     if (Test-Path -LiteralPath "env:$jobOnly") { Remove-Item -LiteralPath "env:$jobOnly" }
 }
 

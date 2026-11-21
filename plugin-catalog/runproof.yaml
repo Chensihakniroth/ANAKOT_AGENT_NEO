@@ -6,7 +6,7 @@ maintainer: "Biznomad"
 description: Verify a Anakot cron report and release its exact bytes to a local outbox once per workflow slot.
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.2.0"
 readme: true
 platforms: []

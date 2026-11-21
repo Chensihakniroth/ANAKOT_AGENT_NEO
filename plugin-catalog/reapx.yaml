@@ -6,7 +6,7 @@ description: "Turn the bookmarks you saved on X into ready-to-load, registered A
 maintainer: BigBossRabbit
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 version: "1.0.0"
 platforms: []
 capabilities:

@@ -40,7 +40,7 @@ description: >-
 maintainer: pjt222
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/pjt222/agent-almanac-first-aid/blob/4ddc7e7422ee21fc637323ba0acdba09212117e9/README.md
 platforms: [linux, macos, windows]
 known_issues:

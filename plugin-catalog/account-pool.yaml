@@ -8,7 +8,7 @@ description: "Run several accounts of one provider in Anakot' credential pool: `
 maintainer: roqianjas
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/roqianjas/anakot-account-pool/blob/7a4fc9fd976ed68de9e6f70ba326ef2053741e69/README.md
 platforms: [linux, windows]
 screenshots:

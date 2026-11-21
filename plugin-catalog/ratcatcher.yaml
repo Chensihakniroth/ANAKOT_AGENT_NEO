@@ -6,7 +6,7 @@ maintainer: Truthgeng
 tier: community
 category: platform
 version: "0.4.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 image: https://raw.githubusercontent.com/Truthgeng/ratcatcher/04b5a548bb38791d559a451a56dda723ea1b9f94/assets/banner.jpg
 screenshots:
   - https://raw.githubusercontent.com/Truthgeng/ratcatcher/04b5a548bb38791d559a451a56dda723ea1b9f94/assets/screenshots/1-scam-removed-and-reported.png

@@ -7,7 +7,7 @@ description: "Read-only observability for Anakot Desktop: what each session cost
 maintainer: abualnassr
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/abualnassr/anakot-session-lens/blob/69bc2b183fd376acf27256cd9b43f578a16388ae/README.md
 image: https://raw.githubusercontent.com/abualnassr/anakot-session-lens/69bc2b183fd376acf27256cd9b43f578a16388ae/docs/catalog-banner.png
 screenshots:

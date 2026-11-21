@@ -7,7 +7,7 @@ description: >-
 maintainer: minhng92
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "1.0.0"
 docs_url: https://github.com/minhng92/skill-stats/blob/4e412bcdc10f833ee11a0425e673695e55fd3472/README.md
 readme: true

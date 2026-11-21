@@ -8,7 +8,7 @@ maintainer: HornLib
 tier: community
 category: tools
 docs_url: https://hornlib.com
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://raw.githubusercontent.com/HornLib/mcp-server/50d9ea46d30f57c4ce679e60e745fc04c185c419/assets/cover.png
 screenshots:
   - https://raw.githubusercontent.com/HornLib/mcp-server/50d9ea46d30f57c4ce679e60e745fc04c185c419/assets/screenshot.png

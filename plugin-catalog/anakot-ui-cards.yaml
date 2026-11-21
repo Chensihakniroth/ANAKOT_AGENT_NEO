@@ -7,7 +7,7 @@ tier: community
 category: desktop
 title: HUI+ Cards
 version: "0.1.0"
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 image: https://raw.githubusercontent.com/robbyczgw-cla/anakot-ui-cards/c40df4d41cd5439cf4902995fd4a9e5505483f25/assets/banner.jpg
 screenshots:
   - https://raw.githubusercontent.com/robbyczgw-cla/anakot-ui-cards/c40df4d41cd5439cf4902995fd4a9e5505483f25/assets/cards/plan.jpg

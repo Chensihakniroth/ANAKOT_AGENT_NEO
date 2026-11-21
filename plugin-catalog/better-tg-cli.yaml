@@ -7,7 +7,7 @@ description: "Telegram on your own account (not a bot) through a local MCP serve
 maintainer: TheVilfer
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/TheVilfer/better-tg-cli/blob/0a73b787509dd385c9ef555bc16ed2e34d9ab4af/agent-plugin/README.md
 version: "0.39.6"
 platforms: []

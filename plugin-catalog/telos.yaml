@@ -1,4 +1,4 @@
-# Submit as plugin-catalog/telos.yaml. Keep sha, version and requires_anakot in step with the published release.
+# Submit as plugin-catalog/telos.yaml. Keep sha, version and requires_hermes in step with the published release.
 name: telos
 title: Telos
 repo: https://github.com/TelosPlatforms/anakot-telos-provider
@@ -8,7 +8,7 @@ description: Telos — workspace routers and canonical models through one OpenAI
 maintainer: TelosPlatforms
 tier: community
 category: models
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/TelosPlatforms/anakot-telos-provider#readme
 known_issues:
   - The model pickers show IDs such as route:orbit; Anakot does not yet render provider display names.

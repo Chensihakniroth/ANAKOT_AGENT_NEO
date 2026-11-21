@@ -1,4 +1,4 @@
-"""Anakot Achievements dashboard plugin backend, mounted at /api/plugins/anakot-achievements/.
+"""Anakot Achievements dashboard plugin backend, mounted at /api/plugins/hermes-achievements/.
 
 Scans the session history into per-session stats (checkpointed by fingerprint so warm
 scans are cheap), aggregates them, and evaluates the tiered / multi-condition catalog.
@@ -145,15 +145,15 @@ _CHECKPOINT_SCHEMA_VERSION = 2
 
 
 def _data_dir() -> Path:
-    """Durable data root (``<anakot home>/plugin-data/anakot-achievements/``). State used to
+    """Durable data root (``<anakot home>/plugin-data/hermes-achievements/``). State used to
     live in the install tree and died on ``anakot plugins remove``/``update``; legacy files
     migrate on first read (see ``_data_file``)."""
     try:
         from plugins.plugin_storage import plugin_data_dir
-        return plugin_data_dir("anakot-achievements")
+        return plugin_data_dir("hermes-achievements")
     except Exception:
         # Standalone dashboard import (no plugins package on sys.path): same layout, computed locally.
-        root = get_anakot_home() / "plugin-data" / "anakot-achievements"
+        root = get_anakot_home() / "plugin-data" / "hermes-achievements"
         root.mkdir(parents=True, exist_ok=True)
         return root
 
@@ -161,7 +161,7 @@ def _data_dir() -> Path:
 def _data_file(name: str) -> Path:
     path = _data_dir() / name
     if not path.exists():
-        legacy = get_anakot_home() / "plugins" / "anakot-achievements" / name
+        legacy = get_anakot_home() / "plugins" / "hermes-achievements" / name
         if legacy.exists():
             try:
                 # Two statements so the read (utf-8-sig, tolerates a BOM)
@@ -810,7 +810,7 @@ def _start_background_scan() -> None:
         existing = _BACKGROUND_SCAN_THREAD
         if existing is not None and existing.is_alive():
             return
-        thread = threading.Thread(target=_run_scan_and_update_cache, kwargs={"publish_partial_snapshots": True}, name="anakot-achievements-scan", daemon=True)
+        thread = threading.Thread(target=_run_scan_and_update_cache, kwargs={"publish_partial_snapshots": True}, name="hermes-achievements-scan", daemon=True)
         _BACKGROUND_SCAN_THREAD = thread
         thread.start()
 

@@ -23,7 +23,8 @@ def main() -> None:
     root = Path(os.environ["ANAKOT_HOME"]) / "anakot-agent"
     root.mkdir(parents=True)
     for name in (
-        "anakot_cli", "anakot_platform", "pm", "agent", "tools", "gateway", "tui_gateway", "cron", "plugins",
+        "anakot_agent", "anakot_cli", "anakot_platform", "pm", "agent", "tools", "gateway", "tui_gateway", "cron",
+        "plugins",
     ):
         shutil.copytree(repository / name, root / name,
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))

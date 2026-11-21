@@ -12,7 +12,7 @@ tier: community
 category: general
 docs_url: https://github.com/MOTHR/anakot-security-suite#readme
 version: "0.8.2"
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 readme: true
 platforms: []
 known_issues:

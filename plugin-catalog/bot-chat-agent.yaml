@@ -7,7 +7,7 @@ description: "Anakot Bots: a calmer Anakot Bot Chat that still does the work: sh
 maintainer: Tormen28
 category: desktop
 tier: community
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.3.0"
 docs_url: https://github.com/Tormen28/anakot-bot-chat-agent#readme
 image: https://raw.githubusercontent.com/Tormen28/anakot-bot-chat-agent/76e83e83517ba2a1a2d61d4757ed13c2ad3f1639/docs/anakot-bots-030-nous.jpg

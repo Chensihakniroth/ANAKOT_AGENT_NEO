@@ -6,7 +6,7 @@ description: "Inspect local Anakot request dumps, messages, tool calls, schemas,
 maintainer: TDV Alinsa
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/alinsavix/anakot-request-dump-viewer/blob/3d94c6da86b0e16107be569e6d91bde772a4e8a3/README.md
 readme: true
 screenshots:

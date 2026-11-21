@@ -8,7 +8,7 @@ description: "Computer-use provider for Anakot: with computer_use.backend: alans
 maintainer: capthvnsen
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/capthvnsen/alans-way-agents/tree/9276468d8ef4258e8fbfc42d48d0a627e4e5619e/alans-way-computer
 readme: true
 platforms: [linux, macos]

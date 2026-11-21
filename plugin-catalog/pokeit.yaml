@@ -6,7 +6,7 @@ description: "Real-time Pokémon GO hunting inside Anakot, with a live Radar, ne
 maintainer: kbtbc
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/kbtbc/pokeit-anakot/blob/990c4126db513d69292ce68d48aa756ad7852123/README.md
 version: "0.1.25"
 image: https://raw.githubusercontent.com/kbtbc/pokeit-anakot/990c4126db513d69292ce68d48aa756ad7852123/assets/catalog-banner.png

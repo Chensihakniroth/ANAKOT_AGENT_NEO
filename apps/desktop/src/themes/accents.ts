@@ -46,16 +46,11 @@ export interface ResolvedAccent {
 }
 
 /**
- * Resolve `theme`, a swatch id, `#rrggbb` or `custom:#rrggbb` to what gets painted.
- *
- * `theme` means the live theme's own accent. A swatch always paints the colour it
- * shows: `nous` used to double as this reset because Nous blue WAS the default
- * skin's accent. EVA-01 is the default now and its accent is neon green, so that
- * shortcut made a blue swatch paint green — every swatch resolves to itself, and
- * the reset is `theme` alone. Unknown input → `undefined`.
+ * Resolve `theme`, a swatch id, `#rrggbb` or `custom:#rrggbb` to what gets painted. Nous blue is the default
+ * skin's accent, so it resolves to the theme's own (`null`), the same as `theme`. Unknown input → `undefined`.
  */
 export function resolveAccentPick(value: string, dark: boolean): ResolvedAccent | undefined {
-  if (value === 'theme') {
+  if (value === 'theme' || value === 'nous') {
     return { hex: null, id: null }
   }
 
@@ -73,7 +68,7 @@ export function resolveAccentPick(value: string, dark: boolean): ResolvedAccent 
 
   const hex = raw.toLowerCase()
 
-  return { hex, id: `${CUSTOM_ACCENT_PREFIX}${hex}` }
+  return hex === NOUS_ACCENT ? { hex: null, id: null } : { hex, id: `${CUSTOM_ACCENT_PREFIX}${hex}` }
 }
 
 /** The name a settled card shows for a reported accent id. */

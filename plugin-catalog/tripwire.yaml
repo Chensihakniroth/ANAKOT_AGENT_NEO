@@ -7,7 +7,7 @@ description: "Logs every refused agent action (a tool blocked by a guardrail or 
 maintainer: percyhendrux123-prog
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/percyhendrux123-prog/anakot-tripwire/blob/5a8b5bab040d782e5d9111a7e1b8439e9c501226/README.md
 readme: true
 platforms: [macos, linux]

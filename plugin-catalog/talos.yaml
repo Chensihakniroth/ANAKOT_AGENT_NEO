@@ -6,7 +6,7 @@ description: "Automatic, unskippable smart-contract security checks for code Ana
 maintainer: oma035
 tier: community
 category: tools
-requires_anakot: ">=0.18.1"
+requires_hermes: ">=0.18.1"
 version: "0.1.1"
 docs_url: https://github.com/oma035/Talos#readme
 platforms: []

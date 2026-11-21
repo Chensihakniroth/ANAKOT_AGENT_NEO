@@ -9,7 +9,7 @@ maintainer: lEWFkRAD
 tier: community
 category: tools
 docs_url: https://github.com/lEWFkRAD/anakot-plugin-sunshine-moonlight#readme
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 platforms: [linux]
 capabilities:
   provides_tools: [game_stream]

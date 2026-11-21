@@ -19,7 +19,7 @@ description: >-
 maintainer: EmpirioLabs-AI
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "1.0.0"
 docs_url: https://github.com/EmpirioLabs-AI/anakot-empiriolabs/blob/20f049d5913ec850e98bef3d289f6cb43645869e/media/README.md
 platforms: []

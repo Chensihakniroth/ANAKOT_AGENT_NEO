@@ -144,6 +144,14 @@ membership, and currency checks use the same declaration reader.
 PM prepares core requirements, enabled extras, and enabled plugin requirements
 together. It seeds resolution from the existing lock. Compatible transitive
 versions can change, but declared constraints and exact pins remain binding.
+Core's lock still takes precedence over that seed: when core's `uv.lock` moves a
+package past both the previous environment's pin and the core lock that
+environment was built from (a security release of a transitive, say), the
+package moves to core's version for the installing interpreter's fork
+(`uv lock -P name==version`), and a plugin that cannot accept it is disabled by
+an update like any other plugin that no longer builds. Pins core did not move,
+packages core's lock does not pin, and conflicts between plugins keep the
+incumbent environment's versions.
 Each candidate gets a fresh workspace with explicit source, lock seed, and
 prepared environment inputs. Plugin snapshots keep a plugin's runtime dependencies
 and the optional extras this install selects (or the plugin's own requirements name);
@@ -158,13 +166,13 @@ the checkout: a plugin requirement naming `anakot-agent` (a runtime dependency i
 `pyproject.toml` or `plugin.yaml`, or an extra this install selects, such as
 `anakot-agent[web]>=0.20`) is satisfied by it, whatever its version specifier says. PM
 therefore checks that specifier itself against the running Anakot version (the one
-`requires_anakot` reads), with standard PEP 440 comparison and the requirement's environment
+`requires_hermes` reads), with standard PEP 440 comparison and the requirement's environment
 marker; a requirement in an unselected extra or one whose marker is false on this machine is
 not checked, and with no known version (`unknown`) nothing is. A plugin that excludes the
-running version is treated like one whose `requires_anakot` does: enabling or installing it is
+running version is treated like one whose `requires_hermes` does: enabling or installing it is
 refused, and one already enabled is left out of the environment and skipped at load, with its
 config untouched, until Anakot reaches a version it accepts. The two checks compare differently:
-`requires_anakot` compares only `major.minor.patch` (pre/post-release suffixes are dropped, and a
+`requires_hermes` compares only `major.minor.patch` (pre/post-release suffixes are dropped, and a
 clause it cannot parse passes), while a `anakot-agent` requirement is compared as any Python
 requirement would be (`>=0.27.0.post1` excludes 0.27.0). Either one can keep a plugin out.
 The generated workspace and extended lock remain
@@ -458,8 +466,9 @@ update) or `pnpm fetch`, so another pnpm 12 passes those. The backstop for a
 lockfile written that way is CI: every change to `pnpm-lock.yaml` runs the JS checks,
 which install it with the pinned pnpm under `--frozen-lockfile` (with
 `--lockfile-only` when the installed tree is cached). That proves the lockfile matches
-the manifests and the release-age policy, not which pnpm wrote it. A user agent
-overridden through `pnpm_config_user_agent` is refused as well.
+the manifests and the release-age policy, not which pnpm wrote it. The preinstall
+reads the user agent pnpm reports, so a `pnpm_config_user_agent` override is
+refused unless it names the pinned version.
 
 In the repository root and the JS workspace folders, npm refuses every command that
 installs or resolves dependencies (`npm install` with or without `--ignore-scripts`,
@@ -550,7 +559,7 @@ activation or `-TestExtras anthropic` to PowerShell;
 those arguments select runtime extras *in the test interpreter only*.
 
 In an isolated environment where activation is unavailable (for example, a Nix
-dev shell), a caller can explicitly supply `ANAKOT_PYTHON` with pytest, or build
+dev shell), a caller can explicitly supply `HERMES_PYTHON` with pytest, or build
 an independent disposable environment:
 
 ```bash

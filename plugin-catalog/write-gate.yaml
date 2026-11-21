@@ -23,7 +23,7 @@ description: >-
 maintainer: 2vic1
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "1.0.0"
 docs_url: https://github.com/2vic1/anakot-write-gate#readme
 readme: true

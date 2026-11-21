@@ -8,7 +8,7 @@ maintainer: davidmosiah
 tier: community
 category: tools
 version: "0.8.0"
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/davidmosiah/oura-mcp/blob/0f73130546ddfc0f9714f9fe1ea06578b6564ac1/agent-plugin/README.md
 image: https://raw.githubusercontent.com/davidmosiah/oura-mcp/0f73130546ddfc0f9714f9fe1ea06578b6564ac1/assets/banner.png
 platforms: []

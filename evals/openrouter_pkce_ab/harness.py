@@ -14,7 +14,7 @@ Scenarios (each prints PASS/FAIL, exit code = number of failures):
   malformed      exchange returns JSON without "key" → AuthError, nothing persisted
   api_key_path   `anakot auth add openrouter --api-key` still works with no --type (regression)
 
-Usage: ANAKOT_PYTHON=<venv python> python3 evals/openrouter_pkce_ab/harness.py [--json OUT]
+Usage: HERMES_PYTHON=<venv python> python3 evals/openrouter_pkce_ab/harness.py [--json OUT]
 Run against origin/main to see the BEFORE state (every oauth scenario fails with SystemExit
 "not implemented"), then against the salvage branch for AFTER.
 """

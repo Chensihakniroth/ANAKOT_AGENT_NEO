@@ -7,7 +7,7 @@ description: "A voice you can play inside Anakot, made by a physical model of a 
 maintainer: Adolanium
 tier: community
 category: voice
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Adolanium/anakot-voice-lab#readme
 version: "0.4.1"
 screenshots:

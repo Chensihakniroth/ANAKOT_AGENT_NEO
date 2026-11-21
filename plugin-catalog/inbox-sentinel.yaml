@@ -18,10 +18,11 @@ description: >-
   configured model provider; alerts run `anakot send` as a child process with
   the text on argv and may be stored by the destination; sender rules and
   counters are kept in profile plugin state; no telemetry.
+image: https://raw.githubusercontent.com/eddwithers/inbox-sentinel/e86dd9286967f5590ccdbf214d0fa0b008eb10cb/docs/media/icon.png
 maintainer: eddwithers
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/eddwithers/inbox-sentinel/blob/aac40600d7433895005bc21097543d15255c6a21/README.md
 platforms: []
 known_issues:

@@ -6,7 +6,7 @@ description: JetBrains Junie coding agent as a Anakot model provider over ACP.
 maintainer: JetBrains
 tier: community
 category: models
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/JetBrains/junie/tree/main/anakot-plugin
 platforms: []
 capabilities:

@@ -7,7 +7,7 @@ description: "Local memory that keeps every message word for word in one SQLite 
 maintainer: ptaranat
 tier: community
 category: memory
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/ptaranat/zeromem#readme
 image: https://raw.githubusercontent.com/ptaranat/zeromem/1c3bd5e8135271930c611a3449c82a17d4f3bf33/assets/zeromem-og.png
 readme: true

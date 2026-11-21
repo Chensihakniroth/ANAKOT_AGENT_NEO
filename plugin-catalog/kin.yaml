@@ -6,7 +6,7 @@ description: "Gives Anakot Desktop a face. Pick one of thirteen original charact
 maintainer: vdimarco
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.4.1"
 image: https://raw.githubusercontent.com/vdimarco/anakot-kin/22d7199f5b143a0b755fbcbe4aa1f1047347a109/docs/banner.png
 screenshots:

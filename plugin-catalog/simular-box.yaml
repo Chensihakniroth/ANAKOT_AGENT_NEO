@@ -9,7 +9,7 @@ maintainer: Simular
 tier: community
 category: tools
 docs_url: https://github.com/simular-ai/box-plugin/tree/main/anakot#readme
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 readme: true
 platforms: []
 capabilities:

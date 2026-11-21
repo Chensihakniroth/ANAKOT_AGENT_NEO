@@ -5,7 +5,7 @@ description: "Tournament of N sub-agents competing to produce the best answer. P
 maintainer: J182Razor
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "1.0.0"
 platforms: []
 capabilities:

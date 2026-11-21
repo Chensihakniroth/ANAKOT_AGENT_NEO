@@ -146,7 +146,7 @@ class TestWsTicketEndpoint:
 
         assert response.status_code == 200
         assert "window.__ANAKOT_AUTH_REQUIRED__=true" in response.text
-        assert "__ANAKOT_SESSION_TOKEN__" not in response.text
+        assert "__HERMES_SESSION_TOKEN__" not in response.text
 
     def test_unauthenticated_returns_401_or_redirect(self, gated_app):
         r = gated_app.post("/api/auth/ws-ticket", follow_redirects=False)

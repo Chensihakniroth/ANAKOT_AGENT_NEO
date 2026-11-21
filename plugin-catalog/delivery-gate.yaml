@@ -5,7 +5,7 @@ description: "Pre-delivery verification for Anakot Agent: runs the deterministic
 maintainer: ToniAdreal
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ToniAdreal/delivery-gate#readme
 version: "0.1.1"
 platforms: []

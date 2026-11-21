@@ -16,7 +16,7 @@ import { readSourceUpdate, type SourceUpdate } from './checkout-source'
 
 const execute: typeof execFile.__promisify__ = promisify(execFile)
 const repository: string = path.resolve(import.meta.dirname, '../../../..')
-const python: string = process.env.ANAKOT_PYTHON || 'python3'
+const python: string = process.env.HERMES_PYTHON || 'python3'
 
 function buildId(channel: 'stable' | 'canary'): string {
   return (channel === 'stable' ? 'a' : 'b').repeat(32)
@@ -322,12 +322,12 @@ if not getattr(urllib.request, '_anakot_loopback', False):
     vi.stubEnv('ANAKOT_RUNTIME_DIR', path.join(temporary, 'wrong-runtime'))
     vi.stubEnv('PYTHONPATH', path.join(temporary, 'wrong-checkout'))
     vi.stubEnv('PYTHONHOME', path.join(temporary, 'wrong-python'))
-    vi.stubEnv('ANAKOT_INSTALL_ROOT', origin)
+    vi.stubEnv('HERMES_INSTALL_ROOT', origin)
 
     const environment: NodeJS.ProcessEnv = {
       ...process.env,
       ANAKOT_HOME: home,
-      ANAKOT_INSTALL_ROOT: root,
+      HERMES_INSTALL_ROOT: root,
       PYTHONPATH: repository,
       PYTHONHOME: '',
       ANAKOT_RUNTIME_DIR: ''
@@ -438,7 +438,7 @@ if not getattr(urllib.request, '_anakot_loopback', False):
       expect(handoff?.args).not.toContain('-Branch')
       expect(handoff?.command).not.toBe(deps.resolveUpdaterBinary())
       expect(handoff?.options.env?.ANAKOT_HOME).toBe(home)
-      expect(handoff?.options.env?.ANAKOT_INSTALL_ROOT).toBe(root)
+      expect(handoff?.options.env?.HERMES_INSTALL_ROOT).toBe(root)
       expect(handoff?.options.env?.PYTHONPATH).toBe('')
       expect(handoff?.options.env?.PYTHONHOME).toBe('')
       expect(handoff?.options.env?.ANAKOT_RUNTIME_DIR).toBeUndefined()

@@ -159,7 +159,7 @@ def test_an_expiring_access_token_is_rotated_and_a_rejected_refresh_drops_the_si
 def test_token_mode_sends_the_session_token_header_and_the_entry_headers(remote):
     cid = _save(token="secret-token", headers={"CF-Access-Client-Secret": "cf-secret"})
     assert reach.resolve_target(cid) == (
-        REMOTE, {"CF-Access-Client-Secret": "cf-secret", "X-Anakot-Session-Token": "secret-token"})
+        REMOTE, {"CF-Access-Client-Secret": "cf-secret", "X-Hermes-Session-Token": "secret-token"})
     assert reach.mint_ws_ticket(cid) is None
     with pytest.raises(store.ConnectionStoreError):
         reach.resolve_target("local")

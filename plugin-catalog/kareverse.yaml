@@ -7,7 +7,7 @@ description: "Elder care at home in Bangalore, India, from Anakot through Kareve
 maintainer: Kareverse
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://www.kareverse.com/agents
 readme: true
 platforms: []

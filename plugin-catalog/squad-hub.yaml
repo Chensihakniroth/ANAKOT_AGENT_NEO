@@ -7,7 +7,7 @@ description: "One Desktop list for Anakot Agent Squads: bot, project, folder, wo
 maintainer: PuntoyComaTech
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/PuntoyComaTech/anakot-agent-squads/tree/ccefddc3a700cb7a94852cf93bc1ccd1c2090390/squads/_plugins/squad-hub#readme
 version: "2.1.0"
 screenshots:

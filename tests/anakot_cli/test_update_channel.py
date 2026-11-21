@@ -248,7 +248,7 @@ class TestSetChannelCLI:
         )
         monkeypatch.setattr(socket.socket, "connect", _denied("socket.connect"))
         # Real root, real filesystem — but a temp one, never the checkout.
-        monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(tmp_path))
+        monkeypatch.setenv("HERMES_INSTALL_ROOT", str(tmp_path))
 
     def _home(self, tmp_path, monkeypatch):
         home = tmp_path / ".anakot"

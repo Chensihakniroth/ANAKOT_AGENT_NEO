@@ -8,7 +8,7 @@ description: "Keeps your agent from breaking Anakot, and says what really went w
 maintainer: 0xNexuz
 tier: community
 category: general
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/0xNexuz/anakot-rescue/blob/5d365ba5e0293ce0c6bab22cc000ad99b4cefbcd/README.md
 readme: true
 platforms: []

@@ -5,7 +5,7 @@ description: "Automatically pin every new interactive session (desktop, CLI, TUI
 maintainer: bmcfiv
 tier: community
 category: general
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/bmcfiv/anakot-plugin-auto-pin#readme
 version: "1.0.0"
 platforms: []

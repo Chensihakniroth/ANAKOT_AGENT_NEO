@@ -6,7 +6,7 @@ title: RowVerdict
 maintainer: demir-sama
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 platforms: [linux]
 description: "Review drafted CSV/XLSX/JSON contracts, fix quarantined rows through replay, and export source-bound receipts plus self-contained HTML audits locally."
 docs_url: https://github.com/demir-sama/rowverdict#readme

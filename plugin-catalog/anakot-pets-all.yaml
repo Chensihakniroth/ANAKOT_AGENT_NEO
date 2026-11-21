@@ -6,7 +6,7 @@ description: Browse every pet installed for this Anakot profile in its own deskt
 maintainer: poponline63
 tier: community
 category: desktop
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/poponline63/anakot-pets-all
 platforms: []
 capabilities:

@@ -20,14 +20,14 @@ vi.mock("./dashboard-auth-reload", () => ({
   clearDashboardTokenReloadAttempt: reloadMocks.clearDashboardTokenReloadAttempt,
 }));
 
-const SESSION_HEADER = "X-Anakot-Session-Token";
+const SESSION_HEADER = "X-Hermes-Session-Token";
 
 beforeEach(() => {
   reloadMocks.attemptDashboardTokenReloadOnce.mockReset();
   reloadMocks.attemptDashboardTokenReloadOnce.mockReturnValue(false);
   reloadMocks.clearDashboardTokenReloadAttempt.mockReset();
 
-  Object.defineProperty(window, "__ANAKOT_SESSION_TOKEN__", {
+  Object.defineProperty(window, "__HERMES_SESSION_TOKEN__", {
     configurable: true,
     value: "stale-token",
     writable: true,
@@ -242,7 +242,7 @@ describe("plugin SDK calls follow the selected profile (PLG-3)", () => {
 
   it("buildWsUrl names the selected profile on a plugin socket only", async () => {
     vi.stubGlobal("window", {
-      __ANAKOT_SESSION_TOKEN__: "tok",
+      __HERMES_SESSION_TOKEN__: "tok",
       location: { protocol: "http:", host: "127.0.0.1:9119" },
     });
     setManagementProfile("beta");
@@ -283,7 +283,7 @@ describe("api OAuth helpers", () => {
   });
 
   it("still sends the injected session token for OAuth login in loopback mode", async () => {
-    vi.stubGlobal("window", { __ANAKOT_SESSION_TOKEN__: "loopback-token" });
+    vi.stubGlobal("window", { __HERMES_SESSION_TOKEN__: "loopback-token" });
     const fetchMock = jsonFetchMock({
       flow: "device_code",
       session_id: "oauth-session",
@@ -342,7 +342,7 @@ describe("api OAuth helpers", () => {
 
 describe("api.getAuthMe loopback contract", () => {
   it("accepts a token-authenticated synthetic loopback identity", async () => {
-    vi.stubGlobal("window", { __ANAKOT_SESSION_TOKEN__: "loopback-token" });
+    vi.stubGlobal("window", { __HERMES_SESSION_TOKEN__: "loopback-token" });
     const identity = {
       display_name: "Local",
       email: "",
@@ -378,7 +378,7 @@ describe("session token stays on the dashboard origin", () => {
   });
 
   it("relative and same-origin absolute URLs still carry the token", async () => {
-    window.__ANAKOT_SESSION_TOKEN__ = "live-token";
+    window.__HERMES_SESSION_TOKEN__ = "live-token";
     const fetchMock = jsonFetchMock();
     vi.stubGlobal("fetch", fetchMock);
     const own = `${window.location.origin}/api/plugins/demo/blob`;

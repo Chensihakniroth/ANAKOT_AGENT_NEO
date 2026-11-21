@@ -9,7 +9,7 @@ tier: community
 category: platform
 version: "0.2.0"
 docs_url: https://github.com/ivanvanes18/anakot-multibot#readme
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 known_issues:
   - Private DMs only; no groups, topics, albums, voice, streaming or full bundled command parity.

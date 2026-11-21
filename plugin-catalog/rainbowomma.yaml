@@ -10,7 +10,7 @@ maintainer: aviv27-dev
 tier: community
 category: tools
 version: "0.1.0"
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/aviv27-dev/RainbowOMMA/blob/c1961dff1e6c661f46d090d00ed30c13c6074f92/anakot-plugin/rainbowomma/README.md
 image: https://raw.githubusercontent.com/aviv27-dev/RainbowOMMA/c1961dff1e6c661f46d090d00ed30c13c6074f92/anakot-plugin/assets/overview.jpg
 readme: true

@@ -5,7 +5,7 @@ description: "One leased speaker and a durable question/answer record for cooper
 maintainer: SAMBAS123
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/SAMBAS123/anakot-crown/blob/fe6b86874190557ef5347c1752e24a6d65f7511a/README.md
 version: "0.1.0"
 title: Crown

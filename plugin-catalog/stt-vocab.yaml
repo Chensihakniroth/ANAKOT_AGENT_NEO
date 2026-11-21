@@ -16,7 +16,7 @@ description: >-
 maintainer: pierrenode
 tier: community
 category: voice
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/pierrenode/anakot-stt-vocab
 version: "1.1.0"
 image: https://raw.githubusercontent.com/pierrenode/anakot-stt-vocab/6145d065d50f196d51b3ab80fe4a76fb2827c115/docs/card.png

@@ -6,7 +6,7 @@ description: "Mark the parts of any image that need work in a Anakot Desktop pan
 maintainer: Lyfae
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/Lyfae/anakot-retouch#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Lyfae/anakot-retouch/1a5ac4346b991754a25a5dc14745f533341c8c95/assets/banner.png

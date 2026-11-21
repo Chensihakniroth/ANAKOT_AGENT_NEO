@@ -30,6 +30,8 @@ from pathlib import Path
 
 import pytest
 
+from anakot_agent.compat.paths import current_path
+
 
 # Import the module under test via an import-time side-effect check path.
 # We need to be able to reset its state between tests, so we import it
@@ -180,10 +182,10 @@ class TestStdioReconfigureErrorHandling:
 
 
 
-@pytest.mark.parametrize("path", [
+@pytest.mark.parametrize("path", [current_path(entry) for entry in (
     "anakot_cli/main.py", "run_agent.py", "acp_adapter/entry.py",
     "gateway/run.py", "batch_runner.py", "cli.py",
-])
+)])
 def test_entrypoint_executes_bootstrap_before_application_imports(tmp_path, path):
     import subprocess
     from pathlib import Path
@@ -290,11 +292,11 @@ print('reached-pm')
     assert result.stdout.strip() == "reached-pm"
 
 
-@pytest.mark.parametrize("path", [
+@pytest.mark.parametrize("path", [current_path(entry) for entry in (
     "anakot_cli/main.py", "run_agent.py", "acp_adapter/entry.py",
     "gateway/run.py", "batch_runner.py", "cli.py",
     "agent/managed_worker.py", "anakot_cli/kanban_worker_client.py",
-])
+)])
 @pytest.mark.parametrize("bootstrap,expected", [
     (None, "proceeded"),
     ("import anakot_missing_dependency_probe\n", "raised anakot_missing_dependency_probe"),
@@ -344,21 +346,21 @@ class TestHardenImportPath:
 
     def _run(self, hb, path_seed, env=None):
         original = sys.path[:]
-        original_env = os.environ.get("ANAKOT_PYTHON_SRC_ROOT")
+        original_env = os.environ.get("HERMES_PYTHON_SRC_ROOT")
         try:
             sys.path[:] = path_seed
             if env is not None:
-                os.environ["ANAKOT_PYTHON_SRC_ROOT"] = env
-            elif "ANAKOT_PYTHON_SRC_ROOT" in os.environ:
-                del os.environ["ANAKOT_PYTHON_SRC_ROOT"]
+                os.environ["HERMES_PYTHON_SRC_ROOT"] = env
+            elif "HERMES_PYTHON_SRC_ROOT" in os.environ:
+                del os.environ["HERMES_PYTHON_SRC_ROOT"]
             hb.harden_import_path(src_root="/opt/anakot")
             return sys.path[:]
         finally:
             sys.path[:] = original
             if original_env is None:
-                os.environ.pop("ANAKOT_PYTHON_SRC_ROOT", None)
+                os.environ.pop("HERMES_PYTHON_SRC_ROOT", None)
             else:
-                os.environ["ANAKOT_PYTHON_SRC_ROOT"] = original_env
+                os.environ["HERMES_PYTHON_SRC_ROOT"] = original_env
 
     def test_relative_cwd_forms_removed(self):
         hb = _fresh_import()
@@ -384,23 +386,23 @@ class TestHardenImportPath:
 
 
     def test_inherited_src_root_never_redirects_imports(self):
-        """A checkout's dev shell exports ANAKOT_PYTHON_SRC_ROOT; an install started from it
+        """A checkout's dev shell exports HERMES_PYTHON_SRC_ROOT; an install started from it
         must still put its own tree first."""
         hb = _fresh_import()
         original = sys.path[:]
-        original_env = os.environ.get("ANAKOT_PYTHON_SRC_ROOT")
+        original_env = os.environ.get("HERMES_PYTHON_SRC_ROOT")
         try:
             sys.path[:] = ["", "/cwd/proj", "/usr/lib"]
-            os.environ["ANAKOT_PYTHON_SRC_ROOT"] = "/env/anakot"
+            os.environ["HERMES_PYTHON_SRC_ROOT"] = "/env/anakot"
             hb.harden_import_path()
             assert sys.path[0] == os.path.dirname(os.path.abspath(hb.__file__))
             assert "/env/anakot" not in sys.path
         finally:
             sys.path[:] = original
             if original_env is None:
-                os.environ.pop("ANAKOT_PYTHON_SRC_ROOT", None)
+                os.environ.pop("HERMES_PYTHON_SRC_ROOT", None)
             else:
-                os.environ["ANAKOT_PYTHON_SRC_ROOT"] = original_env
+                os.environ["HERMES_PYTHON_SRC_ROOT"] = original_env
 
 
 

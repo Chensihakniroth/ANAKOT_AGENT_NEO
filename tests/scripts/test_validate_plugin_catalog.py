@@ -25,7 +25,7 @@ VALID_ENTRY = {
     "description": "One-line description.",
     "maintainer": "NousResearch",
     "tier": "official",
-    "requires_anakot": ">=0.19",
+    "requires_hermes": ">=0.19",
     "docs_url": "",
     "platforms": [],
     "capabilities": {
@@ -107,6 +107,20 @@ def test_version_and_image_are_validated_when_present(tmp_path):
     _expect_error(tmp_path, {"image": "https://cdn.example.com/banner.png"}, "image")
     _expect_error(tmp_path, {"version": "1.4.0 beta"}, "version")
     path = write_entry(tmp_path, {**VALID_ENTRY, "version": "1.4.0", "image": "https://raw.githubusercontent.com/owner/repo/38fe0fb53eff98d477f807432e965429e665ca33/banner.png"}, "ok.yaml")
+    assert run_validator(str(path)).returncode == 0
+
+
+def test_docs_url_must_be_https_when_present(tmp_path):
+    """docs_url lands verbatim in an <a href> on the docs site, so admission rejects
+    script-executing schemes outright instead of relying on the site to sanitize."""
+    _expect_error(tmp_path, {"docs_url": "javascript:alert(document.domain)"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "https://example.com/docs\r\njavascript:x"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "http://example.com/docs"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "https:///docs"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "https://:443/docs"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "https://user@/docs"}, "docs_url")
+    _expect_error(tmp_path, {"docs_url": "https://["}, "docs_url")
+    path = write_entry(tmp_path, {**VALID_ENTRY, "docs_url": "https://example.com/docs"}, "ok.yaml")
     assert run_validator(str(path)).returncode == 0
 
 
@@ -199,12 +213,12 @@ def test_capabilities_list_of_non_strings_fails(tmp_path):
     )
 
 
-def test_bad_requires_anakot_spec_fails(tmp_path):
-    _expect_error(tmp_path, {"requires_anakot": "banana"}, "requires_anakot")
+def test_bad_requires_hermes_spec_fails(tmp_path):
+    _expect_error(tmp_path, {"requires_hermes": "banana"}, "requires_hermes")
 
 
-def test_comma_separated_requires_anakot_passes(tmp_path):
-    entry = {**VALID_ENTRY, "requires_anakot": ">=0.19, <2.0"}
+def test_comma_separated_requires_hermes_passes(tmp_path):
+    entry = {**VALID_ENTRY, "requires_hermes": ">=0.19, <2.0"}
     path = write_entry(tmp_path, entry)
     result = run_validator(str(path))
     assert result.returncode == 0, result.stdout + result.stderr

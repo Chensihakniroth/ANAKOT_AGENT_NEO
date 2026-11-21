@@ -183,7 +183,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           cat $out/*
         '';
 
-        # The dev shell's ANAKOT_PYTHON must carry its own dependencies: the
+        # The dev shell's HERMES_PYTHON must carry its own dependencies: the
         # TUI and the test runner launch it with PYTHONPATH replaced or cleared.
         dev-venv-self-contained = pkgs.runCommand "anakot-dev-venv-self-contained" { } ''
           venv=${anakot-agent.devVenv}
@@ -1273,7 +1273,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           test -f ${anakot-agent}/ui-tui/dist/entry.js || (echo "FAIL: compiled entry.js missing"; exit 1)
           echo "PASS: compiled entry.js present"
 
-          # The compiled TUI runs these on ANAKOT_PYTHON; the Python package lives in another
+          # The compiled TUI runs these on HERMES_PYTHON; the Python package lives in another
           # store path, so they must ship beside entry.js (#139208).
           for helper in gateway_bootstrap.py clipboard_image.py; do
             test -f ${anakot-agent}/ui-tui/dist/scripts/$helper || \

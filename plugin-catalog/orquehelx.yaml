@@ -16,7 +16,7 @@ description: >-
 maintainer: TicoraX
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/TicoraX/OrqueHelx/blob/964896e44979b29755dd880c5eb2557909e88bf6/README.md
 version: "0.3.0"
 platforms: [linux, macos, windows]

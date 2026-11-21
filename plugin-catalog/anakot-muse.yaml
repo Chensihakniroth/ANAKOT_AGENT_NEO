@@ -35,7 +35,7 @@ description: >-
 maintainer: xiaohei-info
 tier: community
 category: automation
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/xiaohei-info/anakot-muse/blob/0dade28130b6901dfa2dd81a067856441948d33c/README.md
 platforms: [linux, macos]
 capabilities:

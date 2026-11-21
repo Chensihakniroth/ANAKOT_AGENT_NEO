@@ -8,7 +8,7 @@ description: "Kumi puts Anakot inside Ableton Live, REAPER and Renoise: it hears
 maintainer: user1303836
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/user1303836/kumi/blob/7f8b0de9f52d4bca526914c469e084a554388486/docs/en/ANAKOT.md
 image: https://raw.githubusercontent.com/user1303836/kumi/7f8b0de9f52d4bca526914c469e084a554388486/docs/assets/anakot/banner.png
 screenshots:

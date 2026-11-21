@@ -8,7 +8,7 @@ maintainer: zambodotdev
 tier: community
 category: tools
 docs_url: https://github.com/zambodotdev/anakot-zambo-receipts/blob/5da9e11cb3bc22a4b567e135b0330addc55de55f/README.md
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: [linux, macos, windows]
 capabilities:

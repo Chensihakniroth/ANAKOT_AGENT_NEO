@@ -175,7 +175,7 @@ async function retiredFixture(
   return { ...f, retired }
 }
 
-test.each(['NODE_OPTIONS', 'PATH', 'ANAKOT_PYTHON'])(
+test.each(['NODE_OPTIONS', 'PATH', 'HERMES_PYTHON'])(
   'channel manifest rejects process-control bundle key %s',
   async (key: string): Promise<void> => {
     const f = await fixture()

@@ -124,8 +124,8 @@ def run():
         }))
         env = {k: os.environ[k] for k in ('PATH', 'LANG', 'TZ') if k in os.environ}
         env.update(HOME=str(user), USERPROFILE=str(user), ANAKOT_HOME=str(home),
-                   PYTHONPATH=str(ROOT), PYTHONUNBUFFERED='1', ANAKOT_PYTHON=sys.executable,
-                   ANAKOT_PYTHON_SRC_ROOT=str(ROOT), TERM='xterm-256color',
+                   PYTHONPATH=str(ROOT), PYTHONUNBUFFERED='1', HERMES_PYTHON=sys.executable,
+                   HERMES_PYTHON_SRC_ROOT=str(ROOT), TERM='xterm-256color',
                    OPENAI_API_KEY='loopback-only', OPENAI_BASE_URL=model_url)
         children = []
         daemon = None

@@ -44,7 +44,7 @@ def completion(tmp_path, monkeypatch):
     # in the working checkout is modified, even by import-time self-heals.
     for path in ROOT.glob("*.py"):
         shutil.copy2(path, source / path.name)
-    for name in ("anakot_cli", "anakot_platform", "pm", "agent", "gateway", "tools", "cron"):
+    for name in ("anakot_cli", "anakot_platform", "anakot_agent", "pm", "agent", "gateway", "tools", "cron"):
         shutil.copytree(ROOT / name, source / name,
                         ignore=shutil.ignore_patterns("__pycache__", "web_dist", "tui_dist"))
     shutil.copytree(ROOT / "scripts/build", source / "scripts/build",
@@ -170,10 +170,10 @@ def completion(tmp_path, monkeypatch):
                         assert name == 'pnpm' and explicit and not verify
                         assert shutil.which('node', path=base_env['PATH'])
                         assert shutil.which('pnpm', path=base_env['PATH'])
-                        assert base_env['ANAKOT_PYTHON'] == str(project_python(root))
-                        assert base_env['PYTHON'] == base_env['ANAKOT_PYTHON']
+                        assert base_env['HERMES_PYTHON'] == str(project_python(root))
+                        assert base_env['PYTHON'] == base_env['HERMES_PYTHON']
                         (root / 'build-environment.json').write_text(json.dumps({
-                            'python': base_env['ANAKOT_PYTHON'], 'selected': selected_dependency.__file__,
+                            'python': base_env['HERMES_PYTHON'], 'selected': selected_dependency.__file__,
                             'argv': sys.argv, 'old_module': 'pre_pm_only' in sys.modules,
                             'pid': os.getpid(), 'parent': os.getppid(),
                         }))
@@ -414,7 +414,7 @@ def _pnpm_graph(source):
           symlinkSync(target, workspace + '/node_modules/' + name, 'dir');
         }}
         // A real pnpm lifecycle child, not an assertion about a constructed env.
-        writeFileSync('lifecycle-python.json', execFileSync(process.env.ANAKOT_PYTHON,
+        writeFileSync('lifecycle-python.json', execFileSync(process.env.HERMES_PYTHON,
           ['-I', '-c', 'import json, os, sys, selected_dependency; print(json.dumps(dict(python=sys.executable, configured=os.environ["PYTHON"])))']));
     '''))
     _put(source, "packages/value/index.js", "export const value = 'compiled local graph';\n")
@@ -453,7 +453,7 @@ def test_selected_child_builds_and_finalizes_under_parent_lock(completion):
     assert built.stdout.strip() == "compiled local graph"
     assert (source / "anakot_cli/web_dist/index.html").is_file()
     assert any("compiled local graph" in p.read_text() for p in (source / "anakot_cli/web_dist/assets").glob("*.js"))
-    assert (source / "node_modules/.anakot-node-deps").is_file()
+    assert (source / "node_modules/.hermes-node-deps").is_file()
     environment = json.loads((source / "build-environment.json").read_text())
     assert "repairing the recorded dependency environment" not in child.stderr
     lifecycle_python = json.loads((source / "lifecycle-python.json").read_text())

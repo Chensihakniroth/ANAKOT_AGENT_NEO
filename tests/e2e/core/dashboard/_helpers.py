@@ -5,7 +5,7 @@ Every scenario drives the REAL web server as a child process: ``python -m anakot
 resolve under $HOME, never the real install), every credential env var stripped, the LLM vendor
 replaced by ``tests.fakes.fake_llm_provider.FakeLLMServer``. The client side speaks only what the SPA
 speaks: it reads the session token out of the served ``index.html`` (the browser's bootstrap), sends
-it as ``X-Anakot-Session-Token`` on REST and ``?token=`` on WebSocket upgrades, and appends
+it as ``X-Hermes-Session-Token`` on REST and ``?token=`` on WebSocket upgrades, and appends
 ``?profile=<name>`` exactly like the profile switcher in ``web/src/lib/api.ts``.
 """
 
@@ -35,13 +35,13 @@ from tests.fakes.fake_llm_provider import FakeLLMServer
 from . import _reaper
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-TOKEN_HEADER = "X-Anakot-Session-Token"
+TOKEN_HEADER = "X-Hermes-Session-Token"
 PROVIDER_KEY_ENV = "DASH_PROVIDER_KEY"  # same NAME in every profile's .env, distinct VALUE
 
 _STRIP_SUFFIXES = ("_API_KEY", "_TOKEN", "_BASE_URL", "_SECRET", "_ACCESS_KEY", "_KEY_ID", "_KEY")
 _STRIP_PREFIXES = ("ANAKOT_", "OPENAI", "ANTHROPIC", "OPENROUTER", "AWS_", "AZURE_", "GOOGLE_", "GEMINI",
                    "PYTEST_", "NOUS_", "XAI_", "LLM_", "CUSTOM_", "TERMINAL_", "DASH_")
-_TOKEN_RE = re.compile(r'__ANAKOT_SESSION_TOKEN__\s*=\s*"([^"]+)"')
+_TOKEN_RE = re.compile(r'__HERMES_SESSION_TOKEN__\s*=\s*"([^"]+)"')
 _READY_RE = re.compile(r"ANAKOT_DASHBOARD_READY port=(\d+)")
 
 

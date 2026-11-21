@@ -7,7 +7,7 @@ maintainer: 0xileri
 tier: community
 category: tools
 version: "1.0.0"
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/0xileri/Proofly/blob/9fde65f5e8f5f5ab3ad6a5dc6a9848f119deb444/README.md
 known_issues:
   - "Holds every reply in a profile that loads it until the check has run (hold_stream). Tool progress and reasoning are not rewritten; turn them off (display.tool_progress, display.show_reasoning) for strict use."

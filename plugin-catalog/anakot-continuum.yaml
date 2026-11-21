@@ -6,7 +6,7 @@ description: "An integrated nine-system plugin for Anakot Agent that provides ta
 maintainer: mohamad-shafeez
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/mohamad-shafeez/anakot-continuum#readme
 readme: true
 platforms: []

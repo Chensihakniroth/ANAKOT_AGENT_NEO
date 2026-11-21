@@ -8,7 +8,7 @@ description: "Read-only ExpatsList MCP server and skill: city guides from local 
 maintainer: AI Training Data Broker
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/aitrainingdatabroker/expatslist-mcp-server/tree/main/anakot#readme
 readme: true
 platforms: []

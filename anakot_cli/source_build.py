@@ -39,7 +39,7 @@ def source_build_env(base_env: dict | None = None, *, explicit: bool = False, ve
     # the selected venv executable rather than the store interpreter.
     root = repo_root()
     python = str(project_python(root)) if running_from_selected_environment(root) else sys.executable
-    env = {**os.environ, **(base_env or {}), "CI": "1", "ANAKOT_PYTHON": python,
+    env = {**os.environ, **(base_env or {}), "CI": "1", "HERMES_PYTHON": python,
            "PYTHON": python}
     # Electron's installer unpacks its binary with a native module that imports
     # VCRUNTIME140.dll, which a fresh Windows lacks. Our Python ships one, and
@@ -49,8 +49,14 @@ def source_build_env(base_env: dict | None = None, *, explicit: bool = False, ve
         env["ANAKOT_VC_RUNTIME"] = str(vc_runtime)
     env.pop("ESBUILD_BINARY_PATH", None)
     npmrc = user_npmrc(env)
-    if npmrc == anakot_npmrc():
-        env.setdefault("NPM_CONFIG_USERCONFIG", str(npmrc))
+    twins = [name for name in env if name.upper() == "NPM_CONFIG_USERCONFIG"]
+    if npmrc == anakot_npmrc() or twins:
+        # npm reads the last non-empty twin in environ order; pnpm reads the lowercase name when
+        # set, even empty (as unset: ~/.npmrc), else the uppercase one, and never a mixed-case one.
+        # So twins split the installers and an empty one hides the Anakot file. One variable naming
+        # the file user_npmrc picked (a non-empty lowercase one first) replaces them.
+        env = {name: value for name, value in env.items() if name.upper() != "NPM_CONFIG_USERCONFIG"}
+        env["NPM_CONFIG_USERCONFIG"] = str(npmrc)
     # pnpm reads the npmrc that user_npmrc selects (an explicit userconfig, else Anakot's, else
     # ~/.npmrc) only for its registry and auth. npm also handed every other key to the processes it
     # spawned as npm_config_<key>; keep doing that, since it is how node-pre-gyp (run by

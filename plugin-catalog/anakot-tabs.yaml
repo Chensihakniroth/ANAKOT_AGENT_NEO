@@ -7,7 +7,7 @@ description: "Settings page (in the language set in Anakot, nine languages; incl
 maintainer: ai-ag2026
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/ai-ag2026/anakot-tabs#readme
 version: "0.4.1"
 platforms: []

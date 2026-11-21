@@ -5,7 +5,7 @@ description: "Field notes for a Anakot install: search known pitfalls before deb
 maintainer: itpartypattaya
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/itpartypattaya/anakot-field-notes/blob/74b566dd49ce6a9f249b7d1e5e12d25895592d42/README.md
 version: "1.2.6"
 image: "https://raw.githubusercontent.com/itpartypattaya/anakot-field-notes/74b566dd49ce6a9f249b7d1e5e12d25895592d42/docs/banner.png"

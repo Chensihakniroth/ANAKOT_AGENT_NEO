@@ -7,7 +7,7 @@ tier: community
 category: tools
 title: "Network X-ray"
 docs_url: https://github.com/rusty4444/anakot-network-xray#readme
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.1.1"
 platforms: [linux, macos]
 screenshots:

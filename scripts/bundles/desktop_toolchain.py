@@ -16,8 +16,8 @@ import uuid
 
 
 _INSTALL_ENV = {
-    "ANAKOT_INSTALL_ROOT", "ANAKOT_PAYLOAD_ROOT", "ANAKOT_PAYLOAD_TAG", "ANAKOT_BUILD_COMMIT",
-    "ANAKOT_SITE", "ANAKOT_PYTHON", "ANAKOT_NODE", "ANAKOT_PROFILE", "ANAKOT_REAL_HOME",
+    "HERMES_INSTALL_ROOT", "ANAKOT_PAYLOAD_ROOT", "ANAKOT_PAYLOAD_TAG", "ANAKOT_BUILD_COMMIT",
+    "ANAKOT_SITE", "HERMES_PYTHON", "ANAKOT_NODE", "ANAKOT_PROFILE", "ANAKOT_REAL_HOME",
     "ANAKOT_DATA_DIR_SUFFIX", "ANAKOT_BUNDLED_SKILLS", "ANAKOT_OPTIONAL_SKILLS",
     "ANAKOT_BUNDLED_PLUGINS", "ANAKOT_BUNDLED_LOCALES", "ANAKOT_OPTIONAL_MCPS",
     "PYTHONPATH", "PYTHONHOME", "PYTHONUSERBASE", "VIRTUAL_ENV", "CONDA_PREFIX",
@@ -29,7 +29,7 @@ def bootstrap_environment(source: Path, work: Path, cache: Path,
     """Return launch state; never import PM, mutate the process, or write files."""
     source, work, cache = source.resolve(), work.resolve(), cache.resolve()
     owned = {"HOME", "USERPROFILE", "LOCALAPPDATA", "APPDATA", "ANAKOT_HOME", "ANAKOT_RUNTIME_DIR",
-             "ANAKOT_PYTHON_SRC_ROOT", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME",
+             "HERMES_PYTHON_SRC_ROOT", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME",
              "UV_CACHE_DIR", "NPM_CONFIG_CACHE", "NPM_EXECPATH", "NPM_NODE_EXECPATH",
              "NPM_CONFIG_USERCONFIG", "NPM_CONFIG_GLOBALCONFIG", "NPM_CONFIG_PREFIX",
              "PNPM_CONFIG_STORE_DIR", "PNPM_CONFIG_CACHE_DIR", "PNPM_CONFIG_STATE_DIR",
@@ -48,7 +48,7 @@ def bootstrap_environment(source: Path, work: Path, cache: Path,
         "APPDATA": str(home / "AppData/Roaming"),
         "ANAKOT_HOME": str(work / "anakot-home"),
         "ANAKOT_RUNTIME_DIR": str(cache / "tools"),
-        "ANAKOT_PYTHON_SRC_ROOT": str(source),
+        "HERMES_PYTHON_SRC_ROOT": str(source),
         "XDG_CONFIG_HOME": str(home / "config"), "XDG_CACHE_HOME": str(home / "cache"),
         "XDG_DATA_HOME": str(home / "data"), "XDG_STATE_HOME": str(home / "state"),
         "UV_CACHE_DIR": str(cache / "python/runtime"),
@@ -131,7 +131,7 @@ def prepare_tools(source: Path, work: Path, cache: Path,
     uv_cache = native_cache_path(cache, prepared)
     if os.name == "nt":
         uv_cache = short_alias(uv_cache, work / "uv")
-    prepared.update({"ANAKOT_PYTHON": str(binaries["python"]), "ANAKOT_NODE": str(binaries["node"]),
+    prepared.update({"HERMES_PYTHON": str(binaries["python"]), "ANAKOT_NODE": str(binaries["node"]),
                      "UV_CACHE_DIR": str(uv_cache)})
     return binaries["python"], binaries["node"], prepared
 

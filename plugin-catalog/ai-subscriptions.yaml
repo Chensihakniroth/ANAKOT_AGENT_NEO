@@ -15,7 +15,7 @@ maintainer: rahuloruganti
 tier: community
 category: desktop
 docs_url: https://github.com/rahuloruganti/anakot-ai-subscriptions#readme
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 screenshots:
   - https://raw.githubusercontent.com/rahuloruganti/anakot-ai-subscriptions/9d87af6477a4bfe17a3c1a17016225cf704b7630/assets/plans-and-picker.png
   - https://raw.githubusercontent.com/rahuloruganti/anakot-ai-subscriptions/9d87af6477a4bfe17a3c1a17016225cf704b7630/assets/usage.png

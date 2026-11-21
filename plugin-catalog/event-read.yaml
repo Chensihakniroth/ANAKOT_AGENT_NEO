@@ -7,7 +7,7 @@ tier: community
 category: tools
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-event-read#readme
 version: "0.1.4"
-requires_anakot: '>=0.21.6'
+requires_hermes: '>=0.21.6'
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-event-read/00e8aed782ad3d81e1fbc30abb202e3caf9a4dc0/assets/catalog-banner.png
 platforms: []
 capabilities:

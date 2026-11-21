@@ -35,7 +35,7 @@ description: >-
 maintainer: yzy806806
 tier: community
 category: automation
-requires_anakot: '>=0.20'
+requires_hermes: '>=0.20'
 docs_url: https://github.com/yzy806806/agora#readme
 version: "2.0.13"
 platforms: []

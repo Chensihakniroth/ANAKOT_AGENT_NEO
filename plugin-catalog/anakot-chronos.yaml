@@ -6,7 +6,7 @@ description: "Time-travel filesystem checkpoints, approval-gated rollback, and a
 maintainer: DevTarlow
 tier: community
 category: tools
-requires_anakot: ">=0.19.0"
+requires_hermes: ">=0.19.0"
 version: "1.0.3"
 readme: true
 capabilities:

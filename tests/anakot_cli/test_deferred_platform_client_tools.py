@@ -458,7 +458,7 @@ class TestDeferredPlatformToolPreregistration:
             mgr._gate_manifest(manifest, {"probeplat-platform"}, None)
             assert mgr.rearm_failed_platform("probeplat") is False
         with monkeypatch.context() as m:  # nor one built for another Anakot version
-            m.setattr("anakot_cli.plugins_manifest.requires_anakot_error", lambda _manifest: "needs newer anakot")
+            m.setattr("anakot_cli.plugins_manifest.requires_hermes_error", lambda _manifest: "needs newer anakot")
             assert mgr.rearm_failed_platform("probeplat") is False
 
         from anakot_cli import plugins_loader

@@ -441,87 +441,7 @@ export const slateTheme: DesktopTheme = {
   }
 }
 
-/**
- * EVA-01 — Evangelion Unit-01: purple armor, neon-green highlights, warm cream
- * light. Two palettes, one identity.
- *
- * The app keeps following the OS (`system` is the mode default), but each
- * appearance is EVA rather than upstream's white/blue: the dark end is the
- * installer's measured canvas, the light end is the same armor lit — pale
- * lavender surfaces and deep purple ink, never a white sheet. Both are supplied
- * explicitly, because `paletteFor` synthesises a pale variant from the dark
- * palette when `darkColors` is absent, which would drift off-brand.
- *
- * Palette source: purple2 `#523874` (armor), purple1 `#711f8c` (armor
- * highlight), green0 `#33ff00` (neon), black0 `#1f1d1c` (joints). The neon is
- * darkened to `#1f7000` in light, where #33ff00 cannot clear AA on a pale
- * surface. Measured: dark body 10.0:1 / secondary 6.6:1 / neon 8.9:1; light body
- * 15.0:1 / secondary 5.7:1 / green 5.5:1.
- */
-const EVA_DARK_COLORS = {
-  background: '#402d59',
-  foreground: '#ffe6cb',
-  card: '#4a3170',
-  cardForeground: '#ffe6cb',
-  muted: '#523874',
-  mutedForeground: '#c9badb',
-  popover: '#4a3170',
-  popoverForeground: '#ffe6cb',
-  primary: '#ffe6cb',
-  primaryForeground: '#402d59',
-  secondary: '#711f8c',
-  secondaryForeground: '#ffe6cb',
-  accent: '#711f8c',
-  accentForeground: '#ffe6cb',
-  border: '#5d3f80',
-  input: '#5d3f80',
-  ring: '#33ff00',
-  midground: '#33ff00',
-  destructive: '#c0473a',
-  destructiveForeground: '#fef2f2',
-  sidebarBackground: '#35244a',
-  sidebarBorder: '#5d3f80',
-  userBubble: '#54387c',
-  userBubbleBorder: '#711f8c'
-}
-
-const EVA_LIGHT_COLORS = {
-  background: '#f5eef8',
-  foreground: '#241533',
-  card: '#fbf7fd',
-  cardForeground: '#241533',
-  muted: '#e9dff2',
-  mutedForeground: '#6b5580',
-  popover: '#fbf7fd',
-  popoverForeground: '#241533',
-  primary: '#711f8c',
-  primaryForeground: '#fdf7ff',
-  secondary: '#e9dff2',
-  secondaryForeground: '#241533',
-  accent: '#efe3f6',
-  accentForeground: '#241533',
-  border: '#d6c5e4',
-  input: '#d6c5e4',
-  ring: '#711f8c',
-  midground: '#1f7000',
-  destructive: '#b3352c',
-  destructiveForeground: '#fff5f5',
-  sidebarBackground: '#ece1f4',
-  sidebarBorder: '#d6c5e4',
-  userBubble: '#e2d2ee',
-  userBubbleBorder: '#cbb6dd'
-}
-
-export const evaTheme: DesktopTheme = {
-  name: 'eva',
-  label: 'EVA-01',
-  description: 'Evangelion Unit-01 — purple armor, neon green',
-  colors: EVA_LIGHT_COLORS,
-  darkColors: EVA_DARK_COLORS
-}
-
 export const BUILTIN_THEMES: Record<string, DesktopTheme> = {
-  eva: evaTheme,
   nous: nousTheme,
   github: githubTheme,
   catppuccin: catppuccinTheme,
@@ -538,10 +458,8 @@ export const BUILTIN_THEMES: Record<string, DesktopTheme> = {
 
 export const BUILTIN_THEME_LIST = Object.values(BUILTIN_THEMES)
 
-/** Skin used when nothing is persisted or the persisted name is retired.
- *  EVA-01: the fork's own palette, so a stock install never opens on the
- *  upstream Nous white/blue. */
-export const DEFAULT_SKIN_NAME = 'eva'
+/** Skin used when nothing is persisted or the persisted name is retired. */
+export const DEFAULT_SKIN_NAME = 'nous'
 
 /** Names that no longer resolve to a skin of their own. A stored pick of one
  *  falls back to DEFAULT_SKIN_NAME, and a cached backend theme under one is

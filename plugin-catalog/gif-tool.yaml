@@ -6,7 +6,7 @@ description: "Show, edit and compress GIFs in Anakot. `gif_open` turns any GIF, 
 maintainer: tuancookiez-hub
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/tuancookiez-hub/anakot-gif-tool/blob/0c3cdbdfe81886bdbeab30855225f9b4701cd766/README.md
 version: "1.0.1"
 image: https://raw.githubusercontent.com/tuancookiez-hub/anakot-gif-tool/0c3cdbdfe81886bdbeab30855225f9b4701cd766/assets/card-caption.png

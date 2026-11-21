@@ -7,7 +7,7 @@ description: "PayPerQ (ppq.ai) OpenAI-compatible model provider for Anakot — p
 maintainer: thepurpose-npub
 tier: community
 category: models
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/thepurpose-npub/ppq-anakot-provider#readme
 version: "0.3.1"
 capabilities:

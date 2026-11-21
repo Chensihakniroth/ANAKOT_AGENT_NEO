@@ -1,6 +1,6 @@
 name: yandex_mail
 repo: https://github.com/akinfold/anakot-yandex-mail
-sha: 34b650089939867a553dfa82db9d888945c7e403
+sha: 80b17dc4717118165cb029eb5e03c5d3e5a8ca77
 subdir: anakot_yandex_mail
 title: "Yandex Mail"
 image: https://raw.githubusercontent.com/akinfold/anakot-yandex-mail/34b650089939867a553dfa82db9d888945c7e403/docs/banner.png
@@ -8,7 +8,7 @@ description: "Search and read Yandex Mail, organize messages and reply through I
 maintainer: akinfold
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.4.4"
 docs_url: https://github.com/akinfold/anakot-yandex-mail#readme
 readme: true

@@ -7,7 +7,7 @@ tier: community
 category: tools
 docs_url: https://github.com/nosliwhtes/forgebox#readme
 version: "0.1.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [linux, macos]
 capabilities:
   provides_tools: []

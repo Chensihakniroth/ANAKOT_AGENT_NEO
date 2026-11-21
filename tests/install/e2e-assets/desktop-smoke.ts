@@ -93,6 +93,19 @@ function requireEmptyAnakotHome(home: string): void {
   }
 }
 
+/** After an update the app reopens the profile the OLD phase left, so the post-update
+ * smoke expects state there. Reseeding it is safe only when the prediction is one of
+ * this run's own homes, never a real profile the resolver fell through to. */
+export function admitPredictedAnakotHome(home: string, phase: SmokeOptions['phase'], runHomes: readonly string[]): void {
+  if (phase !== 'new') {
+    requireEmptyAnakotHome(home)
+    return
+  }
+  if (!runHomes.some((runHome: string): boolean => path.relative(runHome, home) === '')) {
+    throw new Error(`Predicted Anakot home ${home} is not one of this run's homes (${runHomes.join(', ')}); refusing to seed it after the update`)
+  }
+}
+
 export function resolveSmokeLaunch(options: SmokeOptions): Launch {
   const spec = options['launch-spec'] ? launchSpecSchema.parse(JSON.parse(fs.readFileSync(options['launch-spec'], 'utf8').replace(/^\uFEFF/, ''))) : null
   const env = smokeEnvironment({ ...process.env, ...spec?.env }, options.home, options['user-data'])
@@ -119,12 +132,12 @@ export function resolveSmokeLaunch(options: SmokeOptions): Launch {
       }
       args = spec.argv.slice(1)
     }
-    const editableRoot = spec.env.ANAKOT_PYTHON_SRC_ROOT
+    const editableRoot = spec.env.HERMES_PYTHON_SRC_ROOT
     if (editableRoot) {
       if (!path.isAbsolute(editableRoot) || fs.realpathSync(editableRoot) !== fs.realpathSync(options.root)) {
-        throw new Error('Captured ANAKOT_PYTHON_SRC_ROOT differs from the expected source installation')
+        throw new Error('Captured HERMES_PYTHON_SRC_ROOT differs from the expected source installation')
       }
-      env.ANAKOT_PYTHON_SRC_ROOT = editableRoot
+      env.HERMES_PYTHON_SRC_ROOT = editableRoot
     }
     // Retain the product-selected source interpreter, not the driver's activated Python.
     for (const key of ['ANAKOT_DESKTOP_PYTHON', 'ANAKOT_DESKTOP_ANAKOT', 'ANAKOT_DESKTOP_ANAKOT_ROOT']) {
@@ -292,7 +305,7 @@ export async function runInstalledDesktopSmoke(options: SmokeOptions, launchApp:
     predictedHome = bundleEnv ? predictSmokeAnakotHome(launch.env, bundleEnv) : undefined
 
     // Check before the driver creates its sandbox folders inside this home.
-    if (predictedHome) { requireEmptyAnakotHome(predictedHome) }
+    if (predictedHome) { admitPredictedAnakotHome(predictedHome, options.phase, candidateSmokeAnakotHomes(options.home, options['user-data'])) }
 
     fs.mkdirSync(options.home, { recursive: true })
     fs.mkdirSync(options['user-data'], { recursive: true })

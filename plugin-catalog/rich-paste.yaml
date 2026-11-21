@@ -5,7 +5,7 @@ description: "Paste web pages, screenshots and Finder files into Anakot Desktop 
 maintainer: ZhenningLang
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.2.1"
 title: Rich Paste
 image: "https://raw.githubusercontent.com/ZhenningLang/rich-paste/1e3ec4bb45ce016aee1ce3e4d07d1d19fcc46e16/assets/catalog/banner.png"

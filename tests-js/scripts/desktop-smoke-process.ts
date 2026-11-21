@@ -331,13 +331,13 @@ export function localBackendProcess(port: number, electronPid: number, anakotHom
     backend.cwd = fs.readlinkSync(`/proc/${backend.pid}/cwd`)
     backend.command = fs.readFileSync(`/proc/${backend.pid}/cmdline`, 'utf8').split('\0').filter(Boolean).map((arg: string): string => JSON.stringify(arg)).join(' ')
     backend.sourceRoot = fs.readFileSync(`/proc/${backend.pid}/environ`, 'utf8').split('\0')
-      .find((entry: string): boolean => entry.startsWith('ANAKOT_PYTHON_SRC_ROOT='))?.slice('ANAKOT_PYTHON_SRC_ROOT='.length)
+      .find((entry: string): boolean => entry.startsWith('HERMES_PYTHON_SRC_ROOT='))?.slice('HERMES_PYTHON_SRC_ROOT='.length)
   } else if (process.platform === 'darwin') {
     backend.command = nativeText('ps', ['-p', String(backend.pid), '-o', 'args='])
     backend.cwd = nativeText('/usr/sbin/lsof', ['-a', '-p', String(backend.pid), '-d', 'cwd', '-Fn'])
       .split('\n').find((line: string): boolean => line.startsWith('n'))?.slice(1)
     const environment = nativeText('ps', ['eww', '-p', String(backend.pid), '-o', 'args='])
-    backend.sourceRoot = psEnvValue(environment, 'ANAKOT_PYTHON_SRC_ROOT')
+    backend.sourceRoot = psEnvValue(environment, 'HERMES_PYTHON_SRC_ROOT')
     backend.pythonPath = psEnvValue(environment, 'PYTHONPATH')
     backend.virtualEnv = psEnvValue(environment, 'VIRTUAL_ENV')
   }
@@ -414,7 +414,7 @@ export function assertBackendOrigin(backend: BackendProcess, root: string, origi
     if (backend.sourceRoot !== undefined) {
       if (!sameTree(backend.sourceRoot)) {
         throw new Error('Source backend listener imports a different source tree'
-          + ` (ANAKOT_PYTHON_SRC_ROOT=${backend.sourceRoot}, expected=${root}, command=${backend.command})`)
+          + ` (HERMES_PYTHON_SRC_ROOT=${backend.sourceRoot}, expected=${root}, command=${backend.command})`)
       }
 
       return
@@ -442,7 +442,7 @@ export function assertBackendOrigin(backend: BackendProcess, root: string, origi
 
     if (!sameTree(backend.cwd) && !namesInstallRoot && !usesInstallEnvironment && !appOwnsBackend) {
       throw new Error('Source backend listener imports a different source tree'
-        + ` (cwd=${backend.cwd ?? '(unreadable)'}, ANAKOT_PYTHON_SRC_ROOT=(unset),`
+        + ` (cwd=${backend.cwd ?? '(unreadable)'}, HERMES_PYTHON_SRC_ROOT=(unset),`
         + ` executable=${backend.executable}, expected=${root},`
         + ` appReportedRoot=${evidence.appReportedRoot ?? '(unreported)'}, command=${backend.command})`)
     }

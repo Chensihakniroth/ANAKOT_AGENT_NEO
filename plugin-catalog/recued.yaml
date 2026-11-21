@@ -13,7 +13,7 @@ description: >-
 maintainer: recued
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/recued/agent-plugin/blob/c9c37fb055925e423ff9a28d1376efad3d4c49f7/README.md
 version: "1.0.0"
 platforms: []

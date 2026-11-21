@@ -9,7 +9,7 @@ maintainer: alext8900
 tier: community
 category: tools
 docs_url: https://github.com/alext8900/borrowed-hands/blob/main/docs/QUICKSTART.md
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 readme: true
 platforms: [linux, macos]
 known_issues:

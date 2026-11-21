@@ -35,7 +35,7 @@ const BACKEND = process.env.ANAKOT_DASHBOARD_URL ?? "http://127.0.0.1:9119";
  * production builds.
  */
 function anakotDevToken(): Plugin {
-  const TOKEN_RE = /window\.__ANAKOT_SESSION_TOKEN__\s*=\s*"([^"]+)"/;
+  const TOKEN_RE = /window\.__HERMES_SESSION_TOKEN__\s*=\s*"([^"]+)"/;
   const EMBEDDED_RE =
     /window\.__ANAKOT_DASHBOARD_EMBEDDED_CHAT__\s*=\s*(true|false)/;
   const INITIAL_PROFILE_RE =
@@ -65,7 +65,7 @@ function anakotDevToken(): Plugin {
             tag: "script",
             injectTo: "head",
             children:
-              `window.__ANAKOT_SESSION_TOKEN__="${match[1]}";` +
+              `window.__HERMES_SESSION_TOKEN__="${match[1]}";` +
               `window.__ANAKOT_DASHBOARD_EMBEDDED_CHAT__=${embeddedJs};` +
               `window.__ANAKOT_INITIAL_PROFILE__=${initialProfileJs};`,
           },

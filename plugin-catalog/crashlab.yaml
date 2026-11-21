@@ -6,7 +6,7 @@ description: "Test recovery before delivery, after commit and across restart; in
 maintainer: dolepee
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.5.10"
 docs_url: https://github.com/dolepee/crashlab/blob/40932f8b828f584e64c985ddc8920dfd06d43693/README.md
 platforms:

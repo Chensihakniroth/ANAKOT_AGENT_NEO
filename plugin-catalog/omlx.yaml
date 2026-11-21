@@ -7,7 +7,7 @@ maintainer: vitaliy-blprnt
 tier: community
 category: models
 version: "0.1.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms:
   - macos
 docs_url: https://github.com/vitaliy-blprnt/anakot-plugin-omlx/blob/eb748caf0a3080cd3b8d9426eb995d2722ec3406/README.md

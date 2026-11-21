@@ -12,7 +12,7 @@ tier: community
 category: tools
 docs_url: https://github.com/Luecria/anakot-audit-lens#readme
 version: "0.1.0"
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 platforms: [linux, macos]
 capabilities:
   provides_tools:

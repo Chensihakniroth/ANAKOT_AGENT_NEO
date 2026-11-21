@@ -5,7 +5,7 @@ description: 'Model leaderboard for Anakot Desktop: a full /model-leaderboard pa
 maintainer: e-is
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/e-is/anakot-model-leaderboard#readme
 version: "1.2.0"
 image: https://raw.githubusercontent.com/e-is/anakot-model-leaderboard/516e2f8d4dd0790f2c486d1fe0b444de5c2b3c10/assets/card-podium.png

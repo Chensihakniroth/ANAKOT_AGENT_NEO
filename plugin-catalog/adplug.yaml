@@ -6,7 +6,7 @@ description: "Manage Google Ads, Meta Ads, LinkedIn Ads, Microsoft Ads and Reddi
 maintainer: AdPlug
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/adplug-app/adplug-anakot-plugin#readme
 version: "1.0.1"
 image: https://raw.githubusercontent.com/adplug-app/adplug-anakot-plugin/7d3a8e7119c3988876b2f6962a3a3d6549d73228/assets/banner.png

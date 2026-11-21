@@ -7,7 +7,7 @@ description: Native local dictation with opt-in proofreading and an advanced con
 maintainer: metamindedu
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 screenshots:
   - https://raw.githubusercontent.com/metamindedu/anakot-smart-dictation/e62b98787d4d056b8d7c333e05a80c6779f9ba2a/docs/images/smart-dictation.png
 readme: true

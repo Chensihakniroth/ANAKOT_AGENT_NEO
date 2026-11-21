@@ -7,7 +7,7 @@ description: "Convert PDFs such as bank statements, invoices, receipts and repor
 maintainer: Better Analyst
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://betteranalyst.com/docs/tools/pdf-to-excel
 readme: true
 platforms: []

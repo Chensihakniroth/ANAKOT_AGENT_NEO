@@ -6,7 +6,7 @@ description: "Private Telegram desktop viewing and user takeover with cooperativ
 maintainer: bhoot1234567890
 tier: community
 category: desktop
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 version: "0.1.0"
 title: Computer View
 screenshots:

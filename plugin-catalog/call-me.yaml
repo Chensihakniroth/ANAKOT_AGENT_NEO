@@ -6,7 +6,7 @@ description: "/call-me gateway: text your Anakot agent from the /call-me iPhone 
 maintainer: radres
 tier: community
 category: platform
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.1.0"
 docs_url: https://github.com/radres/anakot-plugin-call-me#readme
 capabilities:

@@ -7,7 +7,7 @@ tier: community
 category: voice
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-wyoming-voice-bridge#readme
 version: "0.1.6"
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 platforms: []
 capabilities:
   provides_tools:

@@ -6,7 +6,7 @@ description: "Brand voice and compliance rules Anakot can't break. Per-brand pro
 maintainer: Mhiah
 tier: community
 category: general
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/Mhiah/On-Brand
 version: "0.1.0"
 platforms: []

@@ -5,7 +5,7 @@ description: "Google Calendar is the one supported backend today (scope calendar
 maintainer: "Benjamin Crow (CrowBe) / Anakot Plugin Builder"
 tier: community
 category: automation
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/CrowBe/anakot-jobs/blob/34c0490fcc08d5e0b60cd56d32f3fa1f7317c317/README.md
 version: "0.3.2"
 image: https://raw.githubusercontent.com/CrowBe/anakot-jobs/34c0490fcc08d5e0b60cd56d32f3fa1f7317c317/docs/banner.png

@@ -6,7 +6,7 @@ description: >-
 maintainer: dandacompany
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/dandacompany/anakot-lang-ko#readme
 version: "0.2.4"
 platforms: []

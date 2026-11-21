@@ -7,7 +7,7 @@ description: Ring when a Anakot turn finishes so you can leave the window. OS
 maintainer: aydnOktay
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/aydnOktay/anakot-done-bell-
 version: "0.1.0"
 platforms: []

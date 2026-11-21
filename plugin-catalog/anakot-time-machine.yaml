@@ -7,7 +7,7 @@ description: "The rollback that knows what it can't undo. Incremental, time-boun
 maintainer: ddaikodaiko
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ddaikodaiko/anakot-time-machine#readme
 image: https://raw.githubusercontent.com/ddaikodaiko/anakot-time-machine/78ce6f538892217cbe6f51f258897da63d3a882c/docs/assets/banner.png
 screenshots:

@@ -10,7 +10,7 @@ maintainer: zzhan1q
 tier: community
 category: desktop
 version: "0.1.0"
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 platforms: []
 readme: true
 capabilities:

@@ -27,7 +27,7 @@ A quick search before you build saves your time and keeps the PR queue clean —
   gh search issues --repo NousResearch/hermes-agent "<your terms>"
   gh search prs --repo NousResearch/hermes-agent --state all "<your terms>"
   ```
-  Or use the web UI: [issues](https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/issues?q=) · [PRs (all states)](https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/pulls?q=is%3Apr).
+  Or use the web UI: [issues](https://github.com/NousResearch/hermes-agent/issues?q=) · [PRs (all states)](https://github.com/NousResearch/hermes-agent/pulls?q=is%3Apr).
 - **The issue tracker can lag the code.** Many requested features are already implemented in-tree, so also search the source (`search_files`, or your editor's grep) for the capability before proposing it.
 - **If an open PR already addresses it**, consider reviewing or improving that one instead of opening a competing duplicate.
 - **For larger work**, comment on the issue to signal you're working on it, so others don't start the same thing.
@@ -212,10 +212,10 @@ that disposable environment first. PM does not delete an existing destination.
 Do not run raw pip or uv commands to change a PM-built environment.
 
 To keep the test environment outside the checkout, replace `.venv` with a fresh absolute
-path. Set `ANAKOT_PYTHON` to that environment's interpreter:
+path. Set `HERMES_PYTHON` to that environment's interpreter:
 
-- POSIX: `export ANAKOT_PYTHON="/absolute/path/to/anakot-dev/bin/python"`
-- PowerShell: `$env:ANAKOT_PYTHON = 'C:\absolute\path\to\anakot-dev\Scripts\python.exe'`
+- POSIX: `export HERMES_PYTHON="/absolute/path/to/anakot-dev/bin/python"`
+- PowerShell: `$env:HERMES_PYTHON = 'C:\absolute\path\to\anakot-dev\Scripts\python.exe'`
 
 The canonical runner discovers repository `.venv` automatically. It clears
 `PYTHONPATH`, so pytest must be installed in the interpreter's own environment.
@@ -265,7 +265,7 @@ Native desktop dependencies can also require the platform build toolchain.
 
 Logos and icons are generated from `assets/nous-girl-*.svg` and
 `assets/backgrounds/`. `node scripts/generate-icons.mjs` (`just icons`) renders them with the
-Anakot runtime Python (`ANAKOT_PYTHON`, else `python` on PATH): Pillow and
+Anakot runtime Python (`HERMES_PYTHON`, else `python` on PATH): Pillow and
 resvg-py are core dependencies. Generated outputs are committed and CI fails if
 they are stale; rerun the generator and commit after changing any source SVG.
 
@@ -282,7 +282,7 @@ Both recipes call `scripts/run_tests.sh`; `just test` refuses to start
 without a path, and `just test-all` runs the full suite.
 
 On Windows, run the script through Bash. When no local `.venv` or `venv`
-contains pytest, the runner accepts the explicit `ANAKOT_PYTHON` above. It
+contains pytest, the runner accepts the explicit `HERMES_PYTHON` above. It
 clears credentials, isolates `ANAKOT_HOME`, and runs each test file in a separate
 subprocess through `scripts/run_tests_parallel.py`. It does not use xdist.
 
@@ -1072,7 +1072,7 @@ test(tools): add unit tests for file_operations
 
 ## Reporting Issues
 
-- Use [GitHub Issues](https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/issues)
+- Use [GitHub Issues](https://github.com/NousResearch/hermes-agent/issues)
 - Include: OS, Python version, Anakot version (`anakot --version`), full error traceback
 - Include steps to reproduce
 - Check existing issues before creating duplicates

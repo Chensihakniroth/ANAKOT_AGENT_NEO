@@ -6,7 +6,7 @@ description: "BaZi (Four Pillars) charts, the Chinese almanac and the charts sav
 maintainer: RussGuo
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/RussGuo/fatetell-mcp/blob/5d81776071ddf897abaf3a65ed9f203ca87372a5/README.md
 version: "0.1.0"
 platforms: []

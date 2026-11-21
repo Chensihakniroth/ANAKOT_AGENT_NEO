@@ -12,7 +12,7 @@ from fastapi.testclient import TestClient
 from anakot_cli.web_server import _SESSION_TOKEN, app
 
 
-HEADERS = {"X-Anakot-Session-Token": _SESSION_TOKEN}
+HEADERS = {"X-Hermes-Session-Token": _SESSION_TOKEN}
 
 
 @pytest.fixture

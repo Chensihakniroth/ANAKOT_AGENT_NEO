@@ -32,7 +32,7 @@ category: tools
 title: "Anakot Roam"
 docs_url: https://github.com/vcruz305/anakot-roam#readme
 readme: true
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.5.6"
 image: https://raw.githubusercontent.com/vcruz305/anakot-roam/8b9fba41fea77f2fe2d6d572cffd43039d2da11f/assets/catalog-banner.png
 known_issues:

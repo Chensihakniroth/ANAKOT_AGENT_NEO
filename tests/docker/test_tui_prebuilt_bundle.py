@@ -95,7 +95,7 @@ from anakot_cli.main_tui_launch import _apply_tui_python_env
 env = dict(os.environ)
 _apply_tui_python_env(env)
 child = subprocess.run(
-    [env["ANAKOT_PYTHON"], "-c",
+    [env["HERMES_PYTHON"], "-c",
      "import os, sys; print(os.path.realpath(sys.executable), flush=True); import tui_gateway.entry"],
     cwd="/opt/anakot", env=env, capture_output=True, text=True, timeout=30,
 )
@@ -107,7 +107,7 @@ print(json.dumps({
 }))
 '''
     # Run as the image user without `su`, which would erase Docker's
-    # ANAKOT_PYTHON and hide the broken runtime environment.
+    # HERMES_PYTHON and hide the broken runtime environment.
     inner = (
         "source /opt/anakot/.venv/bin/activate && "
         "cd /opt/anakot && "

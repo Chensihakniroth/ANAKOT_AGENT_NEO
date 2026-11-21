@@ -7,7 +7,7 @@ description: "Hindsight long-term memory provider — knowledge graph, entity re
 maintainer: vectorize-io
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://hindsight.vectorize.io/sdks/integrations/anakot
 image: https://raw.githubusercontent.com/vectorize-io/hindsight/f14cc1eb5624b0374cb4d82768eb2e0b9c21ae24/hindsight-integrations/anakot/docs/banner.png
 capabilities:

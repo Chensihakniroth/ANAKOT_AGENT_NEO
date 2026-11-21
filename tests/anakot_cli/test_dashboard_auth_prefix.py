@@ -517,7 +517,7 @@ class TestCookiePathRespectsPrefix:
         cookies = r2.headers.get_list("set-cookie")
         at_cookies = [
             c for c in cookies
-            if c.startswith("__Secure-anakot_session_at=")
+            if c.startswith("__Secure-hermes_session_at=")
         ]
         assert at_cookies, (
             f"session_at missing __Secure- prefix: {cookies!r}"

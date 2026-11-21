@@ -7,7 +7,7 @@ description: >-
 maintainer: churnast
 tier: community
 category: tools
-requires_anakot: ">=0.20.6"
+requires_hermes: ">=0.20.6"
 docs_url: https://github.com/churnast/anakot-telegram-stickers#readme
 version: "1.2.0"
 image: https://raw.githubusercontent.com/churnast/anakot-telegram-stickers/210ce860a06ed24b87f34d9c418f544d2afde4f0/docs/card.png

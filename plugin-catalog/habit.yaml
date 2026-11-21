@@ -6,7 +6,7 @@ description: "Learns which commands you already approve, proposes an allowlist e
 maintainer: scottleimroth
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/scottleimroth/habit/blob/21abbc574ab7e4961621385c6e605b6b74037394/README.md
 version: "0.1.6"
 image: https://raw.githubusercontent.com/scottleimroth/habit/21abbc574ab7e4961621385c6e605b6b74037394/docs/banner.png

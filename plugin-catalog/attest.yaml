@@ -7,7 +7,7 @@ description: "Paper trading ledger for agents. Orders, balances and P&L live in 
 maintainer: pgreyy
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/pgreyy/attest/blob/0de5e1e49da1bb9bcd54ef28d224c2cc095e7ad6/README.md
 version: "0.6.1"
 readme: true

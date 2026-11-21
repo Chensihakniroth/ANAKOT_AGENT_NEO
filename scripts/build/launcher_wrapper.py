@@ -38,10 +38,10 @@ import os
 import site
 import sys
 
-HERMES_ENTRY_MODULE = "__HERMES_ENTRY_MODULE__"
-HERMES_ENTRY_FUNC = "__HERMES_ENTRY_FUNC__"
-HERMES_REPO_REL = "__HERMES_REPO_REL__"
-HERMES_SITE_REL = "__HERMES_SITE_REL__"
+ANAKOT_ENTRY_MODULE = "__ANAKOT_ENTRY_MODULE__"
+ANAKOT_ENTRY_FUNC = "__ANAKOT_ENTRY_FUNC__"
+ANAKOT_REPO_REL = "__ANAKOT_REPO_REL__"
+ANAKOT_SITE_REL = "__ANAKOT_SITE_REL__"
 
 
 def _join_rel(here, rel):
@@ -59,7 +59,7 @@ def launcher_dir(argv0):
 def payload_sys_paths(here):
     """Import roots for the sealed payload: repo first (wins), then the
     venv's dependency tree — mirroring the old shim's PYTHONPATH order."""
-    return [_join_rel(here, HERMES_REPO_REL), _join_rel(here, HERMES_SITE_REL)]
+    return [_join_rel(here, ANAKOT_REPO_REL), _join_rel(here, ANAKOT_SITE_REL)]
 
 
 def default_pycache_dir(environ):
@@ -121,8 +121,8 @@ def main(argv=None):
     here = launcher_dir(argv[0] if argv else sys.argv[0])
     configure(here)
     importlib.import_module("anakot_bootstrap")
-    module = importlib.import_module(HERMES_ENTRY_MODULE)
-    target = getattr(module, HERMES_ENTRY_FUNC)
+    module = importlib.import_module(ANAKOT_ENTRY_MODULE)
+    target = getattr(module, ANAKOT_ENTRY_FUNC)
     # main() reads sys.argv; hand it the real argv (argv[0] stays the
     # launcher path, exactly like a console-script entry point).
     return target()

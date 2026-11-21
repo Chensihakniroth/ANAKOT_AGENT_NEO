@@ -6,7 +6,7 @@ description: "Anakot's done doesn't count until your tests pass. Type /necro fre
 maintainer: vijaygopalbalasa
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/vijaygopalbalasa/anakot-necromancer#readme
 version: "0.2.0"
 image: https://raw.githubusercontent.com/vijaygopalbalasa/anakot-necromancer/0ff7bec40aba10091a84f94025d4471984fd7386/docs/img/banner.png

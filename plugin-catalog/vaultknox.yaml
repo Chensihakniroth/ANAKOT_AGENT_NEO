@@ -6,7 +6,7 @@ description: "Secret-leak protection for Anakot chats. Scans inbound messages an
 maintainer: Ufonik88
 tier: community
 category: tools
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/Ufonik88/Anakot-VaultKnox/blob/8aea272fd9b071615fcd0c93a38b760485673316/docs/PLUGIN.md
 version: "0.8.3"
 image: https://raw.githubusercontent.com/Ufonik88/Anakot-VaultKnox/8aea272fd9b071615fcd0c93a38b760485673316/docs/images/banner.png

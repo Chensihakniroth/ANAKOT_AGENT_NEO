@@ -1,8 +1,8 @@
 # Anakot Achievements
 
-> **Bundled with Anakot Agent.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/anakot-achievements — vendored into `plugins/anakot-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Anakot feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
+> **Bundled with Anakot Agent.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/hermes-achievements — vendored into `plugins/hermes-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Anakot feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
 >
-> When Anakot is installed via the install script or cloned from source, this plugin auto-registers as a dashboard tab on first `anakot dashboard` launch. No separate install step. See [Built-in Plugins → anakot-achievements](../../website/docs/user-guide/features/built-in-plugins.md) in the main docs.
+> When Anakot is installed via the install script or cloned from source, this plugin auto-registers as a dashboard tab on first `anakot dashboard` launch. No separate install step. See [Built-in Plugins → hermes-achievements](../../website/docs/user-guide/features/built-in-plugins.md) in the main docs.
 
 Achievement system for the Anakot Dashboard: collectible, tiered badges generated from real local Anakot session history.
 
@@ -61,14 +61,14 @@ Version `0.2.x` expands the catalog to 60+ achievements, including model/provide
 Clone into your Anakot plugins directory:
 
 ```bash
-git clone https://github.com/PCinkusz/anakot-achievements ~/.anakot/plugins/anakot-achievements
+git clone https://github.com/PCinkusz/hermes-achievements ~/.anakot/plugins/hermes-achievements
 ```
 
 For local development, keep the repo elsewhere and symlink it:
 
 ```bash
-git clone https://github.com/PCinkusz/anakot-achievements ~/anakot-achievements
-ln -s ~/anakot-achievements ~/.anakot/plugins/anakot-achievements
+git clone https://github.com/PCinkusz/hermes-achievements ~/hermes-achievements
+ln -s ~/hermes-achievements ~/.anakot/plugins/hermes-achievements
 ```
 
 Then rescan dashboard plugins:
@@ -84,7 +84,7 @@ If backend API routes 404, restart `anakot dashboard`; plugin APIs are mounted a
 If you installed with git:
 
 ```bash
-cd ~/.anakot/plugins/anakot-achievements
+cd ~/.anakot/plugins/hermes-achievements
 git pull --ff-only
 curl http://127.0.0.1:9119/api/dashboard/plugins/rescan
 ```
@@ -121,7 +121,7 @@ dashboard/
 Routes are mounted under:
 
 ```text
-/api/plugins/anakot-achievements/
+/api/plugins/hermes-achievements/
 ```
 
 Endpoints:

@@ -6,7 +6,7 @@ description: "One list of the questions your Anakot bots are waiting on you to a
 maintainer: irsan-dimyati
 tier: community
 category: tools
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/irsan-dimyati/anakot-waiting-on-you#readme
 version: "0.2.0"
 platforms: []

@@ -6,7 +6,7 @@ description: "Local ledger of the turns you stopped while Anakot was still worki
 maintainer: olric3015
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/olric3015/anakot-plugins/tree/main/stop-ledger
 version: "1.0.0"
 image: https://raw.githubusercontent.com/olric3015/anakot-plugins/604940a4bb6754c571b7562362fe2d1ceac1d741/docs/stop-ledger-card.png

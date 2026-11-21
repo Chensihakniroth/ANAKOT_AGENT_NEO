@@ -26,7 +26,7 @@ def test_each_start_checks_pm_once_before_dispatch(surface, tmp_path, monkeypatc
     monkeypatch.setattr(Path, "home", lambda: home)
     monkeypatch.setenv("ANAKOT_HOME", str(home))
     monkeypatch.setenv("ANAKOT_RUNTIME_DIR", str(runtime))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     monkeypatch.setenv("ANAKOT_DISABLE_LAZY_INSTALLS", "1")
     monkeypatch.delenv("ANAKOT_DISABLE_FAST_SERVE_LAUNCH", raising=False)
     checked = []

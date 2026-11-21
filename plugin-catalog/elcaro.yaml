@@ -8,7 +8,7 @@ description: "Runtime prompt-injection defense and tamper-evident flight recorde
 maintainer: udirobert
 tier: community
 category: general
-requires_anakot: ">=0.22"
+requires_hermes: ">=0.22"
 docs_url: https://github.com/udirobert/elcaro/tree/main/anakot-plugin
 platforms: [windows, macos, linux]
 screenshots:

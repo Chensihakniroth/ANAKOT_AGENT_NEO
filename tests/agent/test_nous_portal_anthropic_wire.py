@@ -303,7 +303,7 @@ class TestPortalBodyFields:
 
         tags = self._build()["extra_body"]["tags"]
 
-        assert "product=anakot-agent" in tags
+        assert "product=hermes-agent" in tags
         assert anakot_client_tag() in tags
         assert all(isinstance(tag, str) for tag in tags), (
             "Portal skips non-string tag entries unpredictably"

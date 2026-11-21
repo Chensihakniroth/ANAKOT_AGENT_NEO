@@ -6,7 +6,7 @@ maintainer: lgc2333
 tier: community
 version: "0.1.0"
 category: voice
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/lgc2333/anakot-plugin-transcription-dashscope#readme
 platforms: []
 capabilities:

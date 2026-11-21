@@ -44,7 +44,7 @@ def voice_config(tmp_path, monkeypatch):
 
     def get(surface):
         monkeypatch.setattr(web_server.app.state, "ui_surface", surface, raising=False)
-        response = client.get("/api/audio/voice-config", headers={"X-Anakot-Session-Token": _TOKEN})
+        response = client.get("/api/audio/voice-config", headers={"X-Hermes-Session-Token": _TOKEN})
         assert response.status_code == 200, response.text
         return response
 

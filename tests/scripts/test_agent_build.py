@@ -136,7 +136,7 @@ def test_referenced_installed_code_uses_derived_command_map_without_copying(tmp_
     assert Path(mapping["env"]["ANAKOT_TUI_DIR"]).resolve() == Path(data["frontends"]["tui"])
     assert Path(mapping["env"]["ANAKOT_WEB_DIST"]).resolve() == Path(data["frontends"]["web"])
     assert Path(mapping["env"]["ANAKOT_WEBAPP_DIST"]).resolve() == Path(data["frontends"]["webapp"])
-    assert mapping["env"]["ANAKOT_INSTALL_ROOT"] == str(out / "share/anakot-agent")
+    assert mapping["env"]["HERMES_INSTALL_ROOT"] == str(out / "share/anakot-agent")
     assert not list(out.rglob("entry.py"))
     assert (out / "share/anakot-agent/skills").is_symlink()
     assert (out / "ui-tui").is_symlink()
@@ -302,7 +302,7 @@ def test_payload_smoke_uses_relocated_manifest_commands(tmp_path):
         "import json, os, sys\nfrom pathlib import Path\n"
         "def main():\n"
         f" assert not Path({str(out)!r}).exists(), 'payload was not moved'\n"
-        " assert 'ANAKOT_PYTHON' not in os.environ\n"
+        " assert 'HERMES_PYTHON' not in os.environ\n"
         " assert not Path.cwd().is_relative_to(Path(__file__).parent)\n"
         " if sys.argv[1:] == ['tools', 'list']:\n"
         "  import dependency\n"
@@ -315,7 +315,7 @@ def test_payload_smoke_uses_relocated_manifest_commands(tmp_path):
     (harness / "run.py").write_text("print('harness ok')\n", encoding="utf-8")
     assert build_cli(data, out, tmp_path).returncode == 0
     shutil.rmtree(source)
-    env = dict(os.environ, PYTHONPATH="/foreign", PYTHONHOME="/foreign", ANAKOT_PYTHON="/foreign")
+    env = dict(os.environ, PYTHONPATH="/foreign", PYTHONHOME="/foreign", HERMES_PYTHON="/foreign")
     command = ["bash", str(ROOT / "scripts/smoke-payload.sh"), str(out)]
     result = subprocess.run(command, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30, check=False)
     assert result.returncode == 0, result.stdout + result.stderr
@@ -422,4 +422,4 @@ def test_automatic_frontends_use_requested_snapshot_not_current_checkout(tmp_pat
     monkeypatch.setattr(stage.subprocess, "run", run)
     monkeypatch.setattr(stage, "stage_native", lambda args: 0)
     assert stage.main(["--out", str(tmp_path / "out"), "--ref", revision]) == 0
-    assert len(built_sources) == 4
+    assert len(built_sources) == 5

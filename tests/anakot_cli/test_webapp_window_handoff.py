@@ -23,7 +23,7 @@ def test_child_handoff_is_private_single_use_and_authorizes_real_api(local_webap
     monkeypatch.setattr("anakot_cli.dashboard_auth.prefix.resolve_public_url", lambda: public_url)
     server, client = local_webapp
     token = server._SESSION_TOKEN
-    headers = {"X-Anakot-Session-Token": token}
+    headers = {"X-Hermes-Session-Token": token}
     assert client.post("/api/webapp/window-ticket").status_code == 401
     page = client.get("/webapp/window")
     assert page.status_code == 200
@@ -37,7 +37,7 @@ def test_child_handoff_is_private_single_use_and_authorizes_real_api(local_webap
     path = tmp_path / "handoff.txt"
     path.write_text("child-window-proof", encoding="utf-8")
     assert client.get("/api/fs/read-text", params={"path": str(path)},
-                      headers={"X-Anakot-Session-Token": ticket}).status_code == 401
+                      headers={"X-Hermes-Session-Token": ticket}).status_code == 401
     # An opaque/sibling origin cannot consume even a known ticket.
     for origin in ("", "null", "http://127.0.0.1:9999", "https://127.0.0.1", "http://evil.example"):
         denied = client.post("/webapp/window-session",
@@ -62,7 +62,7 @@ def test_child_handoff_is_private_single_use_and_authorizes_real_api(local_webap
     assert granted.headers["cache-control"] == "no-store"
     assert granted.json()["token"] == token
     read = client.get("/api/fs/read-text", params={"path": str(path)},
-                      headers={"X-Anakot-Session-Token": granted.json()["token"]})
+                      headers={"X-Hermes-Session-Token": granted.json()["token"]})
     assert read.status_code == 200 and "child-window-proof" in read.text
     # Replay cannot recover the token, nor can it be obtained through a GET.
     assert exchange().status_code == 403
@@ -74,7 +74,7 @@ def test_child_handoff_is_bound_to_local_webapp_start(local_webapp, monkeypatch,
     from anakot_cli.web_routers import webapp
 
     server, client = local_webapp
-    issued = client.post("/api/webapp/window-ticket", headers={"X-Anakot-Session-Token": server._SESSION_TOKEN})
+    issued = client.post("/api/webapp/window-ticket", headers={"X-Hermes-Session-Token": server._SESSION_TOKEN})
     assert issued.status_code == 200
     ticket = issued.json()["ticket"]
     if invalidate == "expiry":
@@ -99,7 +99,7 @@ def test_pending_handoffs_keep_the_credentials_generation_not_the_credential(loc
 
     server, client = local_webapp
     token = server._SESSION_TOKEN
-    window = client.post("/api/webapp/window-ticket", headers={"X-Anakot-Session-Token": token}).json()["ticket"]
+    window = client.post("/api/webapp/window-ticket", headers={"X-Hermes-Session-Token": token}).json()["ticket"]
     webapp.mint_launch_ticket(server.app.state)
     webapp.mint_printed_launch_ticket(server.app.state)
     stored = server.app.state.webapp_window_tickets

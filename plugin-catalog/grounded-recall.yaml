@@ -7,7 +7,7 @@ description: "Before every model turn, searches your existing markdown notes (pl
 maintainer: joaquinbyagentx
 tier: community
 category: memory
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/joaquinbyagentx/anakot-grounded-recall#readme
 platforms: []
 capabilities:

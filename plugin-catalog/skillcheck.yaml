@@ -6,7 +6,7 @@ description: "CI for agent skills: snapshots the pre-write state of skill writes
 maintainer: neta-gym
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/neta-gym/skillcheck/blob/501cc11c89b1437eed96ed387451185616bf57d2/README.md
 version: "0.2.1"
 capabilities:

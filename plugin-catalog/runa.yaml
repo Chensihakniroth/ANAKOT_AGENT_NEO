@@ -19,7 +19,7 @@ description: >-
 maintainer: Runa-Labs-Inc
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Runa-Labs-Inc/runa-anakot-plugin/blob/fd663db532caf61a9fa553a4e5f4855aefd06e22/README.md
 version: "1.0.0"
 image: https://raw.githubusercontent.com/Runa-Labs-Inc/runa-anakot-plugin/fd663db532caf61a9fa553a4e5f4855aefd06e22/assets/catalog-card.png

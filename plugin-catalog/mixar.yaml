@@ -6,7 +6,7 @@ title: Mixar
 maintainer: Mixar-AI
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/Mixar-AI/anakot-mixar#readme
 platforms: [macos, windows, linux]
 description: >-

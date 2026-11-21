@@ -8,7 +8,7 @@ maintainer: BulkPublish
 tier: community
 category: tools
 docs_url: https://github.com/bulkpublish/anakot-bulkpublish#readme
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://raw.githubusercontent.com/bulkpublish/anakot-bulkpublish/530589907c6f791aacd35e1f708dbe8949e7e87f/assets/og-default.jpg
 readme: true
 platforms: []

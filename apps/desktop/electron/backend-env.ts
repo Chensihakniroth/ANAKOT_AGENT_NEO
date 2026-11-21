@@ -88,11 +88,13 @@ function normalizeAnakotHomeRoot(
   return isProfileHome(resolved, pathModule) ? pathModule.dirname(pathModule.dirname(resolved)) : resolved
 }
 
-// OS/interpreter names a dotenv may redeclare that no child can run without.
+// OS/interpreter names a dotenv may redeclare that no child can run without, plus the launch-only
+// Anakot keys (anakot_constants.LAUNCH_ONLY_ENV_KEYS): the loader never takes those from a .env.
 const PROCESS_ENV_NAMES = new Set([
   'APPDATA',
   'COMSPEC',
   'ANAKOT_HOME',
+  'ANAKOT_MANAGED_DIR',
   'HOME',
   'LANG',
   'LC_ALL',

@@ -10,7 +10,7 @@ description: Routes selected Anakot auxiliary tasks (approval, MCP sampling, com
 maintainer: trajectoire-ai
 tier: community
 category: models
-requires_anakot: '>=0.21'
+requires_hermes: '>=0.21'
 docs_url: https://github.com/trajectoire-ai/anakot-structured-aux-models#readme
 version: 0.1.0
 platforms: []

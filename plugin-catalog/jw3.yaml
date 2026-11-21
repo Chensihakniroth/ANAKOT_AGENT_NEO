@@ -9,7 +9,7 @@ tier: community
 category: tools
 docs_url: https://github.com/agnostic4321-ops/jw3-anakot-plugin
 image: https://raw.githubusercontent.com/agnostic4321-ops/jw3-anakot-plugin/44100ebdae63bf42b51f5a43913274cf2ee31959/assets/jw3-icon.svg
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 readme: true
 platforms: []
 capabilities:

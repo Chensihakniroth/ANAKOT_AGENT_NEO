@@ -173,12 +173,12 @@ def _verify_access_token(
 
 #: The header Anakot Desktop's "Session token" connection presents its token in, and the provider
 #: that alone may verify it there: the deployment session token (``ANAKOT_DASHBOARD_SESSION_TOKEN``).
-_SESSION_TOKEN_HEADER = "x-anakot-session-token"
+_SESSION_TOKEN_HEADER = "x-hermes-session-token"
 _SESSION_TOKEN_PROVIDER = "session-token"
 
 
 def _session_token_header_session(request: Request):
-    """The Session for the deployment session token in ``X-Anakot-Session-Token``, or ``None``.
+    """The Session for the deployment session token in ``X-Hermes-Session-Token``, or ``None``.
 
     The gate consults it only when no bearer was sent (a bearer wins). Only the registered
     session-token provider verifies the value (constant time), so no other provider's token opens

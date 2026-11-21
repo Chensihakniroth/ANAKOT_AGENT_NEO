@@ -7,7 +7,7 @@ description: "Tasks and lists in Superlist through Superlist's official hosted M
 maintainer: Superlist
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/superlistapp/superlist-mcp/blob/08019bee2821011ba811556ea81c93b258cb47a7/README.md
 readme: true
 platforms: []

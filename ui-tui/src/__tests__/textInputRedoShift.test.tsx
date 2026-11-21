@@ -103,7 +103,7 @@ describe('TextInput redo chord under extended-key terminals', () => {
     await settle()
     expect(changes.at(-1)).toBe('a')
 
-    // Redo: super+shift+z (modifier 10). anakot-ink restores the shifted
+    // Redo: super+shift+z (modifier 10). hermes-ink restores the shifted
     // letter's case, so the composer sees inp 'Z' with key.shift set.
     streams.stdin.send('\u001b[122;10u')
     await settle()

@@ -5,7 +5,7 @@ description: 'Splits one Japanese address into prefecture, city, town and the re
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.4'
+requires_hermes: '>=0.21.4'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-address#readme
 version: 0.1.9
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-address/318384409054e0d43329ed4cf002ea61014f3d6c/assets/catalog-banner.png

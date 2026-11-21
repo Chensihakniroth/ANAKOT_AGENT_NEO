@@ -14,7 +14,7 @@ description: >-
 maintainer: ether-btc
 tier: community
 category: tools
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/ether-btc/inventory-reminder#readme
 version: "1.0.0"
 platforms: []

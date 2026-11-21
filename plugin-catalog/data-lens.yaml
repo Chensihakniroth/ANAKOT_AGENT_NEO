@@ -6,7 +6,7 @@ description: "Automatic full-scan structural maps for eligible local CSV, JSON-a
 maintainer: itsolaph
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/itsolaph/data-lens
 image: https://raw.githubusercontent.com/itsolaph/data-lens/00b83750c2cb6a5901fab71542957975716c5584/docs/header.svg
 platforms:

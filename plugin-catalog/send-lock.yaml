@@ -17,7 +17,7 @@ description: >-
 maintainer: percyhendrux123-prog
 tier: community
 category: tools
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/percyhendrux123-prog/send-lock-kit/blob/9aa41a12e03a4a66b70ce0a194b53ef9ef686031/plugins/send-lock/README.md
 readme: true
 platforms: [macos, linux]

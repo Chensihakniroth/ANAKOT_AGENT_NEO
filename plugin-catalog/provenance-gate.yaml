@@ -18,7 +18,7 @@ description: >-
 maintainer: simin-yuan
 tier: community
 category: general
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/simin-yuan/anakot-provenance-gate#readme
 platforms: []
 capabilities:

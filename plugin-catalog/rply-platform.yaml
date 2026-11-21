@@ -7,7 +7,7 @@ description: "rply gateway platform: talk to Anakot from the rply inbox on your 
 maintainer: joshuaKnauber
 tier: community
 category: platform
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://rply.sh/docs/integrations/anakot/
 version: "0.7.0"
 capabilities:

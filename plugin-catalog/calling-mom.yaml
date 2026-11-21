@@ -7,7 +7,7 @@ description: "Lets a cheap model run your Kanban board and calls a stronger mode
 maintainer: SlyBase
 tier: community
 category: automation
-requires_anakot: ">=0.22"
+requires_hermes: ">=0.22"
 docs_url: https://github.com/SlyBase/calling-mom/blob/bb00935c590d4fc35089487cd2d69d81ac1debb0/README.md
 image: https://raw.githubusercontent.com/SlyBase/calling-mom/bb00935c590d4fc35089487cd2d69d81ac1debb0/assets/calling-mom-banner.jpg
 readme: true

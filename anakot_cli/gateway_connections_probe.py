@@ -2,7 +2,7 @@
 ``anakot:connections:test`` runs, from the serving gateway's side.
 
 The HTTP leg is the one Desktop runs first: ``GET <url>/api/status`` with the credential the entry
-saves (``X-Anakot-Session-Token`` for a token-mode remote, ``Authorization: Bearer`` for an
+saves (``X-Hermes-Session-Token`` for a token-mode remote, ``Authorization: Bearer`` for an
 oauth-mode sign-in in ``gateway-connection-tokens.json``) plus its extra headers. ``local`` is the
 serving gateway itself. SSH entries use the shared reach module's managed tunnel and its
 session token, then run the same authenticated HTTP probe.
@@ -29,7 +29,7 @@ def _credential_headers(connection_id: str) -> tuple[str, dict[str, str]]:
             raise store.ConnectionStoreError("This connection is not signed in. Sign in to it first.")
         headers["Authorization"] = f"Bearer {snap['tokens']['accessToken']}"
     elif snap["token"]:
-        headers["X-Anakot-Session-Token"] = snap["token"]
+        headers["X-Hermes-Session-Token"] = snap["token"]
     else:
         raise store.ConnectionStoreError(
             "This connection has no saved session token. Edit the connection and paste one.")

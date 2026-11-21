@@ -171,7 +171,7 @@ def _home(request: Request) -> Optional[Path]:
 
 
 def cookie_gateway(request: Request) -> str:
-    """The suffix the gateway's Webapp gives every sign-in cookie it sets (``anakot_session_at_<it>``
+    """The suffix the gateway's Webapp gives every sign-in cookie it sets (``hermes_session_at_<it>``
     and the rest, ``anakot_cli.dashboard_auth.cookies``): cookies are not scoped to a port. ``""`` off
     the Webapp, where the standalone dashboard keeps main's names."""
     return _gateway(request) if getattr(request.app.state, "ui_surface", None) == "webapp" else ""

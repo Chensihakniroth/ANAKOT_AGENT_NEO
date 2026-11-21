@@ -7,7 +7,7 @@ description: "Private library for the finished documents agents make (self-conta
 maintainer: dmmeteo
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/dmmeteo/anakot-artifacts/blob/57b61fca2872d15060d8a9b30b9e51242e9cb357/docs/anakot.md
 version: "0.1.0"
 readme: false

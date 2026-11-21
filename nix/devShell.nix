@@ -43,7 +43,7 @@
         ++ self'.packages.default.passthru.devDeps;
         shellHook = ''
           # The editable venv's .pth resolves the checkout through this.
-          export ANAKOT_PYTHON_SRC_ROOT=$(git rev-parse --show-toplevel)
+          export HERMES_PYTHON_SRC_ROOT=$(git rev-parse --show-toplevel)
 
           ${anakotAgentDevShellHook}
           ${anakotNpmLib.mkPnpmDevShellHook npmPackageJsonPaths}
@@ -57,7 +57,7 @@
           export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
           export NIX_SSL_CERT_FILE="$SSL_CERT_FILE"
 
-          echo "Anakot Agent dev shell in $ANAKOT_PYTHON_SRC_ROOT"
+          echo "Anakot Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
           echo "Ready. 'anakot-checkout' runs this checkout; 'anakot' stays your installed Anakot."
         '';
       };

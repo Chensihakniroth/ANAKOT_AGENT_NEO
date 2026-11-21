@@ -8,7 +8,7 @@ description: "Hashference as a Anakot model provider (`--provider hashference`, 
 maintainer: 0xalank
 tier: community
 category: models
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/0xalank/anakot-hashference-provider
 platforms: []
 capabilities:

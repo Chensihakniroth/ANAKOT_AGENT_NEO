@@ -20,7 +20,7 @@ description: >-
 maintainer: Weir
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://docs.weirapp.io/mcp
 readme: true
 platforms: []

@@ -8,7 +8,7 @@ category: tools
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-uk-companies#readme
 version: 0.1.0
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-uk-companies/e620676d9a1140322ce5efc8741cd8fc6d97f3c9/assets/catalog-banner.png
-requires_anakot: '>=0.21.4'
+requires_hermes: '>=0.21.4'
 platforms:
 - linux
 - macos

@@ -47,7 +47,7 @@ def test_loopback_ticket_names_the_session_token_owner_and_is_spent_once(webapp)
 
     _server, client = webapp
     assert client.post(_MINT).status_code == 401
-    minted = client.post(_MINT, headers={"X-Anakot-Session-Token": _TOKEN})
+    minted = client.post(_MINT, headers={"X-Hermes-Session-Token": _TOKEN})
     assert minted.status_code == 200, minted.text
     assert minted.headers["cache-control"] == "no-store"
     body = minted.json()
@@ -63,7 +63,7 @@ def test_loopback_ticket_names_the_session_token_owner_and_is_spent_once(webapp)
 
 def test_a_missing_profile_is_refused_before_a_ticket_exists(webapp):
     _server, client = webapp
-    refused = client.post(_MINT + "&profile=missing", headers={"X-Anakot-Session-Token": _TOKEN})
+    refused = client.post(_MINT + "&profile=missing", headers={"X-Hermes-Session-Token": _TOKEN})
     assert refused.status_code == 404
 
 
@@ -71,5 +71,5 @@ def test_a_missing_profile_is_refused_before_a_ticket_exists(webapp):
 def test_other_surfaces_do_not_mint_webapp_socket_tickets(webapp, monkeypatch, surface):
     server, client = webapp
     monkeypatch.setattr(server.app.state, "ui_surface", surface)
-    refused = client.post(_MINT, headers={"X-Anakot-Session-Token": _TOKEN})
+    refused = client.post(_MINT, headers={"X-Hermes-Session-Token": _TOKEN})
     assert refused.status_code == 404

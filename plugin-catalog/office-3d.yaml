@@ -13,7 +13,7 @@ description: "A live isometric office for Anakot Desktop: every profile is a per
 maintainer: oslook
 tier: community
 category: desktop
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 version: "1.4.4"
 platforms: [linux, macos, windows]
 docs_url: https://github.com/oslook/anakot-desktop-plugin-office-3d#readme

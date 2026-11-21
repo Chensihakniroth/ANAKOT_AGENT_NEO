@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://hermes-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-anakot--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentación"></a>
   <a href="https://discord.gg/NousResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/blob/main/LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge" alt="Licencia: MIT"></a>
+  <a href="https://github.com/NousResearch/hermes-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge" alt="Licencia: MIT"></a>
   <a href="https://nousresearch.com"><img src="https://img.shields.io/badge/Creado%20por-Nous%20Research-blueviolet?style=for-the-badge" alt="Creado por Nous Research"></a>
   <a href="README.md"><img src="https://img.shields.io/badge/Lang-English-blue?style=for-the-badge" alt="English"></a>
   <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/Lang-中文-red?style=for-the-badge" alt="中文"></a>
@@ -37,17 +37,17 @@ Usa cualquier modelo que quieras — [Nous Portal](https://portal.nousresearch.c
 ### Linux, macOS, WSL2
 
 ```bash
-git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git && cd ANAKOT_AGENT_NEO && ./setup-anakot.sh
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
 
 ### Windows (nativo, PowerShell)
 
-> **Nota:** En Windows nativo, Anakot funciona sin WSL — la CLI, el gateway, la TUI y las herramientas funcionan de forma nativa. Si prefieres usar WSL2, el comando de Linux/macOS de arriba también funciona allí. ¿Encontraste un error? Por favor [crea un issue](https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/issues).
+> **Nota:** En Windows nativo, Anakot funciona sin WSL — la CLI, el gateway, la TUI y las herramientas funcionan de forma nativa. Si prefieres usar WSL2, el comando de Linux/macOS de arriba también funciona allí. ¿Encontraste un error? Por favor [crea un issue](https://github.com/NousResearch/hermes-agent/issues).
 
 Ejecuta esto en PowerShell:
 
 ```powershell
-git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git; cd ANAKOT_AGENT_NEO; ./setup-anakot.ps1
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
 El instalador de código fuente usa PM para Python 3.14, Node.js, npm, pnpm,
@@ -193,7 +193,7 @@ de verificación están en [Development Setup](CONTRIBUTING.md#development-setup
 
 - 💬 [Discord](https://discord.gg/NousResearch)
 - 📚 [Skills Hub](https://agentskills.io)
-- 🐛 [Issues](https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO/issues)
+- 🐛 [Issues](https://github.com/NousResearch/hermes-agent/issues)
 - 🔌 [computer-use-linux](https://github.com/avifenesh/computer-use-linux) — Servidor MCP de control de escritorio Linux para Anakot y otros hosts MCP, con árboles de accesibilidad AT-SPI, entrada Wayland/X11, capturas de pantalla y targeting de ventanas del compositor.
 - 🔌 [AnakotClaw](https://github.com/AaronWong1999/anakotclaw) — Puente WeChat comunitario: Ejecuta Anakot Agent y OpenClaw en la misma cuenta de WeChat.
 

@@ -6,7 +6,7 @@ description: "Recovery drills for real application stacks: restores a declared d
 maintainer: Surajkumar5050
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Surajkumar5050/restoreproof#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Surajkumar5050/restoreproof/02615fb696db406e288eafcda2b922ac5731da92/assets/banner.jpg

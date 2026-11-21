@@ -8,7 +8,7 @@ description: "Best-of-N for coding agents, with real checks. multiverse_race mak
 maintainer: vdimarco
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 image: "https://raw.githubusercontent.com/vdimarco/anakot-plugin-hackathon/a3e6c9aa8d2033382400fb94db26892c45fdc643/assets/catalog/multiverse.png"
 readme: true
 platforms: [linux, macos]

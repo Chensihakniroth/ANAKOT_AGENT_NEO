@@ -6,7 +6,7 @@ description: "Play chess in a Anakot terminal or Desktop pane, understand mistak
 maintainer: itsflownium
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.3.0"
 readme: true
 platforms: [macos]

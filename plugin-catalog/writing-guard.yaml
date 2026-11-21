@@ -9,7 +9,7 @@ category: tools
 docs_url: https://github.com/MadeByBrain/anakot-extensions/tree/main/plugins/writing-guard#readme
 version: "1.0.1"
 image: https://raw.githubusercontent.com/MadeByBrain/anakot-extensions/c18ef190635e386a627ba921c816dceeb28c2de8/plugins/writing-guard/docs/banner.png
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 platforms: []
 capabilities:
   provides_tools:

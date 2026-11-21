@@ -6,7 +6,7 @@ description: Session file tray — paths the Anakot agent touched via read_file,
 maintainer: aydnOktay
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/aydnOktay/anakot-file-tray
 version: "0.1.0"
 platforms: []

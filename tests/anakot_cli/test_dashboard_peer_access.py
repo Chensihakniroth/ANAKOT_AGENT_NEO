@@ -141,7 +141,7 @@ def _bearer(token: str) -> dict[str, str]:
 def test_a_pass_reaches_the_agent_api_with_the_agent_key_and_nothing_of_the_callers(peer):
     resp = peer.client.post("/api/peer/v1/runs?wait=0", content=b'{"input": "hi", "session_id": "bot-1"}', headers={
         **_bearer("pass-message"), "Content-Type": "application/json", "Idempotency-Key": "ticket-1",
-        "Cookie": "anakot_session_at=browser", "X-Anakot-Peer-Principal": "someone-else",
+        "Cookie": "hermes_session_at=browser", "X-Anakot-Peer-Principal": "someone-else",
         "X-Forwarded-For": "198.51.100.7", "Origin": "https://attacker.example"})
 
     assert resp.status_code == 202 and resp.json() == {"path": "/v1/runs"}
@@ -375,8 +375,8 @@ def test_dashboard_credentials_never_open_peer_paths(peer):
     register_provider(session_token_plugin.SessionTokenProvider(token=deployment_token))
     session = _sign({"sub": "stub-user-1", "email": "stub@example.test", "name": "Stub User",
                      "org_id": "stub-org-1", "exp": 4102444800})
-    for credentials in ({"Cookie": f"anakot_session_at={session}"},
-                        {"X-Anakot-Session-Token": deployment_token}, _bearer(deployment_token)):
+    for credentials in ({"Cookie": f"__Host-hermes_session_at={session}"},
+                        {"X-Hermes-Session-Token": deployment_token}, _bearer(deployment_token)):
         assert peer.client.get("/api/auth/me", headers=credentials).status_code == 200, credentials
         resp = peer.client.get("/api/peer/health", headers=credentials)
         assert resp.status_code == 401, (credentials, resp.text)
@@ -424,7 +424,8 @@ def test_the_default_profiles_handle_reaches_the_default_profile(peer):
 def test_an_unknown_profile_gets_the_api_servers_unknown_profile_answer(peer):
     """``anakot peer`` reads this exact body as the peer's own "no such profile" verdict."""
     resp = peer.client.get("/api/peer/p/nosuch/health", headers=_bearer("pass-message"))
-    assert resp.status_code == 404 and resp.json() == {"error": "Unknown or unconfigured profile"}
+    assert resp.status_code == 404 and resp.json() == {"error": "Unknown or unconfigured profile",
+                                                       "code": "profile_unknown"}
     assert peer.seen == []
 
 

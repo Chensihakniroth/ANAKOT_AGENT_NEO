@@ -8,7 +8,7 @@ description: "Local-first layered agent memory (working / episodic / semantic) w
 maintainer: Caesar
 tier: community
 category: memory
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/er-s-an/recalllayer/blob/e89cc87ef7b2051f2b4dc6cb449b09df4cac36ce/recalllayer/README.md
 readme: true
 platforms: []

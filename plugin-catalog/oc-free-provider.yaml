@@ -5,7 +5,7 @@ description: "Unofficial OpenCode Zen free-model transport for Anakot. Discovers
 maintainer: anpicasso
 tier: community
 category: models
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 docs_url: https://github.com/anpicasso/anakot-oc-free-provider#readme
 version: "3.0.0"
 platforms: []

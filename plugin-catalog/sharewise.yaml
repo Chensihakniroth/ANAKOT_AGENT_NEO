@@ -32,7 +32,7 @@ description: >-
 maintainer: ardianreffa
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/ardianreffa/sharewise#readme
 version: "0.1.6"
 image: https://raw.githubusercontent.com/ardianreffa/sharewise/dd82698f253a29fe6eb53a8c36d4b51b11a289a9/docs/banner.jpg

@@ -5,7 +5,7 @@ description: "CCR compression plugin - 28-type classifier, 13 tools, opt-in cont
 maintainer: NikolaRHristov
 tier: community
 category: tools
-requires_anakot: ">=0.20.2"
+requires_hermes: ">=0.20.2"
 docs_url: https://github.com/PlayForm/Aphrodite-Anakot#readme
 version: "2.2.6"
 capabilities:

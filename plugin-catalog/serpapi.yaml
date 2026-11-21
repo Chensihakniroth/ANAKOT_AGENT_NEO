@@ -7,7 +7,7 @@ tier: community
 category: web
 title: SerpApi
 version: "1.2.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/serpapi/serpapi-anakot-plugin#readme
 image: https://raw.githubusercontent.com/serpapi/serpapi-anakot-plugin/f61418cb72a2771aec7526d03bf675fefd993b14/assets/catalog-banner.png
 capabilities:

@@ -6,7 +6,7 @@ maintainer: BrokeSkill
 tier: community
 category: desktop
 version: "0.7.0"
-requires_anakot: ">=0.22.1"
+requires_hermes: ">=0.22.1"
 image: https://raw.githubusercontent.com/BrokeSkill/anakot-taskbar-badge/a6fb95b930b50fc27874830fb77aba804688fda0/docs/banner.png
 platforms: [windows, linux, macos]
 capabilities:

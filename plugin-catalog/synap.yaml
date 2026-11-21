@@ -6,7 +6,7 @@ description: "Synap — OpenAI-compatible hosted inference. Sends prompts and SY
 maintainer: Linkrra
 tier: community
 category: models
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/jimmyplup/anakot-synap-provider#readme
 version: "1.0.0"
 capabilities:

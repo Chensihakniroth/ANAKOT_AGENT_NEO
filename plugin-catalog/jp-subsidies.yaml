@@ -5,7 +5,7 @@ description: 'Japanese subsidy search and weekly watch, built on the jGrants pub
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-subsidies#readme
 version: 0.1.9
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-subsidies/471ed8e7bd3e3dd9430ef86ee933e42da8d7cc73/assets/catalog-banner.png

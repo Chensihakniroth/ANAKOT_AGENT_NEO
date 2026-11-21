@@ -21,7 +21,7 @@ from starlette.websockets import WebSocketDisconnect
 from tests.anakot_cli.test_web_host_terminal_persistence import IdleBridge, metadata
 
 _TOKEN = "a" * 43
-_SESSION = {"X-Anakot-Session-Token": _TOKEN}
+_SESSION = {"X-Hermes-Session-Token": _TOKEN}
 
 
 def serve_webapp(tmp_path, monkeypatch):

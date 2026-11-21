@@ -432,19 +432,19 @@ test('source launch restores only an explicitly captured exact editable root', (
   const writeSpec = (sourceRoot: string): void => {
     // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- This is the existing launch-capture wire field.
     fs.writeFileSync(specPath, JSON.stringify({ argv: [process.execPath], cwd: home, matchedShape: 'packaged',
-      env: { ANAKOT_DESKTOP_PYTHON: process.execPath, ANAKOT_PYTHON_SRC_ROOT: sourceRoot } }))
+      env: { ANAKOT_DESKTOP_PYTHON: process.execPath, HERMES_PYTHON_SRC_ROOT: sourceRoot } }))
   }
 
   try {
     writeSpec(home)
-    expect(resolveSmokeLaunch(options).env.ANAKOT_PYTHON_SRC_ROOT).toBe(home)
+    expect(resolveSmokeLaunch(options).env.HERMES_PYTHON_SRC_ROOT).toBe(home)
 
     for (const wrong of [childRoot, path.dirname(home), 'relative-root']) {
       writeSpec(wrong)
       expect((): void => { resolveSmokeLaunch(options) }).toThrow('expected source installation')
     }
 
-    expect(smokeEnvironment({ ANAKOT_PYTHON_SRC_ROOT: home }, home, options['user-data']).ANAKOT_PYTHON_SRC_ROOT).toBeUndefined()
+    expect(smokeEnvironment({ HERMES_PYTHON_SRC_ROOT: home }, home, options['user-data']).HERMES_PYTHON_SRC_ROOT).toBeUndefined()
   } finally { fs.rmSync(home, { recursive: true, force: true }) }
 })
 
@@ -455,7 +455,7 @@ test.runIf(process.platform === 'linux')('module-launched source listener proves
   fs.writeFileSync(path.join(home, 'anakot_cli', 'main.py'), 'import socket, time\ns = socket.socket()\ns.bind(("127.0.0.1", 0))\ns.listen()\nprint(s.getsockname()[1], flush=True)\ntime.sleep(60)\n')
 
   const child = spawn('python3', ['-m', 'anakot_cli.main'], {
-    cwd: home, env: { ...process.env, ANAKOT_PYTHON_SRC_ROOT: home }, stdio: ['ignore', 'pipe', 'pipe'],
+    cwd: home, env: { ...process.env, HERMES_PYTHON_SRC_ROOT: home }, stdio: ['ignore', 'pipe', 'pipe'],
   })
 
   try {
@@ -748,6 +748,40 @@ test.each<[Record<string, string | null> | undefined]>([
     } finally {
       await mock.close()
     }
+  } finally { fs.rmSync(root, { recursive: true, force: true }) }
+})
+
+test('the post-update smoke reseeds the profile the update kept, but no home outside the run', async (): Promise<void> => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'smoke-post-update-'))
+  const home = path.join(root, 'home')
+  const userData = path.join(root, 'root', 'user-data')
+  const exe = path.join(root, 'root', 'fake-desktop')
+  fs.mkdirSync(path.join(root, 'root'), { recursive: true })
+  fs.writeFileSync(exe, '#!/bin/sh\nexit 1\n')
+  fs.chmodSync(exe, 0o755)
+  fs.writeFileSync(path.join(root, 'install-stamp.json'), JSON.stringify({ payload: 'bundled', bundleEnv: {} }))
+  // What the OLD phase and the update left in the profile.
+  fs.mkdirSync(path.join(home, 'sessions'), { recursive: true })
+  fs.writeFileSync(path.join(home, 'config.yaml'), 'display:\n  skin: ares\n')
+  fs.writeFileSync(path.join(home, 'sessions', 'old.json'), '{}')
+
+  const refuseLaunch = async (): Promise<never> => { throw new Error('launch refused by test') }
+
+  const options = { exe, root: path.join(root, 'root'), origin: 'bundled' as const, home, 'user-data': userData, out: root,
+    'expect-commit': 'a'.repeat(40) }
+
+  try {
+    await expect(runInstalledDesktopSmoke({ ...options, phase: 'new' }, refuseLaunch)).rejects.toThrow('launch refused by test')
+    expect(yaml.load(fs.readFileSync(path.join(home, 'config.yaml'), 'utf8'))).toMatchObject({ model: { provider: 'custom' }, display: { skin: 'ares' } })
+    expect(fs.readFileSync(path.join(home, 'sessions', 'old.json'), 'utf8')).toBe('{}')
+
+    // A fresh-install smoke still refuses the same populated profile.
+    await expect(runInstalledDesktopSmoke({ ...options, phase: 'installed' }, refuseLaunch)).rejects.toThrow('refusing to seed an existing profile')
+
+    // A prediction that falls through to a home this run never made is someone's real profile.
+    fs.writeFileSync(path.join(root, 'install-stamp.json'),
+      JSON.stringify({ payload: 'bundled', bundleEnv: { ANAKOT_HOME: null, ANAKOT_DESKTOP_USER_DATA_DIR: null } }))
+    await expect(runInstalledDesktopSmoke({ ...options, phase: 'new' }, refuseLaunch)).rejects.toThrow("is not one of this run's homes")
   } finally { fs.rmSync(root, { recursive: true, force: true }) }
 })
 

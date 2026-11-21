@@ -6,7 +6,7 @@ description: "Tracekit's signer decides every tool call before it runs (deny blo
 maintainer: Cygnux-Labs
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Cygnux-Labs/Tracekit/wiki/Integrations-Anakot
 version: "0.2.0"
 capabilities:

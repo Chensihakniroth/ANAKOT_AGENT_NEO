@@ -6,7 +6,7 @@ description: "Immutable artifact checks and privacy-minimized observer usage led
 maintainer: 1anter
 tier: community
 category: tools
-requires_anakot: '>=0.23.0'
+requires_hermes: '>=0.23.0'
 version: 0.2.0
 capabilities:
   provides_tools:

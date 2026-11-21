@@ -8,7 +8,7 @@ maintainer: reduck-ai
 tier: community
 category: web
 docs_url: https://docs.reduck.ai
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 known_issues:
   - "On Anakot 0.22.7 and older, the Reduck tools can stop after a reconnect (the header is sent as the literal ${REDUCK_API_KEY}). Restart Anakot to connect again."
 capabilities:

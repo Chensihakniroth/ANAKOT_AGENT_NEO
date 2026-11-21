@@ -5,7 +5,7 @@ description: 'SwitchBot OpenAPI v1.1, personal use. The watch does not report Pl
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.6'
+requires_hermes: '>=0.21.6'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-switchbot-control#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-switchbot-control/f0ecbf266ee528fa0db895e222ade31135461ca0/assets/catalog-banner.png

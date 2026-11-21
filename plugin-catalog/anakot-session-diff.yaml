@@ -5,7 +5,7 @@ description: Persistent session file diffs, run comparisons, and individual edit
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 docs_url: https://github.com/Adolanium/anakot-session-diff#readme
 image: https://raw.githubusercontent.com/Adolanium/anakot-session-diff/9ed3bf2f6e7d859495589940430782c542bbc4f9/assets/catalog-banner.png
 capabilities:

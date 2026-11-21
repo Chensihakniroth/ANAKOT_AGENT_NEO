@@ -141,8 +141,8 @@ is the sole packaging configuration. The wrapper disables automatic publishing;
 the release workflow owns uploads and channel promotion.
 
 `pm bundle --out DIR --ref REF` stages the native runtime only.
-`scripts/bundles/stage.py` also builds the TUI/dashboard unless both products
-are supplied explicitly. Both generate launchers; neither creates an Electron installer.
+`scripts/bundles/stage.py` also builds the TUI, dashboard and Webapp unless the
+TUI and dashboard products are supplied explicitly. Both generate launchers; neither creates an Electron installer.
 The launcher stage checks the payload and records its relative launch paths.
 The Electron build bakes these paths into its stamp. Desktop startup does not
 inspect, create, or repair a PM payload. Non-bundled builds carry no placeholder payload.
@@ -388,7 +388,7 @@ replace the complete tagged build described above.
 
 Icons are generated from `assets/nous-girl-*.svg` and `assets/backgrounds/`.
 `node scripts/generate-icons.mjs` renders them with the Anakot runtime Python
-(`ANAKOT_PYTHON`, else `python` on PATH); Pillow and resvg-py are core
+(`HERMES_PYTHON`, else `python` on PATH); Pillow and resvg-py are core
 dependencies. Generated PNG/ICO/ICNS files are not source assets.
 
 [Stable release admission](../../docs/stable-releases.md) requires the full

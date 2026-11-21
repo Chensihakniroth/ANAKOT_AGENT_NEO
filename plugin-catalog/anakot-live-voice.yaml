@@ -6,7 +6,7 @@ description: "Full-duplex Live Voice for Anakot Desktop — GPT-Live-1 on the Ch
 maintainer: Synero
 tier: community
 category: voice
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/Synero/anakot-live-voice
 platforms: []
 capabilities:

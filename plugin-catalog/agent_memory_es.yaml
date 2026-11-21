@@ -5,7 +5,7 @@ description: "Self-owned long-term memory backed by the agent-memory-es service 
 maintainer: patrykkopycinski
 tier: community
 category: memory
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 version: "0.1.0"
 docs_url: https://github.com/patrykkopycinski/anakot-plugin-agent-memory-es#readme
 homepage_url: https://patrykkopycinski.github.io/anakot-plugin-agent-memory-es/

@@ -8,7 +8,7 @@ description: "Learns the multi-step tool routines your agent keeps repeating acr
 maintainer: opeblow
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/opeblow/kata/blob/cc59b08f1bbeeb02524c060faac04edb34de0564/README.md
 readme: true
 platforms: []

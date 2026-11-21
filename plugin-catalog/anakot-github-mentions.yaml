@@ -6,7 +6,7 @@ description: "Run approved GitHub mentions as Anakot tasks and reply in the orig
 maintainer: luantak
 tier: community
 category: platform
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.4.3"
 platforms: [linux, macos]
 docs_url: https://github.com/luantak/anakot-github-mentions/blob/d8a88220a547180663fcec76a069c8fbbf63bff9/README.md

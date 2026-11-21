@@ -6,7 +6,7 @@ description: "Anakot Body turns a phone into a first-class Anakot channel: a pri
 maintainer: Itsmetibo
 tier: community
 category: platform
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Itsmetibo/anakot-body#readme
 capabilities:
   provides_tools: [body_status, body_speak]

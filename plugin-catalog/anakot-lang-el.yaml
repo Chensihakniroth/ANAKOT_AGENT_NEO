@@ -6,7 +6,7 @@ description: >-
 maintainer: axiom-agent-ai
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/axiom-agent-ai/anakot-lang-el#readme
 version: "1.0.0"
 platforms: []

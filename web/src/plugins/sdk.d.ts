@@ -2,15 +2,15 @@
  * Anakot Dashboard Plugin SDK — typed contract (SPIKE)
  * ====================================================
  *
- * This is the public type surface for ``window.__ANAKOT_PLUGIN_SDK__`` and
- * ``window.__ANAKOT_PLUGINS__``, the globals the dashboard host exposes to
+ * This is the public type surface for ``window.__HERMES_PLUGIN_SDK__`` and
+ * ``window.__HERMES_PLUGINS__``, the globals the dashboard host exposes to
  * plugin bundles (see ``web/src/plugins/registry.ts::exposePluginSDK``).
  *
  * STATUS: spike. This file documents the contract and gives plugin authors
  * (in-repo IIFEs and external bundles alike) editor types without bundling
  * their own copies of React / the API client. It is intentionally a
  * hand-authored ambient declaration rather than ``typeof
- * window.__ANAKOT_PLUGIN_SDK__`` because:
+ * window.__HERMES_PLUGIN_SDK__`` because:
  *   1. The runtime object is assembled from many internal modules
  *      (``@/lib/api``, ``@nous-research/ui``, …). Deriving the type would
  *      leak those internal import paths into the public contract and couple
@@ -58,7 +58,7 @@ export type FetchJSON = <T = unknown>(
  * binary/blob downloads). Same auth handling as ``fetchJSON`` but returns
  * the raw ``Response``, does not parse, does not throw on non-2xx, and does
  * not run the 401 redirect. Plugins MUST use this (or ``fetchJSON``) instead
- * of calling ``fetch`` with a hand-read ``window.__ANAKOT_SESSION_TOKEN__``.
+ * of calling ``fetch`` with a hand-read ``window.__HERMES_SESSION_TOKEN__``.
  * Both reject a URL on another origin instead of sending it the session
  * token; fetch third-party URLs with plain ``fetch``.
  */
@@ -79,7 +79,7 @@ export type BuildWsUrl = (
 export type BuildWsAuthParam = () => Promise<[string, string]>;
 
 // ---------------------------------------------------------------------------
-// Registry surface (window.__ANAKOT_PLUGINS__)
+// Registry surface (window.__HERMES_PLUGINS__)
 // ---------------------------------------------------------------------------
 
 export interface PluginRegistry {
@@ -90,7 +90,7 @@ export interface PluginRegistry {
 }
 
 // ---------------------------------------------------------------------------
-// SDK surface (window.__ANAKOT_PLUGIN_SDK__)
+// SDK surface (window.__HERMES_PLUGIN_SDK__)
 // ---------------------------------------------------------------------------
 
 export interface AnakotPluginSDK {
@@ -178,8 +178,8 @@ export interface AnakotPluginSDK {
 
 declare global {
   interface Window {
-    __ANAKOT_PLUGIN_SDK__?: AnakotPluginSDK;
-    __ANAKOT_PLUGINS__?: PluginRegistry;
+    __HERMES_PLUGIN_SDK__?: AnakotPluginSDK;
+    __HERMES_PLUGINS__?: PluginRegistry;
   }
 }
 

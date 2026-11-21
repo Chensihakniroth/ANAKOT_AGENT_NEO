@@ -23,4 +23,4 @@ capabilities:
     - subagent_stop
   provides_middleware: []
   requires_env: []
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"

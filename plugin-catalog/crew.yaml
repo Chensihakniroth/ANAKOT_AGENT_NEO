@@ -5,7 +5,7 @@ description: "One /crew message becomes verified work on the kanban board. A coo
 maintainer: macd2
 tier: community
 category: automation
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/macd2/Crew#readme
 version: "0.10.7"
 image: https://raw.githubusercontent.com/macd2/Crew/ffb0e0c1d11a5fb3d36c3e34671bbd4c2cc02b6f/assets/banner.png

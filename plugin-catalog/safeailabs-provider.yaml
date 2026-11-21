@@ -6,7 +6,7 @@ description: "Safe AI Labs as a Anakot model provider (`--provider safeailabs`, 
 maintainer: nevertrust-ai
 tier: community
 category: models
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "1.0.0"
 docs_url: https://github.com/nevertrust-ai/anakot-safeailabs-provider#readme
 capabilities:

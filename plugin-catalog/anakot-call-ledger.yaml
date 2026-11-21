@@ -6,7 +6,7 @@ description: >-
 maintainer: skappafrost
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/skappafrost/anakot-call-ledger#readme
 version: "1.0.0"
 platforms: []

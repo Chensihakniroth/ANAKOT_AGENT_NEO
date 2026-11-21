@@ -17,7 +17,7 @@ from anakot_cli.web_server import _SESSION_TOKEN, app
 from tests.anakot_cli.test_anon_upgrade import EMAIL, free_account, portal
 
 client = TestClient(app)
-HEADERS = {"X-Anakot-Session-Token": _SESSION_TOKEN}
+HEADERS = {"X-Hermes-Session-Token": _SESSION_TOKEN}
 
 __all__ = ["free_account", "portal"]  # fixtures imported from the CLI test module
 

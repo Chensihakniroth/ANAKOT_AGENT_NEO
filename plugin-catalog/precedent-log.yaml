@@ -5,7 +5,7 @@ description: "Saves a human's answer to a blocked Kanban question as a ruling fo
 maintainer: quotumorg
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.4.2"
 docs_url: https://github.com/quotumorg/precedent-log/blob/8741e9f121aad297c2383f51a30ac444f08438b8/README.md
 image: https://raw.githubusercontent.com/quotumorg/precedent-log/8741e9f121aad297c2383f51a30ac444f08438b8/docs/catalog-1200x600.png

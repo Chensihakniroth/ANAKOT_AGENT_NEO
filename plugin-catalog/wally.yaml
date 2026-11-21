@@ -17,7 +17,7 @@ description: >-
 maintainer: RunanywhereAI
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/RunanywhereAI/anakot-wally-provider/tree/8a9a0dc157c057ba6ded84454d874a96e3b08a63/wally#readme
 version: "0.1.0"
 capabilities:

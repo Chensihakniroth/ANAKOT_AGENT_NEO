@@ -9,7 +9,6 @@ import {
   type BootstrapStateModel,
   openLogDir,
   startInstall,
-  startUninstall,
   startUpdate
 } from '../store'
 
@@ -33,7 +32,7 @@ export default function Failure({ bootstrap }: FailureProps) {
     <div className="anakot-fade-in flex h-full flex-col items-center justify-center gap-6 px-12 py-10">
       <div className="w-full max-w-2xl min-w-0 text-center">
         <p
-          className="wordmark fit-text mx-auto mb-4 w-full text-destructive mix-blend-plus-lighter dark:text-destructive/90"
+          className="fit-text mx-auto mb-4 w-full font-['Collapse'] font-bold uppercase leading-[0.9] tracking-[0.08em] text-destructive mix-blend-plus-lighter dark:text-destructive/90"
           style={
             {
               '--fit-text-line-height': '0.9',
@@ -43,32 +42,23 @@ export default function Failure({ bootstrap }: FailureProps) {
           }
         >
           <span>
-            <span>{isUpdate ? 'Update didn\u2019t finish' : mode === 'uninstall' ? 'Uninstall didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
+            <span>{isUpdate ? 'Update didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
           </span>
-          <span aria-hidden="true">{isUpdate ? 'Update didn\u2019t finish' : mode === 'uninstall' ? 'Uninstall didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
+          <span aria-hidden="true">{isUpdate ? 'Update didn\u2019t finish' : 'Install didn\u2019t finish'}</span>
         </p>
 
         <p className="m-0 mx-auto max-w-xl text-center text-sm leading-normal tracking-tight text-muted-foreground">
           {bootstrap.error ??
             (isUpdate
               ? 'Something went wrong during the update.'
-              : mode === 'uninstall'
-                ? 'Something went wrong during the uninstall.'
-                : 'Something went wrong during installation.')}
+              : 'Something went wrong during installation.')}
         </p>
       </div>
 
       <div className="flex items-center gap-3">
-        <Button
-          className="gap-1.5"
-          // Retrying must retry the SAME flow: falling through to startInstall()
-          // here would reinstall the app a failed uninstall was removing.
-          onClick={() =>
-            void (isUpdate ? startUpdate() : mode === 'uninstall' ? startUninstall() : startInstall())
-          }
-        >
+        <Button className="gap-1.5" onClick={() => void (isUpdate ? startUpdate() : startInstall())}>
           <RefreshCw />
-          {isUpdate ? 'Retry update' : mode === 'uninstall' ? 'Retry uninstall' : 'Retry install'}
+          {isUpdate ? 'Retry update' : 'Retry install'}
         </Button>
         <Button className="gap-1.5" onClick={() => void openLogDir()} variant="text">
           <FileText />

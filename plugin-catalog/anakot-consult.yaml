@@ -5,7 +5,7 @@ description: "Website voice consultations with an embedded server and bilingual 
 maintainer: dandacompany
 tier: community
 category: voice
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.2.3"
 title: anakot-consult
 readme: true

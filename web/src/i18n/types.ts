@@ -656,7 +656,7 @@ export interface Translations {
     fontMono?: string;
   };
 
-  // ── Achievements plugin (plugins/anakot-achievements) ──
+  // ── Achievements plugin (plugins/hermes-achievements) ──
   achievements: {
     hero: {
       kicker: string;

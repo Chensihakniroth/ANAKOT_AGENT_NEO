@@ -11,7 +11,7 @@ description: >-
 maintainer: ladyFaye1998
 tier: community
 category: desktop
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/ladyFaye1998/anakot-clean-exit#readme
 version: "0.1.0"
 readme: true

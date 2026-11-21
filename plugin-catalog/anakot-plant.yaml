@@ -7,7 +7,7 @@ description: "A calm little garden for Anakot Desktop that grows in real time. I
 maintainer: tuancookiez-hub
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/tuancookiez-hub/anakot-plant/tree/f387648461b12488a48d703e918d283cafe7402a
 image: https://raw.githubusercontent.com/tuancookiez-hub/anakot-plant/f387648461b12488a48d703e918d283cafe7402a/docs/images/banner.png
 screenshots:

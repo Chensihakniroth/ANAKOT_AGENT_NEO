@@ -46,7 +46,7 @@ _ZIP_PRESERVED_NESTED = {
     "apps": ("desktop/release", "desktop/dist", "desktop/dist-webapp", "desktop/build"),
     "anakot_cli": ("web_dist",),
     "scripts": ("whatsapp-bridge/node_modules",),
-    "ui-tui": ("dist", "packages/anakot-ink/dist"),
+    "ui-tui": ("dist", "packages/hermes-ink/dist"),
 }
 
 _STASH_HINT = "  Stash or commit your changes, then rerun `anakot update`."

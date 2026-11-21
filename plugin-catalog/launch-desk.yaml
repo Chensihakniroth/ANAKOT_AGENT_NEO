@@ -7,7 +7,7 @@ description: "Built something? Ask Anakot to prepare the launch, based on what p
 maintainer: posts-design
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/posts-design/anakot-launch-desk/blob/745208481188ebad236eb5dc8f9291fecc7aad22/README.md
 version: "0.2.3"
 image: https://raw.githubusercontent.com/posts-design/anakot-launch-desk/745208481188ebad236eb5dc8f9291fecc7aad22/assets/banner.png

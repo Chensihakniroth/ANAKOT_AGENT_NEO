@@ -84,7 +84,7 @@ def test_signing_out_closes_the_terminal_and_streams_the_session_token_opened(we
 def test_signing_out_with_no_open_tabs_still_replaces_the_credential(webapp, sign_out):
     client = webapp.client
     assert sign_out() == {"signed_out": True, "serving": True, "sign_in_gate": False, "connections_closed": 0}
-    assert client.post("/api/webapp/socket-ticket?socket=gateway", headers={"X-Anakot-Session-Token": _TOKEN}).status_code == 401
+    assert client.post("/api/webapp/socket-ticket?socket=gateway", headers={"X-Hermes-Session-Token": _TOKEN}).status_code == 401
 
 
 @pytest.mark.parametrize("route", ["stream", "download"])
@@ -99,7 +99,7 @@ def test_signing_out_ends_the_file_links_the_session_token_minted(webapp, sign_o
     (root / "clip.mp4").write_bytes(b"hello")
     monkeypatch.setenv("ANAKOT_DASHBOARD_FILES_ROOT", str(root))
     minted = client.post("/api/files/ticket", json={"route": route, "path": str(root / "clip.mp4")},
-                         headers={"X-Anakot-Session-Token": _TOKEN})
+                         headers={"X-Hermes-Session-Token": _TOKEN})
     assert minted.status_code == 200, minted.text
     link = {"path": str(root / "clip.mp4"), "ticket": minted.json()["ticket"]}
     endpoint = web_server_file_tickets.ROUTES[route]
@@ -126,7 +126,7 @@ def test_a_media_link_minted_while_signing_out_streams_nothing(webapp, sign_out,
 
     monkeypatch.setattr(web_server_file_tickets, "mint", mint_after_sign_out)
     minted = client.post("/api/files/ticket", json={"route": "stream", "path": str(root / "clip.mp4")},
-                         headers={"X-Anakot-Session-Token": _TOKEN})
+                         headers={"X-Hermes-Session-Token": _TOKEN})
     assert minted.status_code == 200, minted.text
     stream = {"path": str(root / "clip.mp4"), "ticket": minted.json()["ticket"]}
     assert client.get("/api/files/stream", params=stream).status_code == 401

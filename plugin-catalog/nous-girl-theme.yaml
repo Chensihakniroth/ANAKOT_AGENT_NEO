@@ -6,7 +6,7 @@ description: "Warm monochrome ink-and-paper theme for Anakot Desktop in real lig
 maintainer: mykeura
 tier: community
 category: desktop
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 docs_url: https://github.com/mykeura/nous-girl#readme
 version: "0.1.1"
 image: https://raw.githubusercontent.com/mykeura/nous-girl/227ec2de49f4988ebb223afc9f3a75c5b546871d/images/cover.png

@@ -6,7 +6,7 @@ description: "Desktop pet for Anakot: runs the upstream dsh-pet standalone pet (
 maintainer: yucode-kk
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.2.1"
 docs_url: https://github.com/yucode-kk/dsh-pet/blob/ea058fcac75289abda09c1335ec830a6c2b9926e/docs/anakot-plugin.md
 screenshots: []

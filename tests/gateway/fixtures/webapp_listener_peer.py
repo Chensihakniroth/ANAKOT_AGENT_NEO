@@ -66,7 +66,7 @@ async def sockets_across_sign_out(runner, client, origin, ask):
     # A harmless program stands in for the user's login shell.
     web_host_terminal.shell_spec = lambda: ([sys.executable, "-c", "import time; time.sleep(120)"], "python")
     sockets = origin.replace("http:", "ws:")
-    session = {"X-Anakot-Session-Token": web_server._SESSION_TOKEN}
+    session = {"X-Hermes-Session-Token": web_server._SESSION_TOKEN}
 
     async def ticket(socket):
         return (await client.post(f"/api/webapp/socket-ticket?socket={socket}", headers=session)).json()["ticket"]
@@ -152,7 +152,7 @@ async def probe(mode, port, dist, platform):
             report["session_token_is_seeded"] = web_server._SESSION_TOKEN == SEEDED_TOKEN
             report["token_file"] = (home / TOKEN_PATH).exists()
             minted = await client.post("/api/webapp/socket-ticket?socket=gateway",
-                                       headers={"X-Anakot-Session-Token": web_server._SESSION_TOKEN})
+                                       headers={"X-Hermes-Session-Token": web_server._SESSION_TOKEN})
             report["ticket_status"] = minted.status_code
             if minted.status_code == 200:
                 ticket = minted.json()["ticket"]
@@ -179,7 +179,7 @@ async def probe(mode, port, dist, platform):
                     await client.post("/webapp/window-session", headers=handoff)).status_code
                 report.update(await sockets_across_sign_out(runner, client, origin, ask))
                 stale = await client.post("/api/webapp/socket-ticket?socket=gateway",
-                                          headers={"X-Anakot-Session-Token": SEEDED_TOKEN})
+                                          headers={"X-Hermes-Session-Token": SEEDED_TOKEN})
                 report["old_credential_status"] = stale.status_code
                 report["token_file_rotated"] = (home / TOKEN_PATH).read_text().strip() not in {"", SEEDED_TOKEN}
     finally:

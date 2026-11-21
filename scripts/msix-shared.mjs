@@ -26,7 +26,7 @@ export function channelBuildRequest(env = process.env) {
     'from scripts.bundles.desktop_prepare import validate_channel_request',
     'validate_channel_request(decode_json(sys.stdin.buffer.read()))'
   ].join('; ')
-  execFileSync(env.ANAKOT_PYTHON || 'python', ['-I', '-S', '-c', validator, path.resolve(import.meta.dirname, '..')], {
+  execFileSync(env.HERMES_PYTHON || 'python', ['-I', '-S', '-c', validator, path.resolve(import.meta.dirname, '..')], {
     env, input: env._ANAKOT_CHANNEL_REQUEST_JSON, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 30_000
   })
   if (env.ANAKOT_PAYLOAD_VERSION && env.ANAKOT_PAYLOAD_VERSION !== value.version) throw new Error('Channel package version conflicts with prepared request')

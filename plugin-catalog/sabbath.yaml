@@ -5,7 +5,7 @@ description: "Your agent never rests. Now it rests with you. Once a week (say Sa
 maintainer: ponzgpt
 tier: community
 category: general
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ponzgpt/sabbath
 version: "0.2.0"
 image: https://raw.githubusercontent.com/ponzgpt/sabbath/cb20a4edbe3783e9b2ebd2898f30f9f39937f6ea/docs/screenshots/banner.png

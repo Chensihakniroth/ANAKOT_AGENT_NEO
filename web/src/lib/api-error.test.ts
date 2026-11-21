@@ -10,7 +10,7 @@ vi.mock("./dashboard-auth-reload", () => ({
 }));
 
 beforeEach(() => {
-  Object.defineProperty(window, "__ANAKOT_SESSION_TOKEN__", {
+  Object.defineProperty(window, "__HERMES_SESSION_TOKEN__", {
     configurable: true,
     value: "tok",
     writable: true,

@@ -7,7 +7,7 @@ description: "Reads your own X bookmarks (long posts and X Articles in full) thr
 maintainer: winchxyz
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/winchxyz/anakot-x-bookmarks#readme
 image: https://raw.githubusercontent.com/winchxyz/anakot-x-bookmarks/c4c64dc98161c42e49bca56c16e23845481427d6/docs/media/banner.png
 screenshots:

@@ -7,7 +7,7 @@ description: Opt-in idle/daily gateway conversation resets. Reads the existing s
 maintainer: fastfinge
 tier: community
 category: automation
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/fastfinge/anakot-session-reset-policy#readme
 version: "0.3.0"
 platforms: []

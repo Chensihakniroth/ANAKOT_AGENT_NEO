@@ -7,7 +7,7 @@ description: "Local System One observes selected Anakot decisions through a sepa
 maintainer: NMTZ-z
 tier: community
 category: automation
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 version: "0.10.0"
 docs_url: https://github.com/NMTZ-z/system-one-benchmark-lab/tree/da9f0d474aa4d5d7baa19b13d338cc1d8a0cbd8e/integrations/anakot/local-system-one-anakot
 readme: true

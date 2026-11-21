@@ -7,7 +7,7 @@ maintainer: true402
 tier: community
 category: tools
 title: true402 swap guard
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://true402.dev/guides/rug-check-anakot-nousresearch-agent
 version: "1.0.0"
 capabilities:

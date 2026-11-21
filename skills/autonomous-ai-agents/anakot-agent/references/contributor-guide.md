@@ -101,7 +101,7 @@ scripts/run_tests.sh -v --tb=long             # pass-through pytest flags
   The output must not exist. Stop its processes and intentionally remove only
   that disposable environment before regeneration.
 - The runner probes repository `.venv`, `venv`, and the standard source-install
-  venv before falling back to `ANAKOT_PYTHON`. Each candidate must contain pytest.
+  venv before falling back to `HERMES_PYTHON`. Each candidate must contain pytest.
 - **Windows:** run the same wrapper through Git Bash. See `references/windows-quirks.md`.
 - After editing `pyproject.toml`, run `anakot pm lock`, re-source `./activate`, and
   commit `pyproject.toml` with `uv.lock`.

@@ -6,7 +6,7 @@ maintainer: ousiaresearch
 tier: community
 category: desktop
 docs_url: https://github.com/ousiaresearch/daily-edition
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.4.8"
 title: "Daily Edition"
 image: https://raw.githubusercontent.com/ousiaresearch/daily-edition/b53569f93157708fd7019e499a86fdf9a9117d3a/docs/images/hero-card.jpg

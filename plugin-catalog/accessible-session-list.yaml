@@ -15,7 +15,7 @@ description: >-
 maintainer: denis-skripnik
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "1.0.0"
 docs_url: https://github.com/denis-skripnik/anakot-accessible-session-list#readme
 readme: true

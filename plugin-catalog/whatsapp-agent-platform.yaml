@@ -2,7 +2,7 @@ name: whatsapp-agent-platform
 repo: https://github.com/ahtishamdilawar/anakot-whatsapp-agent-platform
 sha: 3a57b1da04499279d1af6c7d979c9c2d8b658ce0
 version: "0.2.1"
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 title: WhatsApp Agent Platform
 description: >-
   Community platform plugin (not affiliated with Meta or Nous Research) connecting a WhatsApp Agent to

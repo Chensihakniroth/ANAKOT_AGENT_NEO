@@ -5,7 +5,7 @@ description: Compare pinned Terraform provider and module versions with the publ
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.4'
+requires_hermes: '>=0.21.4'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-terraform-drift#readme
 version: 0.1.0
 platforms:

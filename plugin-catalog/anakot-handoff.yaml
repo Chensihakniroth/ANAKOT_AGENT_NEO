@@ -17,7 +17,7 @@ tier: community
 category: automation
 # Conservative support boundary: admission validated on official stable v0.22.5.
 # Not a certification of full UI/CLI behavior or the oldest working release.
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/yuzushi-dev/anakot-handoff/blob/2bab6cf77a436544f58f5b528cd0d838e6d60309/README.md
 readme: true
 platforms: [linux]

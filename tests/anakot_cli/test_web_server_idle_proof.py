@@ -175,7 +175,7 @@ def _probe_settled(port: int, settled, timeout: float = 20.0) -> tuple[int, dict
 
 def _probe(port: int, token: str | None = TOKEN) -> tuple[int, dict]:
     req = urllib.request.Request(f"http://127.0.0.1:{port}/api/health/idle",
-                                 headers={"X-Anakot-Session-Token": token} if token else {})
+                                 headers={"X-Hermes-Session-Token": token} if token else {})
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
             return resp.status, json.loads(resp.read().decode())

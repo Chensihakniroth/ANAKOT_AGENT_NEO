@@ -6,7 +6,7 @@ description: "Anakot can't call a UI change done until it has looked. Glance scr
 maintainer: Chinteyley
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/Chinteyley/anakot-glance#readme
 version: "0.1.0"
 screenshots:

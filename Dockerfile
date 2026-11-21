@@ -198,7 +198,7 @@ WORKDIR /opt/anakot
 # which fetched whatever revision the npm-resolved playwright wanted,
 # unverified, and recorded no fact. The resolved browser binary path is
 # baked to /etc/anakot/chromium-executable-path: the layout differs per
-# arch (chrome-linux64/chrome on amd64, chromium-linux-arm64/chromium on
+# arch (chrome-linux64/chrome on amd64, chrome-linux-arm64/chrome on
 # arm64), so it is resolved at build time and never hunted at boot.
 # anakot_cli/browser_runtime.py reads it when a volume over the runtime dir
 # hides pm's facts; stage2-hook.sh checks it still names a binary.
@@ -229,7 +229,7 @@ RUN set -eu; \
 RUN python3 -c 'from pathlib import Path; from pm import stage_manager_runtime; from scripts.bundles.payload import seal_pm_runtime; root = Path("/opt/anakot"); python = Path("/usr/local/bin/python3").resolve(); stage_manager_runtime(python=python, destination=root / "pm-runtime", project=root / "pm"); seal_pm_runtime(root, python)'
 
 # JS build helpers use the prepared interpreter without an installer parent.
-ENV ANAKOT_PYTHON=/usr/local/bin/python3
+ENV HERMES_PYTHON=/usr/local/bin/python3
 # The standalone interpreter records its builder's clang toolchain;
 # native extensions must use the compiler installed in this image.
 ENV CC=gcc CXX=g++
@@ -322,7 +322,7 @@ RUN python3 -c 'from pathlib import Path; from pm import ensure, installed_packa
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY web/package.json web/
 COPY ui-tui/package.json ui-tui/
-COPY ui-tui/packages/anakot-ink/ ui-tui/packages/anakot-ink/
+COPY ui-tui/packages/hermes-ink/ ui-tui/packages/hermes-ink/
 COPY apps/shared/ apps/shared/
 COPY scripts/build/node-deps*.mjs scripts/build/electron-runtime.mjs scripts/build/pnpm-lock.mjs scripts/build/
 # Root node_modules/typescript is a link into pnpm's virtual store, which never
@@ -543,10 +543,15 @@ COPY --chmod=0644 docker/profile-anakot-path.sh /etc/profile.d/anakot.sh
 # image these are shared, non-secret package metadata, read by UID 10000.
 # uv's environment locks are build-only and may be world-writable. Remove
 # them after all builds; never relax permissions on mutable PM/home state.
+# uv also creates its cache locks 0666 (the root .lock and one <entry>.lock
+# per wheel/sdist entry), and the seed copy into $ANAKOT_HOME/cache/uv keeps
+# modes. Drop the world bit instead of deleting by name: "*.lock" also matches
+# files inside unpacked wheels (setuptools/_vendor/.lock).
 RUN mkdir -p /opt/data && chmod 0644 /opt/anakot/tools/facts.json && \
-    rm -f /opt/anakot/.venv/.lock /opt/anakot/pm-runtime/.lock
+    rm -f /opt/anakot/.venv/.lock /opt/anakot/pm-runtime/.lock && \
+    find /opt/anakot/uv-cache ! -type l -perm -0002 -exec chmod o-w {} +
 # Build helpers use system Python above; TUI gateway children need the sealed runtime.
-ENV ANAKOT_PYTHON=/opt/anakot/.venv/bin/python
+ENV HERMES_PYTHON=/opt/anakot/.venv/bin/python
 VOLUME [ "/opt/data" ]
 
 # The image ENTRYPOINT is a tiny dispatcher rather than `/init` directly.

@@ -9,7 +9,7 @@ description: >-
 maintainer: scross01
 tier: community
 category: tools
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 version: "0.5.2"
 image: https://raw.githubusercontent.com/scross01/anakot-custom-dangerous-patterns-plugin/6b9bda685fb6271d2be7f13b75cd59fafc30f263/assets/card.png
 platforms: []

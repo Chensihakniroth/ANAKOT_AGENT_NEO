@@ -6,7 +6,7 @@ description: "Algorithmic (no-LLM) context compaction engine: builds summaries b
 maintainer: rain-sk
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/agentbox-tech/anakot-vcc
 version: "0.1.0"
 platforms: []

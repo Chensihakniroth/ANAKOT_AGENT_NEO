@@ -19,7 +19,7 @@ description: >-
 maintainer: RuAPI
 tier: community
 category: models
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/RuAPI-ai/anakot-provider-ruapi#readme
 version: "0.1.0"
 platforms: []

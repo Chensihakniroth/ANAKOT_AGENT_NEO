@@ -53,6 +53,8 @@ DAYTONA_API_KEY VERCEL_OIDC_TOKEN VERCEL_TOKEN VERCEL_PROJECT_ID VERCEL_TEAM_ID 
 AUXILIARY_VISION_API_KEY AUXILIARY_WEB_EXTRACT_API_KEY AUXILIARY_APPROVAL_API_KEY
 AUXILIARY_MY_PLUGIN_TASK_API_KEY AUXILIARY_VISION_BASE_URL AUXILIARY_COMPRESSION_BASE_URL
 GATEWAY_RELAY_SECRET GATEWAY_RELAY_DELIVERY_KEY GATEWAY_RELAY_SESSION_TOKEN
+ANAKOT_MODEL_API_KEY ANAKOT_DELEGATION_API_KEY ANAKOT_CUSTOM_LOCALHOST_8080_API_KEY
+ANAKOT_PROVIDER_ACME_1A2B3C4D_API_KEY
 """.split()
 OPERATOR_ALLOWED = """
 AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_PROFILE AWS_DEFAULT_REGION
@@ -989,7 +991,7 @@ class TestNativeEnvironmentContracts:
                    return_value={"mode": "strict"}), \
              patch("model_tools.handle_function_call",
                    side_effect=_mock_handle_function_call), \
-             patch("tools.code_execution_env._uses_anakot_python_environment",
+             patch("tools.code_execution_env._uses_hermes_python_environment",
                    return_value=same_env), \
              patch("subprocess.Popen", side_effect=_fake_popen), \
              patch.dict(os.environ, {

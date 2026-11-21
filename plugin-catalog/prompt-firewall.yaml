@@ -18,7 +18,7 @@ maintainer: Gaijin-01
 tier: community
 category: tools
 version: "1.1.4"
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 readme: true
 platforms: []
 known_issues:

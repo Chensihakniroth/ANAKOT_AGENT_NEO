@@ -5,7 +5,7 @@ description: "Nerve is a supervisory nervous system for Anakot Agent with provid
 maintainer: keeltrace
 tier: community
 category: automation
-requires_anakot: '>=0.21'
+requires_hermes: '>=0.21'
 docs_url: https://github.com/keeltrace/anakot-nerve#readme
 version: 0.4.15
 capabilities:

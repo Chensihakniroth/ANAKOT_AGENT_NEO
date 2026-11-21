@@ -29,7 +29,7 @@ description: >-
 maintainer: zkasuran
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/zkasuran/anakot-kestra-oncall#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/zkasuran/anakot-kestra-oncall/9714ac0d65ec1c887c7b250ec6f8709791ee5e25/assets/banner.png

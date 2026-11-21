@@ -7,7 +7,7 @@ maintainer: mistrysiddh
 tier: community
 category: desktop
 version: "1.3.0"
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/mistrysiddh/web-crawler-spider
 image: https://raw.githubusercontent.com/mistrysiddh/web-crawler-spider/cccc8de3c172fb0e95bc271e9b4b39c24bb360b6/docs/hero.png
 screenshots:

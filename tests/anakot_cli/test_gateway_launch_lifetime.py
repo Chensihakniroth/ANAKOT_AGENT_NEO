@@ -38,7 +38,7 @@ def test_retained_tui_worktree_survives_stale_prune_while_its_session_resumes(tm
     import os
     import time
 
-    from anakot_cli import main_tui_launch
+    from anakot_cli import main_tui_launch, session_worktree
     from anakot_cli.worktree_ops import _prune_stale_worktrees, _setup_worktree
     from anakot_constants import get_anakot_home
     from anakot_state import SessionDB
@@ -50,13 +50,13 @@ def test_retained_tui_worktree_survives_stale_prune_while_its_session_resumes(tm
     subprocess.run([*git, '-C', str(repo), 'add', '.gitignore'], check=True)
     subprocess.run([*git, '-C', str(repo), 'commit', '-qm', 'fixture'], check=True)
     monkeypatch.chdir(repo)
-    monkeypatch.setenv('ANAKOT_PYTHON', sys.executable)
+    monkeypatch.setenv('HERMES_PYTHON', sys.executable)
     wt_info = _setup_worktree(str(repo), sync_base=False)
     # The real launcher exits with the TUI, so its `anakot pid=<pid>` launch lock is dead by the next launch.
     subprocess.run(['git', '-C', str(repo), 'worktree', 'unlock', wt_info['path']], check=True)
     subprocess.run(['git', '-C', str(repo), 'worktree', 'lock', '--reason', 'anakot pid=999999999',
                     wt_info['path']], check=True)
-    monkeypatch.setattr(main_tui_launch, '_setup_tui_worktree', lambda: wt_info)
+    monkeypatch.setattr(session_worktree, 'create', lambda: wt_info)
     monkeypatch.setattr(main_tui_launch, '_make_tui_argv', lambda *_: (['node'], Path('.')))
     monkeypatch.setattr(main_tui_launch, '_print_tui_exit_summary', lambda *_: None)
 
@@ -107,7 +107,7 @@ def test_retained_tui_worktree_kept_while_any_session_in_it_resumes(tmp_path, mo
     subprocess.run([*git, '-C', str(repo), 'add', '.gitignore'], check=True)
     subprocess.run([*git, '-C', str(repo), 'commit', '-qm', 'fixture'], check=True)
     monkeypatch.chdir(repo)
-    monkeypatch.setenv('ANAKOT_PYTHON', sys.executable)
+    monkeypatch.setenv('HERMES_PYTHON', sys.executable)
     monkeypatch.setattr(main_tui_launch, '_make_tui_argv', lambda *_: (['node'], Path('.')))
     monkeypatch.setattr(main_tui_launch, '_print_tui_exit_summary', lambda *_: None)
     if case == 'terminal_closed':

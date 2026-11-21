@@ -8,7 +8,7 @@ description: "Senses for your computer: when a file lands in a folder, a USB sti
 maintainer: zahmed333
 tier: community
 category: automation
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/zahmed333/reflexes/tree/e90f63a97effcbadc4f14907ffffca277d3a65d6/reflexes#readme
 image: https://raw.githubusercontent.com/zahmed333/reflexes/e90f63a97effcbadc4f14907ffffca277d3a65d6/reflexes/docs/banner.svg
 readme: true

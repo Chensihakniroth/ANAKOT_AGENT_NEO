@@ -17,7 +17,7 @@ import sys
 # dist/scripts/ (a separate Nix store path), so parents[2] is only right in a source tree.
 # localGatewayBootstrap.ts passes the root it put on PYTHONPATH.
 def python_root() -> Path:
-    return Path(os.environ.get("ANAKOT_PYTHON_SRC_ROOT") or Path(__file__).resolve().parents[2])
+    return Path(os.environ.get("HERMES_PYTHON_SRC_ROOT") or Path(__file__).resolve().parents[2])
 
 
 sys.path.insert(0, str(python_root()))
@@ -30,7 +30,7 @@ BOOTSTRAP_REMEDY = "gateway unavailable: run `anakot pm repair`, then restart th
 def bootstrap(start: bool, recover: bool = False) -> dict:
     from pm.environments import NoCommittedEnvironment, activate_dependencies
 
-    # Ink runs this on ANAKOT_PYTHON with PYTHONPATH=<root> only. On a source install that is PM's
+    # Ink runs this on HERMES_PYTHON with PYTHONPATH=<root> only. On a source install that is PM's
     # store Python, which owns no packages, and the no-owner discovery fallback already imports one
     # (gateway.status -> utils -> anakot_yaml -> ruamel): boot the committed generation first, as
     # anakot_bootstrap does for every other entry point.

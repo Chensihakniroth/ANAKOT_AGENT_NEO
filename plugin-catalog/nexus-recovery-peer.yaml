@@ -14,7 +14,7 @@ description: >-
 maintainer: rezaaibox-ui
 tier: community
 category: models
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/rezaaibox-ui/nexus-recovery-peer/blob/2d3b15dcc513bab7fc2463d29fb581524a94c8fb/README.md
 version: "0.1.0"
 capabilities:

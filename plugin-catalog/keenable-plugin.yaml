@@ -6,7 +6,7 @@ description: "Web search and page fetching through Keenable's hosted MCP server,
 maintainer: keenableai
 tier: community
 category: web
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/keenableai/keenable-anakot-plugin#readme
 version: "1.0.0"
 image: https://raw.githubusercontent.com/keenableai/keenable-anakot-plugin/ffa97c924415f7b6e3517d900694272efac8af41/assets/keenable-catalog-card.svg

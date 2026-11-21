@@ -7,7 +7,7 @@ description: "A 12-month monthly direct cash-flow forecast for corporate treasur
 maintainer: "Prabhusekaran"
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Prabhusekaran/anakot-treasury-cash-forecast/blob/bc36c28e6357095b435b678bae11e5acc089b7ca/README.md
 image: https://raw.githubusercontent.com/Prabhusekaran/anakot-treasury-cash-forecast/bc36c28e6357095b435b678bae11e5acc089b7ca/docs/cover.png
 platforms: []

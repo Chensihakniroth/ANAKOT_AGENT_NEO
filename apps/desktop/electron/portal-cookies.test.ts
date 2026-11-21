@@ -29,7 +29,7 @@ test('either portal credential family signs in, and refresh-only material is a s
 // routing hints and logout identifiers. None of those authenticate the portal.
 test('gateway cookies, routing hints, empty values and non-arrays are never a portal credential', () => {
   const noise = [
-    { name: 'anakot_session_at', value: 'x' },
+    { name: 'hermes_session_at', value: 'x' },
     { name: '__Host-anakot_session_rt', value: 'x' },
     { name: 'next-auth-provider', value: 'workos' },
     { name: 'workos-session-id', value: 'logout-only' },

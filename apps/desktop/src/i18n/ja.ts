@@ -926,7 +926,10 @@ export const jaOverrides = {
       keepAwakeAlways: '常に',
       voiceShortcutHintTitle: '音声録音ショートカット',
       voiceShortcutHintDesc:
-        '「設定 → キーボードショートカット」で音声録音ショートカット（「Start / stop voice conversation」）を設定します。voice.record_key は CLI と TUI 専用です。'
+        '「設定 → キーボードショートカット」で音声録音ショートカット（「Start / stop voice conversation」）を設定します。voice.record_key は CLI と TUI 専用です。',
+      desktopReadAloudTitle: 'このアプリで応答を読み上げる',
+      desktopReadAloudDesc:
+        'Desktop で完了した各応答を読み上げます。入力欄のボタンと同じスイッチで、開いているすべてのウィンドウに適用され、オフにすると読み上げ中の応答も止まります。下の「応答を読み上げる」はメッセージングと CLI 用です。'
     },
     hudModifier: {
       title: 'キーをタップして HUD を呼び出す',
@@ -1103,7 +1106,7 @@ export const jaOverrides = {
       sshErrHostKey:
         '前回の接続以降、ホスト鍵が変更されています。想定どおりか確認し、ssh-keygen -R <host> を実行してから再接続してください。',
       sshErrNotInstalled:
-        'リモートホストに Anakot がインストールされていません。リモートでインストールする（git clone https://github.com/Chensihakniroth/ANAKOT_AGENT_NEO.git && cd ANAKOT_AGENT_NEO && ./setup-anakot.sh）か、Anakot パスを設定してください。',
+        'リモートホストに Anakot がインストールされていません。リモートでインストールする（curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sh）か、Anakot パスを設定してください。',
       sshErrPlatform:
         'サポートされていないリモートプラットフォームです。Anakot Desktop の SSH モードは Linux、macOS、Windows のリモートホストに対応しています。',
       sshErrTimeout: 'SSH 接続がタイムアウトしました。ホストが到達不能、またはスリープ中の可能性があります。',
@@ -1594,7 +1597,12 @@ export const jaOverrides = {
     noModelUsage: 'モデルの使用履歴はまだありません。',
     topSkills: 'よく使うスキル',
     noSkillActivity: 'スキルのアクティビティはまだありません。',
-    actions: count => `${count} アクション`
+    actions: count => `${count} アクション`,
+    maintenance: {
+      debugShareConfirm: 'デバッグレポートを公開ペーストにアップロードしますか？',
+      debugShareConfirmDesc:
+        'サマリーを公開ペーストサービスにアップロードします：Anakot・Python・OS のバージョン、接続中のプラットフォームとツールセットの名前、設定キー名（値は含みません）、警告/エラーの件数。ログ行やメッセージ本文は含まれません。ペーストは 6 時間後に自動削除されます。paste.rs に接続できない場合は代替の dpaste.com が使われ、1 日間公開されたままとなり、早期に削除できません。'
+    }
   },
 
   messaging: {
@@ -2421,7 +2429,7 @@ export const jaOverrides = {
       '/topup': 'Nous の残高を表示し、請求を管理',
       '/platform': '問題のあるゲートウェイプラットフォームを一時停止、再開、一覧表示',
       '/version': 'Anakot Agent のバージョンを表示',
-      '/debug': 'デバッグレポートを作成',
+      '/debug': 'デバッグレポート（バージョン、設定キー名、エラー件数。ログ本文なし）: まずプライバシー通知を表示し、/debug upload でリンクを共有',
       '/model': 'このセッションのモデルを切り替え'
     },
     hotkeyDescs: {

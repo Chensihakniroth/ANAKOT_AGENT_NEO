@@ -7,7 +7,7 @@ maintainer: onkanat
 tier: community
 category: desktop
 version: "0.1.8"
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/onkanat/anakot-offpeak-bekci#readme
 platforms: []
 screenshots:

@@ -6,7 +6,7 @@ description: "Your agent's plan, wired to its real work. The agent draws its pla
 maintainer: 0xbyt4
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.0"
 docs_url: https://github.com/0xbyt4/anakot-canvas#readme
 # image: needs a 2:1 picture committed to the repo (e.g. 1200x600), pinned to the sha. None exists yet.

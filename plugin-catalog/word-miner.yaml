@@ -12,7 +12,7 @@ description: >
 maintainer: trenthalden
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/trenthalden/word-miner#readme
 image: https://raw.githubusercontent.com/trenthalden/word-miner/510119b9ffd48eedbc007791e4edf4b809c45c1f/assets/banner.png
 screenshots:

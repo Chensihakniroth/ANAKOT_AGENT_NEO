@@ -6,7 +6,7 @@ description: "Supply-chain guard: runs the local Bumblebee scanner bridge (read-
 maintainer: kahnanX
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.1"
 screenshots:
   - https://raw.githubusercontent.com/kahnanX/bumblebee-guard/8cdf7e03493eedbd8fd7abb5a2aed53b230e53c6/docs/proof-page.png

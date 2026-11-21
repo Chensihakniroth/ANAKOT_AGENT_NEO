@@ -18,7 +18,7 @@ def test_release_channel_never_compares_main_or_reuses_main_cache(tmp_path, monk
     root = tmp_path / "source"
     root.mkdir()
     (root / ".git").mkdir()
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     monkeypatch.delenv("ANAKOT_REVISION", raising=False)
     monkeypatch.setattr("anakot_cli.config.get_project_root", lambda: root)
     head = "a" * 40

@@ -29,18 +29,12 @@ import types
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-# Hermes-era plugins import ``hermes_constants`` / ``hermes_state`` at call
-# time. Install the aliases before any plugin module is executed so their
-# dashboard APIs resolve Anakot's home and state DB (see plugin_legacy_compat).
-from anakot_cli.plugin_legacy_compat import install as _install_legacy_plugin_names
 from anakot_cli.plugin_host_wire import (
     Channel, Opaque, PROTOCOL_VERSION, PluginHostUnsupported, bind_serving_request, declared_member, decode,
     describe_signature, encode, is_async_callable, restore_arguments, serving_request,
 )
 
 logger = logging.getLogger("anakot_cli.plugin_host_child")
-
-_install_legacy_plugin_names()
 
 _ENTRY_POINTS_GROUP = "anakot_agent.plugins"
 
@@ -484,12 +478,15 @@ def _import_base(ref: str) -> type:
 def _provider_base(value: Any) -> Optional[type]:
     """The provider ABC (``HOST_OBJECT_BASES``) ``value`` implements. Only an already-imported base
     can match: a plugin object subclassing it imported it."""
+    from anakot_agent.compat.finder import current_name
+    from anakot_agent.compat.moves import MOVES
     from anakot_cli.plugin_isolation import HOST_OBJECT_BASES
     for ref in HOST_OBJECT_BASES.values():
         module, attr = ref.split(":")
-        base = getattr(sys.modules.get(module), attr, None)
-        if isinstance(base, type) and isinstance(value, base):
-            return base
+        for name in (module, current_name(module, MOVES)):
+            base = getattr(sys.modules.get(name), attr, None)
+            if isinstance(base, type) and isinstance(value, base):
+                return base
     return None
 
 
@@ -627,8 +624,10 @@ def extract_profiles_main(path: str, module_name: str) -> int:
 def main() -> int:
     reader, writer = _take_protocol_streams()
     import anakot_bootstrap
-    logging.basicConfig(stream=sys.stderr, level=os.environ.get("ANAKOT_PLUGIN_HOST_LOG_LEVEL", "WARNING"),
-                        format="%(levelname)s %(name)s: %(message)s")
+    from anakot_logging import DisplayNameFormatter
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    stderr_handler.setFormatter(DisplayNameFormatter("%(levelname)s %(name)s: %(message)s"))
+    logging.basicConfig(handlers=[stderr_handler], level=os.environ.get("ANAKOT_PLUGIN_HOST_LOG_LEVEL", "WARNING"))
     runtime = HostRuntime(reader, writer)
     from anakot_cli import plugin_events
     plugin_events._session_event_forwarder = runtime.session_event

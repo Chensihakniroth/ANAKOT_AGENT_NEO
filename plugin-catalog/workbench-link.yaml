@@ -6,7 +6,7 @@ description: "Route Anakot native file, terminal and code tools to one explicitl
 maintainer: dotmantissa
 tier: community
 category: tools
-requires_anakot: ">=0.23.0,<0.24.0"
+requires_hermes: ">=0.23.0,<0.24.0"
 version: "0.1.0"
 docs_url: https://github.com/dotmantissa/workbench_link/blob/657bfda03bef3e47a2a89652ecf2bdbcfdf5a839/README.md
 readme: true

@@ -14,7 +14,7 @@ maintainer: "ROCK"
 tier: community
 category: desktop
 platforms: [windows, macos, linux]
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 capabilities:
   provides_tools:
     - ideacut_create

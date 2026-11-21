@@ -6,7 +6,7 @@ description: "Read-only dashboard tab and model-free /duty and anakot duty summa
 maintainer: xiaoyaner0201
 tier: community
 category: desktop
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/xiaoyaner0201/anakot-duty-board#readme
 version: "0.4.0"
 screenshots:

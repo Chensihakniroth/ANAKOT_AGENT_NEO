@@ -7,7 +7,7 @@ maintainer: ShawnCRMer
 tier: community
 category: desktop
 version: "6.0.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ShawnCRMer/anakot-tldr#readme
 image: https://raw.githubusercontent.com/ShawnCRMer/anakot-tldr/5664d2d0d9499dd4eff9337b815cd316870b9cb0/docs/card.png
 screenshots:

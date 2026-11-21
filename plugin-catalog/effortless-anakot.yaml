@@ -5,7 +5,7 @@ description: "Picks the reasoning effort for every prompt: a fast judge (Jev/Typ
 maintainer: ivcained
 tier: community
 category: tools
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/ivcained/effortless-anakot#readme
 image: https://raw.githubusercontent.com/ivcained/effortless-anakot/5444e7b130a74e1c03e826f224da65789abdffb5/assets/banner.png
 version: "0.4.0"

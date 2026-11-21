@@ -6,7 +6,7 @@ description: "Live translation for Anakot. Hermeneus captures the audio playing 
 maintainer: Bihruze
 tier: community
 category: voice
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/Bihruze/hermeneus#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Bihruze/hermeneus/9b8b98c369281358226b948410e3e289c782f702/docs/banner.jpg

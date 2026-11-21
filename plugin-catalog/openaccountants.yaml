@@ -6,7 +6,7 @@ description: "OpenAccountants connector for Anakot: today's tax figures for 190+
 maintainer: Jeffrey Watts
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/lEWFkRAD/openaccountants-anakot-plugin
 version: "0.1.0"
 readme: true

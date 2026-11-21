@@ -7,7 +7,7 @@ sidebar_label: Codex App-Server Runtime
 
 Anakot can optionally hand `openai/*`, `openai-codex/*` and [named custom provider](#named-custom-providers) turns to the [Codex CLI app-server](https://github.com/openai/codex) instead of running its own tool loop. When enabled, terminal commands, file edits, sandboxing, and MCP tool calls all execute inside Codex's runtime — Anakot becomes the shell around it (sessions DB, slash commands, gateway, memory and skill review).
 
-This is **opt-in only**. Default Anakot behavior is unchanged unless you flip the flag. Anakot never auto-routes you onto this runtime.
+This is **opt-in only**. Default Anakot behavior is unchanged unless you flip the flag. Anakot never auto-routes you onto this runtime. Weighing the two? [Anakot Agent vs Codex](https://hermes-agent.nousresearch.com/compare/codex) compares model choice, platforms and pricing with sources.
 
 :::tip
 Not using OpenAI Codex? `anakot setup --portal` configures a non-Codex backend with Claude/Gemini/etc. in one step. See [Nous Portal](../../integrations/nous-portal.md).

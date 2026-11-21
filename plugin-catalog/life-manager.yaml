@@ -8,7 +8,7 @@ description: "Records commitments a person states, keeps habit streaks, and inje
 maintainer: Daisuke134
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Daisuke134/life-manager/tree/main/anakot-plugin
 readme: true
 platforms: []

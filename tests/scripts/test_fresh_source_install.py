@@ -66,7 +66,7 @@ def test_current_installer_publishes_real_dependencies_and_warm_path(tmp_path, s
     run([uv, "python", "install", "--no-bin", "--no-registry", minor])
     source = tmp_path / "fixture source"
     source.mkdir()
-    for name in ("pm", "anakot_cli", "anakot_platform"):
+    for name in ("pm", "anakot_cli", "anakot_platform", "anakot_agent"):
         shutil.copytree(ROOT / name, source / name, ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("utils.py", "anakot_constants.py", "anakot_dir_acl.py", "anakot_yaml.py", "anakot_bootstrap.py",
                  "setup-anakot.sh"):

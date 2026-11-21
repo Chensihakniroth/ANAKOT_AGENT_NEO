@@ -5,7 +5,7 @@ description: "A nightly board of things your agent can take off your plate, each
 maintainer: bmanturner
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/bmanturner/anakot-idea-board/blob/fc824ef3ea22df8bc1c63da4657ea72f08005bb6/README.md
 version: "0.1.0"
 platforms: []

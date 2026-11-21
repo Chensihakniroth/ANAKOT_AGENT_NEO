@@ -7,7 +7,7 @@ description: "A test harness for Anakot guardrails: what a rule would break, and
 maintainer: noviceadam666
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/noviceadam666/policy-backtester#readme
 known_issues:
   - "Enforce is a policy gate, not a security boundary: rules see what a command says, not what it does, and code an agent writes and runs can get past them."

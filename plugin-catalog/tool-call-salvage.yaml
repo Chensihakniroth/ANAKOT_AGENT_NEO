@@ -17,7 +17,7 @@ description: >-
 maintainer: Julientalbot
 tier: community
 category: models
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/Julientalbot/anakot-tool-call-salvage/blob/eae346510d680c3e6de211ef254e69b29ab95e4a/README.md
 capabilities:
   provides_tools: []

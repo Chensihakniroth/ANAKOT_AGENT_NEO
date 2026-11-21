@@ -8,7 +8,7 @@ description: "Anakot long-term memory on Walrus mainnet (decentralized storage o
 maintainer: Automationbot24x7
 tier: community
 category: memory
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Automationbot24x7/anakot-tusk#readme
 image: https://raw.githubusercontent.com/Automationbot24x7/anakot-tusk/3d1a6ef5f938c3d6b36187a388bcdaabe20b1829/assets/banner.png
 screenshots:

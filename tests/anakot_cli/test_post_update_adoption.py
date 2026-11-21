@@ -22,7 +22,7 @@ def blessed_checkout(tmp_path, monkeypatch):
     root.mkdir(parents=True)
     (root / ".git").mkdir()
     monkeypatch.setenv("ANAKOT_HOME", str(home))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     return root
 
 
@@ -62,7 +62,7 @@ def test_non_blessed_checkout_untouched(tmp_path, monkeypatch):
     dev.mkdir(parents=True)
     (dev / ".git").mkdir()
     monkeypatch.setenv("ANAKOT_HOME", str(home))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(dev))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(dev))
     result = step_adopt_blessed_checkout()
     assert result.get("skipped") == "not-a-blessed-root"
     assert not (dev / "install-stamp.json").exists()
@@ -75,7 +75,7 @@ def test_sealed_tree_untouched(tmp_path, monkeypatch):
     root = home / "anakot-agent"
     root.mkdir(parents=True)
     monkeypatch.setenv("ANAKOT_HOME", str(home))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     result = step_adopt_blessed_checkout()
     assert result.get("skipped") == "not-a-checkout"
     assert not (root / "install-stamp.json").exists()
@@ -130,7 +130,7 @@ def test_adoption_of_real_checkout_records_full_identity(tmp_path, monkeypatch):
     git("commit", "-qm", "release")
     git("tag", "v0.21.4")
     monkeypatch.setenv("ANAKOT_HOME", str(home))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
 
     result = step_adopt_blessed_checkout()
 

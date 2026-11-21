@@ -21,7 +21,7 @@ _RESERVED_REMOTE_PROFILES = {"anakot", "test", "tmp", "root", "sudo"}
 _HEADER_NAME_RE = re.compile(r"^[!#$%&'*+.^_`|~0-9A-Za-z-]+$")
 _FORBIDDEN_HEADERS = {
     "authorization", "connection", "content-length", "content-type", "cookie", "host", "origin",
-    "referer", "te", "trailer", "transfer-encoding", "upgrade", "x-anakot-session-token",
+    "referer", "te", "trailer", "transfer-encoding", "upgrade", "x-hermes-session-token",
 }
 _PROFILE_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 

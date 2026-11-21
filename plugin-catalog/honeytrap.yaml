@@ -16,4 +16,4 @@ capabilities:
     - post_tool_call
   provides_middleware: []
   requires_env: []
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"

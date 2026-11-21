@@ -7,7 +7,7 @@ description: "Tech job search: search the public board of open tech roles, find 
 maintainer: Remoet
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/remoet-labs/agent-skills/blob/3e153fdadc552265f6281d80c319e7e959287bfb/anakot-plugin/README.md
 version: "1.0.0"
 platforms: []

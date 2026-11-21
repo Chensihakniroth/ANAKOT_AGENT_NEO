@@ -44,7 +44,7 @@ tier: community
 version: "0.2.2"
 category: voice
 docs_url: https://github.com/ashwanthbalakrishnan5/anakot-whatsapp-voice#readme
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [linux, macos]
 known_issues:
   - "Uses an unofficial, reverse-engineered WhatsApp protocol (whatsapp-rust): WhatsApp updates can break calls, and automated use may get the bot number restricted. Use a number you can afford to lose."

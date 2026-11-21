@@ -6,7 +6,7 @@ description: "Nyx: local, single-user long-term memory with no LLM on the write 
 maintainer: sixgodgit
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 version: "7.17.0"
 docs_url: https://github.com/sixgodgit/nyx/tree/101a64d308281f75ba200e28c1c73c4d6e1887ce/anakot-plugin
 readme: true

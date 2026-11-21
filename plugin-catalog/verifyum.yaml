@@ -22,7 +22,7 @@ description: >-
 maintainer: aisenseapi
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/aisenseapi/verifyum-agent-plugin/blob/15c80a75593a04fdcf22a3ed52ed3c545bceee0b/README.md
 version: "0.2.0"
 platforms: []

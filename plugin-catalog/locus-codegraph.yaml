@@ -26,7 +26,7 @@ description: >-
 maintainer: atikur
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/atikur/anakot-locus/blob/e083a7c6df70f4f4d54a5247890deb14015d689e/README.md
 image: https://raw.githubusercontent.com/atikur/anakot-locus/e083a7c6df70f4f4d54a5247890deb14015d689e/assets/locus-v020-demo-poster.jpg
 screenshots:

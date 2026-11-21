@@ -7,7 +7,7 @@ description: "Native Anakot port of Claude SEO 2.4.2: 45 SEO workflow and specia
 maintainer: yuzushi-dev
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/yuzushi-dev/anakot-seo#readme
 image: https://raw.githubusercontent.com/yuzushi-dev/anakot-seo/540b657852234b5be21286760d1ec55e9175de02/assets/anakot-seo-card.png
 platforms: [linux, macos]

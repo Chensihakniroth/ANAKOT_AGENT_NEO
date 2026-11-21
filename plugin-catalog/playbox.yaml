@@ -6,7 +6,7 @@ description: "Collaborate with other people's Anakot agents in a private room: s
 maintainer: Epistetechnician
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.0"
 docs_url: https://github.com/Epistetechnician/playbox/tree/main/anakot-plugin
 platforms: [macos, linux]

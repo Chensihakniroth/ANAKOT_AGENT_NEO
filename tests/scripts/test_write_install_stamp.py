@@ -40,7 +40,7 @@ def test_cli_stamp_roundtrip(tmp_path, monkeypatch, variant, distribution, mecha
     assert data["baseVersion"] == data["displayVersion"] == "0.18.0"
     from anakot_cli.version_info import _stamp_version_info
     from anakot_cli.venv_sync import _is_sealed
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(tmp_path))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(tmp_path))
     if payload == "light":
         with pytest.raises(RuntimeError, match="light"):
             _stamp_version_info()
@@ -93,7 +93,7 @@ def test_packaged_identity_never_falls_back_to_project_metadata(tmp_path, monkey
     (tmp_path / "anakot_cli" / "_version.py").write_text('__version__ = "9.9.9"\n', encoding="utf-8")
     (tmp_path / "pyproject.toml").write_text('[project]\nversion = "8.8.8"\n', encoding="utf-8")
     monkeypatch.setattr(write_install_stamp, "_REPO_ROOT", tmp_path)
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(tmp_path))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(tmp_path))
 
     # No reachable release (a tagless docker build): the admitted commit is the whole identity.
     write_install_stamp.write_stamp(

@@ -6,7 +6,7 @@ description: "Keln as a Anakot model provider (`--provider keln`): open models t
 maintainer: kris-holy
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/kris-holy/anakot-keln-provider
 version: "1.0.0"
 platforms: []

@@ -70,7 +70,7 @@ export async function sourceUpdateEnvironment(
     ...(await updateProxyEnv(process.env, note, updateRoot, anakotHome)),
     ...buildDesktopBackendEnv(),
     ANAKOT_HOME: anakotHome,
-    ANAKOT_INSTALL_ROOT: updateRoot
+    HERMES_INSTALL_ROOT: updateRoot
   }
 
   delete env.ANAKOT_RUNTIME_DIR

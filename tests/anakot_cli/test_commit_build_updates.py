@@ -22,7 +22,7 @@ def commit_build(tmp_path, monkeypatch):
     monkeypatch.setattr("anakot_cli.image_provenance.IMAGE_PROVENANCE_PATH", tmp_path / "absent")
     monkeypatch.setattr("anakot_cli.config.get_project_root", lambda: root)
     monkeypatch.setattr("pm.paths.repo_root", lambda: root)
-    monkeypatch.delenv("ANAKOT_INSTALL_ROOT", raising=False)
+    monkeypatch.delenv("HERMES_INSTALL_ROOT", raising=False)
     from anakot_cli.version_info import _reset_version_info_cache
     _reset_version_info_cache()
     yield root

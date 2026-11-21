@@ -8,7 +8,7 @@ description: "Anakot, but it texts you first. Keeps your goals (life > year > qu
 maintainer: justin06lee
 tier: community
 category: automation
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/justin06lee/hyperactive/tree/main/plugin#readme
 image: https://raw.githubusercontent.com/justin06lee/hyperactive/4f5f5f355e9cdff9134cec6a00a6dda8f8bc2ef6/docs/media/banner.png
 screenshots:

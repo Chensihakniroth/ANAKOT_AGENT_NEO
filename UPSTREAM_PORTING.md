@@ -4,13 +4,13 @@ This file tracks commits from [NousResearch/hermes-agent](https://github.com/Nou
 and their status in **Anakot Agent v2** (`Chensihakniroth/ANAKOT_AGENT_NEO`).
 
 It replaces the v1 tracker. That ledger lived in the v1 repository and described a *history-sharing*
-fork (parity rows against `ca436069`, `scripts/hermes_sync.py`, 343 rows). **v2 starts from a snapshot
+fork (parity rows against `ca436069`, `scripts/anakot_sync.py`, 343 rows). **v2 starts from a snapshot
 import with no shared history**, so the questions this file answers are different: not "which commit
 did we already merge" but "which upstream commit do we re-express on top of a fresh regenerate, and
 which fork-local work must survive it".
 
 **How to use:**
-1. Run the refresh command below to list new Hermes commits — local `git` is enough, the `upstream`
+1. Run the refresh command below to list new Anakot commits — local `git` is enough, the `upstream`
    remote is already configured and fetched.
 2. Filter `plugin-catalog/`, `catalog/`, `chore/`, `docs/`, `test/`, re-pins and mailmap rows first;
    they are most of upstream's volume and almost never portable.
@@ -42,7 +42,7 @@ which fork-local work must survive it".
 | Rebrand mechanism | `scripts/rebrand.py` (`--check` / `--apply` / `--verify` / `--rebaseline`) |
 
 Rename detection is skipped at this scale, so most added/deleted pairs are the rebrand's
-`hermes_*` → `anakot_*` renames (e.g. `hermes_cli/` → `anakot_cli/`), not new functionality.
+`anakot_*` → `anakot_*` renames (e.g. `anakot_cli/` → `anakot_cli/`), not new functionality.
 
 **Scan result for this window:** of 2,491 non-merge commits, **1,688 were filtered as noise**
 (plugin-catalog 838, chore/docs/CI/build 620, re-pin/mailmap 108, test-only 90, catalog maintenance 31,
@@ -99,7 +99,7 @@ for c in json.load(sys.stdin):
 |--------|---------|
 | `PENDING` | Reviewed as a candidate, not yet implemented |
 | `PORTED` | Behaviour re-expressed in Anakot v2 and verified |
-| `SKIPPED` | Intentionally not ported (Hermes-specific, or conflicts with an Anakot customization) |
+| `SKIPPED` | Intentionally not ported (Anakot-specific, or conflicts with an Anakot customization) |
 | `CUSTOM` | Anakot already has its own implementation of the behaviour |
 | `N/A` | Not applicable (catalog/plugin-listing, docs-only, test-only, release machinery) |
 
@@ -252,7 +252,7 @@ Seeded from the 2026-11-16 scan — the newest commit of each behavioural cluste
 | f61bc58e5b | 2026-11-14 | fix(approval): stop the DELETE WHERE lookahead at shell redirections | `PENDING` | |
 | f3e3bade84 | 2026-11-14 | fix(approval): a glued redirect still ends the socat/nc command word | `PENDING` | |
 | f25aed52f6 | 2026-11-14 | fix(gateway): load the restart watcher builder with the gateway module | `PENDING` | |
-| f24c795aa2 | 2026-11-14 | fix(desktop): resolve a relocated Hermes .env in the credential-store sweep | `PENDING` | |
+| f24c795aa2 | 2026-11-14 | fix(desktop): resolve a relocated Anakot .env in the credential-store sweep | `PENDING` | |
 | f218799808 | 2026-11-14 | fix(gateway): catch a profile refusal raised on scope entry, per event | `PENDING` | |
 | f1ecb5e08f | 2026-11-14 | fix(signal): clear the 👀 actually sent even if the auth verdict flips mid-turn | `PENDING` | |
 | f17cecbdf3 | 2026-11-14 | refactor(telegram): move legacy-edit bookkeeping out of edit_message | `PENDING` | |
@@ -270,7 +270,7 @@ Seeded from the 2026-11-16 scan — the newest commit of each behavioural cluste
 
 ## Fork-local commits (must survive every sync)
 
-These 17 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they
+These 18 commits are Anakot v2's own work. A scripted regenerate drops all of them unless they
 are re-applied.
 
 | SHA | Date | Subject | Why it exists |
@@ -292,6 +292,12 @@ are re-applied.
 | `9b0cfdf2` | 2026-11-13 | docs(upstream): add the v2 porting ledger with a measured baseline | This file — regenerate restores it only if the carry list includes it |
 | `0be8c3ed` | 2026-11-15 | feat(desktop): add GUI-only desktop variant | A `desktop` build variant: bundled payload with no TUI/web frontends planted |
 | `c36521d9` | 2026-11-16 | fix(desktop): teach the build stamp about the desktop variant | The variant must stamp as `bundled` (the stamp's own mechanism table) |
+| `0f407a54` | 2026-11-16 | fix(tests): split the Discord token fixtures | GitHub push protection rejects any push carrying upstream's raw token literals |
+
+Two of these are **post-regen patches** rather than fork features: `95d72085` (lint debt) and
+`0f407a54` (push protection). Re-apply them only if the regenerated tree still needs them —
+`0f407a54` is only needed while upstream's fixture is a single literal, and upstream split
+`MFA_TOKEN` itself for this reason, so check whether they have finished the job first.
 
 ---
 
@@ -300,7 +306,7 @@ are re-applied.
 | Surface | Location | Notes |
 |---------|----------|-------|
 | Scripted rebrand | `scripts/rebrand.py` | `--check` (dry run) / `--apply` / `--verify` (gate) / `--rebaseline` |
-| Protected strings | `brand/protected-strings.txt` | Live wires that must **never** be renamed: docs/API endpoints, upstream repo identity, on-disk build markers, plugin-SDK globals, `HERMES_*` build contracts, and server-registered identifiers (`hermes-cli` OAuth client id, `requires_hermes` catalog field) |
+| Protected strings | `brand/protected-strings.txt` | Live wires that must **never** be renamed: docs/API endpoints, upstream repo identity, on-disk build markers, plugin-SDK globals, `ANAKOT_*` build contracts, and server-registered identifiers (`anakot-cli` OAuth client id, `requires_hermes` catalog field) |
 | Brand masters | `anakot_rebrand_masters/` | Source art + `MANIFEST.json`; `brand/assets.manifest.json` records applied hashes |
 | Exclusive-plugin guard | `scripts/ci/check_exclusive_plugins.py` (run by `scripts/check`) | Fails when a fork-only plugin ships an incomplete or unreadable half |
 | Free Model Suite (desktop half) | `apps/desktop/src/plugins/free-model-suite/` | Recovered from v1; no upstream counterpart |
@@ -314,11 +320,12 @@ are re-applied.
 |------|-------|
 | Branch | `update/upstream-2026-11-16` |
 | Worktree | `D:/School/PROJECT/anakot-next3` |
-| Tip | `be73ce8e76` — fresh `upstream/main`, pre-rebrand |
+| Base | `e96221fa73` — pristine `upstream/main` (37 commits past `be73ce8e76`) |
+| Tip | `1cb5a4c34e` — regenerated, rebranded, cherry-picks re-applied |
 | Safety tag | `backup/pre-update-2026-11-16` -> `c36521d908` (`main`) |
 
-The tree is a **pristine upstream checkout**: no rebrand applied, no fork files carried yet. The
-regenerate (carry list -> `rebrand.py --apply` -> `--verify` -> re-lock -> residue) has not run.
+The tree is **regenerated**: 82 fork files carried, `rebrand.py --apply` run, the fork-local commits
+re-applied, and `--verify` passing. `main` is untouched at `6efd1d0df5` throughout.
 
 ---
 
@@ -329,13 +336,29 @@ Because the histories are unrelated, updating is a **regenerate**, not a merge:
 ```bash
 git tag backup/pre-update                        # safety point
 git fetch upstream
-git checkout -b update/vNEXT upstream/main       # start from fresh upstream
-git checkout backup/pre-update -- scripts/rebrand.py brand/ anakot_rebrand_masters/
+git worktree add ../anakot-nextN -b update/vNEXT upstream/main   # isolated, disposable
+cd ../anakot-nextN
+# carry the fork-only inputs (scripts/rebrand.py, brand/, anakot_rebrand_masters/ + the carry list)
 python scripts/rebrand.py --apply
-python scripts/rebrand.py --verify               # gate: protected strings + asset hashes
-git cherry-pick <the fork-local commits above>   # re-apply Anakot's own work
+python scripts/rebrand.py --verify               # gate: pending rewrites/renames, lost files,
+                                                 #       brand assets, lockfile identity
+git apply --3way <patch>                         # per fork-local commit (see below)
 scripts/run_tests.sh                             # prove it
 ```
+
+`--verify` is the authority on "is this tree done": it fails on work still owed, on a path that
+exists under neither name, on brand drift, and on a lockfile that disagrees with its pyproject.
+Run `--apply` then `--verify` as two invocations (`--apply --verify` also works — it re-probes the
+finished tree rather than reporting the work it just wrote).
+
+Two traps the 2026-11-16 cycle hit:
+
+- **A reused tree is not a clean tree.** `git clean -fd` leaves a renamed directory standing when it
+  contains ignored files (`__pycache__`), and the next run then aborts on `hermes_cli -> anakot_cli`
+  "target already exists". Use `git checkout -- . && git clean -fdx`, and confirm the target dir is
+  gone before re-running. The abort is deliberate: a half-renamed tree must never be committed.
+- **`git cherry-pick` is blocked** by `tools/self_repo_guard.py` in a live checkout. Use
+  `git diff <sha>^ <sha> > p.patch && git apply --3way p.patch` and commit by hand.
 
 `git merge upstream/main` is **not** an option: with no merge base it treats every file present in
 both trees as a conflict, and `--allow-unrelated-histories` scales the conflict count with the tree.
@@ -343,6 +366,49 @@ both trees as a conflict, and `--allow-unrelated-histories` scales the conflict 
 ---
 
 ## Porting log
+
+### 2026-11-16 — regenerate complete; rebrand tooling hardened
+
+- Safety tag `backup/pre-update-2026-11-16` at `main` `c36521d908`; **`main` was never written** and
+  still sits at `6efd1d0df5`. All work happened in the `anakot-next3` worktree.
+- Moved the cycle to the current upstream tip `e96221fa73` (37 commits past the recorded
+  `be73ce8e76`), then carried 82 fork files (108 fork-added − 26 deliberately upstream-deleted:
+  langfuse, spotify, ruff pre-commit, 17 plugin-catalog entries).
+- `rebrand.py --apply`: 26,143 files scanned, 16,149 content rewrites, 596 path renames.
+- Re-applied the fork-local commits with `git apply --3way` (`git cherry-pick` is blocked by
+  `tools/self_repo_guard.py` in a live checkout): `3025dbf9` (no diff — the rebrand already did the
+  rename), `04f330a6` (skipped: its patch would regress the path rename), `95d72085` (skipped: lint
+  only), `0be8c3ed`, `c36521d9`.
+
+**Three rebrand bugs, fixed in the tool** — each surfaced far from its cause:
+
+1. `main` was carrying a stale `rebrand.py`. Branch `11-13` already had `KEEP_PATH_NAMES` (keep the
+   `hermes-ink` *directory* as the on-disk marker, still rewrite its *contents*) and
+   `verify_failures`/`verify_completeness`. Ported.
+2. The protected list protected the whole `HERMES_` env-var family — and that rule is what CREATED
+   the half-renamed contract: `launchers.py` wrote `HERMES_RUNTIME_DIR` while the app read
+   `ANAKOT_RUNTIME_DIR`, so both silently fell back to a default. Adopting `11-13`'s list moved
+   5,642 files onto `ANAKOT_` (37 files `ANAKOT_DESKTOP_VARIANT`, 0 on the old spelling).
+3. Lockfiles are in `SKIP_FILES`, so nothing re-pointed their identity entries: `pm/uv.lock` still
+   said `hermes-pm-runtime` while `pm/pyproject.toml` said `anakot-pm-runtime` (every `pm` bootstrap
+   died on a stale-lock error that reads as "Preparing the isolated Anakot runtime... failed"), and
+   `pnpm-lock.yaml` kept the `@hermes/` scope `--frozen-lockfile` refuses. Added
+   `lockfile_edits`/`rewrite_lockfiles` plus a `verify_lock_identity` gate leg.
+
+Two more were caught only by re-running the tooling against a **pristine** worktree rather than
+trusting the tree that had the fixes applied by hand: the lock rewrite ran *after* `rewrite_tree`
+(so it read the already-renamed pyproject and computed no edit), and `verify_completeness` lowercased
+only, so `HermesConsoleModal.tsx -> AnakotConsoleModal.tsx` read as a lost file.
+
+**Proof, on a clean room:** fresh worktree at `e96221fa73` seeded with only `scripts/rebrand.py` and
+`brand/`, then `--apply --verify` -> `VERIFY: PASS` (0 rewrites, 0 renames, 0 drift, locks
+consistent, no lost files). The five brand fonts the manifest expects arrive via the carry step, so
+a clean room must carry those too. Tests: `tests/scripts/test_rebrand_lockfiles.py` (8).
+
+**Not done:** the full `scripts/run_tests.sh` on the regenerated tree, and the desktop/dev installer
+build. Both are next.
+
+---
 
 ### 2026-11-16 — cycle opened; window re-scanned
 

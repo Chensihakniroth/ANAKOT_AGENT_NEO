@@ -13,7 +13,7 @@ maintainer: mertkayacs
 tier: community
 category: tools
 version: "1.0.1"
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://postkitty.mertkayacs.com
 image: https://raw.githubusercontent.com/mertkayacs/postkitty/06a80a50a445cc8eaf223cb334eb3fd28fc2ba22/docs/banner.png
 screenshots:

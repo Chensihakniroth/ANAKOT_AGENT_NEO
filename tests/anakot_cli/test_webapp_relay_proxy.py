@@ -36,7 +36,7 @@ def _other_gateway(seen: dict) -> Starlette:
 
     async def echo(request: Request):
         seen.setdefault("requests", []).append({k: v for k, v in request.headers.items()})
-        if request.headers.get("x-anakot-session-token") != seen.get("accepts", TOKEN) and \
+        if request.headers.get("x-hermes-session-token") != seen.get("accepts", TOKEN) and \
                 request.headers.get("authorization") != f"Bearer {seen.get('bearer')}":
             return JSONResponse({"error": "unauthenticated"}, status_code=401)
         return JSONResponse({"profiles": [{"name": "default"}]}, headers={"Set-Cookie": "edge=sticky; Path=/"})
@@ -90,11 +90,11 @@ def webapp(tmp_path, monkeypatch):
 
 def test_a_saved_connection_is_reached_with_its_saved_credential_and_never_the_browsers(webapp):
     reached = webapp.browser.get(f"/api/relay/{webapp.id}/api/profiles",
-                                 headers={"Cookie": "anakot_session_at=browser-login", "Authorization": "Bearer mine",
+                                 headers={"Cookie": "hermes_session_at=browser-login", "Authorization": "Bearer mine",
                                           "X-Forwarded-For": "10.0.0.9"})
     assert reached.status_code == 200, reached.text
     sent = webapp.seen["requests"][-1]
-    assert sent["x-anakot-session-token"] == TOKEN and sent["cf-access-client-id"] == "edge-id"
+    assert sent["x-hermes-session-token"] == TOKEN and sent["cf-access-client-id"] == "edge-id"
     for header in ("cookie", "authorization", "x-forwarded-for", "origin", "referer"):
         assert header not in sent, header
     assert "set-cookie" not in reached.headers

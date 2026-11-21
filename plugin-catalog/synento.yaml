@@ -8,10 +8,10 @@ category: tools
 # First stable tag whose agent_plugins.py has portable streamable-http and
 # server trust. Trust merged as 1e347ccf2a61e828a24e8059420517ee770f088e on
 # 2026-10-07. v0.21.6, published 2026-10-08, contains that commit. There is
-# no stable v0.21.5 tag. plugin.json has no requires_anakot field, so this
+# no stable v0.21.5 tag. plugin.json has no requires_hermes field, so this
 # line is the only floor. Do not bump it to whatever Anakot happened to be
 # installed for the receipt unless a newer key is actually required.
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "1.0.0"
 readme: true
 docs_url: https://synento.com/docs/guides/mcp

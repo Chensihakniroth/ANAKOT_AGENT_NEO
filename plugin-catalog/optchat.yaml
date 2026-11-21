@@ -6,7 +6,7 @@ description: "OptChat-style endless memory for Anakot: an append-only verbatim l
 maintainer: ahrazzle
 tier: community
 category: memory
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.0"
 docs_url: https://github.com/aska-digital/optchat-memory/tree/7b0f3abd65b95996366d0495787c95af981ea587#readme
 readme: true

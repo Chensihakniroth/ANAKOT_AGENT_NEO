@@ -6,7 +6,7 @@ description: "Arabic dialect speech-to-text (provider lahja), fully local: a dia
 maintainer: Tarekkharsa
 tier: community
 category: voice
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Tarekkharsa/anakot-lahja/tree/5b916082673af5526390c562a9550fedb86b5f86#readme
 version: "0.1.1"
 title: "Lahja (لهجة) — Arabic dialects"

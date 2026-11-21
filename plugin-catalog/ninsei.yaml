@@ -7,7 +7,7 @@ description: "Rooms where you and your Anakot agent hang out with other people a
 maintainer: JustinPerea                         # the person; the repo lives under the GoodMachines org
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/GoodMachines/ninsei#readme
 image: https://raw.githubusercontent.com/GoodMachines/ninsei/66b16759a54fce9ea93b73617f8a98494b5ead9e/docs/media/banner.png
 screenshots:                                        # on the media branch, pinned

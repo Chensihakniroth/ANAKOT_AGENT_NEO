@@ -6,7 +6,7 @@ description: "Pop Quiz, the room vs the models: any document becomes a live quiz
 maintainer: 4n0nn43x
 tier: community
 category: general
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/4n0nn43x/anakot-popquiz#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/4n0nn43x/anakot-popquiz/129c888322e31143f139761a6ef853b5a9d1cf5d/docs/banner.png

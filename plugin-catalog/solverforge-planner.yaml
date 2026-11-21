@@ -6,7 +6,7 @@ description: "Plans your tasks into your week around your meetings, deadlines, t
 maintainer: blackopsrepl
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.3.1"
 docs_url: https://github.com/blackopsrepl/anakot-solverforge-planner#readme
 image: https://raw.githubusercontent.com/blackopsrepl/anakot-solverforge-planner/c2ae4f2ad893501aa644c5f70b8fb6df65d0495d/docs/banner.png

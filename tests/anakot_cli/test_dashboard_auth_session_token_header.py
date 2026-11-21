@@ -1,4 +1,4 @@
-"""The gated dashboard accepts the deployment session token in ``X-Anakot-Session-Token``.
+"""The gated dashboard accepts the deployment session token in ``X-Hermes-Session-Token``.
 
 Regression for #147387: Anakot Desktop's "Session token" connection sends its token in that
 header on REST, but the gate read only a bearer token from the Authorization header, so every
@@ -17,7 +17,7 @@ from anakot_cli.dashboard_auth import clear_providers, register_provider
 from anakot_cli.dashboard_auth.ws_tickets import _reset_for_tests
 import plugins.dashboard_auth.session_token as session_token_plugin
 
-_HEADER = "X-Anakot-Session-Token"
+_HEADER = "X-Hermes-Session-Token"
 
 
 class _OtherLoginProvider(session_token_plugin.SessionTokenProvider):
@@ -121,7 +121,7 @@ def test_session_header_follows_the_webapps_bearer_rule(gated, token, other_toke
 
 def test_wrong_session_header_leaves_a_cookie_session_working(gated, other_token):
     client = gated()
-    client.cookies.set("anakot_session_at", other_token)
+    client.cookies.set("__Host-hermes_session_at", other_token)
     r = client.get("/api/auth/me", headers={_HEADER: secrets.token_urlsafe(32)})
     assert r.status_code == 200, (r.status_code, r.text)
     assert r.json().get("provider") == "other-login"
@@ -131,7 +131,7 @@ def test_valid_session_header_leaves_a_cookie_session_to_its_provider(gated, tok
     """A cookie session is served by the cookie's provider, as on main, even when the
     deployment token is also in the header."""
     client = gated()
-    client.cookies.set("anakot_session_at", other_token)
+    client.cookies.set("__Host-hermes_session_at", other_token)
     r = client.get("/api/auth/me", headers={_HEADER: token})
     assert r.status_code == 200, (r.status_code, r.text)
     assert r.json().get("provider") == "other-login"

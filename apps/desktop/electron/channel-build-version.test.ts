@@ -328,7 +328,7 @@ test('channel stamps verify the real checkout and retain source version and nati
       verifyBundleStamp(built, { commit: receiver.commit, platform: 'darwin', channelRequest: receiver })
     })
     execFileSync(
-      process.env.ANAKOT_PYTHON || 'python3',
+      process.env.HERMES_PYTHON || 'python3',
       [
         '-c',
         `
@@ -492,7 +492,7 @@ print(out.read_text(encoding='utf-8'))
 `
 
       const recorded: string = execFileSync(
-        process.env.ANAKOT_PYTHON || 'python3',
+        process.env.HERMES_PYTHON || 'python3',
         ['-c', recordScript, repo, root, JSON.stringify(build)],
         { encoding: 'utf8' }
       )

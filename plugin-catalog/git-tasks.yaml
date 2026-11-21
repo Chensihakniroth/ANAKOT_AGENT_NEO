@@ -5,7 +5,7 @@ description: "Multi-repo GitHub issues & PRs in an Orca-style Tasks view for Ana
 maintainer: meviusisback
 tier: community
 category: desktop
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/meviusisback/git-tasks#readme
 version: "0.2.0"
 platforms: []

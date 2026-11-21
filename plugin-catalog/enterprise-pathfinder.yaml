@@ -7,7 +7,7 @@ description: "Routes SAP questions to documented sources and reads official refe
 maintainer: DavidDiazMerino
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/DavidDiazMerino/anakot-pathfinder#readme
 capabilities:
   provides_tools:

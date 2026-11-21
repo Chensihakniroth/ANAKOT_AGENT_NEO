@@ -7,7 +7,7 @@ image: https://raw.githubusercontent.com/hydra-db/hydradb-anakot-plugin/a44241ae
 maintainer: hydra-db
 tier: community
 category: memory
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "1.0.1"
 docs_url: https://github.com/hydra-db/hydradb-anakot-plugin#readme
 readme: true

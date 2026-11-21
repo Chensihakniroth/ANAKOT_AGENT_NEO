@@ -31,7 +31,7 @@ def status_server():
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
-            seen.append((self.path, self.headers.get("X-Anakot-Session-Token")))
+            seen.append((self.path, self.headers.get("X-Hermes-Session-Token")))
             self.send_response(state["status"])
             self.send_header("Content-Type", "application/json")
             self.end_headers()

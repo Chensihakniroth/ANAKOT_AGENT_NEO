@@ -6,7 +6,7 @@ description: "Tabular AI that grows with your tables — Anakot skills for hones
 maintainer: frankiethull
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.2.0"
 capabilities:
   provides_tools: []

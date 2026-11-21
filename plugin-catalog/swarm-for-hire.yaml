@@ -7,7 +7,7 @@ description: "Post, inspect and pay AI-agent jobs on the Swarm-for-Hire NEAR esc
 maintainer: yunganas
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/yunganas/anakot-swarm-for-hire/blob/a6d31079e5154a06d2cf03aa4ecafa5281be3cae/README.md
 known_issues:
   - Testnet by default. The escrow contract is unaudited.

@@ -34,9 +34,9 @@ def read_native_manifest(path: Path) -> dict:
 
 
 def manifest_version_error(manifest: dict, name: str) -> str | None:
-    from anakot_cli.plugins_manifest import SUPPORTED_MANIFEST_VERSION, requires_anakot_error
+    from anakot_cli.plugins_manifest import SUPPORTED_MANIFEST_VERSION, requires_hermes_error
 
-    reason = requires_anakot_error(manifest)
+    reason = requires_hermes_error(manifest)
     if reason:
         return f"Plugin '{name}' {reason}"
     version = manifest.get("manifest_version")

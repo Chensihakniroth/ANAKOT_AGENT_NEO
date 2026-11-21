@@ -19,7 +19,7 @@ description: >-
 maintainer: dukemawex
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/dukemawex/anakot-plugin-weightscope/blob/760e10ce0d4d8bc9d27d8216e8f4bac9d7ebed6c/weightscope/README.md
 version: "0.1.1"
 platforms: []

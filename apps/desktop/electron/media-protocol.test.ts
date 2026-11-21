@@ -237,7 +237,7 @@ describe('createMediaProtocolHandler', () => {
     expect(url.pathname).toBe('/anakot/api/files/stream')
     expect(url.searchParams.get('path')).toBe(expectedPath)
     expect(url.searchParams.has('token')).toBe(false)
-    expect(headers.get('x-anakot-session-token')).toBe('s e/cret')
+    expect(headers.get('x-hermes-session-token')).toBe('s e/cret')
     expect(headers.get('range')).toBe('bytes=0-1023')
   })
 
@@ -259,7 +259,7 @@ describe('createMediaProtocolHandler', () => {
     const [, headers] = vi.mocked(deps.fetchRemote).mock.calls[0]
     expect(headers.get('cf-access-client-id')).toBe('client-id')
     expect(headers.get('range')).toBe('bytes=0-1023')
-    expect(headers.get('x-anakot-session-token')).toBe('secret')
+    expect(headers.get('x-hermes-session-token')).toBe('secret')
   })
 
   it('sends the connection extra gateway headers on OAuth cookie-session remote media', async () => {

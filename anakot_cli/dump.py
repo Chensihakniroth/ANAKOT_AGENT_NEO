@@ -57,7 +57,7 @@ def _get_git_commit(project_root: Path) -> str:
     The requested *project_root* is authoritative: when it has no git,
     the install-stamp fallback is only valid for the RUNNING install
     (``anakot_cli.version_info`` has no per-root API — it reads
-    ANAKOT_INSTALL_ROOT / the running code root, never an arbitrary
+    HERMES_INSTALL_ROOT / the running code root, never an arbitrary
     directory). For any other root the provenance is unknown.
     """
     value = _git_output(project_root, "rev-parse", "--short=8", "HEAD")

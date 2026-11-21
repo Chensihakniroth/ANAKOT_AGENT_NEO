@@ -18,7 +18,7 @@ description: >-
 maintainer: belivetech
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/belivetech/anakot-belive-aihub/blob/6eeb45e5f212752ad941f32fc6de7f2bbeb757ca/media/README.md
 version: "0.2.2"
 readme: true

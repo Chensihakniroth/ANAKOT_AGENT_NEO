@@ -790,8 +790,8 @@ def _detect_concurrent_anakot_instances(
     PM stages a fresh generation instead of replacing a mapped anakot.exe.
     Returning an empty list would let old callers continue into that mutation.
     """
-    from anakot_cli._old_updater import stop_for_relaunch
-    stop_for_relaunch()
+    from anakot_cli._old_updater import stop_historical_updater
+    stop_historical_updater("anakot_cli.dashboard_procs._detect_concurrent_anakot_instances")
 
 
 def _is_desktop_local_serve_cmdline(command: str) -> bool:

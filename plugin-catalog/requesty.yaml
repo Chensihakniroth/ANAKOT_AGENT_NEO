@@ -18,7 +18,7 @@ description: >-
 maintainer: requestyai
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/requestyai/anakot-provider-requesty#readme
 version: "0.1.0"
 capabilities:

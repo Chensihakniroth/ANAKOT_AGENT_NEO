@@ -6,7 +6,7 @@ description: "Chat-as-frontend for the Comfyrizz film pipeline: brief, plan, rev
 maintainer: mojomast
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.0"
 docs_url: https://github.com/mojomast/comfyrizz-anakot#readme
 platforms: []

@@ -7,7 +7,7 @@ maintainer: kangmochi
 tier: community
 category: desktop
 version: "1.0.0"
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/kangmochi/mascot-widget
 image: https://raw.githubusercontent.com/kangmochi/mascot-widget/260806425aa0f6702cedfd26ae2a65c2f03150c6/docs/shots/banner.png
 screenshots:

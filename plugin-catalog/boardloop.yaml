@@ -7,7 +7,7 @@ description: "Anakot writes ESP32 and Arduino code, compiles it with arduino-cli
 maintainer: LSUDOKO
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/LSUDOKO/BoardLoop/blob/950586cd231d8f3d0905fdc53eecf8bba1319c3e/README.md
 version: "0.2.4"
 image: https://raw.githubusercontent.com/LSUDOKO/BoardLoop/950586cd231d8f3d0905fdc53eecf8bba1319c3e/assets/banner.png

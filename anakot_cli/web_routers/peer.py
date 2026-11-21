@@ -25,7 +25,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
 
-from gateway.platforms.api_server_profile_prefix import DEFAULT_PROFILE_HANDLE, UNKNOWN_PROFILE_ERROR
+from gateway.platforms.api_server_profile_prefix import DEFAULT_PROFILE_HANDLE, unknown_profile_body
 from anakot_cli.dashboard_auth.audit import AuditEvent, audit_log
 from anakot_cli.dashboard_auth.peer_pass import PEER_PREFIX
 from anakot_cli.dashboard_auth.request_utils import client_ip
@@ -81,7 +81,7 @@ _HOP_BY_HOP = frozenset({"connection", "keep-alive", "proxy-authenticate", "prox
 #: cookies, browser origin). The agent's key and the verified pass holder replace them.
 _DROP_REQUEST = _HOP_BY_HOP | frozenset({
     "host", "cookie", "authorization", "origin", "referer", "forwarded", "x-real-ip",
-    "x-anakot-session-token", "x-anakot-gateway-ticket", "x-anakot-window-ticket"})
+    "x-hermes-session-token", "x-anakot-gateway-ticket", "x-anakot-window-ticket"})
 #: The api_server's memory scope, which it keeps for key holders: only a control pass, which has
 #: key-holder parity, may set it or see it.
 _CONTROL_ONLY = frozenset({"x-anakot-session-key"})
@@ -307,7 +307,7 @@ async def peer_forward(request: Request, path: str):
 
     upstream_target = await asyncio.to_thread(_upstream, profile)
     if upstream_target is None:
-        return JSONResponse({"error": UNKNOWN_PROFILE_ERROR}, status_code=404)
+        return JSONResponse(unknown_profile_body(), status_code=404)
     base, key = upstream_target
     if not key:
         return _refusal("peer_gateway_unavailable", "This agent's API server has no key configured.", 503)

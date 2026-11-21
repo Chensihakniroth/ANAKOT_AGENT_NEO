@@ -9,7 +9,7 @@ maintainer: Totem
 tier: community
 category: tools
 docs_url: https://github.com/totemlayer/totem-harness-plugins/tree/b211af34b688e16ae92b0182bdec120eb35dc51f/harnesses/anakot
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

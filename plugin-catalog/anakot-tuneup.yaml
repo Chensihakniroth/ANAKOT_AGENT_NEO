@@ -6,7 +6,7 @@ description: "Shows when compaction really fires on every profile and model rout
 maintainer: GodsBoy
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/GodsBoy/anakot-tuneup#readme
 version: "0.1.1"
 image: https://raw.githubusercontent.com/GodsBoy/anakot-tuneup/e844617bb451fa6d19cd6162a25551599f60e5a9/docs/banner.png

@@ -6,7 +6,7 @@ description: "Anakot opens a shop: sell this agent's skills to anyone (people, s
 maintainer: 0xdopewilly
 tier: community
 category: platform
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.2.0"
 docs_url: https://github.com/0xdopewilly/anakot-emporium#readme
 image: https://raw.githubusercontent.com/0xdopewilly/anakot-emporium/7b43458565055461b8094ce44199976933275fad/docs/banner.png

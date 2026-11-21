@@ -19,7 +19,7 @@ description: >-
 maintainer: ostravajih
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/ostravajih/anakot-lang-cs#readme
 version: "1.0.1"
 platforms: []

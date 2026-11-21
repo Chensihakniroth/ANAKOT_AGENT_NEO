@@ -7,7 +7,7 @@ description: "A remote personal assistant for your agent: it does the errands up
 maintainer: 100yenadmin
 tier: community
 category: automation
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/100yenadmin/anakot-personal-assistant#readme
 version: "0.11.0"
 image: https://raw.githubusercontent.com/100yenadmin/anakot-personal-assistant/57f701e83ebb807be4d1429d7e35f02bdf5dd5d8/docs/media/banner.jpg

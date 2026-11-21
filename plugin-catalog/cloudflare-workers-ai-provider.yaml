@@ -16,7 +16,7 @@ description: >-
 maintainer: AhmetArif0
 tier: community
 category: models
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/AhmetArif0/anakot-cloudflare-workers-ai-provider
 version: "1.0.0"
 image: https://raw.githubusercontent.com/AhmetArif0/anakot-cloudflare-workers-ai-provider/f6821d058d504ee6324b0d3217564b93124c09f9/docs/card.png

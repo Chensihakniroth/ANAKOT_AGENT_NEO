@@ -89,7 +89,7 @@ description: >-
 maintainer: jedbrnth-eng
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/jedbrnth-eng/no-cap#readme
 image: https://raw.githubusercontent.com/jedbrnth-eng/no-cap/edebf651e96691b57c806d43a13597117444faae/docs/brand/social-preview-1280x640.png
 screenshots:

@@ -15,4 +15,4 @@ capabilities:
   provides_hooks: [pre_api_request, post_api_request, api_request_error, pre_tool_call, post_tool_call, pre_llm_call, post_llm_call]
   provides_middleware: []
   requires_env: []
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"

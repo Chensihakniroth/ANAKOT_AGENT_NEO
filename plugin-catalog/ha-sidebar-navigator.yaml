@@ -7,7 +7,7 @@ description: "Full-power sidebar navigator & uncapped project/session explorer f
 maintainer: badiyee85
 tier: community
 category: desktop
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/badiyee85/HA-Plugins-sidebar-navigator
 platforms: []
 capabilities:

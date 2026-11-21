@@ -6,7 +6,7 @@ description: "n8n-style flows for Anakot Desktop: each cron job, webhook route a
 maintainer: benoit-dev
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/benoit-dev/ariadne-thread/blob/a4ca623e7fe45d5b09e1c313b4f90077b00434de/README.md
 version: "0.2.2"
 image: "https://raw.githubusercontent.com/benoit-dev/ariadne-thread/a4ca623e7fe45d5b09e1c313b4f90077b00434de/docs/banner.png"

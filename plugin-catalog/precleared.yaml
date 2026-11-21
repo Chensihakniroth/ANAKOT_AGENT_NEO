@@ -6,7 +6,7 @@ description: "Checks cold email against the law before it goes out: when the age
 maintainer: gabrielaoimevbore-beep
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/gabrielaoimevbore-beep/anakot-precleared#readme
 version: "0.1.0"
 platforms: []

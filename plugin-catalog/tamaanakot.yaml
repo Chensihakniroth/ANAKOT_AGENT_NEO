@@ -12,7 +12,7 @@ description: >-
 maintainer: ahrazzle
 tier: community
 category: general
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/ahrazzle/TamaAnakot
 version: "1.2.3"
 readme: true

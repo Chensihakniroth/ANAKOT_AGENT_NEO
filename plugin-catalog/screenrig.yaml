@@ -6,7 +6,7 @@ subdir: plugins/screenrig-agents
 maintainer: screenrig
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "26.11.231"
 docs_url: https://screenrig.ai/docs/start/anakot
 readme: true

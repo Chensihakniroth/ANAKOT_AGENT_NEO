@@ -5,7 +5,7 @@ description: "Liquid Inference, an auction exchange for LLM inference, as a Anak
 maintainer: architect-xyz
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/architect-xyz/anakot-liquid-inference
 version: "0.2.0"
 platforms: []

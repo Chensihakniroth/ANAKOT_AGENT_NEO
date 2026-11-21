@@ -6,7 +6,7 @@ description: "Long-lived matters shared by all your assistants, kept on your own
 maintainer: chaos-xxl
 tier: community
 category: general
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 version: "0.3.0"
 title: Protocol Chaos
 docs_url: https://github.com/chaos-xxl/protocol-chaos/blob/main/integrations/anakot/protocol-chaos/README.md

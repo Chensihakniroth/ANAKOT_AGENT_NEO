@@ -8,7 +8,7 @@ maintainer: aron98
 tier: community
 category: tools
 version: "1.7.1"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/aron98/load-lock/tree/main/plugins/anakot#readme
 image: https://raw.githubusercontent.com/aron98/load-lock/d473315d5866f1740f633d8f46e82b2c23c19eec/plugins/anakot/docs/banner.png
 screenshots:

@@ -6,7 +6,7 @@ description: "Capture demonstrated actions, check exact arguments and session-bo
 maintainer: raffieeey
 tier: community
 category: automation
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 version: "0.1.0"
 platforms: [linux]
 capabilities:

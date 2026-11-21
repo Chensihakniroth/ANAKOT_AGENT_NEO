@@ -22,7 +22,7 @@ title: "Vellum: Anakot draws inside the paper"
 maintainer: 0xsaltylollipop
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/0xsaltylollipop/vellum#readme
 version: "0.5.0"
 platforms: []

@@ -7,7 +7,7 @@ description: "Earned trust for Anakot workers. Each profile has a level (L0 read
 maintainer: percyhendrux123-prog
 tier: community
 category: automation
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/percyhendrux123-prog/anakot-standing/blob/6b1a23aa3644f6a44d872a1e1be98c03e5997c2c/README.md
 readme: true
 platforms: [linux, macos]

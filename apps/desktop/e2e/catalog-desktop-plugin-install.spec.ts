@@ -18,11 +18,7 @@ import { pathToFileURL } from 'node:url'
 import { type MockBackendFixture, setupMockBackend, waitForAppReady } from './fixtures'
 import { expect, test } from './test'
 
-// Both published snapshot hosts: the ladder tries the docs domain first and the
-// Pages project second, so the intercept must not depend on which rung answers.
-const CATALOG_FEED =
-  /^https:\/\/(?:hermes-agent\.nousresearch\.com|nousresearch\.github\.io\/hermes-agent)\/docs\/api\/plugins\.json$/
-
+const CATALOG_FEED = 'https://nousresearch.github.io/anakot-agent/docs/api/plugins.json'
 const NAME = 'accent-picker'
 const INSTALL_ORIGIN = '.anakot-origin.json'
 

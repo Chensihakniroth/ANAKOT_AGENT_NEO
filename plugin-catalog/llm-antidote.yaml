@@ -5,7 +5,7 @@ description: "Runtime guardrails, behavioral evaluation, and signed fleet admiss
 maintainer: GroveMinting
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "3.2.4"
 docs_url: https://github.com/GroveMinting/llmAntidote#readme
 capabilities:

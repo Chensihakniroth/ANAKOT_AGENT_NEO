@@ -5,7 +5,7 @@ description: "Pinocchio is the honesty layer for Anakot Agent: it keeps the rece
 maintainer: tobadaniel
 tier: community
 category: tools
-requires_anakot: ">=0.23"
+requires_hermes: ">=0.23"
 docs_url: https://github.com/tobadaniel/pinocchio
 version: "1.0.0"
 readme: true

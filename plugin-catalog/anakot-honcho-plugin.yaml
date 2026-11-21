@@ -7,7 +7,7 @@ maintainer: outpoints
 tier: community
 category: desktop
 version: "0.6.0"
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/outpoints/anakot-honcho-plugin
 image: https://raw.githubusercontent.com/outpoints/anakot-honcho-plugin/5ebd8f7fd43569d57fc18f38ded86a73690e2b93/docs/catalog/banner.png
 screenshots:

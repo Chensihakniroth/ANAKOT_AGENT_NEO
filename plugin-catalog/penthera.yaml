@@ -9,7 +9,7 @@ maintainer: danoszz
 tier: community
 category: tools
 docs_url: https://github.com/danoszz/penthera/tree/e3c62111a5541c3715a23175a83941690d52b2a6/plugin
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: [linux, macos]
 known_issues:

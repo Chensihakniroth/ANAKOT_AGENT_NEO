@@ -6,7 +6,7 @@ description: "Markdown wiki as Anakot long-term memory: plain files you and the 
 maintainer: ottosulin
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/ottosulin/hwiki
 readme: true
 capabilities:

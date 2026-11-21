@@ -6,7 +6,7 @@ description: "Local speech-to-text (provider stt_enhance) with faster-whisper or
 maintainer: dmmeteo
 tier: community
 category: voice
-requires_anakot: ">=0.15.0"
+requires_hermes: ">=0.15.0"
 docs_url: https://github.com/dmmeteo/anakot-stt-enhance/tree/7be60e334a2d7cba870a76b5758e83655323d8b0/anakot-stt-enhance#readme
 version: "0.5.1"
 platforms: []

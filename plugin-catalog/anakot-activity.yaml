@@ -6,7 +6,7 @@ description: "Anakot Desktop session analytics and provider-reported usage: annu
 maintainer: hassan-kamel
 tier: community
 category: desktop
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/hassan-kamel/anakot-activity
 version: "0.2.2"
 screenshots:

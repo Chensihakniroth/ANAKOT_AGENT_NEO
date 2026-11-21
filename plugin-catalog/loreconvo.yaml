@@ -55,6 +55,6 @@ capabilities:
   requires_env:
     - LORECONVO_ANAKOT_PROJECT
     - LORECONVO_PRO
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 version: "0.11.0"
 docs_url: https://github.com/labyrinth-analytics/loreconvo?tab=readme-ov-file#loreconvo

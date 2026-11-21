@@ -59,7 +59,7 @@ it('uses one private session for REST, RPC and terminal across reload without lo
   expect(window.location.search).toBe('?profile=coder')
   const desktop = window.anakotDesktop!
   await desktop.api({ path: '/api/fs/read-text' })
-  expect(new Headers(fetchMock.mock.calls[0][1].headers).get('X-Anakot-Session-Token')).toBe(token)
+  expect(new Headers(fetchMock.mock.calls[0][1].headers).get('X-Hermes-Session-Token')).toBe(token)
   expect((await desktop.getConnection()).token).toBe(token)
   // RPC: the gateway socket's one-use ticket is minted over REST with the same private session;
   // the session token itself never rides a socket URL.
@@ -77,14 +77,14 @@ it('uses one private session for REST, RPC and terminal across reload without lo
     )!
 
   const mint = mintFor('gateway')
-  expect(new Headers(mint[1].headers).get('X-Anakot-Session-Token')).toBe(token)
+  expect(new Headers(mint[1].headers).get('X-Hermes-Session-Token')).toBe(token)
   // Terminal: each dial mints its own one-use ticket the same way.
   await desktop.terminal.start({ cwd: '/work' })
   expect(urls[0].pathname).toBe('/one/api/host-terminal')
   expect(urls[0].searchParams.get('ticket')).toBe('shell-ticket')
   const shellMint = mintFor('host-terminal')
   expect(shellMint[1].method).toBe('POST')
-  expect(new Headers(shellMint[1].headers).get('X-Anakot-Session-Token')).toBe(token)
+  expect(new Headers(shellMint[1].headers).get('X-Hermes-Session-Token')).toBe(token)
   // A plugin's live socket cannot carry a ticket here; it stays on its polling fallback.
   const stopPluginSocket = pluginSocket('kanban', '/events', () => undefined)
   await new Promise(resolve => setTimeout(resolve, 20))
@@ -169,7 +169,7 @@ it.each(['window', 'session'] as const)('hands off a private %s through a one-us
   const [url, init] = fetchMock.mock.calls[0] as [URL, RequestInit]
   expect(url.pathname).toBe('/one/api/webapp/window-ticket')
   expect(init.method).toBe('POST')
-  expect(new Headers(init.headers).get('X-Anakot-Session-Token')).toBe(token)
+  expect(new Headers(init.headers).get('X-Hermes-Session-Token')).toBe(token)
   expect(open).toHaveBeenCalledOnce()
   const [opened, target, features] = open.mock.calls[0]
   const child = new URL(String(opened))

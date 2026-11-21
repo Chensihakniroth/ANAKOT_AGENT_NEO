@@ -7,7 +7,7 @@ description: "GMI Cloud Sandbox terminal backend: Anakot's terminal, file and co
 maintainer: avinxshKD
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/avinxshKD/anakot-gmi-sandbox/tree/593d6425e7d0e4d966b7dd96b16f738534e42d6f#readme
 version: "0.1.0"
 readme: true

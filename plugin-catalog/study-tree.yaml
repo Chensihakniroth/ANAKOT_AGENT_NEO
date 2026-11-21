@@ -7,7 +7,7 @@ description: "Study with the agent without losing the thread: a side question yo
 maintainer: IpastorSan
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/IpastorSan/study-tree/blob/aae3bf53ca5d8429d8f0ff22bb14fcbcce505e03/README.md
 image: https://raw.githubusercontent.com/IpastorSan/study-tree/aae3bf53ca5d8429d8f0ff22bb14fcbcce505e03/docs/banner.png
 screenshots:

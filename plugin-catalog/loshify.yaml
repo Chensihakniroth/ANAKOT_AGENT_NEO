@@ -8,7 +8,7 @@ tier: community
 version: "1.0.0"
 category: desktop
 docs_url: https://github.com/iHeavyShoes/loshify#readme
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms: []
 capabilities:
   provides_tools: [loshify_setup, loshify_taste, loshify_reactions, loshify_curate, loshify_react, loshify_rotation, loshify_onboard]

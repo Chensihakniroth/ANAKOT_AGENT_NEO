@@ -216,7 +216,7 @@ def test_fallback_notice_survives_the_tui_screen_clear(monkeypatch):
     again once the TUI exits, below whatever it drew."""
     import sys
 
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     terminal = _Terminal(60)
     try:
         terminal.read_until(b"Press Enter")
@@ -239,7 +239,7 @@ def test_fallback_notice_never_holds_an_unwatched_launch(monkeypatch, tmp_path, 
     prompt goes) is redirected starts it at once. The warning still follows the TUI's output."""
     import sys
 
-    monkeypatch.setenv("ANAKOT_PYTHON", sys.executable)
+    monkeypatch.setenv("HERMES_PYTHON", sys.executable)
     log = tmp_path / "stderr.log"
     with log.open("wb") as stderr:
         terminal = _Terminal(2 if case == "nobody answers" else 60, background=case == "background job",
@@ -298,14 +298,14 @@ def test_prebuilt_bundle_launch_does_not_touch_missing_source(tmp_path, monkeypa
 @pytest.mark.parametrize("local_tsx", [False, True])
 def test_dev_launch_builds_ink_before_running_source(tui_source, local_tsx):
     root, acquired = tui_source
-    ink = root / "ui-tui/packages/anakot-ink"
+    ink = root / "ui-tui/packages/hermes-ink"
     ink.mkdir(parents=True)
     (ink / "package.json").write_text(json.dumps({
         "name": "fixture-ink", "version": "1.0.0", "scripts": {"build": "node build.mjs"},
     }))
     (ink / "build.mjs").write_text("import { writeFileSync } from 'node:fs'; writeFileSync('built', 'ink');")
     workspace = root / "pnpm-workspace.yaml"
-    workspace.write_text(workspace.read_text() + "  - ui-tui/packages/anakot-ink\n")
+    workspace.write_text(workspace.read_text() + "  - ui-tui/packages/hermes-ink\n")
     subprocess.run([shutil.which("pnpm"), "install", "--lockfile-only", "--ignore-scripts", "--offline"], cwd=root, check=True,
                    env={**os.environ, **{f"pnpm_config_{name}_dir": str(root.parent / "pnpm" / name)
                                          for name in ("store", "cache", "state")}})

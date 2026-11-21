@@ -232,7 +232,7 @@ function catalogEntry(entry: ConnectionOperationTarget, name: string): CatalogEn
     phase: entry.phase ?? null,
     platforms: entry.platforms ?? [],
     repo: entry.repo ?? null,
-    requiresAnakot: entry.requires_anakot ?? null,
+    requiresAnakot: entry.requires_hermes ?? null,
     resolved: entry.resolved ?? false,
     scan: entry.scan ?? null,
     sha: entry.sha ?? null,

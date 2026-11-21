@@ -93,7 +93,7 @@ def ownership_id(root: Path, connection_id: str) -> str:
 def _http_get(url: str, token: str = ""):
     import httpx
 
-    headers = {"X-Anakot-Session-Token": token} if token else {}
+    headers = {"X-Hermes-Session-Token": token} if token else {}
     return httpx.get(url, headers=headers, timeout=_HTTP_TIMEOUT_S, trust_env=False)
 
 

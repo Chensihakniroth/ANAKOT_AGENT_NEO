@@ -55,7 +55,7 @@ def two_profiles(monkeypatch, tmp_path):
 def _ask(client, method, params, profile=None):
     """*method*'s reply on a tab socket opened for *profile* (``?profile=`` on the page)."""
     query = f"&profile={profile}" if profile else ""
-    minted = client.post(f"/api/webapp/socket-ticket?socket=gateway{query}", headers={"X-Anakot-Session-Token": _TOKEN})
+    minted = client.post(f"/api/webapp/socket-ticket?socket=gateway{query}", headers={"X-Hermes-Session-Token": _TOKEN})
     assert minted.status_code == 200, minted.text
     ticket = minted.json()["ticket"]
     socket_query = f"&profile={profile}" if profile else ""

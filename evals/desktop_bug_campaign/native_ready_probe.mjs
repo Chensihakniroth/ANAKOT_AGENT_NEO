@@ -37,7 +37,7 @@ try {
   })
   for (let i = 0; i < 20; i++) {
     for (const path of ['/api/status', '/api/profiles']) {
-      const response = await fetch(`http://127.0.0.1:${port}${path}`, { headers: { 'X-Anakot-Session-Token': token } })
+      const response = await fetch(`http://127.0.0.1:${port}${path}`, { headers: { 'X-Hermes-Session-Token': token } })
       if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`)
       await response.json()
     }

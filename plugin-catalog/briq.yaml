@@ -6,7 +6,7 @@ description: "Run Anakot' terminal, file and execute_code tools in a briq sandbo
 maintainer: briq-cloud
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/briq-cloud/anakot-briq#readme
 platforms: [linux, macos, windows]
 known_issues:

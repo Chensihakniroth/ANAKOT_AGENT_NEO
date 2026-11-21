@@ -6,7 +6,7 @@ description: "Pairs each \"done\" in an agent's reply (tests pass, sent, deploye
 maintainer: Justin Whalen (Whalen Ventures)
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: ""
 version: "0.4.2"
 screenshots: []

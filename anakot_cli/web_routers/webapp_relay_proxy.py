@@ -43,7 +43,7 @@ _HOP_BY_HOP = frozenset({"connection", "keep-alive", "proxy-authenticate", "prox
 #: Request headers that never cross to the other gateway: this one's credentials and the browser's
 #: provenance. The saved connection's credential replaces them.
 _DROP_REQUEST = _HOP_BY_HOP | frozenset({
-    "host", "cookie", "authorization", "origin", "referer", "x-anakot-session-token", "forwarded",
+    "host", "cookie", "authorization", "origin", "referer", "x-hermes-session-token", "forwarded",
     "x-real-ip", "x-anakot-gateway-ticket", "x-anakot-window-ticket"})
 #: Response headers that cross back from the gateway: what describes the body. Anything else would
 #: let the gateway act on this one's origin (cookies, CORS, HSTS, service workers, site-data
@@ -321,7 +321,7 @@ async def relay_ws(ws: WebSocket, connection_id: str, path: str) -> None:
     url = (f"{'wss' if parts.scheme == 'https' else 'ws'}://{parts.netloc}{parts.path}{target}"
            f"{joiner}{credential[0]}={urllib.parse.quote(credential[1], safe='')}")
     offered = [Subprotocol(value) for value in _offered_subprotocols(ws)]
-    extra = {k: v for k, v in row.headers.items() if k.lower() not in {"x-anakot-session-token", "authorization"}}
+    extra = {k: v for k, v in row.headers.items() if k.lower() not in {"x-hermes-session-token", "authorization"}}
     try:
         upstream = await connect(url, subprotocols=offered or None, additional_headers=extra or None,
                                  origin=Origin(f"{parts.scheme}://{parts.netloc}"), max_size=_MAX_FRAME,

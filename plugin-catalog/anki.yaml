@@ -7,7 +7,7 @@ description: "Create, search, and review Anki flashcards from Anakot through the
 maintainer: suhas-svg
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/suhas-svg/anakot_anki#readme
 readme: true
 platforms: []

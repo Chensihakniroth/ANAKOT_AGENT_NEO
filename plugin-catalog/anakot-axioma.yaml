@@ -8,7 +8,7 @@ description: "Inline signal color in the agent's normal reply. The agent marks t
 maintainer: percyhendrux123-prog
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/percyhendrux123-prog/anakot-axioma/blob/c95be0baea4b4644dc622277b0aba1c085b9e792/README.md
 readme: true
 platforms: []
@@ -23,7 +23,7 @@ capabilities:
   provides_middleware: []
   requires_env: []
 known_issues:
-  - "Axioma 0.6.0 Desktop additions (inline card, board lights): checked by the repo's stubbed-SDK Desktop checks and Python tests, and the Desktop contracts were read in v0.23.0 reference sources; the requires_anakot >=0.22.5 floor is agent-side history only and these Desktop APIs were not verified on v0.22.5. A live Desktop run of the card buttons and the board-lights route is reported in the pull request when observed."
+  - "Axioma 0.6.0 Desktop additions (inline card, board lights): checked by the repo's stubbed-SDK Desktop checks and Python tests, and the Desktop contracts were read in v0.23.0 reference sources; the requires_hermes >=0.22.5 floor is agent-side history only and these Desktop APIs were not verified on v0.22.5. A live Desktop run of the card buttons and the board-lights route is reported in the pull request when observed."
   - "Axioma Charter: compile, show and the pasted settings block were checked through the real plugin loader in a test profile; a model has run the ten questions with a person once from the installed question list and compile code, and has called the registered axioma_charter tool in a live session (the show action); a full interview through the registered tool with a person was not yet observed. The Charter does not read the owner's current settings, so it cannot show a merged result: the owner adds the rules by hand. Charter rules match exact text: an item over 6 words is refused unless it is in double quotes, and a shorter description of a situation still compiles into a rule that never fires. Charter files are refused when the plugin data folder or charter folder is a link, not owned by the user or open to other users; the Anakot plugin-data base folder above them is trusted."
   - "Axioma Desktop: checked on Desktop v0.23.0 with the built-in demo (labelled fake events) and, on real events, a steer of the main turn, a delegated worker shown as a serpent row, a steer of that worker and a stop of that worker, all sent from the pane; Stop on the main turn was not yet observed, and the 0.22.5 floor comes from reading the SDK source at that tag, not from a run on 0.22.5. The background drawing stops at the plugin's own pane only while that pane's tab is showing. Closing the plugin's only pane tab switches the Desktop half off (host behavior); use the pane switch in settings instead."
   - "Signals are written by the model. A model that ignores the markup guide produces plain replies; nothing breaks, nothing is colored."

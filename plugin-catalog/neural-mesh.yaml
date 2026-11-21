@@ -6,7 +6,7 @@ maintainer: D0xedDevi0
 tier: community
 category: memory
 docs_url: https://github.com/D0xedDevi0/anakot-neural-mesh
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.39.0"
 image: https://raw.githubusercontent.com/D0xedDevi0/anakot-neural-mesh/26abb610f3cbdd4215fbb898d4a2478317dfc5e5/docs/screenshots/the-difference.png
 screenshots:

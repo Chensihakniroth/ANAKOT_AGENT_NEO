@@ -656,3 +656,14 @@ class TestProjectVenvDirOutOfTree:
         assert anakot_constants.project_venv_dir(other) is None
         (checkout / ".venv").mkdir()
         assert anakot_constants.project_venv_dir(checkout) == checkout / ".venv"
+
+
+@pytest.mark.parametrize("name", ["ANAKOT_MANAGED_DIR", "anakot_managed_dir", "Anakot_Home", "ANAKOT_HOME"])
+def test_is_launch_only_env_key_folds_case(name):
+    """Windows env names are case-insensitive, so every guard must fold case (#135200)."""
+    assert anakot_constants.is_launch_only_env_key(name)
+
+
+@pytest.mark.parametrize("name", ["ANAKOT_MANAGED_DIRX", "ANAKOT_HOMEDIR", "PATH", ""])
+def test_is_launch_only_env_key_rejects_other_names(name):
+    assert not anakot_constants.is_launch_only_env_key(name)

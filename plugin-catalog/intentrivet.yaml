@@ -8,7 +8,7 @@ description: "Your existing Anakot prepares posts for your own Telegram channels
 maintainer: MrRosc
 tier: community
 category: automation
-requires_anakot: ">=0.20.1"
+requires_hermes: ">=0.20.1"
 docs_url: https://github.com/MrRosc/IntentRivet/blob/fd3990e05a3f5d4e886345d6b26e9b108482d34b/README.md
 known_issues:
   - "Installing this entry does not deploy the IntentRivet executor: set it up first, as the README describes. The install asks for INTENTRIVET_URL (the executor's address) and INTENTRIVET_AGENT_KEY (issued on the executor host)."

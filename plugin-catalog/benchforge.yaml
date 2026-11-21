@@ -5,7 +5,7 @@ description: "The flight simulator for AI-written Arduino firmware. Describe wha
 maintainer: ohjay-official
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ohjay-official/anakot-benchforge#readme
 version: "1.0.0"
 title: "BenchForge"

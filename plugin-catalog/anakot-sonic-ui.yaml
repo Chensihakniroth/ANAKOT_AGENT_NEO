@@ -7,7 +7,7 @@ maintainer: "iKnz990"
 tier: community
 category: desktop
 version: "0.5.01"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 image: "https://raw.githubusercontent.com/iKnz990/anakot-sound-studio/93af2b7625c53dc0a562ffc098eb92a59bb8d919/docs/images/banner.png"

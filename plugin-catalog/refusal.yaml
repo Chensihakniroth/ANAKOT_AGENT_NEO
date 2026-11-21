@@ -6,7 +6,7 @@ description: "Detects when a model refuses a request or deflects to an education
 maintainer: 0ldev
 tier: community
 category: models
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/0ldev/refusal/blob/b1bd080caeba423309d437f7df6ee564bd5d27dd/README.md
 readme: true
 platforms: []

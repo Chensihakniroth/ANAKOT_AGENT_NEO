@@ -6,7 +6,7 @@ version: "1.3.0"
 maintainer: NathanOyewole
 tier: community
 category: tools
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 capabilities:
   provides_tools:
   - scout_radar

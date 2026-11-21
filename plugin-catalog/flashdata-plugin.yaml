@@ -7,7 +7,7 @@ description: "Web search with Google Search; Google News, Google Images, Google 
 maintainer: rocosen
 tier: community
 category: web
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/rocosen/flashdata-mcp/blob/061b74528b08635a2cbd2e213033c25ee265ef92/plugins/anakot/README.md
 version: "0.1.1"
 readme: true

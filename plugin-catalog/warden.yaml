@@ -8,7 +8,7 @@ tier: community
 category: tools
 version: "0.1.0"
 platforms: [linux, macos]
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 capabilities:
   provides_tools: [sec_scope, sec_tool, sec_assess, sec_investigate, sec_campaign, sec_contain]
   provides_hooks: [post_tool_call, pre_tool_call]

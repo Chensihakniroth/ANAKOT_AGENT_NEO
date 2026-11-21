@@ -6,7 +6,7 @@ description: "Keeps your agent on a few active lanes (current commitments): new 
 maintainer: MindSproutStudios
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/MindSproutStudios/anakot-lane-keeper#readme
 version: "0.2.1"
 platforms: []

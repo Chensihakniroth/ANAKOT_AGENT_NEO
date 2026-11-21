@@ -5,7 +5,7 @@ description: "FXMacroData macro and FX research with official-source releases, i
 maintainer: fxmacrodata
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/fxmacrodata/anakot-fxmacrodata?utm_source=anakot&utm_medium=marketplace&utm_campaign=anakot-fxmacrodata&utm_content=catalogue-docs#readme
 version: "0.3.0"
 platforms: []

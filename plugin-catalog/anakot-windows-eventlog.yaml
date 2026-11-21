@@ -6,7 +6,7 @@ description: "Answer \"why did this process die\" on Windows: three read-only to
 maintainer: Yicheng-Mark
 tier: community
 category: tools
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/Yicheng-Mark/anakot-windows-plugins/tree/main/windows-eventlog
 version: "0.1.0"
 platforms:

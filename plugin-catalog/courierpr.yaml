@@ -8,7 +8,7 @@ description: "Read-only press release wire MCP server and skill: browse newsroom
 maintainer: AI Training Data Broker
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/aitrainingdatabroker/courierpr-mcp-server/tree/main/anakot#readme
 readme: true
 platforms: []

@@ -6,7 +6,7 @@ maintainer: kyssta-exe
 title: Codex Truly
 tier: community
 category: models
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 version: "1.0.0"
 docs_url: https://github.com/kyssta-exe/anakot-codex-truly#readme
 platforms: []

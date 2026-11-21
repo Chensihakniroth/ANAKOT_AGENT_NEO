@@ -563,7 +563,7 @@ def test_update_sync_survives_unreadable_secondary_profile(admission_env):
 
 @pytest.mark.skipif(not _uv_available(), reason="uv not on PATH")
 def test_plugin_our_version_rejects_sits_out_without_being_disabled(admission_env, monkeypatch):
-    """requires_anakot is judged against our version identity, which can lag (an untagged
+    """requires_hermes is judged against our version identity, which can lag (an untagged
     source checkout reads as an older release). Such a plugin sits out: config untouched,
     boot's currency check neither raises nor loops, and it rejoins once the verdict flips."""
     from pm.environments import runtime_facts_path
@@ -574,12 +574,12 @@ def test_plugin_our_version_rejects_sits_out_without_being_disabled(admission_en
 
     tmp_path, home = admission_env
     core = tmp_path / "core"
-    # A tagless checkout (CI's) has no parseable version, which makes requires_anakot permissive.
+    # A tagless checkout (CI's) has no parseable version, which makes requires_hermes permissive.
     monkeypatch.setattr(plugins_manifest, "running_anakot_version", lambda: "1.0.0")
     for name in ("fits", "needs-newer"):
         _fixtures.installing_member(home / "plugins" / name, name, tmp_path / "wheels")
     manifest = home / "plugins" / "needs-newer" / "plugin.yaml"
-    manifest.write_text("name: needs-newer\nrequires_anakot: '>=999'\n", encoding="utf-8")
+    manifest.write_text("name: needs-newer\nrequires_hermes: '>=999'\n", encoding="utf-8")
     _write_enabled(home, ["fits", "needs-newer"])
     before = (home / "config.yaml").read_bytes()
 
@@ -592,7 +592,7 @@ def test_plugin_our_version_rejects_sits_out_without_being_disabled(admission_en
     assert "needs-newer" not in (workspace / "pyproject.toml").read_text()
     assert venv_is_current(project_root=core) is True
 
-    manifest.write_text("name: needs-newer\nrequires_anakot: '>=0'\n", encoding="utf-8")
+    manifest.write_text("name: needs-newer\nrequires_hermes: '>=0'\n", encoding="utf-8")
     assert venv_is_current(project_root=core) is False
     sync_venv(explicit=True, evict_incompatible_plugins=True)
     workspace = Path(Facts(runtime_facts_path(core), strict=True).get("venv")["resolved_lock"]).parent
@@ -607,7 +607,7 @@ def test_plugin_our_version_rejects_sits_out_without_being_disabled(admission_en
 def test_plugin_requiring_a_newer_anakot_sits_out_until_anakot_fits(admission_env, monkeypatch,
                                                                     dependencies, chosen, extras):
     """PM supplies anakot-agent itself, so a plugin's requirement on it is judged the way
-    requires_anakot is: the misfit sits out of the build with config untouched (a plain sync
+    requires_hermes is: the misfit sits out of the build with config untouched (a plain sync
     and an update both succeed), and it rejoins once the running Anakot fits, although no
     dependency input changed."""
     from pm.environments import runtime_facts_path
@@ -656,7 +656,7 @@ def test_plugin_requiring_a_newer_anakot_sits_out_until_anakot_fits(admission_en
 def test_only_enabling_a_plugin_that_requires_a_newer_anakot_is_refused(admission_env, monkeypatch,
                                                                          enabled_before):
     """Admission refuses enabling a plugin whose sole declared dependency is a Anakot it is not,
-    as it refuses a failing requires_anakot, although it installs nothing and is no workspace
+    as it refuses a failing requires_hermes, although it installs nothing and is no workspace
     member. One enabled before sits out as the build leaves it out, so enabling another plugin
     beside it is admitted."""
     from anakot_cli import plugins_admission as admission

@@ -23,7 +23,7 @@ description: >-
 maintainer: dolepee
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.5"
 docs_url: https://github.com/dolepee/anakot-plugin-foundry/blob/9345a56954d219f923a05712a7a68e44df5099a2/README.md
 platforms: []

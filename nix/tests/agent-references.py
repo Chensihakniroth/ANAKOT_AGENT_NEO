@@ -26,8 +26,8 @@ for name, key in (("tui", "ANAKOT_TUI_DIR"), ("web", "ANAKOT_WEB_DIST"), ("webap
     assert resource.samefile(inputs["frontends"][name])
 assert not (repo / "run_agent.py").exists(), "installed Python code must not be copied"
 assert not list(repo.glob("*.dist-info")), "Nix keeps the uv2nix wheel's metadata"
-assert command_map["env"]["ANAKOT_PYTHON"] == inputs["python"]
-assert command_map["env"]["ANAKOT_INSTALL_ROOT"] == str(repo)
+assert command_map["env"]["HERMES_PYTHON"] == inputs["python"]
+assert command_map["env"]["HERMES_INSTALL_ROOT"] == str(repo)
 stamp = json.loads((repo / "install-stamp.json").read_text())
 assert stamp["pmRuntime"] == inputs["pm_runtime"]
 assert (Path(inputs["pm_runtime"]) / "pm-runtime.json").is_file()

@@ -68,10 +68,8 @@ export type Route = 'welcome' | 'progress' | 'success' | 'failure'
 
 /// How the installer was launched, mirrored from src-tauri AppMode.
 /// 'install' = first-run onboarding (bare launch). 'update' = driven by the
-/// desktop app handing off via `Anakot-Setup.exe --update`. 'uninstall' =
-/// `Anakot-Setup.exe --uninstall`, which drives `anakot uninstall` (see
-/// src-tauri/src/uninstall.rs).
-export type AppMode = 'install' | 'update' | 'uninstall'
+/// desktop app handing off via `Anakot-Setup.exe --update`.
+export type AppMode = 'install' | 'update'
 
 export const $route = atom<Route>('welcome')
 export const $mode = atom<AppMode>('install')
@@ -266,12 +264,11 @@ export async function initialize(): Promise<void> {
           currentStage: null
         })
 
-        // Only install leaves something to launch, so only install shows the
-        // "launch Anakot" success screen. Update and uninstall are hand-offs:
-        // Rust exits within a second, so routing to success would just flash a
-        // screen — and for an uninstall it would offer to launch the app the
-        // user just removed.
-        if ($mode.get() === 'install') {
+        // Install: show the "launch Anakot" success screen. Update: this is a
+        // hand-off — the installer relaunches the desktop and exits within a
+        // few hundred ms, so routing to success just flashes that screen
+        // before the window closes. Stay on progress until we exit.
+        if ($mode.get() !== 'update') {
           $route.set('success')
         }
 
@@ -295,14 +292,6 @@ export async function initialize(): Promise<void> {
   // the user lands on progress, not a redundant "click to update" screen.
   if ($mode.get() === 'update') {
     void startUpdate()
-  }
-
-  // Uninstall is a hand-off too, and always flag-gated (never a bare launch):
-  // removal is destructive, so the intent has to be on the command line. The
-  // data policy (`--full`) stays a Rust-side launch fact — the UI never
-  // round-trips it, so a retry can't silently downgrade a wipe to a keep.
-  if ($mode.get() === 'uninstall') {
-    void startUninstall()
   }
 }
 
@@ -346,17 +335,6 @@ export async function startUpdate(): Promise<void> {
   $bootstrap.set(INITIAL)
   $route.set('progress')
   await invoke('start_update')
-}
-
-export async function startUninstall(): Promise<void> {
-  // No fakeMode branch: the dev preview has no uninstall flow, and this action
-  // is only ever reached on a real `--uninstall` launch. Rust drives
-  // `anakot uninstall --yes` — the CLI owns every removal rule, and the
-  // keep/`--full` policy stays a launch fact on that side, so there is no
-  // argument to pass (and none to lose on a retry).
-  $bootstrap.set(INITIAL)
-  $route.set('progress')
-  await invoke('start_uninstall')
 }
 
 export async function cancelInstall(): Promise<void> {
@@ -481,7 +459,7 @@ async function runFakeBoot(kind: FakeMode): Promise<void> {
         await sleep(durationMs / lines)
 
         if (cancelled()) {return}
-        fakeLog(s.name, `[${s.name}] ${s.title.toLowerCase()} — step ${l + 1}/${lines}...`)
+        fakeLog(s.name, `[${s.name}] ${s.title.toLowerCase()} — step ${l + 1}/${lines}…`)
       }
 
       if (s.name === failAt) {

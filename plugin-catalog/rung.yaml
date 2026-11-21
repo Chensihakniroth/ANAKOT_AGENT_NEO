@@ -6,7 +6,7 @@ description: "Stops an agent from marking its own work done until the tests you 
 maintainer: miguelangeloazevedo
 tier: community
 category: automation
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "1.2.1"
 docs_url: https://github.com/miguelangeloazevedo/rung
 screenshots:

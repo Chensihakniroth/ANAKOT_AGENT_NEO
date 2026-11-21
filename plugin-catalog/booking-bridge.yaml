@@ -7,7 +7,7 @@ description: "Find free time, then book, list, reschedule and cancel real Google
 maintainer: kyle-bartlett
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/kyle-bartlett/booking-bridge/blob/8d013fcd7500f5b9e3b98588a6c32826f25c8252/README.md
 readme: true
 capabilities:

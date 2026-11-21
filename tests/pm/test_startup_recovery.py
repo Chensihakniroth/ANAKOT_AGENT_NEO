@@ -30,7 +30,7 @@ def isolated_machine_home(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
     monkeypatch.setenv("ANAKOT_HOME", str(tmp_path / ".anakot"))
-    monkeypatch.delenv("ANAKOT_INSTALL_ROOT", raising=False)
+    monkeypatch.delenv("HERMES_INSTALL_ROOT", raising=False)
 
 
 @pytest.mark.parametrize("marker_name", [".update-incomplete", ".lazy-refresh-incomplete", None, "manual", "baseline"])
@@ -46,7 +46,8 @@ def test_bootstrap_repairs_before_dependency_activation(tmp_path, monkeypatch, m
     home.mkdir()
     for name in ("anakot_bootstrap.py", "anakot_constants.py"):
         shutil.copy2(repo / name, core / name)
-    shutil.copytree(repo / "pm", core / "pm", ignore=shutil.ignore_patterns("__pycache__"))
+    for package in ("pm", "anakot_agent"):
+        shutil.copytree(repo / package, core / package, ignore=shutil.ignore_patterns("__pycache__"))
     cli = core / "anakot_cli"
     cli.mkdir()
     # Include the real preimport protocol, including its ownership check. Do
@@ -142,7 +143,7 @@ def test_bootstrap_repairs_before_dependency_activation(tmp_path, monkeypatch, m
         'print(json.dumps({"version": startup_dep.__version__, "file": startup_dep.__file__}))\n',
         encoding="utf-8",
     )
-    env = {**os.environ, "PYTHONPATH": str(core), "ANAKOT_PYTHON_SRC_ROOT": str(core)}
+    env = {**os.environ, "PYTHONPATH": str(core), "HERMES_PYTHON_SRC_ROOT": str(core)}
     env.pop("PYTEST_CURRENT_TEST", None)  # this child owns an isolated copied installation
     control = subprocess.run(
         [sys.executable, "-S", "-c", f"import site; site.addsitedir({str(old_site)!r}); import startup_dep"],

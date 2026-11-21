@@ -47,7 +47,21 @@ the feature.
 The location can be relocated with the `ANAKOT_MANAGED_DIR` environment variable
 (for containers or non-`/etc` deployments). This is a deployment/bootstrap path
 knob — like `ANAKOT_HOME` — set by the same administrator who owns the managed
-files. It is **never persisted** to any `.env` by Anakot.
+files. Anakot ignores the variable (in any letter case) in every `.env`, secret
+source and top-level `config.yaml` key, and logs a warning when it skips one: set
+it in the launch environment (service unit `Environment=`, container image), not
+in `~/.anakot/.env`. On NixOS, `services.anakot-agent.environment` is written to
+`$ANAKOT_HOME/.env`, so it can't carry this variable: use
+`systemd.services.anakot-agent.environment` (and
+`systemd.services.anakot-backend.environment` when the backend runs),
+`environment.variables` for interactive shells, or, in container mode, an `--env`
+entry in `services.anakot-agent.container.extraOptions` with the directory mounted
+through `container.extraVolumes`. The Home Manager module writes
+`services.anakot-agent.environment` to the same `.env`: set the variable on the
+user units instead, with `systemd.user.services.anakot-agent.Service.Environment`
+(and `anakot-backend`) on Linux, or
+`launchd.agents.anakot-agent.config.EnvironmentVariables` (and `anakot-backend`)
+on macOS.
 
 ```bash
 # Point managed scope at a custom directory (set by IT / the deployment, not the user)

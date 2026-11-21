@@ -6,7 +6,7 @@ description: "Read-only journal reflection skill with opt-in local Vault MCP set
 maintainer: IkwhanChang
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://habitude.ai/integrations
 version: "0.2.0"
 readme: true

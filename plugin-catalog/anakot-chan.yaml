@@ -6,7 +6,7 @@ tier: community
 category: desktop
 version: "0.2.0"
 title: "Anakot-chan"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/AlleyBo55/anakot-chan#readme
 platforms: [macos, windows, linux]
 description: "A chibi desktop companion who walks around your screen, reacts to Anakot, and does its computer-use clicks and typing. Disclosure — on first run builds its Rust overlay from source with cargo (downloads the crates pinned in Cargo.lock from crates.io, several minutes; needs a Rust toolchain) and then runs it as a long-lived always-on-top desktop window that Anakot restarts on crash; the build and the overlay get a minimal environment without your API keys; with computer_use.backend: anakot-chan it performs real mouse clicks and keyboard input through the core computer_use tool; its mischief setting (on by default) visually glitches and, after 20 s of user inactivity, moves or shakes the active app window; optional heartbeat/watch modes (off by default) send the active window title and a screenshot to your current model; its chat bubble injects your typed messages into the local chat only after you allow plugin injection; the desktop-tidy tools move files on your Desktop into a \"Anakot-chan Tidy\" folder after you approve each run and each undo in Anakot's approval prompt (journaled, undoable); no network calls besides the cargo build, no credentials read."

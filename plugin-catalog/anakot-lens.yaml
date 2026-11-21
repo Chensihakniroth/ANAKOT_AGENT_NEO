@@ -6,7 +6,7 @@ description: "Talk to your own Anakot agent through Ray-Ban Meta glasses. A plat
 maintainer: brukchip
 tier: community
 category: platform
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/brukchip/anakot-lens#readme
 version: "0.4.0"
 known_issues:

@@ -8,6 +8,7 @@ import { createDashboardSessionMutations } from "./session-mutations";
 const mutateSessionHttp = createDashboardSessionMutations(fetchJSON);
 
 import type { AuxiliaryModelsResponse, ModelAssignmentResponse } from "./api-aux";
+import type { ProfileCreateResponse } from "./api-profiles";
 import type {
   AgentPluginUpdateResponse,
   AgentPluginsUpdateAllResponse,
@@ -26,6 +27,19 @@ export type {
   WhatsAppOnboardingStartResponse,
   WhatsAppOnboardingStatusResponse,
 } from "./api-whatsapp";
+import type {
+  WebhookCreate,
+  WebhookEnableResponse,
+  WebhookRoute,
+  WebhooksResponse,
+} from "./api-webhooks";
+export type {
+  WebhookCreate,
+  WebhookEnableResponse,
+  WebhookRoute,
+  WebhookSignature,
+  WebhooksResponse,
+} from "./api-webhooks";
 import type {
   MessagingPlatform,
   RelayLinkCode,
@@ -79,7 +93,7 @@ import type { AutomationBlueprint } from "@/lib/automation-blueprints";
 // Injected into index.html by the server — never fetched via API.
 declare global {
   interface Window {
-    __ANAKOT_SESSION_TOKEN__?: string;
+    __HERMES_SESSION_TOKEN__?: string;
     __ANAKOT_BASE_PATH__?: string;
     /** Server-injected flag: ``true`` when the dashboard's OAuth gate is
      * engaged (public bind, no ``--insecure``). Toggles the SPA's
@@ -88,7 +102,7 @@ declare global {
     __ANAKOT_AUTH_REQUIRED__?: boolean;
   }
 }
-const SESSION_HEADER = "X-Anakot-Session-Token";
+const SESSION_HEADER = "X-Hermes-Session-Token";
 
 function setSessionHeader(headers: Headers, token: string): void {
   if (!headers.has(SESSION_HEADER)) {
@@ -147,7 +161,7 @@ export async function fetchJSON<T>(
   const target = resolveSameOrigin(BASE, url);
   // Inject the session token into all /api/ requests.
   const headers = new Headers(init?.headers);
-  const token = window.__ANAKOT_SESSION_TOKEN__;
+  const token = window.__HERMES_SESSION_TOKEN__;
   if (token) {
     setSessionHeader(headers, token);
   }
@@ -212,7 +226,7 @@ export async function fetchJSON<T>(
     // Loopback mode: ``_SESSION_TOKEN`` rotates on every server restart
     // (``anakot update``, ``anakot gateway restart``, etc.). A tab kept
     // open across the restart holds the OLD token in
-    // ``window.__ANAKOT_SESSION_TOKEN__`` from the previous HTML render,
+    // ``window.__HERMES_SESSION_TOKEN__`` from the previous HTML render,
     // so every fetch returns 401. The HTML is served ``Cache-Control:
     // no-store`` so a reload picks up the freshly-injected token. Trigger
     // that reload once on the first stale-token 401 — gated mode is
@@ -226,7 +240,7 @@ export async function fetchJSON<T>(
   }
   if (res.ok) {
     // Clear the stale-token reload guard: a successful 2xx proves the
-    // current ``window.__ANAKOT_SESSION_TOKEN__`` is valid, so the next
+    // current ``window.__HERMES_SESSION_TOKEN__`` is valid, so the next
     // 401 — if any — should be allowed to trigger its own reload cycle.
     clearDashboardTokenReloadAttempt();
   }
@@ -277,7 +291,7 @@ export async function buildWsAuthParam(): Promise<[string, string]> {
     const { ticket } = await getWsTicket();
     return ["ticket", ticket];
   }
-  const token = window.__ANAKOT_SESSION_TOKEN__ ?? "";
+  const token = window.__HERMES_SESSION_TOKEN__ ?? "";
   return ["token", token];
 }
 
@@ -288,9 +302,9 @@ export async function buildWsAuthParam(): Promise<[string, string]> {
  * the caller can read ``.blob()`` / ``.formData()`` / stream it.
  *
  * Auth, in both modes, exactly as ``fetchJSON`` does it:
- *  - loopback / ``--insecure``: attach the ``X-Anakot-Session-Token`` header.
+ *  - loopback / ``--insecure``: attach the ``X-Hermes-Session-Token`` header.
  *  - gated OAuth: no token header (it's absent by design); the
- *    ``anakot_session_at`` cookie rides along via ``credentials: 'include'``.
+ *    ``hermes_session_at`` cookie rides along via ``credentials: 'include'``.
  *
  * Unlike ``fetchJSON`` this does NOT parse the body, does NOT throw on
  * non-2xx (the caller decides — a 404 on a download is meaningful), and
@@ -309,7 +323,7 @@ export async function authedFetch(
   url = withManagementProfile(url);
   const target = resolveSameOrigin(BASE, url);
   const headers = new Headers(init?.headers);
-  const token = window.__ANAKOT_SESSION_TOKEN__;
+  const token = window.__HERMES_SESSION_TOKEN__;
   if (token) {
     setSessionHeader(headers, token);
   }
@@ -326,7 +340,7 @@ export async function authedFetch(
  * with the correct auth query param appended for the active mode (fresh
  * single-use ``ticket`` in gated mode, ``token`` in loopback). Plugins and
  * the SPA should use this instead of hand-assembling a WS URL + reading
- * ``window.__ANAKOT_SESSION_TOKEN__`` directly, so the gated-mode ticket
+ * ``window.__HERMES_SESSION_TOKEN__`` directly, so the gated-mode ticket
  * path can never be forgotten.
  *
  * ``path`` is the dashboard-relative path (e.g.
@@ -739,15 +753,7 @@ export const api = {
     keep_skills?: string[];
     hub_skills?: string[];
   }) =>
-    fetchJSON<{
-      ok: boolean;
-      name: string;
-      path: string;
-      model_set?: boolean;
-      mcp_written?: number;
-      skills_disabled?: number;
-      hub_installs?: Array<{ identifier: string; pid: number | null }>;
-    }>("/api/profiles", {
+    fetchJSON<ProfileCreateResponse>("/api/profiles", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -1399,11 +1405,11 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        consent: true, // sent only after the confirm dialog; the backend refuses its absence
         redact: opts?.redact ?? true,
         lines: opts?.lines ?? 200,
       }),
     }),
-
 
   getCheckpoints: () => fetchJSON<CheckpointsResponse>("/api/ops/checkpoints"),
   pruneCheckpoints: () =>
@@ -1696,48 +1702,6 @@ export interface PairingUser {
 export interface PairingResponse {
   pending: PairingUser[];
   approved: PairingUser[];
-}
-
-export interface WebhookRoute {
-  name: string;
-  description: string;
-  events: string[];
-  deliver: string;
-  deliver_only: boolean;
-  prompt: string;
-  skills: string[];
-  created_at: string | null;
-  url: string;
-  secret_set: boolean;
-  enabled: boolean;
-}
-
-export interface WebhooksResponse {
-  enabled: boolean;
-  base_url: string;
-  subscriptions: WebhookRoute[];
-}
-
-export interface WebhookEnableResponse {
-  ok: boolean;
-  platform: "webhook";
-  enabled: true;
-  needs_restart: boolean;
-  restart_started?: boolean;
-  restart_action?: string;
-  restart_pid?: number | null;
-  restart_error?: string;
-}
-
-export interface WebhookCreate {
-  name: string;
-  description?: string;
-  events?: string[];
-  prompt?: string;
-  skills?: string[];
-  deliver?: string;
-  deliver_only?: boolean;
-  deliver_chat_id?: string;
 }
 
 export interface CredentialPoolEntry {

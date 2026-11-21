@@ -7,7 +7,7 @@ description: "Drive and observe ROS / ROS 2 robots from Anakot over rosbridge: l
 maintainer: Arca Computer (arcabotai)
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/arcabotai/anakot-ros#readme
 readme: true
 capabilities:

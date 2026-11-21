@@ -5,7 +5,7 @@ description: "Show agent work as rails in the TUI, web and CLI. One lane per age
 maintainer: ListeningPost
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: "https://github.com/ListeningPost/vibeline#readme"
 version: "0.2.0"
 screenshots:

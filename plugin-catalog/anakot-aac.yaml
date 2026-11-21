@@ -8,7 +8,7 @@ maintainer: TREE-Ind
 tier: community
 category: desktop
 version: "0.1.1"
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 readme: true
 onboarding: false
 platforms: [windows]

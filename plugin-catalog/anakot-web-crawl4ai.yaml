@@ -6,7 +6,7 @@ maintainer: axAilotl
 tier: community
 category: web
 version: "0.2.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/axAilotl/anakot-web-crawl4ai#readme
 platforms: [linux, macos, windows]
 known_issues:

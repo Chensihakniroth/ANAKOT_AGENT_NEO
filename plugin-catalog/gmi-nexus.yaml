@@ -35,7 +35,7 @@ description: "Adaptive intelligence layer for Anakot Agent over the live GMI Clo
 maintainer: Joystonm
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Joystonm/anakot-gmi-nexus/blob/7b2d8c5eb7578d73f4f58907f9ddfe5e2da58fe9/plugins/gmi-nexus/README.md
 version: "1.0.0"
 image: https://raw.githubusercontent.com/Joystonm/anakot-gmi-nexus/7b2d8c5eb7578d73f4f58907f9ddfe5e2da58fe9/docs/banner.png

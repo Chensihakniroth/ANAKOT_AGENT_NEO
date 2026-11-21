@@ -8,7 +8,7 @@ description: "Git archaeology in Anakot Desktop: dig a local repository's histor
 maintainer: KyaniteLabs
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/KyaniteLabs/ag4te/tree/d884f9a5cdd3b6d03e95114e860cc134d5067b84/plugins/ag4te-anakot#readme
 image: https://raw.githubusercontent.com/KyaniteLabs/ag4te/d884f9a5cdd3b6d03e95114e860cc134d5067b84/plugins/ag4te-anakot/docs/banner.png
 screenshots:

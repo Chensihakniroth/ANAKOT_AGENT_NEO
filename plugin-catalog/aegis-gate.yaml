@@ -8,7 +8,7 @@ description: "AEGIS gate — a pre-execution verification gate for AI agents. Re
 maintainer: Rainyy99
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Rainyy99/aegis-anakot#readme
 readme: true
 platforms: []

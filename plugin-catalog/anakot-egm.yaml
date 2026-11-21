@@ -6,7 +6,7 @@ description: Fresh-context, tool-free design reviews with checked source evidenc
 maintainer: willbohn
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.2.0"
 docs_url: https://github.com/willbohn/anakot-egm#quickstart
 image: https://raw.githubusercontent.com/willbohn/anakot-egm/d37006f9ddd940ed196fa07554fe2dd470ce7336/assets/banner.jpg

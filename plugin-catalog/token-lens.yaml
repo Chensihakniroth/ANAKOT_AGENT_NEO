@@ -6,7 +6,7 @@ description: "Token consumption analytics for Anakot: records exact per-call usa
 maintainer: patrickluvsoj
 tier: community
 category: general
-requires_anakot: ">=0.16.0"
+requires_hermes: ">=0.16.0"
 docs_url: https://github.com/patrickluvsoj/anakot-token-lens#readme
 version: "0.1.0"
 screenshots:

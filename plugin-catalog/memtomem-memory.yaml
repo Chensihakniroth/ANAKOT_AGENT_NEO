@@ -7,7 +7,7 @@ description: "Memory provider backed by memtomem: on eligible user turns (not gr
 maintainer: memtomem
 tier: community
 category: memory
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/memtomem/memtomem/tree/465e1abdf5285b2ebdce15e7c8fc6dd9d1a55601/packages/memtomem-anakot-memory
 capabilities:
   provides_tools: []

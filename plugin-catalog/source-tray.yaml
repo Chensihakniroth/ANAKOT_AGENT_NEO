@@ -7,7 +7,7 @@ description: Session source tray — URLs the Anakot agent opened via web_search
 maintainer: aydnOktay
 tier: community
 category: web
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/aydnOktay/anakot-source-tray
 version: "0.1.1"
 platforms: []

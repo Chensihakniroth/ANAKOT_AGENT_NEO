@@ -6,7 +6,7 @@ description: Repair weekly staff schedules with minimum disruption, verified con
 maintainer: wms2537
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.0"
 readme: true
 platforms:

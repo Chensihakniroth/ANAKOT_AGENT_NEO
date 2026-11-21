@@ -133,7 +133,7 @@ def test_unknown_prefix_is_not_cached(outcome):
 
 def test_current_interpreter_needs_no_probe():
     with patch("subprocess.run", side_effect=AssertionError("unexpected probe")):
-        assert ce._uses_anakot_python_environment(sys.executable)
+        assert ce._uses_hermes_python_environment(sys.executable)
 
 
 def test_project_without_active_venv_falls_back(child_env):

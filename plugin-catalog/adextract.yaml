@@ -9,7 +9,7 @@ maintainer: Advertly, Inc.
 tier: community
 category: tools
 docs_url: https://adextract.co/documentation
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 readme: true
 image: https://raw.githubusercontent.com/ad-vertly/adextract-mcp-server/5612b7ffd61e747467452d9196210922c84bd4b9/plugins/adextract/assets/banner.png
 platforms: []

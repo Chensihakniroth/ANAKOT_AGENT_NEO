@@ -5,7 +5,7 @@ description: "CLIProxyAPI as native Anakot model providers: discovers each CPA p
 maintainer: duu261
 tier: community
 category: models
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/duu261/anakot-cliproxyapi-provider#readme
 version: "0.8.1"
 capabilities:

@@ -6,7 +6,7 @@ description: "Considerate health context for Anakot Agent: barometric pressure (
 maintainer: tamamo510
 tier: community
 category: general
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.2.0"
 capabilities:
   provides_tools:

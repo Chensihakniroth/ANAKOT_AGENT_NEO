@@ -10,7 +10,7 @@ description: "Status-bar chip, popover and dockable pane showing which skills ar
 maintainer: yugasurfer
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/yugasurfer/loaded-skills-indicator#readme
 version: "1.0.0"
 title: "Loaded Skills Indicator"

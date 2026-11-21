@@ -9,7 +9,7 @@ description: "Try Anakot without leaving Grok. Gives each Grok desktop-app bot a
 maintainer: hudsonwa
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/hudsonwa/twin/blob/80713d1ece86c20a802ff33dcce6cdb341f9efbb/README.md
 screenshots:
   - https://raw.githubusercontent.com/hudsonwa/twin/80713d1ece86c20a802ff33dcce6cdb341f9efbb/docs/screenshots/twins-page.png

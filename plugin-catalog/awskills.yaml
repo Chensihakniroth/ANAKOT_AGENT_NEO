@@ -7,7 +7,7 @@ description: "About 100 portable skills for operating AI agents and the Aither/a
 maintainer: Aitherium
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Aitherium/awskills#readme
 readme: true
 platforms: []

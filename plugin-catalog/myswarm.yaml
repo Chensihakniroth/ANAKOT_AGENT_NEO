@@ -6,7 +6,7 @@ description: "Discover, visualize, sanitize/export, and import community agents.
 maintainer: tomkubik
 tier: community
 category: tools
-requires_anakot: ">=0.19.0"
+requires_hermes: ">=0.19.0"
 version: "1.0.0"
 docs_url: https://github.com/tomkubik/anakot-myswarm#readme
 readme: true

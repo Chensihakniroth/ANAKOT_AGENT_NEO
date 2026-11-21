@@ -6,7 +6,7 @@ description: "Operate your real iPhone or Android from any Anakot (for example o
 maintainer: brucexu-eth
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.2.0"
 capabilities:
   provides_tools:

@@ -5,7 +5,7 @@ description: "Lean OWASP Top 10 pentest toolkit run by the agent against your ow
 maintainer: nicoarias81
 tier: community
 category: tools
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/nicoarias81/leash#readme
 version: "0.1.0"
 platforms: []

@@ -6,7 +6,7 @@ description: "Anakot debugs ESP32 firmware on real hardware. It watches the boar
 maintainer: zblauser
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.2"
 image: https://github.com/user-attachments/assets/17a79988-4bcf-428f-bb96-9a06b30780db
 docs_url: https://github.com/zblauser/numogram-anakot-plugin/blob/025547ff83c073200ddf94fd2def3c8ca57e7b9e/README.md

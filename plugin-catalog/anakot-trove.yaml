@@ -11,7 +11,7 @@ description: >-
 maintainer: misterdas
 tier: community
 category: general
-requires_anakot: '>=0.20'
+requires_hermes: '>=0.20'
 docs_url: https://github.com/misterdas/anakot-trove#readme
 version: 1.1.4
 platforms: []

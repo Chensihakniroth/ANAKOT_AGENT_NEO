@@ -9,7 +9,7 @@ tier: community
 category: tools
 docs_url: https://github.com/MrHydeDev/ghostmark-mcp-plugin
 image: https://raw.githubusercontent.com/MrHydeDev/ghostmark-mcp-plugin/22ff2e44fc5fe3c2778d6198caf879923ebe1c9b/docs/logo.png
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

@@ -8,7 +8,7 @@ maintainer: aimanmalib
 image: https://raw.githubusercontent.com/aimanmalib/anakot-telegram-miniapp/0fd15e2a6b6468fb938789c43c05e17df0c90735/docs/brand/catalog-banner.png
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/aimanmalib/anakot-telegram-miniapp#readme
 version: "0.6.1"
 screenshots:

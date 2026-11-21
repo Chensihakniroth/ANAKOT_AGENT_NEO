@@ -10,7 +10,7 @@ description: "Native Beads (bd) work-graph plugin: fixed-argv adapter, scoped re
 maintainer: jacobhausler
 tier: community
 category: tools
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 version: "0.1.2"
 readme: true
 platforms: []

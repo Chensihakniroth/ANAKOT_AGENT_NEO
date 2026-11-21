@@ -35,7 +35,7 @@ _KNOWN_MANIFEST_FIELDS: set[str] = {
     "pip_dependencies", "provides_browser_providers", "provides_web_providers",
     "manifest_version", "api_version", "requires_plugins", "python_dependencies", "config_schema",
     "license", "homepage", "tags", "capabilities", "emits", "listens", "anakot", "depends",
-    "requires_anakot", "python_runtime", "provides_locales", "requires_auth", "oauth", "config_keys",
+    "requires_hermes", "python_runtime", "provides_locales", "requires_auth", "oauth", "config_keys",
 }
 
 # Highest manifest schema version this Anakot understands.
@@ -379,8 +379,8 @@ class PluginManifest:
     # for a flat plugin, ``image_gen/openai`` for a category plugin. Empty -> name.
     key: str = ""
     # Anakot version requirement (``">=0.19"``, comma-separated clauses allowed). Unsatisfied plugins are
-    # recorded with an error and skipped before import — see ``requires_anakot_error``.
-    requires_anakot: str = ""
+    # recorded with an error and skipped before import — see ``requires_hermes_error``.
+    requires_hermes: str = ""
     portable: bool = False
     # ``plugin-data/<data_namespace>`` for a portable plugin; its skills are named after the plugin
     # itself (``<name>:<skill>``), like every native plugin's.
@@ -454,7 +454,7 @@ def parse_provides_locales(raw: Any, key: str = "") -> tuple[list[str], dict[str
     return ids, metadata
 
 
-# ── requires_anakot version gate ─────────────────────────────────────────────
+# ── requires_hermes version gate ─────────────────────────────────────────────
 _VERSION_COMPARATOR_RE = re.compile(r"^\s*(>=|<=|==|!=|>|<)\s*(.+?)\s*$")
 
 
@@ -499,9 +499,9 @@ def version_satisfies(spec: str, current: str) -> bool:
     return True
 
 
-def requires_anakot_error(manifest: PluginManifest | Mapping[str, Any]) -> Optional[str]:
-    """Load-blocking reason when the manifest's ``requires_anakot`` rejects the running version."""
-    spec = manifest.get("requires_anakot", "") if isinstance(manifest, Mapping) else manifest.requires_anakot
+def requires_hermes_error(manifest: PluginManifest | Mapping[str, Any]) -> Optional[str]:
+    """Load-blocking reason when the manifest's ``requires_hermes`` rejects the running version."""
+    spec = manifest.get("requires_hermes", "") if isinstance(manifest, Mapping) else manifest.requires_hermes
     if not spec:
         return None
     current = running_anakot_version()
@@ -575,7 +575,7 @@ def parse_manifest_file(
             # ``hooks:`` is the spelling the bundled manifests carried for months; external copies of it
             # must keep declaring the same thing (#108371).
             provides_hooks=data.get("provides_hooks", data.get("hooks", [])), source=source, path=str(plugin_dir),
-            kind=kind, key=key, requires_anakot=str(data.get("requires_anakot") or "").strip(),
+            kind=kind, key=key, requires_hermes=str(data.get("requires_hermes") or "").strip(),
             capabilities=_parse_declared_capabilities(data.get("capabilities"), name),
             **_parse_manifest_v2_fields(data, key), emits=data.get("emits") or [],
             listens=data.get("listens") or [],

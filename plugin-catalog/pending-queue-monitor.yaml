@@ -6,7 +6,7 @@ description: "Desktop-only, read-only monitor for pending memory and skill write
 maintainer: Ardenye
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Ardenye/pending-queue-monitor#readme
 readme: true
 screenshots:

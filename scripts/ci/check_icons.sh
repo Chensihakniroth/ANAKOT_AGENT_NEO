@@ -17,9 +17,9 @@ else
     # The renderer runs isolated (-I, no PYTHONPATH), so it needs an interpreter that carries
     # Pillow and resvg-py itself: the runtime venv, not the toolchain `python` on PATH. No
     # trailing newline: on Windows print() ends in CRLF, and $(...) strips only the LF.
-    ANAKOT_PYTHON="$(scripts/anakot-python -c \
+    HERMES_PYTHON="$(scripts/anakot-python -c \
         'from pathlib import Path; from pm.environments import project_python; print(project_python(Path(".")), end="")')"
-    export ANAKOT_PYTHON
+    export HERMES_PYTHON
     index="$(mktemp)"
     trap 'rm -f "$index"' EXIT
     cp "$(git rev-parse --git-path index)" "$index"

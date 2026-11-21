@@ -7,7 +7,7 @@ description: "One memory several Anakot profiles share, split into domains with 
 maintainer: DrFreeman001
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/DrFreeman001/shared-memory-domains/blob/8502b8c909100f673a74b50c3519014088efa4f4/README.md
 readme: true
 platforms: [linux]

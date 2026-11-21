@@ -85,7 +85,7 @@ test('baked defaults precede imported module initialization and reach children w
     expect(run({})).toEqual({ values: defaults, child: defaults.ANAKOT_DATA_DIR_SUFFIX })
     expect(run({ ANAKOT_DATA_DIR_SUFFIX: '-explicit', ANAKOT_PREVIEW_FULL_CONNECTORS: '' })).toEqual({ values: { ...defaults, ANAKOT_DATA_DIR_SUFFIX: '-explicit', ANAKOT_PREVIEW_FULL_CONNECTORS: '' }, child: '-explicit' })
     for (const bad of ['[]', 'null', '{"BAD-NAME":"x"}', '{"ANAKOT_HOME":1}', '{"ANAKOT_HOME":"\\u0000"}',
-      '{"NODE_OPTIONS":"--require=evil"}', '{"PATH":null}', '{"ANAKOT_PYTHON":"/untrusted/python"}', '{"ANAKOT_SKIP_INTRO":"1"}',
+      '{"NODE_OPTIONS":"--require=evil"}', '{"PATH":null}', '{"HERMES_PYTHON":"/untrusted/python"}', '{"ANAKOT_SKIP_INTRO":"1"}',
       '{"ANAKOT_GUEST_ONBOARDING":"1"}']) {
       expect(() => environmentDefaultsBanner(bad)).toThrow()
     }

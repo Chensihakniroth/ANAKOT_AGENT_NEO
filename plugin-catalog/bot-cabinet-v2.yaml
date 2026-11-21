@@ -6,7 +6,7 @@ description: "Tell Cabinet the job you need done and it answers with the smalles
 maintainer: Dgardenhire
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://botcabinet.com/anakot/manual/
 version: "0.3.11"
 image: "https://raw.githubusercontent.com/Dgardenhire/anakot-cabinet/d6a816c350f800e908075de437a108c44ff982e3/docs/card.png"

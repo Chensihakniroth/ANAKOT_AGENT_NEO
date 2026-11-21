@@ -20,7 +20,7 @@ maintainer: Julientalbot
 tier: community
 category: voice
 docs_url: https://github.com/Julientalbot/anakot-xai/blob/8fd9bf8ecef1f8e9cb2cb7921fc86527acd9ede3/README.md
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 platforms: []
 capabilities:
   provides_tools: [xai_collections_search]

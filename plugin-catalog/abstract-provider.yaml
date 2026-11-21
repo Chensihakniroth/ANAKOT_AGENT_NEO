@@ -6,7 +6,7 @@ description: "Abstract model provider (GLM-5.3, DeepSeek-V4-Flash, Kimi-K3) over
 maintainer: abstractpbc
 tier: community
 category: models
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "1.0.0"
 docs_url: https://github.com/abstractpbc/anakot-abstract-provider#readme
 capabilities:

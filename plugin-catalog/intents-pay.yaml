@@ -5,7 +5,7 @@ description: "Crypto invoices and cross-chain payment quotes for a NEAR account 
 maintainer: ayinmodeolarewaju-bot
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "1.1.0"
 title: Intents Pay
 docs_url: https://github.com/ayinmodeolarewaju-bot/anakot-intents-pay

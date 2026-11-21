@@ -7,7 +7,7 @@ description: "Practise any interview or talk out loud: job, technical, case, adm
 maintainer: flamiinngo
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/flamiinngo/rehearse#readme
 readme: true
 image: https://raw.githubusercontent.com/flamiinngo/rehearse/0de3a679eb80f2c3a8f4a2dd5e215ba29bbc1570/docs/card.png

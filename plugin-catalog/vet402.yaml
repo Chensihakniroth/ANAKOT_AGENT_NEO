@@ -7,7 +7,7 @@ description: "Look a paid x402 or MPP URL up in vet402's public record of real p
 maintainer: kzmttkc
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/kzmttkc/vet402-anakot/blob/main/vet402/README.md
 capabilities:
   provides_tools:

@@ -5,7 +5,7 @@ description: "Run Python scripts and Jupyter notebooks on Google Colab GPUs (T4 
 maintainer: PietrangeloManco
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.0"
 docs_url: https://github.com/PietrangeloManco/anakot-colab#readme
 platforms: [linux, macos, windows]

@@ -6,7 +6,7 @@ description: "A Markdown draft beside Anakot chat, with selected-text rewrites a
 maintainer: "Techdox"
 tier: "community"
 category: "desktop"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.2"
 docs_url: "https://github.com/Techdox/anakot-draftroom#readme"
 platforms: ["linux", "macos"]

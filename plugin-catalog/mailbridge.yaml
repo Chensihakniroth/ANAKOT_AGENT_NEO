@@ -7,7 +7,7 @@ description: "Resumable legacy POP and EML migration to Gmail with source preser
 maintainer: MadanChaollaPark
 tier: community
 category: automation
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 version: "0.3.0"
 platforms: [linux, macos]
 readme: true

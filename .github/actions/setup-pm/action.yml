@@ -236,7 +236,7 @@ runs:
       run: |
         args=()
         if [ "$_PM_TEST_ENVIRONMENT" = true ]; then args+=(--test-environment); fi
-        "$ANAKOT_PYTHON" -S "$_PM_ACTION/../../../scripts/ci/setup_toolchain.py" dependencies \
+        "$HERMES_PYTHON" -S "$_PM_ACTION/../../../scripts/ci/setup_toolchain.py" dependencies \
           --toolchain "$_PM_TOOLCHAIN" --extras "$_PM_EXTRAS" --home "$ANAKOT_HOME" "${args[@]}"
 
     - name: Log PM cache restore results and save policy

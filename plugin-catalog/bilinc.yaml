@@ -6,7 +6,7 @@ description: "Hosted memory for Anakot with a full history: see what your agent 
 maintainer: ReARCLabs
 tier: community
 category: memory
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/ReARCLabs/bilinc-anakot-plugin#readme
 title: "Bilinc"
 image: https://raw.githubusercontent.com/ReARCLabs/bilinc-anakot-plugin/1ad81b4aaef8632ba5d6438384f3f063f46a0ebd/docs/banner.jpg

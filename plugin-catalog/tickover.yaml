@@ -7,7 +7,7 @@ maintainer: rapha18th
 tier: community
 category: tools
 title: Tickover
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/rapha18th/tickover/blob/45ebd2bd447504fb6229088fda1b3cab052aa982/README.md
 readme: true
 platforms: []

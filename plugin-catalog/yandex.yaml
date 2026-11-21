@@ -1,6 +1,6 @@
 name: yandex
 repo: https://github.com/akinfold/anakot-yandex-search-api
-sha: fb4b339ddaf758064a450bd0c242c261d7418178
+sha: 06914bf48e2d4876ce98ae5a355e7d83d8ccc789
 subdir: anakot_yandex_search
 title: "Yandex Search API"
 image: https://raw.githubusercontent.com/akinfold/anakot-yandex-search-api/fb4b339ddaf758064a450bd0c242c261d7418178/docs/banner.png
@@ -8,7 +8,7 @@ description: "Yandex Search API for Anakot web search and generated answers with
 maintainer: akinfold
 tier: community
 category: web
-requires_anakot: ">=0.18.1"
+requires_hermes: ">=0.18.1"
 version: "0.1.6"
 docs_url: https://github.com/akinfold/anakot-yandex-search-api#readme
 readme: true

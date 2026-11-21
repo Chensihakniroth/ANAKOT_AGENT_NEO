@@ -166,7 +166,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
   // so a missing token there is expected, not an error.
   const tokenMissing =
     typeof window !== "undefined" &&
-    !window.__ANAKOT_SESSION_TOKEN__ &&
+    !window.__HERMES_SESSION_TOKEN__ &&
     !window.__ANAKOT_AUTH_REQUIRED__;
   const [banner, setBanner] = useState<string | null>(() =>
     tokenMissing ? PTY_TOKEN_MISSING_BANNER.text : null,
@@ -505,7 +505,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
     // may point elsewhere by then — react-hooks/exhaustive-deps).
     const termWrap = termWrapRef.current;
 
-    const token = window.__ANAKOT_SESSION_TOKEN__;
+    const token = window.__HERMES_SESSION_TOKEN__;
     const gated = !!window.__ANAKOT_AUTH_REQUIRED__;
     // Banner already initialised above; just bail before wiring xterm/WS.
     // In gated mode the token is absent by design — api.buildWsUrl() mints
@@ -2067,7 +2067,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
 
 declare global {
   interface Window {
-    __ANAKOT_SESSION_TOKEN__?: string;
+    __HERMES_SESSION_TOKEN__?: string;
     __ANAKOT_AUTH_REQUIRED__?: boolean;
   }
 }

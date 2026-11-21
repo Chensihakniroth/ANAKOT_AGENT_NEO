@@ -7,7 +7,7 @@ description: "Agent security telemetry for SIEMs. Every tool call, file read, sh
 maintainer: ASV-Labs
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/ASV-Labs/siemless#readme
 version: "0.1.2"
 image: https://raw.githubusercontent.com/ASV-Labs/siemless/a74bd96f2fc232e808db6242a6be642fa700db5e/docs/banner.png

@@ -5,7 +5,7 @@ description: "Experimental model transport using the official Cursor Agent SDK. 
 maintainer: mcpeezy
 tier: community
 category: models
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/mcpeezy/anakot-cursor-sdk#readme
 version: "0.1.0"
 readme: true

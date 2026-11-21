@@ -5,7 +5,7 @@ description: "Pay-per-call data and utility APIs via a remote MCP server (241 pa
 maintainer: DataRebelHQ
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://exchangerebel.com
 version: "1.0.1"
 capabilities:

@@ -19,7 +19,7 @@ description: "Local-first skill discovery: on each user turn it runs a BM25 quer
 maintainer: kosmo888
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/kosmo888/skill-hint#readme
 version: "1.0.0"
 title: "Skill Hint"

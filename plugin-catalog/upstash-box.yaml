@@ -8,7 +8,7 @@ description: "Terminal backend that runs Anakot terminal, execute_code and file 
 maintainer: Upstash
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/upstash/box/tree/main/packages/anakot-box#readme
 platforms: []
 capabilities:

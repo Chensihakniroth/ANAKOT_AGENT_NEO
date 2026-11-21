@@ -5,7 +5,7 @@ description: "Japanese filings on the EDINET API v2. It finds a Japanese company
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-edinet#readme
 version: 0.1.10
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-edinet/06171c84b23ab5e35b0c58203cebcbee33117110/assets/catalog-banner.png

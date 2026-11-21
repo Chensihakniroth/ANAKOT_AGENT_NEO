@@ -6,7 +6,7 @@ description: "Tripo 3D tools on Tripo's v3 API (openapi.tripo3d.ai). Text, photo
 maintainer: Adolanium
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Adolanium/anakot-tripo#readme
 version: "0.4.0"
 image: https://raw.githubusercontent.com/Adolanium/anakot-tripo/09b26f6b3b2662a0fe86dc782283bc4cddf7a196/assets/catalog-banner.png

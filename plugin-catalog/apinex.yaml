@@ -20,7 +20,7 @@ description: >-
 maintainer: Apinex-AI
 tier: community
 category: models
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://apinex.bond/integrations/anakot?utm_source=anakot&utm_medium=plugin
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Apinex-AI/anakot-provider-apinex/4097c6e311a214b91171d5035ab7684bcf9cdb3e/assets/banner.png

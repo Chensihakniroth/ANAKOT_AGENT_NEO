@@ -6,7 +6,7 @@ description: 'Pick the sound Anakot Desktop plays when a turn finishes: one of t
 maintainer: Zamoca42
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Zamoca42/anakot-completion-sound
 version: "0.1.0"
 platforms: []

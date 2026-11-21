@@ -29,7 +29,7 @@ description: >-
 maintainer: scottleimroth
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 image: https://raw.githubusercontent.com/scottleimroth/signal-dog/002e33b67b636f295788c3e7ddc5c486ea8e95cc/docs/demo-scene.png
 screenshots:
   - https://raw.githubusercontent.com/scottleimroth/signal-dog/002e33b67b636f295788c3e7ddc5c486ea8e95cc/docs/demo-scene.png

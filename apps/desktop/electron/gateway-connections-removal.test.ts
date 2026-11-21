@@ -16,7 +16,7 @@ import { createDesktopGatewayConnectionsStore } from './gateway-connections-stor
 // feed a ONE-TIME import; after that the shared list is the authority, for Desktop
 // and for the Webapp alike.
 const repo = path.resolve(import.meta.dirname, '../../..')
-const python = process.env.ANAKOT_PYTHON || 'python3'
+const python = process.env.HERMES_PYTHON || 'python3'
 const dirs: string[] = []
 
 afterEach(() => {

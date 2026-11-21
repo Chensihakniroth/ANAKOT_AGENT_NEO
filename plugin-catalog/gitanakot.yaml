@@ -5,7 +5,7 @@ description: GitHub PRs and issues as a right workspace pane in Anakot Desktop, 
 maintainer: claudiumio
 tier: community
 category: desktop
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/claudiumio/gitanakot#readme
 version: "0.5.0"
 image: https://raw.githubusercontent.com/claudiumio/gitanakot/09d5b566da650290dc0d639ea1e77def4bcdab31/docs/social-preview.png

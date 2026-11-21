@@ -294,19 +294,19 @@ def _refuse_unsupported_catalog_platform(entry: PluginCatalogEntry) -> None:
 
 
 def catalog_anakot_error(entry: PluginCatalogEntry) -> Optional[str]:
-    """``<name> needs Anakot <spec>; this is <version>.`` when the entry's ``requires_anakot`` rejects the
+    """``<name> needs Anakot <spec>; this is <version>.`` when the entry's ``requires_hermes`` rejects the
     running Anakot, else ``None``. The verdict IS the plugin.yaml gate's
-    (:func:`~anakot_cli.plugins_manifest.requires_anakot_error`): same version source, same comparison, so
+    (:func:`~anakot_cli.plugins_manifest.requires_hermes_error`): same version source, same comparison, so
     a dev checkout or canary build is judged the same by both, and an unknown version never blocks."""
-    from anakot_cli.plugins_manifest import requires_anakot_error, running_anakot_version
-    if not requires_anakot_error({"requires_anakot": entry.requires_anakot}):
+    from anakot_cli.plugins_manifest import requires_hermes_error, running_anakot_version
+    if not requires_hermes_error({"requires_hermes": entry.requires_hermes}):
         return None
-    return f"{entry.name} needs Anakot {entry.requires_anakot}; this is {running_anakot_version()}."
+    return f"{entry.name} needs Anakot {entry.requires_hermes}; this is {running_anakot_version()}."
 
 
 def refuse_incompatible_catalog_entry(entry: PluginCatalogEntry) -> None:
     """``PluginOperationError`` when the catalog says *entry* cannot run here: a platform it does not list,
-    or a ``requires_anakot`` the running version fails. Every install by catalog name passes through here."""
+    or a ``requires_hermes`` the running version fails. Every install by catalog name passes through here."""
     from anakot_cli.config import recommended_update_command
     from anakot_cli.plugins_cmd import PluginOperationError
     _refuse_unsupported_catalog_platform(entry)
@@ -813,7 +813,7 @@ def _render_entries(entries: list[PluginCatalogEntry], console) -> None:
     for e in sorted(entries, key=lambda e: (e.category, rank.get(e.tier, len(rank)), e.name)):
         tier = f"[{style.get(e.tier, 'magenta')}]{e.tier}[/{style.get(e.tier, 'magenta')}]"
         desc = e.description if len(e.description) <= 60 else e.description[:57] + "..."
-        name = e.name + (f"\n[yellow]needs Anakot {e.requires_anakot}[/yellow]" if catalog_anakot_error(e) else "")
+        name = e.name + (f"\n[yellow]needs Anakot {e.requires_hermes}[/yellow]" if catalog_anakot_error(e) else "")
         table.add_row(name, e.category, tier, desc, pin_label(e), _capability_counts(e))
     console.print()
     console.print(table)
@@ -853,7 +853,7 @@ def cmd_info(name: str) -> None:
     console.print()
     rows = [("Repo", entry.repo), ("Subdir", entry.subdir), ("Version", entry.version), ("Pinned SHA", entry.sha),
             ("Image", entry.image),
-            ("Maintainer", entry.maintainer), ("Requires", f"anakot {entry.requires_anakot}" if entry.requires_anakot else ""),
+            ("Maintainer", entry.maintainer), ("Requires", f"anakot {entry.requires_hermes}" if entry.requires_hermes else ""),
             ("Platforms", ", ".join(entry.platforms)), ("Docs", entry.docs_url)]
     for label, value in rows:
         if value:

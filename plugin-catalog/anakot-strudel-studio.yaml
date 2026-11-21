@@ -18,7 +18,7 @@ description: >-
 maintainer: mojomast
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.2.5"
 docs_url: https://github.com/mojomast/poptart/blob/42356ddb9eff2eea2419bbd223ee159f353e4632/INTEGRATION.md
 readme: true

@@ -14,7 +14,7 @@ description: >-
 maintainer: EricBlack47
 tier: community
 category: tools
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 docs_url: https://github.com/EricBlack47/anakot-persona-stickers#readme
 version: "1.0.1"
 platforms: [linux, macos, windows]

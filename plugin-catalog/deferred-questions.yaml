@@ -5,7 +5,7 @@ description: "Durable non-blocking questions with exact answer binding and gatew
 maintainer: web3blind
 tier: community
 category: automation
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [linux, macos]
 version: "0.3.0"
 docs_url: https://github.com/web3blind/anakot-deferred-questions#readme

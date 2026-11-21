@@ -6,7 +6,7 @@ description: "Delete and package skills, browse their markdown files, and save p
 maintainer: apoapostolov
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "1.1.0"
 image: https://raw.githubusercontent.com/apoapostolov/anakot-agent-awesome-plugins/184725016633448af8f1c12f326529516b948ad3/public/better-capabilities/docs/hero.png
 docs_url: https://github.com/apoapostolov/anakot-agent-awesome-plugins/tree/main/public/better-capabilities

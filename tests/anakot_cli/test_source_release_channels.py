@@ -50,7 +50,7 @@ def releases(tmp_path, monkeypatch, request):
     git(checkout, "config", "commit.gpgsign", "false")
     git(checkout, "checkout", "--detach", commits[0])
     monkeypatch.setattr(main, "PROJECT_ROOT", checkout)
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(checkout))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(checkout))
     monkeypatch.delenv("ANAKOT_MANAGED", raising=False)
 
     responses = {}

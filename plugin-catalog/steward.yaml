@@ -7,7 +7,7 @@ description: "Your chief of staff in the team chat. Collects every department's 
 maintainer: imprint-hash
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/imprint-hash/steward/blob/400dd9d4a3720d426c75ef0d86f9e1d3eb8a304a/README.md
 readme: true
 capabilities:

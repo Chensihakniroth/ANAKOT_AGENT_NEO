@@ -8,7 +8,7 @@ description: "Fax preparation, quotes, approved sending, delivery status, cancel
 maintainer: faxforagents
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/faxforagents/anakot-integration#readme
 readme: true
 platforms: []

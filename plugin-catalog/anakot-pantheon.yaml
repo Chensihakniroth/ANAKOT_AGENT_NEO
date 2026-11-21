@@ -6,7 +6,7 @@ description: "Eighteen Anakot Desktop themes in dithered classical marble, one g
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Adolanium/anakot-pantheon#readme
 version: "0.4.2"
 image: https://raw.githubusercontent.com/Adolanium/anakot-pantheon/f4c997005c488785c3b146a2b40c634956d46c0a/assets/catalog-banner.png

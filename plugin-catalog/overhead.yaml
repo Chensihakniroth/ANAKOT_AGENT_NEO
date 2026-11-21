@@ -6,7 +6,7 @@ description: "What changed at this place between these dates? Measures vegetatio
 maintainer: leoresendedop-sys
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/leoresendedop-sys/overhead/blob/5ddd2e5aed0e5451f0a9c5107270770c919e1eb8/README.md
 version: "0.1.0"
 image: https://raw.githubusercontent.com/leoresendedop-sys/overhead/5ddd2e5aed0e5451f0a9c5107270770c919e1eb8/assets/overhead-cover.png

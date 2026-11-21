@@ -38,7 +38,7 @@ for word, and a test fails the build if the two drift apart.
   anakot plugins validate /path/to/your-plugin --install-deps
   ```
 
-  It checks the manifest and `requires_anakot`, that the plugin loads, that the
+  It checks the manifest and `requires_hermes`, that the plugin loads, that the
   `capabilities` you declare match what it registers, `config_schema` and
   `requires_env`, Python dependencies against Anakot's core constraints, the
   install security scan, and the `desktop surface` and `no core override`
@@ -81,7 +81,10 @@ the gallery. There is no separate listing to maintain.
    self-updater lets an installed copy move to a commit nobody reviewed.
    Updates reach users only through a SHA-bump PR here plus
    `anakot plugins update <name>`. Keep the updater in the standalone
-   distribution if you want one; strip it from the catalog build.
+   distribution if you want one; strip it from the catalog build. Downloading
+   a separate third-party tool pinned by checksum is not a self-updater; a
+   maintainer allows such a file by repo, pinned sha and file hash in
+   `scripts/ci/catalog_self_updater_allowlist.json`.
 4. **SHA bumps are new PRs.** Updating an entry's pin is a new PR whose diff
    (old SHA → new SHA) is re-reviewed like any other change — reviewers are
    expected to look at the upstream commit range being adopted.
@@ -175,15 +178,15 @@ the gallery. There is no separate listing to maintain.
    long-running background processes, stored credentials. Telemetry and usage
    reporting are opt-in. Reviewers summarise these as disclosure lines on the
    entry PR; undisclosed behaviour found in review is a request for changes.
-14. **Compatibility metadata is truthful.** `requires_anakot` is a SemVer floor
+14. **Compatibility metadata is truthful.** `requires_hermes` is a SemVer floor
    (`">=0.21.5"`), never a CalVer date, and never newer than the current release.
-   The entry's `requires_anakot` is enforced: an install by catalog name refuses
+   The entry's `requires_hermes` is enforced: an install by catalog name refuses
    on a Anakot it rejects, and `anakot plugins update` keeps an installed plugin
    at its current pin until Anakot is updated. Declare the same floor in
    `plugin.yaml` as well, because older Anakot versions enforce only that one
    (the loader skips the plugin when it does not match). A portable package
-   (`plugin.json`) has no `requires_anakot` field, so the catalog entry's
-   `requires_anakot` is its only floor: set one when the package needs a recent
+   (`plugin.json`) has no `requires_hermes` field, so the catalog entry's
+   `requires_hermes` is its only floor: set one when the package needs a recent
    Anakot (a server declaration key an older release ignores). `version` matches the
    pinned code, and Python dependencies resolve under Anakot's core constraints
    (`anakot plugins validate --install-deps` is what CI runs).
@@ -234,6 +237,14 @@ the gallery. There is no separate listing to maintain.
    however clean its code. A general-purpose tool such as a browser, downloader
    or media player is fine; one that ships with those sources built in, or whose
    description points users at them, is not.
+20. **No coin or token promotion.** A plugin built around one coin, token or
+   NFT collection that is not a broadly adopted asset (its price, trading,
+   launch, airdrop, holder rewards or promotion), and a plugin used to promote
+   its maker's own token, is declined. Memecoin boards, coin launchpads and
+   airdrop or free-mint farming tools fall under this rule. Fine: stablecoins
+   such as USDC, payments (x402 and similar), multi-coin wallets, exchanges and
+   markets, price tickers, safety and scam checks, and broadly adopted assets
+   such as Bitcoin, Ethereum and Solana.
 <!-- admission-rules:end -->
 
 ## Updating your entry
@@ -259,6 +270,11 @@ changed or removed, open a PR on its file. Owners keep control of their entries.
   fixed. When a new rule affects plugins that are already listed, their
   authors get an issue on their repository explaining the change and time to
   update before anything is removed.
+- **Dead entries are delisted automatically.** If your repository is deleted,
+  or the commit your entry pins disappears (a force-push that drops it), a
+  weekly check opens a PR deleting the entry, since it can no longer be
+  installed. Keep the pinned commit reachable; to come back, resubmit with a
+  live repository and pin.
 - **Removal** adds the plugin to
   [`removed.yaml`](https://github.com/NousResearch/hermes-agent/blob/main/plugin-catalog/README.md#removedyaml--the-blocklist),
   which is reserved for security and policy incidents. Installers refuse

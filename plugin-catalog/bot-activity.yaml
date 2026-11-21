@@ -25,7 +25,7 @@ description: "Live per-Bot activity timeline for Anakot Desktop: turns, tool cal
 maintainer: risyadul
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/risyadul/anakot-bot-activity
 screenshots:
   - https://raw.githubusercontent.com/risyadul/anakot-bot-activity/da1c9d10eb228cd6f0a93e255ee92c8c3a6717f2/docs/screenshots/by-bot.png

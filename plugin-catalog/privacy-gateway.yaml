@@ -7,7 +7,7 @@ tier: community
 category: general
 docs_url: https://github.com/saiteja-madha/anakot-privacy-gateway#readme
 version: "0.1.1"
-requires_anakot: ">=0.20.4"
+requires_hermes: ">=0.20.4"
 platforms: [linux]
 capabilities:
   provides_tools: []

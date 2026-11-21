@@ -6,7 +6,7 @@ description: "Brazilian Portuguese (pt-BR) language pack for Anakot Agent coveri
 maintainer: StudioCodeAI
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/StudioCodeAI/anakot-lang-pt-br#readme
 version: "1.2.4"
 platforms: []

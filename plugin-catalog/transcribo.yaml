@@ -8,7 +8,7 @@ maintainer: Transcribo
 tier: community
 category: tools
 docs_url: https://github.com/santigamo/transcribo-skill#install-in-anakot-agent
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

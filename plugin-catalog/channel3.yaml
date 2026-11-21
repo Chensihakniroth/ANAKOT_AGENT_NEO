@@ -7,7 +7,7 @@ maintainer: channel3-ai
 tier: community
 category: tools
 version: "0.1.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/channel3-ai/channel3-anakot-plugin#readme
 screenshots:
 - https://raw.githubusercontent.com/channel3-ai/channel3-anakot-plugin/5dfcb6df773ad62c033346824d0779594cc6c31e/docs/cards.png

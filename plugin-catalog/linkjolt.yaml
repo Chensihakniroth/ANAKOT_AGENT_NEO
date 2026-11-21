@@ -8,7 +8,7 @@ maintainer: LinkJolt
 tier: community
 category: tools
 docs_url: https://github.com/Efesop/linkjolt-claude-plugin#install-in-anakot-agent
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 image: https://raw.githubusercontent.com/Efesop/linkjolt-claude-plugin/9db46b04f582257a2cf8a32dc35438c838f4d58f/assets/icon.png
 platforms: []

@@ -7,7 +7,7 @@ description: "Ask Anakot for an ad and get the finished file back in your chat. 
 maintainer: Glorya-AI
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Glorya-AI/anakot-plugin#readme
 image: https://raw.githubusercontent.com/Glorya-AI/anakot-plugin/e6ffa2bb4e6180686ebf276ff5b9744c029842f8/assets/glorya-anakot.png
 readme: true

@@ -5,7 +5,7 @@ description: "Serve local Inference Exchange models while Anakot CLI is idle. Di
 maintainer: qzyu999
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 docs_url: https://github.com/qzyu999/anakot-inference-exchange#readme
 capabilities:

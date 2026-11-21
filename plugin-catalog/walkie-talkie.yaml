@@ -5,7 +5,7 @@ description: "Let one session message another existing session (Telegram topic, 
 maintainer: barronlroth
 tier: community
 category: automation
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/barronlroth/anakot-walkie-talkie#readme
 version: "0.1.5"
 title: Walkie-Talkie

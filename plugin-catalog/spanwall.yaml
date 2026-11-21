@@ -7,7 +7,7 @@ description: "One Kanban wall for every Anakot session, across every profile: Ne
 maintainer: tuanpv47
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/tuanpv47/spanwall#readme
 version: "1.0.1"
 image: https://raw.githubusercontent.com/tuanpv47/spanwall/0efc95fd6258f4ea0f2aa6cf5f109203db9520c0/assets/banner.png

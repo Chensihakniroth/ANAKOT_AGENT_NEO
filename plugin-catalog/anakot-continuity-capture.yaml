@@ -5,7 +5,7 @@ description: "Records Anakot lifecycle events (session, subagent, and kanban tas
 maintainer: Goitonthefloor
 tier: community
 category: automation
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.2.2"
 capabilities:
   provides_tools: []

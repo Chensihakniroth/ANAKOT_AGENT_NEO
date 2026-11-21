@@ -21,7 +21,7 @@ async def config(request: Request):
     late("_require_token")(request)
     return {"pid": os.getpid(), "saved": True,
             "credentials": [k for k in request.headers if k in
-                {"authorization", "cookie", "x-anakot-session-token", "x-anakot-gateway-ticket"}]}
+                {"authorization", "cookie", "x-hermes-session-token", "x-anakot-gateway-ticket"}]}
 '''
 
 

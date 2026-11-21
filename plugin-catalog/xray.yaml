@@ -7,7 +7,7 @@ description: "Sets traps for plugins instead of watching them. anakot xray deton
 maintainer: cipoklean
 tier: community
 category: tools
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 version: "0.1.0"
 docs_url: https://github.com/cipoklean/anakot-xray#readme
 readme: true

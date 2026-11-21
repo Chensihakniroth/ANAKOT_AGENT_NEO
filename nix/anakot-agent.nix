@@ -434,7 +434,7 @@ stdenv.mkDerivation (finalAttrs: {
       };
 
       devShellHook = ''
-        export ANAKOT_PYTHON=${devVenv}/bin/python3
+        export HERMES_PYTHON=${devVenv}/bin/python3
         # `uv run --active --no-sync` reuses this venv instead of creating .venv.
         export VIRTUAL_ENV=${devVenv}
       '';

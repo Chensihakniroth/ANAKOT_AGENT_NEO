@@ -53,7 +53,7 @@ def test_standalone_serve_keeps_the_permit_protocol(monkeypatch):
     monkeypatch.setattr(web_server.app.state, "gateway_runner", None, raising=False)
     monkeypatch.setattr(web_server, "_SESSION_TOKEN", "standalone-retirement-token")
     client = TestClient(web_server.app)
-    headers = {"X-Anakot-Session-Token": "standalone-retirement-token"}
+    headers = {"X-Hermes-Session-Token": "standalone-retirement-token"}
 
     assert client.get("/api/health/idle", headers=headers).json() == {"ok": True, "idle": True, "reason": None}
     permit = client.post("/api/health/retirement", json={"action": "prepare"}, headers=headers).json()

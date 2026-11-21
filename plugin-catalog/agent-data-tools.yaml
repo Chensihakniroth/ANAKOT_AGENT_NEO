@@ -18,7 +18,7 @@ maintainer: Nutshell2000
 tier: community
 category: tools
 docs_url: https://github.com/Nutshell2000/agent-data-tools/tree/main/integrations/anakot#readme
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 readme: true
 platforms: []
 capabilities:

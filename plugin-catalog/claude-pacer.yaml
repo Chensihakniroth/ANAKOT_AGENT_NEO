@@ -5,7 +5,7 @@ description: "For power users running heavy automation in Anakot on a Claude Pro
 maintainer: Rubenkivilang
 tier: community
 category: automation
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.4.1"
 docs_url: https://github.com/Rubenkivilang/claude-pacer/tree/main/docs
 known_issues:

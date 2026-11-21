@@ -9,7 +9,7 @@ description: >-
 maintainer: cygnostik
 tier: community
 category: tools
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 version: "0.2.0"
 docs_url: https://github.com/cygnostik/anakot-plugin-remarkable#readme
 image: https://raw.githubusercontent.com/cygnostik/anakot-plugin-remarkable/5f841248b068d49f8a04208bf3471e00acd933f3/docs/media/remarkable-anakot-catalog.png

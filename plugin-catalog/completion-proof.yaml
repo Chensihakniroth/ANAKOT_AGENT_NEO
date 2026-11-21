@@ -6,7 +6,7 @@ description: "Revision-bound receipts for operator-configured checks; changed so
 maintainer: yuanshen101
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.5"
 platforms: [linux]
 readme: true

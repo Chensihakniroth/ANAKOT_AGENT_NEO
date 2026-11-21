@@ -142,7 +142,7 @@ test.skipIf(process.platform === 'win32')('probe Git reaches the staged main eve
     run(['remote', 'add', 'origin', 'https://github.com/NousResearch/hermes-agent.git'])
     const cfg = path.join(root, 'gitconfig')
     run(['config', '--file', cfg, '--add', `url.file://${bare}.insteadOf`, 'https://github.com/NousResearch/hermes-agent.git'])
-    const python = process.env.ANAKOT_PYTHON || 'python3'
+    const python = process.env.HERMES_PYTHON || 'python3'
     const source = fileURLToPath(new URL('../', import.meta.url))
     const launcher = path.join(checkout, '.anakot', 'bin', 'anakot')
     fs.mkdirSync(path.dirname(launcher), { recursive: true })
@@ -259,7 +259,7 @@ test('preloaded Electron-style execFile transports explicit branch into the chec
     fs.mkdirSync(path.join(root, 'anakot_cli'))
     fs.writeFileSync(path.join(root, 'anakot_cli', 'source_check.py'), 'import json, sys\ndef main(): print(json.dumps(sys.argv[1:]))\n')
     const probe = 'from pathlib import Path; import runpy; p = Path("anakot_cli/source_check.py"); entry = runpy.run_path(str(p)).get("main") if p.is_file() else None; entry() if callable(entry) else print("null")'
-    const python = process.env.ANAKOT_PYTHON || 'python3'
+    const python = process.env.HERMES_PYTHON || 'python3'
     const script = 'const {promisify} = require("node:util"); const {execFile} = require("node:child_process"); promisify(execFile)(process.argv[1], ["-c", process.argv[2], "--install-root", process.argv[3], "--home", process.argv[3], "--git", "fixture-shim", "--force"], {cwd:process.argv[3]}).then(r=>console.log(r.stdout), e=>{console.error(e);process.exitCode=1})'
     const result = spawnSync(process.execPath, ['-e', script, python, probe, root], {
       encoding: 'utf8', env: { ...process.env, ANAKOT_E2E_SOURCE_ROOT: root, ANAKOT_E2E_SOURCE_GIT: '/real/git',

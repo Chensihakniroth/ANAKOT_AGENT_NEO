@@ -15,7 +15,7 @@ description: >-
 maintainer: ngrok
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://ngrok.com/docs/ai-gateway/overview
 version: "1.0.0"
 platforms: []

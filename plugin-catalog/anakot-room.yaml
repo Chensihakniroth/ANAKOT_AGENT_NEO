@@ -5,7 +5,7 @@ description: "Anakot Room washes untrusted web, email, file and tool output befo
 maintainer: adenijiridwan43
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.2.0"
 docs_url: https://github.com/adenijiridwan43/anakot-room#readme
 platforms: []

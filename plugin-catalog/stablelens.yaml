@@ -18,7 +18,7 @@ description: >-
 maintainer: erhnysr
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/erhnysr/stablelens#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/erhnysr/stablelens/4555b3e57f871003b14952fcd06f0854f1eac07a/docs/banner.png

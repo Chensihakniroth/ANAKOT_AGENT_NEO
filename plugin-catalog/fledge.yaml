@@ -37,7 +37,7 @@ description: >-
 maintainer: 12burb
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/12burb/anakot-fledge#readme
 platforms: []
 capabilities:

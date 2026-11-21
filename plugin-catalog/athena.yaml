@@ -7,7 +7,7 @@ maintainer: athenaforanakot
 tier: community
 category: platform
 version: "1.0.1"
-requires_anakot: ">=0.21.0,<0.23.0"
+requires_hermes: ">=0.21.0,<0.23.0"
 docs_url: https://github.com/athenaforanakot/athena
 # `readme: true` makes the docs site render the plugin's own README from the
 # pinned commit - which is where the licence, the screenshots and the full

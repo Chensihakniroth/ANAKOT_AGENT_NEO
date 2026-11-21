@@ -5,7 +5,7 @@ description: "Control Shelly Gen 1/2/3 devices directly on your LAN — discover
 maintainer: Cyberpz
 tier: community
 category: automation
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 version: "1.0.0"
 title: "Shelly Direct"
 image: https://raw.githubusercontent.com/cyberpz/anakot-shelly-direct/8dff6456ba20aa26708494eccd64f667106fe7f4/docs/banner.png

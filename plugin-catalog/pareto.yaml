@@ -6,7 +6,7 @@ description: "Pareto Inference as a Anakot model provider (`--provider pareto`):
 maintainer: pareto-inference
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/pareto-inference/anakot-pareto-provider#readme
 version: "1.0.0"
 known_issues:

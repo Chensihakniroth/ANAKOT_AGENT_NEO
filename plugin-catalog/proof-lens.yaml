@@ -5,7 +5,7 @@ description: "Verify a DRAT refutation and profile its proof depth as a Desktop 
 maintainer: invisiblemonsters
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/invisiblemonsters/proof-lens/blob/64c913e8489e8dcf2ee4d84e5a1e85cbd6a8b2c8/README.md
 version: "1.0.0"
 platforms: []

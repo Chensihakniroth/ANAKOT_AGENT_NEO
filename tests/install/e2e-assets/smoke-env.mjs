@@ -118,12 +118,12 @@ export function updateWindowEnvironment(inherited, root, origin) {
     fs.writeFileSync(file, JSON.stringify({ ...prior, ...local }), { mode: 0o600 });
   }
   if (origin === 'source') {
-    const editableRoot = inherited.ANAKOT_PYTHON_SRC_ROOT;
+    const editableRoot = inherited.HERMES_PYTHON_SRC_ROOT;
     if (editableRoot) {
       if (!path.isAbsolute(editableRoot) || fs.realpathSync(editableRoot) !== fs.realpathSync(root)) {
-        throw new Error('Captured ANAKOT_PYTHON_SRC_ROOT differs from the installed source');
+        throw new Error('Captured HERMES_PYTHON_SRC_ROOT differs from the installed source');
       }
-      env.ANAKOT_PYTHON_SRC_ROOT = editableRoot;
+      env.HERMES_PYTHON_SRC_ROOT = editableRoot;
     }
     for (const key of ['ANAKOT_DESKTOP_PYTHON', 'ANAKOT_DESKTOP_ANAKOT', 'ANAKOT_DESKTOP_ANAKOT_ROOT']) {
       if (inherited[key]) {

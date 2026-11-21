@@ -10,7 +10,7 @@ description: "Per-provider quota and balance readout in the Anakot desktop statu
 maintainer: PhoeniXAbhisheK
 tier: community
 category: desktop
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/PhoeniXAbhisheK/anakot-plugin-provider-usage#readme
 version: "0.4.1"
 image: https://raw.githubusercontent.com/PhoeniXAbhisheK/anakot-plugin-provider-usage/4a957a66a1e36aa4fce14fe03c1b78fe11c4d6a2/media/banner.png

@@ -172,7 +172,7 @@ class ConnectionOperationTarget(Payload):
     subdir: str | None = None
     scan: CatalogScan | None = None
     # The Anakot version range the plugin needs; its env vars ride in ``required_env``.
-    requires_anakot: str | None = None
+    requires_hermes: str | None = None
     has_desktop_half: bool | None = None
     # The profile the row installs into; absent when the chat's home is no named profile.
     target_profile: str | None = None
@@ -186,6 +186,8 @@ class ConnectionOperationTarget(Payload):
     missing_env: list[str] | None = None
     server_errors: list[CatalogServerError] | None = None
     already_installed: bool | None = None
+    # Installed skill row from an optional-skill stub that pulls a third-party repo live: that repo.
+    upstream_repo: str | None = None
 
 
 class ConnectionDisplay(Payload):

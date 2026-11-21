@@ -5,7 +5,7 @@ description: "Semantic recall for the built-in holographic memory provider. It r
 maintainer: MohamedElsiddig
 tier: community
 category: memory
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.3.2"
 docs_url: https://github.com/MohamedElsiddig/anakot-plugin-factkit#readme
 readme: true

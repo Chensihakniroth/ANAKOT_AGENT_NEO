@@ -5,7 +5,7 @@ description: "A side agent rereads the conversation while Anakot works on longer
 maintainer: BonesNasty
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/bonesnasty/you-should-know#readme
 version: "1.0.0"
 platforms: []

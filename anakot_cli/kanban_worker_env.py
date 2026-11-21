@@ -35,8 +35,8 @@ _HOST_NAMES = frozenset({
     # Anakot' own location, install and host policy, read before any profile config loads: the
     # host-wide gateway lock directory (else a cold-started gateway takes a different "host" lock),
     # the no-install policy, and the shared board root and its lock's busy timeout.
-    "ANAKOT_HOME", "ANAKOT_REAL_HOME", "ANAKOT_SCRATCH_DIR", "ANAKOT_RUNTIME_DIR", "ANAKOT_INSTALL_ROOT",
-    "ANAKOT_PYTHON_SRC_ROOT", "ANAKOT_DATA_DIR_SUFFIX", "ANAKOT_HOME_MODE", "ANAKOT_MANAGED",
+    "ANAKOT_HOME", "ANAKOT_REAL_HOME", "ANAKOT_SCRATCH_DIR", "ANAKOT_RUNTIME_DIR", "HERMES_INSTALL_ROOT",
+    "HERMES_PYTHON_SRC_ROOT", "ANAKOT_DATA_DIR_SUFFIX", "ANAKOT_HOME_MODE", "ANAKOT_MANAGED",
     "ANAKOT_CONTAINER", "ANAKOT_SKIP_CHMOD", "ANAKOT_GATEWAY_LOCK_DIR", "ANAKOT_DISABLE_LAZY_INSTALLS",
     "ANAKOT_KANBAN_HOME", "ANAKOT_KANBAN_BUSY_TIMEOUT_MS",
     # The administrator-managed scope directory (an IT bootstrap override, never in any profile's

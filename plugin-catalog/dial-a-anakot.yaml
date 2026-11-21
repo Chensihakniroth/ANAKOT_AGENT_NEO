@@ -7,7 +7,7 @@ description: "Talk to Anakot from any phone with no data: a USSD gateway platfor
 maintainer: ebohdarlington123-cmyk
 tier: community
 category: platform
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/ebohdarlington123-cmyk/dial-a-anakot#readme
 version: "0.1.0"
 platforms: []

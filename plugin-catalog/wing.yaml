@@ -13,7 +13,7 @@
 - "Live subscription voice requires a profile sign-in with voice access. OpenAI API voice is unavailable pending host-owned per-call instructions/voice support in NousResearch/hermes-agent#151774. Email drafts require neither."
 "sha": "9b0ca946ea82cc9e2180f51929844a535231b958"
 "version": "0.3.4"
-"requires_anakot": ">=0.23.0"
+"requires_hermes": ">=0.23.0"
 "screenshots":
 - "https://raw.githubusercontent.com/tarkilhk/wing-anakot-plugin/9b0ca946ea82cc9e2180f51929844a535231b958/docs/email-draft-preview.png"
 "capabilities":

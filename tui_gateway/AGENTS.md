@@ -205,9 +205,9 @@ remain session-scoped; composer model changes use `session.mutate`, never global
 ```bash
 cd ui-tui
 pnpm install       # first time
-pnpm run dev       # watch mode (rebuilds anakot-ink + tsx --watch)
+pnpm run dev       # watch mode (rebuilds hermes-ink + tsx --watch)
 pnpm start         # production
-pnpm run build     # full build (anakot-ink + tsc)
+pnpm run build     # full build (hermes-ink + tsc)
 pnpm run typecheck # tsc --noEmit
 pnpm run lint      # eslint
 pnpm run fmt       # prettier

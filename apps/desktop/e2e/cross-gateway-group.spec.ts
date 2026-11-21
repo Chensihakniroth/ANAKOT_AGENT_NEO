@@ -94,7 +94,7 @@ async function startRemoteGateway(root: string, mockUrl: string, config = MULTIP
     if (child.exitCode !== null) {throw new Error(`remote anakot serve exited early (${child.exitCode}):\n${log}`)}
 
     try {
-      if ((await fetch(`${url}/api/status`, { headers: { 'X-Anakot-Session-Token': REMOTE_TOKEN } })).ok) {break}
+      if ((await fetch(`${url}/api/status`, { headers: { 'X-Hermes-Session-Token': REMOTE_TOKEN } })).ok) {break}
     } catch {
       // not up yet
     }

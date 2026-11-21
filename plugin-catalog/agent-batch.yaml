@@ -21,5 +21,5 @@ capabilities:
   provides_middleware: []
   requires_env:
     - GITHUB_TOKEN
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 version: 1.0.0

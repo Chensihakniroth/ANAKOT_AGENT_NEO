@@ -7,7 +7,7 @@ description: "Source-grounded 5W1H task cards and advisory prompt-preparation wo
 maintainer: Guinevere1991
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.2.2"
 docs_url: https://github.com/Guinevere1991/token-housekeeper-hackathon/tree/e1b5d954131e3a44faef2ff3422ab6c430e0040e
 readme: true

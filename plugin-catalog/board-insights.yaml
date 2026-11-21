@@ -6,7 +6,7 @@ description: "Read-only analytics page for the Anakot Kanban boards, in Desktop.
 maintainer: kwpings
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/kwpings/board-insights#readme
 version: "1.0.0"
 screenshots:

@@ -8,7 +8,7 @@ description: "Idle check-ins, a texting voice and workspace-browser skills for a
 maintainer: capthvnsen
 tier: community
 category: automation
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/capthvnsen/alans-way-agents/tree/9276468d8ef4258e8fbfc42d48d0a627e4e5619e/alans-way
 readme: true
 platforms: [linux, macos]

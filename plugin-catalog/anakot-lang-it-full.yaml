@@ -6,7 +6,7 @@ description: >-
 maintainer: gradia64
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/gradia64/anakot-lang-it-full#readme
 version: "0.1.0"
 platforms: []

@@ -6,7 +6,7 @@ description: "Local ledger of the slash commands you run in Anakot (built-in com
 maintainer: olric3015
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/olric3015/anakot-plugins/tree/main/command-ledger
 version: "1.2.0"
 image: https://raw.githubusercontent.com/olric3015/anakot-plugins/bf93fe7502464a2206f4b7878c61946f0b022b88/docs/command-ledger-card.png

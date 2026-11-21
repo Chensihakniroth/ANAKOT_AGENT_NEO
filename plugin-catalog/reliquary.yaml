@@ -7,7 +7,7 @@ description: "Local, inspectable long-term memory with source provenance, conver
 maintainer: Lokee86
 tier: community
 category: memory
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Lokee86/reliquary-anakot/tree/0de70d170a575582aeb71ba3daff371fc0fdd42c
 screenshots:
   - https://raw.githubusercontent.com/Lokee86/reliquary-anakot/0de70d170a575582aeb71ba3daff371fc0fdd42c/assets/graph-overview.png

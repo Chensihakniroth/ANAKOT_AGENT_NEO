@@ -7,7 +7,7 @@ description: "Puts back files an agent deleted or overwrote: before write_file, 
 maintainer: Moodtuner997
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/Moodtuner997/anakot-undo-effects#readme
 readme: true
 platforms: [linux, macos, windows]

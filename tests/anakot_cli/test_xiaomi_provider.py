@@ -75,6 +75,7 @@ class TestXiaomiCredentials:
         from agent import secret_scope as ss
         from anakot_cli import config as config_module
         from anakot_cli import env_loader
+        from anakot_constants import anakot_home_key
 
         home = tmp_path / "anakot"
         home.mkdir()
@@ -85,7 +86,7 @@ class TestXiaomiCredentials:
         monkeypatch.delenv("XIAOMI_BASE_URL", raising=False)
         monkeypatch.setitem(
             env_loader._SECRET_SOURCE_VALUES_BY_HOME,
-            str(home.resolve()),
+            anakot_home_key(home),
             {"XIAOMI_API_KEY": "sk-bws-xiaomi-12345678"},
         )
 

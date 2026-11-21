@@ -6,7 +6,7 @@ maintainer: BrokeSkill
 tier: community
 category: desktop
 version: "1.0.1"
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 image: https://raw.githubusercontent.com/BrokeSkill/turn-bell/b39808efe7eef1528679661ebda902c9b632a438/assets/demo-modes.gif
 platforms: [linux, macos, windows]
 capabilities:

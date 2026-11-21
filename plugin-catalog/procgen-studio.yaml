@@ -6,7 +6,7 @@ description: "Image and video backend that draws with code. Your configured mode
 maintainer: iamlukethedev
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/iamlukethedev/anakot-procgen-studio#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/iamlukethedev/anakot-procgen-studio/204b063ca5dcb81c050299b9fcaa47ea5a437553/examples/banner.png

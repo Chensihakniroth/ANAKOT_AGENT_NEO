@@ -7,7 +7,7 @@ maintainer: Mad-Max8063
 tier: community
 category: tools
 version: "0.1.0"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [windows, linux]
 capabilities:
   provides_tools: [pmp_inspect, pmp_prepare_handoff, pmp_verify_handoff, pmp_receive_handoff]

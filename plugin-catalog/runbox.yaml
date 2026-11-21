@@ -8,7 +8,7 @@ description: "Build, run and test Python in an offline container per chat, with 
 maintainer: Zek-Takai
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 platforms: [linux, macos]
 image: https://raw.githubusercontent.com/Zek-Takai/anakot-runbox/544e6f35c65c45d085a90078a328dbd8c3fb8872/docs/runbox-banner.png
 screenshots:

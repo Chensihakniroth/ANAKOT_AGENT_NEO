@@ -20,6 +20,7 @@ from typing import Literal, cast
 
 from anakot_cli.steward import UPDATE_MECHANISMS
 from anakot_cli.update_channel import STABLE_TAG_RE
+from anakot_cli._startup_fast import project_root_str
 
 
 @dataclass(frozen=True)
@@ -72,7 +73,7 @@ def _run_git(repo_dir: Path, *args: str) -> str | None:
 
 def _resolve_repo_dir() -> Path | None:
     """Use the executing checkout before a profile's optional clone."""
-    repo_dir = Path(__file__).parent.parent.resolve()
+    repo_dir = Path(project_root_str())
     if (repo_dir / ".git").exists():
         return repo_dir
     # The PROCESS home: this is the running code's identity and is cached
@@ -99,7 +100,7 @@ def _calver_release_version(repo_dir: Path) -> tuple[str, int] | None:
     Releases before semver tags existed are tagged ``vYYYY.M.D`` only; the
     version users actually run is in that tag's pyproject. Without this, a
     checkout past such a release would compare as "unknown" against plugins'
-    ``requires_anakot``.
+    ``requires_hermes``.
     """
     described = _run_git(repo_dir, "describe", "--tags", "--long", "--match", "v2[0-9][0-9][0-9].*", "HEAD")
     if not described:

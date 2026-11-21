@@ -5,7 +5,7 @@ description: "Mini-Plexamp for Anakot Desktop: statusbar player for your Plex mu
 maintainer: imzacksong
 tier: community
 category: desktop
-requires_anakot: '>=0.21'
+requires_hermes: '>=0.21'
 docs_url: https://github.com/imzacksong/anakot-plex-music
 platforms: [windows]
 capabilities:

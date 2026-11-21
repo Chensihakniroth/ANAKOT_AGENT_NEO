@@ -32,7 +32,7 @@ for (const status of [401, 403]) {
           res.end(JSON.stringify({ providers: [{ name: 'portal', supports_password: false }] }))
         } else if (pathname === '/login') {
           signedIn = true
-          res.setHeader('Set-Cookie', 'anakot_session_at=fixture-session; Path=/; HttpOnly; SameSite=Lax')
+          res.setHeader('Set-Cookie', 'hermes_session_at=fixture-session; Path=/; HttpOnly; SameSite=Lax')
           res.end('{}')
         } else if (signedIn && pathname === '/api/auth/ws-ticket') {
           mints += 1

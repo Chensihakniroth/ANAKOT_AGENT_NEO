@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import importlib.metadata
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -50,7 +51,7 @@ class CheckResult:
     latest: Optional[str] = None
     update_available: Optional[bool] = None   # None = unknown/uncheckable
     needs_fixing: Optional[str] = None        # mismatch reason when set
-    min_anakot: Optional[str] = None          # feed floor / catalog requires_anakot, if any
+    min_anakot: Optional[str] = None          # feed floor / catalog requires_hermes, if any
     reason: str = ""
 
     def to_json(self) -> dict:
@@ -84,6 +85,15 @@ def _read_manifest_field(plugin_dir: Path, key: str) -> Optional[str]:
     return value.strip() if isinstance(value, str) and value.strip() else None
 
 
+def _self_cloned_next_step(path: Path) -> str:
+    from pm.filesystem import is_junction
+
+    if path.is_symlink() or is_junction(path):
+        # `adopt` refuses a link on purpose: Anakot never updates or deletes files outside its plugins dir.
+        return f"linked to {os.path.realpath(path)}; pull updates in that checkout"
+    return "self-cloned; run `anakot plugins adopt` first"
+
+
 def check_local_provenance(prov: Provenance) -> CheckResult:
     """Check installed provenance without fetching remote metadata."""
     result = CheckResult(name=prov.name, klass=prov.klass.value)
@@ -98,7 +108,7 @@ def check_local_provenance(prov: Provenance) -> CheckResult:
         )
         return result
     if prov.klass is ProvenanceClass.SELF_CLONED:
-        result.reason = "self-cloned; run `anakot plugins adopt` first"
+        result.reason = _self_cloned_next_step(prov.path)
         return result
 
     row = prov.row or {}
@@ -131,12 +141,12 @@ def check_local_provenance(prov: Provenance) -> CheckResult:
 
 def held_for_newer_anakot(result: CheckResult) -> Optional[str]:
     """``needs Anakot <spec>; this is <version>`` when the update's ``min_anakot`` (a feed floor or the
-    catalog entry's ``requires_anakot``) rejects the running Anakot, else ``None``. The update path refuses
+    catalog entry's ``requires_hermes``) rejects the running Anakot, else ``None``. The update path refuses
     such an update, so listings name it as waiting on a Anakot update instead of offering it."""
     if not result.min_anakot:
         return None
-    from anakot_cli.plugins_manifest import requires_anakot_error, running_anakot_version
-    if not requires_anakot_error({"requires_anakot": result.min_anakot}):
+    from anakot_cli.plugins_manifest import requires_hermes_error, running_anakot_version
+    if not requires_hermes_error({"requires_hermes": result.min_anakot}):
         return None
     return f"needs Anakot {result.min_anakot}; this is {running_anakot_version()}"
 
@@ -169,7 +179,7 @@ def check_provenanced(
             return result
         result.latest = entry.sha
         result.update_available = result.current != entry.sha
-        result.min_anakot = entry.requires_anakot or None
+        result.min_anakot = entry.requires_hermes or None
         return result
     result = check_local_provenance(prov)
     if result.reason or result.needs_fixing:

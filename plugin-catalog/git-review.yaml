@@ -8,7 +8,7 @@ description: "Git review pane for Anakot Desktop: every changed file of the agen
 maintainer: mister-ideas
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.3.0"
 docs_url: https://github.com/mister-ideas/git-review#readme
 image: https://raw.githubusercontent.com/mister-ideas/git-review/a1944377c3f8d5699668b67379be9bf63ca0cee7/docs/banner.jpg

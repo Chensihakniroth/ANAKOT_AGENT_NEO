@@ -6,7 +6,7 @@ description: "Client for the local VoiceStudio text-to-speech app (debpalash/Voi
 maintainer: aska-digital
 tier: community
 category: voice
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 version: "1.0.0"
 docs_url: https://github.com/aska-digital/protean-voice-studio
 readme: true

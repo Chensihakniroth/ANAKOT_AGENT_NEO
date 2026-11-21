@@ -7,7 +7,7 @@ description: "Review boards for UI mockups and plans. The agent builds a board f
 maintainer: "arspesk"
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/apelabs-dev/anakot-mock-review#readme
 image: https://raw.githubusercontent.com/apelabs-dev/anakot-mock-review/4ec3b90d63ef82efa2c91c6e62845e1f16f66d88/docs/img/catalog-banner.jpg
 screenshots:

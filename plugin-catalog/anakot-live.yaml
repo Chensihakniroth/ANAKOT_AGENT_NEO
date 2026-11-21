@@ -6,7 +6,7 @@ description: "Multi-provider live voice calls with Gemini, Grok, Qwen, and a Cod
 maintainer: dandacompany
 tier: community
 category: voice
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.9.2"
 docs_url: https://github.com/dandacompany/anakot-live#readme
 readme: true

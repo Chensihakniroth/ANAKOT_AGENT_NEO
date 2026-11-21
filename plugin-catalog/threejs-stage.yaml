@@ -13,7 +13,7 @@ description: "Live three.js r187 scenes and GLB, GLTF, STL and OBJ models in Ana
 maintainer: tuancookiez-hub
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/tuancookiez-hub/anakot-threejs-stage/tree/5dbee69884211aaa7c08fbef4c6cb177e2138546
 platforms: []
 capabilities:

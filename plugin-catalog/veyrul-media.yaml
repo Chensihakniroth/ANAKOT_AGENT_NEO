@@ -8,7 +8,7 @@ description: "Saved media workflows, code and references for captions, editing, 
 maintainer: the-media-vampire
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/the-media-vampire/veyrul-integrations/tree/02ed7b7a32ecdbb87643c068f0cf562a0c854a64/anakot-plugin
 readme: true
 platforms: [linux, macos, windows]

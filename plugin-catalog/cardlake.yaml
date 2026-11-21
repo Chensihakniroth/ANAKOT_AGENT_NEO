@@ -16,7 +16,7 @@ description: >-
 maintainer: cardleforall
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/cardleforall/cardlake-anakot
 version: "0.7.9"
 title: Cardlake

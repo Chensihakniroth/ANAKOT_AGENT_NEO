@@ -6,7 +6,7 @@ description: "Private AgentPlaybooks memory for Anakot: explicit recall by defau
 maintainer: matebenyovszky
 tier: community
 category: memory
-requires_anakot: ">=0.22.4"
+requires_hermes: ">=0.22.4"
 version: "0.4.0"
 docs_url: https://github.com/matebenyovszky/agentplaybooks/tree/b0b9bcc242a5b68ca2f1a6e13a4b22ca035e6264/packages/anakot-memory/agentplaybooks
 image: https://raw.githubusercontent.com/matebenyovszky/agentplaybooks/b0b9bcc242a5b68ca2f1a6e13a4b22ca035e6264/public/plugin-catalog/anakot-memory.png

@@ -38,10 +38,6 @@ def build_environment(prepared: PreparedDesktop, variant: str, inherited: Mappin
     if prepared.python != selection.entries["python"].binary or prepared.node != selection.entries["node"].binary:
         raise ValueError("prepared Python/Node paths do not match selected tools; prepare again")
     env = selection.environment(env)
-    env["ANAKOT_PYTHON"] = str(prepared.python)
-    # The packaging hooks (after-pack, payload digests, dmgbuild prep) call the
-    # shared build wrapper, whose contract is HERMES_PYTHON. Keep both bridges
-    # pointed at the same prepared interpreter.
     env["HERMES_PYTHON"] = str(prepared.python)
     return identity_environment(request, variant, env)
 

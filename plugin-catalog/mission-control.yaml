@@ -6,7 +6,7 @@ description: Live mission-control dashboard for Anakot Desktop — tool waterfal
 maintainer: rohitdanda
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "1.0.0"
 image: https://raw.githubusercontent.com/rohitdanda/anakot-mission-control/3f0b984d653732c7b607db1be99f24cd090b4e79/assets/banner.jpg
 screenshots:

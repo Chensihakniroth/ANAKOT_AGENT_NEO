@@ -6,7 +6,7 @@ description: "A dashboard for the machines and services on your home network, in
 maintainer: Timidan
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Timidan/hostbook/blob/4d4630f0a60254ac6941103c3d028b2c1f994985/docs/guide.md
 version: "0.2.1"
 image: https://raw.githubusercontent.com/Timidan/hostbook/4d4630f0a60254ac6941103c3d028b2c1f994985/docs/banner.png

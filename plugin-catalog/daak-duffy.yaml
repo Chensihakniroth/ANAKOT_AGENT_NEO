@@ -6,7 +6,7 @@ description: "Autonomous background task queue (DAAK Duffy / Duet Do-For-You wor
 maintainer: benfirad
 tier: community
 category: automation
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/benfirad/anakot-plugin-antigravity-duet#readme
 version: "0.3.0"
 readme: true

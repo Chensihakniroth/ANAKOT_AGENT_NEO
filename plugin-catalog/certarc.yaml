@@ -9,7 +9,7 @@ maintainer: CertArc
 tier: community
 category: tools
 docs_url: https://certarc.com/integrations
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 image: https://raw.githubusercontent.com/CertArc/certarc-mcp/bdb74db3ddc7c5d14ecda710e6af077d71f415b2/anakot/assets/banner.png
 screenshots:
   - https://raw.githubusercontent.com/CertArc/certarc-mcp/bdb74db3ddc7c5d14ecda710e6af077d71f415b2/anakot/assets/practice-review.png

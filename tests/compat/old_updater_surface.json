@@ -1263,7 +1263,7 @@
     "anakot_cli.plugins_cmd_catalog::raise_if_removed",
     "anakot_cli.plugins_ledger::_hook_source_of",
     "anakot_cli.plugins_manifest::SUPPORTED_MANIFEST_VERSION",
-    "anakot_cli.plugins_manifest::requires_anakot_error",
+    "anakot_cli.plugins_manifest::requires_hermes_error",
     "anakot_cli.plugins_provenance::Provenance",
     "anakot_cli.plugins_provenance::ProvenanceClass",
     "anakot_cli.plugins_provenance::read_sidecar_rows",

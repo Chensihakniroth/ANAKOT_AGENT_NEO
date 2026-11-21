@@ -109,7 +109,7 @@ def _build_prepared(prepared, builder_args: list[str], variant: str | None) -> N
     run([str(prepared.icon_python), "-I", str(repo / "scripts/generate_icons.py"),
          "--source", str(repo), "--out", str(icons)], cwd=repo, env=env)
     if variant != "light":
-        # `desktop` is the GUI-only bundle: the agent payload is assembled with
+# `desktop` is the GUI-only bundle: the agent payload is assembled with
         # NO frontends planted, so anakot_cli/{tui_dist,web_dist} never enter the
         # app. Both products are built only for the variants that ship them — the
         # Desktop serves its dashboard from its own Electron renderer dist, so it
@@ -119,7 +119,9 @@ def _build_prepared(prepared, builder_args: list[str], variant: str | None) -> N
             run([node, "scripts/build/tui.mjs", "--source", str(repo), "--out", str(products / "tui")], cwd=repo, env=env)
             run([node, "scripts/build/web.mjs", "--source", str(repo), "--icons", str(products / "icons"),
                  "--out", str(products / "web")], cwd=repo, env=env)
-            frontends = {"tui": products / "tui", "web": products / "web"}
+            run([node, "scripts/build/webapp.mjs", "--source", str(repo), "--out", str(products / "webapp")],
+                cwd=repo, env=env)
+            frontends = {"tui": products / "tui", "web": products / "web", "webapp": products / "webapp"}
         if prepared.payload is None:
             raise ValueError("payload dependencies were not prepared")
         if finish_native(prepared.payload, frontends):

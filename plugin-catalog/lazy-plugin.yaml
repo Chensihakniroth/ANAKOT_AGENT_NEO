@@ -12,7 +12,7 @@ image: https://raw.githubusercontent.com/RegeneratusLabs/lazy-plugin/0adb8ff33f9
 screenshots:
   - https://raw.githubusercontent.com/RegeneratusLabs/lazy-plugin/0adb8ff33f9ebe47118077423bfdd17234403b8f/assets/preview.png
 readme: true
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 capabilities:
   provides_tools:
     - lazyplugin_create

@@ -7,13 +7,13 @@ from pathlib import Path
 # The Python root (localGatewayBootstrap.ts/imageAttachments.ts pass it): the TUI product ships this
 # helper in dist/scripts/, where parents[2] is not the root.
 def python_root() -> Path:
-    return Path(os.environ.get("ANAKOT_PYTHON_SRC_ROOT") or Path(__file__).resolve().parents[2])
+    return Path(os.environ.get("HERMES_PYTHON_SRC_ROOT") or Path(__file__).resolve().parents[2])
 
 
 sys.path.insert(0, str(python_root()))
 
 def main(destination: Path) -> bool:
-    # Ink runs this on ANAKOT_PYTHON with PYTHONPATH=<root> only, which on a source install is PM's
+    # Ink runs this on HERMES_PYTHON with PYTHONPATH=<root> only, which on a source install is PM's
     # store Python: without the committed generation, Pillow is missing and non-PNG clipboard
     # images silently depend on ImageMagick being installed. Activate before any Anakot import, so
     # a module that grows a third-party import still loads from the generation.

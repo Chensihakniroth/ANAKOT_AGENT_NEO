@@ -13,7 +13,7 @@ description: "HyAtlas 5 — self-hosted 8-layer memory provider backed by a pure
 maintainer: tuancookiez-hub
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/tuancookiez-hub/HyAtlas-Memory/tree/0428086c382456d9afaf55ba166c107f6f30759d/plugins/hyatlas
 platforms:
   - linux

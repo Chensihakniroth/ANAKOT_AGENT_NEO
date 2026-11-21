@@ -5,7 +5,7 @@ description: "Live skill-execution fidelity - watches whether the agent actually
 maintainer: PhucNguyen-Dev
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 image: https://raw.githubusercontent.com/PhucNguyen-Dev/skillens/b788910f661705b06d0f94415cc02b4897cbfa85/docs/screenshot-checklist.png
 screenshots:

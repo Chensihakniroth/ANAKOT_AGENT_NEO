@@ -5,7 +5,7 @@ description: "Fortytwo — Qwen3.8 27B inference; adds Fortytwo to the Anakot mo
 maintainer: Fortytwo
 tier: community
 category: models
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Fortytwo-Network/fortytwo-anakot#readme
 version: "1.0.0"
 capabilities:

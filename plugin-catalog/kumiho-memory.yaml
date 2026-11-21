@@ -7,7 +7,7 @@ description: "Recall and save decisions, preferences and facts in your Kumiho Cl
 maintainer: KumihoIO
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/KumihoIO/kumiho-plugins/tree/d4811200fa22225ae245d2778b938a793d6d5af6/anakot
 version: "0.1.0"
 image: https://raw.githubusercontent.com/KumihoIO/kumiho-plugins/d4811200fa22225ae245d2778b938a793d6d5af6/anakot/assets/kumiho-memory-banner.jpg

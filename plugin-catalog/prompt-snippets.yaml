@@ -5,7 +5,7 @@ description: "Prompt snippet library for the Anakot Desktop composer: a quick-pi
 maintainer: Heybinshao
 tier: community
 category: desktop
-requires_anakot: '>=0.21.5'
+requires_hermes: '>=0.21.5'
 docs_url: https://github.com/Heybinshao/prompt-snippets#readme
 version: "1.8.0"
 image: https://raw.githubusercontent.com/Heybinshao/prompt-snippets/a6ecc3f73a1ccb7f003f498ca950c525d0537222/assets/banner.png

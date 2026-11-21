@@ -10,7 +10,7 @@ category: general
 docs_url: https://github.com/huy-sec/anakot-mood#readme
 readme: true
 platforms: []
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 capabilities:
   provides_tools: []
   provides_hooks:

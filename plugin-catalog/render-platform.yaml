@@ -23,4 +23,4 @@ capabilities:
   provides_middleware: []
   requires_env:
     - RENDER_API_KEY
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"

@@ -12,7 +12,9 @@ from pathlib import Path
 
 import pytest
 
-ANAKOT_CLI = Path(__file__).resolve().parents[2] / "anakot_cli"
+from anakot_agent.compat.paths import current_path
+
+ANAKOT_CLI = Path(__file__).resolve().parents[2] / current_path("anakot_cli")
 
 
 def _iter_call_text_nodes(tree: ast.AST) -> list[ast.Call]:

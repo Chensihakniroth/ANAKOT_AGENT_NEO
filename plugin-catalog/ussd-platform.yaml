@@ -6,7 +6,7 @@ description: "Talk to Anakot from any phone by dialling a USSD short code: no ap
 maintainer: GodlyDeveloper1
 tier: community
 category: platform
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/GodlyDeveloper1/anakot#readme
 version: "1.0.0"
 image: https://raw.githubusercontent.com/GodlyDeveloper1/anakot/f5f69e215dad54c06d2977320a080ab1c68f10ca/docs/media/banner.png

@@ -35,7 +35,7 @@ it guards. `plan → snapshot → apply → restart-per-kind → verify → repo
   re-check gets the real one), a nested `__pycache__`/`node_modules`, or a `_ZIP_PRESERVED_NESTED`
   output is admitted; other ignored files under shipped dirs still block), and grafts the live nested
   build outputs (`_ZIP_PRESERVED_NESTED`: `apps/desktop/{release,dist,node_modules,build}`,
-  `anakot_cli/web_dist`, `ui-tui/{dist,node_modules,packages/anakot-ink/dist}`, `web/node_modules`,
+  `anakot_cli/web_dist`, `ui-tui/{dist,node_modules,packages/hermes-ink/dist}`, `web/node_modules`,
   `scripts/whatsapp-bridge/node_modules`) into the staged swap by hardlink (the GitHub source ZIP has
   none of them; without the graft the swap deletes them). Post-swap, the Desktop
   rebuild decision also trusts the build stamp under ANAKOT_HOME, so an install that already lost

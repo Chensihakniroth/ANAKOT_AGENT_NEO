@@ -8,7 +8,7 @@ maintainer: yablokolabs
 tier: community
 category: voice
 docs_url: https://github.com/yablokolabs/keepvoice-anakot
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 known_issues:

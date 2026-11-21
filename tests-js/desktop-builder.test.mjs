@@ -210,7 +210,7 @@ test('in-tree desktop products rebuild after build exists without replacing prep
   // even when that input itself is an earlier builder-owned product.
   const built = files(input.out)
   for (const prepared of [
-    { stamp: join(input.out, 'anakot-build.json') },
+    { stamp: join(input.out, 'hermes-build.json') },
     { nativeDeps: join(input.out, 'node_modules') },
     { icons: input.out },
   ]) {
@@ -317,7 +317,7 @@ test('a desktop build that another build restamps mid-compile still publishes, a
     }}] }
   `)
   await expect(buildDesktop(input)).resolves.toBeTruthy()
-  expect(existsSync(join(input.out, 'anakot-build.json'))).toBe(true)
+  expect(existsSync(join(input.out, 'hermes-build.json'))).toBe(true)
   // The guard itself: a PROVENANCE change during compilation must still throw, or
   // this test would pass simply because recordProduct stopped guarding anything.
   const swapped = { ...JSON.parse(readFileSync(input.stamp, 'utf8')), commit: 'e'.repeat(40) }
@@ -370,7 +370,7 @@ test('the receipt records the clock the output BAKED, so a restamp between the b
   expect(() => recordProduct({
     source: input.source, product: 'desktop', out: input.out, inputs, stampClock: baked,
   })).not.toThrow()
-  const receipt = JSON.parse(readFileSync(join(input.out, 'anakot-build.json'), 'utf8'))
+  const receipt = JSON.parse(readFileSync(join(input.out, 'hermes-build.json'), 'utf8'))
   expect(receipt.stampClock).toBe(baked)
   expect(productCurrent({ ...input, product: 'desktop' })).toBe(false)
 }, 60000)

@@ -7,7 +7,7 @@ description: "LLM API (llmapi.ai) as a Anakot model provider (`--provider llmapi
 maintainer: llmapi-ai
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/llmapi-ai/anakot-provider-llmapi#readme
 version: "0.1.1"
 platforms: []

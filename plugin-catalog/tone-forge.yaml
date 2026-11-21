@@ -7,7 +7,7 @@ description: "AI guitar tone engineer for IK Multimedia AmpliTube 5 inside Anako
 maintainer: efesn
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms: [windows]
 readme: true
 docs_url: https://github.com/efesn/toneforge-anakot-plugin#readme

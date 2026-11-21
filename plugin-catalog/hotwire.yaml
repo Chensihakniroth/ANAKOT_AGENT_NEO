@@ -32,7 +32,7 @@ screenshots:
   - https://raw.githubusercontent.com/RohanGlitched/hotwire/c66a0dd354a034da1bad4fe56bd4945f1e5c8e24/docs/desktop/board-light.png
   - https://raw.githubusercontent.com/RohanGlitched/hotwire/c66a0dd354a034da1bad4fe56bd4945f1e5c8e24/docs/desktop/chat-light.png
   - https://raw.githubusercontent.com/RohanGlitched/hotwire/c66a0dd354a034da1bad4fe56bd4945f1e5c8e24/docs/desktop/bench-dark.png
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 capabilities:
   provides_tools:
     - circuit_check

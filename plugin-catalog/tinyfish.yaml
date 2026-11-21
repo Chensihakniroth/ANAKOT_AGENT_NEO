@@ -9,7 +9,7 @@ version: "0.2.5"
 image: https://raw.githubusercontent.com/tinyfish-io/tinyfish-web-agent-integrations/2b29d5c864d08fd9716d6f15c3eafdf487b148d3/anakot/assets/banner.png
 tier: verified
 category: web
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://docs.tinyfish.ai
 capabilities:
   provides_tools:

@@ -14,7 +14,7 @@ maintainer: Vsemagush
 tier: community
 category: desktop
 version: "0.1.0"
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Vsemagush/anakot-profile-switcher#readme
 readme: true
 screenshots:

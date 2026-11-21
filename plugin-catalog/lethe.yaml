@@ -6,7 +6,7 @@ description: "Take one chat off the record with /lethe: nothing reaches memory, 
 maintainer: itsflownium
 tier: community
 category: memory
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/itsflownium/anakot-lethe#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/itsflownium/anakot-lethe/8b93e2dce9402648c7e238c1d8c83dc649f2f204/assets/banner.png

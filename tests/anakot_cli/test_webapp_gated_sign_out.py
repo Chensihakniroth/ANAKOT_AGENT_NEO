@@ -260,14 +260,14 @@ def test_the_webapp_leaves_cookies_named_for_no_gateway_to_the_dashboard(gated, 
     browser = gated.browser()
     _sign_in_with_password(browser)
     names = set(browser.cookies.keys())
-    assert {"anakot_session_at", "anakot_session_rt", "anakot_session_provider"} <= names
+    assert {"hermes_session_at", "anakot_session_rt", "anakot_session_provider"} <= names
     monkeypatch.setattr(gated.server.app.state, "ui_surface", "webapp")
     on_webapp = browser.get("/api/auth/me")
     _signed_out(on_webapp)
-    assert "anakot_session_at=" not in on_webapp.headers.get("set-cookie", "")
+    assert "hermes_session_at=" not in on_webapp.headers.get("set-cookie", "")
     signed_out = browser.post("/auth/logout", headers={"Origin": WEBAPP}, follow_redirects=False)
     assert signed_out.status_code == 302
-    assert "anakot_session_at=" not in signed_out.headers.get("set-cookie", "")
+    assert "hermes_session_at=" not in signed_out.headers.get("set-cookie", "")
     monkeypatch.setattr(gated.server.app.state, "ui_surface", "dashboard")
     assert browser.get("/api/auth/me").status_code == 200
 
@@ -302,7 +302,7 @@ def _tokens(client):
     """The access and refresh token the cookie login on *client* holds, as a copy taken out of the
     browser would present them (the cookie keeps them in quotes)."""
     return tuple(client.cookies.get(_cookie(client, name)).strip('"')
-                 for name in ("anakot_session_at", "anakot_session_rt"))
+                 for name in ("hermes_session_at", "anakot_session_rt"))
 
 
 def _bearer(token):
@@ -356,7 +356,7 @@ def test_a_logins_tokens_work_only_as_its_cookies(gated, sign_in):
     assert browser.get("/api/auth/me").status_code == 200
     access, refresh = _tokens(browser)
     _refused_alone(gated, access, refresh)
-    stored = (browser.cookies.get(_cookie(browser, "anakot_session_at")),
+    stored = (browser.cookies.get(_cookie(browser, "hermes_session_at")),
               browser.cookies.get(_cookie(browser, "anakot_session_rt")))
     _refused_alone(gated, *stored)
 
@@ -367,7 +367,7 @@ def test_a_pair_renewed_before_sign_out_is_refused_after_it(gated, sign_out, clo
     first = _tokens(browser)
     # The gate renews the browser's pair once its access token lapses.
     clock()
-    browser.cookies.delete(_cookie(browser, "anakot_session_at"))
+    browser.cookies.delete(_cookie(browser, "hermes_session_at"))
     assert browser.get("/api/auth/me").status_code == 200
     renewed = _tokens(browser)
     assert renewed[0] != first[0]

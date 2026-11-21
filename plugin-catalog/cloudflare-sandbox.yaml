@@ -6,7 +6,7 @@ description: "Run Anakot terminal, file and execute_code tools in Cloudflare Con
 maintainer: kiyo-e
 tier: community
 category: tools
-requires_anakot: ">=0.20.6"
+requires_hermes: ">=0.20.6"
 docs_url: https://github.com/kiyo-e/anakot-cloudflare-sandbox#readme
 platforms: []
 capabilities:

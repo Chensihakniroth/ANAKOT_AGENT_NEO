@@ -6,7 +6,7 @@ description: "Proxy the local EventForge control plane into Anakot with approval
 maintainer: sinequix
 tier: community
 category: automation
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "0.1.0"
 title: EventForge for Anakot
 docs_url: https://github.com/sinequix/eventforge/blob/master/plugins/anakot-eventforge/README.md

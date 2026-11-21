@@ -7,7 +7,7 @@ description: "One pinned Telegram message with your Anakot' state on one phone s
 maintainer: bablobanov
 tier: community
 category: automation
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/bablobanov/anakot-agent-telegram-dashboard#readme
 version: "1.1.1"
 image: https://raw.githubusercontent.com/bablobanov/anakot-agent-telegram-dashboard/07dd2ca26d1f456511bb0ecf776f9a9e3bf40dbc/docs/hero-1.1.1.jpg

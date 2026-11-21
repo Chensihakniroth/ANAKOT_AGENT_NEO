@@ -7,7 +7,7 @@ description: "Consolidated skill-governance plugin behind one composed hook surf
 maintainer: moonlight-lupin
 tier: community
 category: tools
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 docs_url: https://github.com/moonlight-lupin/agent-skills/tree/8743eae944c0d361339c614f21c258e6851357e8/plugins/skill-governance#readme
 platforms: [linux, macos, windows]
 capabilities:

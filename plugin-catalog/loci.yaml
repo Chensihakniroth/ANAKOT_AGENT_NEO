@@ -8,7 +8,7 @@ description: "Local models on your Mac for file summaries, document extraction, 
 maintainer: AskLoci
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms: [macos]
 docs_url: https://github.com/AskLoci/loci-plugins/tree/51dca9ab524b7a7953292d2d70ace87bf97ed5ec/loci-anakot
 readme: true

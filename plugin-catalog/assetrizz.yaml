@@ -7,7 +7,7 @@ description: "Assetrizz for Anakot: search 14,641 original 2D game assets and ha
 maintainer: mojomast
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/mojomast/assetrizz-anakot#readme
 version: "0.2.0"
 image: https://raw.githubusercontent.com/mojomast/assetrizz-anakot/e710b89c276b210969bebd67db4f1c855541586a/docs/banner.jpg

@@ -6,7 +6,7 @@ description: "Local ledger of the voice messages and recordings Anakot transcrib
 maintainer: olric3015
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/olric3015/anakot-plugins/tree/main/voice-ledger
 version: "1.0.0"
 image: https://raw.githubusercontent.com/olric3015/anakot-plugins/93080fb3cf44ce6e13ab050df64ca66b8eea0d90/docs/voice-ledger-card.png

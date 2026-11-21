@@ -7,7 +7,7 @@ description: "Context engine that compresses older tool output and turns locally
 maintainer: Thanatos9404
 tier: community
 category: general
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/Thanatos9404/llmslim/blob/main/docs/integrations/ANAKOT.md
 version: "0.12.0"
 capabilities:

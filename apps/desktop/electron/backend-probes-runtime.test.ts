@@ -11,7 +11,7 @@ import { canImportAnakotCli } from './backend-probes'
 const REPO: string = path.resolve(import.meta.dirname, '../../..')
 
 const PYTHON: string =
-  process.env.ANAKOT_PYTHON || process.env.UV_PYTHON || (process.platform === 'win32' ? 'python' : 'python3')
+  process.env.HERMES_PYTHON || process.env.UV_PYTHON || (process.platform === 'win32' ? 'python' : 'python3')
 
 interface RuntimeFixture {
   python: string

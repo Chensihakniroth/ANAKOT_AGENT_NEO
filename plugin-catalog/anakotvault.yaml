@@ -6,7 +6,7 @@ description: "Keep secrets out of plaintext .env files: a local encrypted vault 
 maintainer: Guerilla-ops
 tier: community
 category: tools
-requires_anakot: ">=0.21.2"
+requires_hermes: ">=0.21.2"
 docs_url: https://github.com/Guerilla-ops/floorvault/blob/227ae4d7a6fe0abffa251c66f5bc72f464982f99/plugins/anakotvault/README.md
 image: https://raw.githubusercontent.com/Guerilla-ops/floorvault/227ae4d7a6fe0abffa251c66f5bc72f464982f99/docs/assets/anakotvault-banner.png
 version: "0.4.0"

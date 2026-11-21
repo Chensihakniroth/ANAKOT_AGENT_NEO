@@ -7,7 +7,7 @@ description: "Durable, hash-chained tool-call journal that blocks protected acti
 maintainer: sammy-XXIV
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/sammy-XXIV/anakot-crash-recovery#readme
 platforms: [linux, macos, windows]
 readme: true

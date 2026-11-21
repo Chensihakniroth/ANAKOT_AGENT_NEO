@@ -8,7 +8,7 @@ title: Cua Spaces
 version: "0.4.0"
 tier: verified
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://gist.githubusercontent.com/teknium1/953b88aa0cd14fdad2880db82d8476c3/raw/255e7b3f9bd6eb780f8aae7228c1a15fe797efbd/cua-spaces-banner.jpg
 docs_url: https://github.com/trycua/anakot-cua-spaces#readme
 platforms: []

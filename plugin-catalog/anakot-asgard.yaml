@@ -6,7 +6,7 @@ description: "Twelve Norse gods carved in runestone and wood: Odin, Thor, Freyja
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Adolanium/anakot-asgard#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/Adolanium/anakot-asgard/5df7060c9d54d5b4429df81764c6fcbabcbb74ad/assets/catalog-banner.png

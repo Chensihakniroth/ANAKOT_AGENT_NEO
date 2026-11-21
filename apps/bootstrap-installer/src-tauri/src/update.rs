@@ -602,11 +602,7 @@ fn concurrent_update_message(stdout_tail: &[String]) -> String {
 /// Spawn `anakot <args>` from `cwd`, stream stdout/stderr as Log events on the
 /// bootstrap channel, and return the exit code. Mirrors powershell::run_script
 /// but for an arbitrary command (no install.ps1 -File wrapping).
-///
-/// `pub(crate)`: uninstall.rs drives `anakot uninstall` through this same
-/// launcher-resolution + streaming path, so the two CLI-driving modes can never
-/// disagree about how the installation is invoked.
-pub(crate) async fn run_streamed(
+async fn run_streamed(
     app: &AppHandle,
     program: &Path,
     args: &[String],
@@ -689,17 +685,14 @@ pub(crate) async fn run_streamed(
     })
 }
 
-pub(crate) struct CmdResult {
-    pub(crate) exit_code: Option<i32>,
+struct CmdResult {
+    exit_code: Option<i32>,
     /// Last [`STDOUT_TAIL_LINES`] stdout lines; see [`concurrent_update_message`].
-    pub(crate) stdout_tail: Vec<String>,
+    stdout_tail: Vec<String>,
 }
 
 /// Resolve only a launcher owned by this installation, never PATH.
-///
-/// `pub(crate)`: uninstall.rs uses the same resolution as its "is anything
-/// actually installed here?" check.
-pub(crate) async fn resolve_anakot(install_root: &Path) -> Option<PathBuf> {
+async fn resolve_anakot(install_root: &Path) -> Option<PathBuf> {
     let names: &[&str] = if cfg!(target_os = "windows") { &["anakot.exe", "anakot.cmd"] } else { &["anakot"] };
     for name in names {
         let launcher = install_root.join(".anakot").join("bin").join(name);
@@ -771,7 +764,7 @@ fn update_child_env(install_root: &Path) -> Vec<(String, OsString)> {
         "ANAKOT_UPDATE_HANDOFF_PID".to_string(),
         OsString::from(std::process::id().to_string()),
     ));
-    envs.push(("ANAKOT_INSTALL_ROOT".to_string(), install_root.as_os_str().to_os_string()));
+    envs.push(("HERMES_INSTALL_ROOT".to_string(), install_root.as_os_str().to_os_string()));
     envs
 }
 

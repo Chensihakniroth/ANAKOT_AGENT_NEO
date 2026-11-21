@@ -10,7 +10,7 @@ description: >-
 maintainer: pCwOrM
 tier: community
 category: memory
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/pCwOrM/anakot-fractal-memory#readme
 readme: true
 platforms: [linux, macos, windows]

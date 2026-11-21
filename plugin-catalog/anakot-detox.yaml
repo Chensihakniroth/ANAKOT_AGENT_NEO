@@ -7,7 +7,7 @@ description: "Tool output firewall. Saves redacted tool output locally (unencryp
 maintainer: kellycryptos
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/kellycryptos/anakot-detox#readme
 readme: true
 platforms: []

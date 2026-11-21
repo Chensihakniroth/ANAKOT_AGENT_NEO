@@ -8,7 +8,7 @@ title: smol machines
 version: "0.1.1"
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/smol-machines/anakot-smolmachines#readme
 platforms: [linux, macos]
 known_issues:

@@ -6,7 +6,7 @@ description: "The 23 Omarchy stock themes (Tokyo Night, Catppuccin, Gruvbox, Nor
 maintainer: seppegadeyne
 tier: community
 category: general
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/seppegadeyne/anakot-themes-pack#readme
 version: "1.2.0"
 image: https://raw.githubusercontent.com/seppegadeyne/anakot-themes-pack/c3147a9f08b3d704b706aeed983b0081ce72dbd7/docs/catalog-banner.png

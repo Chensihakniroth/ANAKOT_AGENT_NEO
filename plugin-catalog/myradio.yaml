@@ -16,7 +16,7 @@ maintainer: newjordan
 tier: community
 category: tools
 title: myradio
-requires_anakot: ">=0.16.0"
+requires_hermes: ">=0.16.0"
 docs_url: https://github.com/newjordan/myradio/tree/main/integrations/anakot#readme
 image: https://raw.githubusercontent.com/newjordan/myradio/66d611bad24f069a41b136b0672b39b9ab3cde12/docs/anakot/banner.png
 screenshots:

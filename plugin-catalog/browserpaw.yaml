@@ -7,7 +7,7 @@ description: >-
 maintainer: GoldenLoaf24h
 tier: community
 category: web
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: "https://github.com/GoldenLoaf24h/browserpaw#readme"
 version: "4.0.0"
 capabilities:

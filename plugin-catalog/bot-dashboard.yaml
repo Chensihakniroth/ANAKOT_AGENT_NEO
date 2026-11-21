@@ -7,7 +7,7 @@ maintainer: trookish
 tier: community
 category: desktop
 version: "1.2.0"
-requires_anakot: ">=0.21.2"
+requires_hermes: ">=0.21.2"
 docs_url: https://github.com/trookish/anakot-bot-dashboard#readme
 platforms: []
 capabilities:

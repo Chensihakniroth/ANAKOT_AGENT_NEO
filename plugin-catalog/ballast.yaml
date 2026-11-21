@@ -6,7 +6,7 @@ description: "Free a target amount of disk space by clearing the developer and A
 maintainer: 1momoh
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 platforms: [macos]
 title: Ballast

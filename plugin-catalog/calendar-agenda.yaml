@@ -24,7 +24,7 @@ tier: community
 
 category: automation
 
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 
 version: "0.1.1"
 

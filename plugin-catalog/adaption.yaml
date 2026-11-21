@@ -6,7 +6,7 @@ description: "Dataset import, adaptation, augmentation, translation, localizatio
 maintainer: adaptionlabs
 tier: verified
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/adaptionlabs/adaption-anakot-plugin#readme
 version: "0.3.0"
 readme: true

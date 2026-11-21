@@ -17,7 +17,7 @@ it('moves a checkout without a source probe to main, but surfaces a broken probe
 
   const probe: () => Promise<SourceUpdate | null> = (): Promise<SourceUpdate | null> =>
     readSourceUpdate({
-      python: process.env.ANAKOT_PYTHON || 'python3',
+      python: process.env.HERMES_PYTHON || 'python3',
       git: 'git',
       updateRoot: root,
       anakotHome: home

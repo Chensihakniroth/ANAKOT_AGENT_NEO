@@ -5,7 +5,7 @@ description: "Deterministic, local-first analysis of your own Apple Health data 
 maintainer: mwdearing
 tier: community
 category: tools
-requires_anakot: '>=0.20'
+requires_hermes: '>=0.20'
 docs_url: https://github.com/mwdearing/anakot-health-insights#readme
 version: 0.3.2
 platforms: []

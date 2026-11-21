@@ -5,7 +5,7 @@ description: "Word-by-word certainty heat maps from the model's own token probab
 maintainer: PinnacleCryptNG
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 title: Doubt
 screenshots:

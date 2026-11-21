@@ -11,7 +11,7 @@ description: Adwave self-serve advertising through its hosted MCP server. Makes 
 maintainer: AdwaveInc
 tier: community
 category: tools
-requires_anakot: '>=0.21.6'
+requires_hermes: '>=0.21.6'
 docs_url: https://waverunner.adwave.com/docs/mcp
 version: '1.1.0'
 image: https://raw.githubusercontent.com/AdwaveInc/adwave-agent-plugin/0b5ab18aa6ebcde1a33f7dcd399a8c07cebf342c/assets/logo.png

@@ -7,7 +7,7 @@ description: "T3 Code-style session sidebar for Anakot Desktop: Input/Done/Woke 
 maintainer: V1rgul
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/V1rgul/anakot-plugin-t3sidebar/blob/5989b1d88ff6061204df2d0807363f69ae576c56/README.md
 screenshots:
   - https://raw.githubusercontent.com/V1rgul/anakot-plugin-t3sidebar/5989b1d88ff6061204df2d0807363f69ae576c56/docs/images/draft.png

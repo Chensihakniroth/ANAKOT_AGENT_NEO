@@ -7,7 +7,7 @@ description: "Audit mode and Design mode for the live page in Anakot Desktop's B
 maintainer: stupidburgers
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.0"
 image: "https://raw.githubusercontent.com/stupidburgers/pinpoint/d97399a6ec82391e736eccdfd0b75f00ef7c7eef/docs/banner.png"
 screenshots:

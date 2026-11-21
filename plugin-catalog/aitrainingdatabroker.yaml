@@ -8,7 +8,7 @@ description: "Ask how much AI labs pay for company data, whether it is legal to 
 maintainer: AI Training Data Broker
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/aitrainingdatabroker/blog-mcp-server/tree/main/anakot#readme
 readme: true
 platforms: []

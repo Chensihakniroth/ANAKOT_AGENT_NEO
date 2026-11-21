@@ -6,7 +6,7 @@ description: "Chase overdue invoices from your CSV exports (generic, Xero, Quick
 maintainer: FutureInvoked
 tier: community
 category: automation
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/FutureInvoked/cash-desk#readme
 version: "1.2.0"
 image: https://raw.githubusercontent.com/FutureInvoked/cash-desk/26d5fabe5f50f250e5dc72c0751adbdb3625f732/docs/banner.png

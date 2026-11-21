@@ -8,7 +8,7 @@ description: "Learn and practice American mah jongg (the game played with the ye
 maintainer: Jack Wallner
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/jackwallner/mahj/tree/main/anakot
 readme: true
 platforms: []

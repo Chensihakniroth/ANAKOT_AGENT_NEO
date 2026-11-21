@@ -21,7 +21,7 @@ _LOCK_WAIT_SECONDS = 30 * 60
 # the Webapp unavailable instead of serving it against the updated backend. Publishing a build
 # replaces the whole folder, and the receipt's output hash covers this file, so a marked bundle is
 # never reused as current.
-STALE_MARKER = ".anakot-stale"
+STALE_MARKER = ".hermes-stale"
 # A packaged bundle (the Nix package), like ANAKOT_WEB_DIST for the dashboard: the packager
 # builds it, so Anakot serves it as it is and never builds or marks it.
 DIST_ENV = "ANAKOT_WEBAPP_DIST"
@@ -102,6 +102,7 @@ def prepare_webapp_renderer(
     installs are disabled, like ``anakot desktop --build-only``.
     """
     from anakot_cli.source_build import build_source_webapp, source_build_env, source_product_current
+    from anakot_cli.steward import is_bundled_payload
 
     project_root = project_root.resolve()
     dist = webapp_dist_dir(project_root)
@@ -112,6 +113,14 @@ def prepare_webapp_renderer(
         if force:
             raise WebappBuildError(f"The Webapp renderer at {dist} comes from {DIST_ENV} and cannot be rebuilt here")
         print(f"→ Using Anakot Webapp renderer from {DIST_ENV}: {dist}")
+        return dist
+    if is_bundled_payload(project_root):
+        # A desktop app's sealed payload ships the renderer prebuilt, without the sources or scripts to build it.
+        if not (dist / "index.html").is_file():
+            raise WebappBuildError(f"This desktop app ships no Webapp renderer at {dist}")
+        if force:
+            raise WebappBuildError(f"The Webapp renderer at {dist} ships with the desktop app and cannot be rebuilt")
+        print(f"→ Using the desktop app's Webapp renderer: {dist}")
         return dist
     if skip_build:
         # Reuse takes no build lock, like `anakot dashboard --skip-build`: the

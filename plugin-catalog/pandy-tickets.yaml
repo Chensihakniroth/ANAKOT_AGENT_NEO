@@ -6,7 +6,7 @@ description: "Find events in Guatemala and draft new events through Pandy Ticket
 maintainer: Pandy Cloud
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Pandy-Cloud/pandy-tickets-public#readme
 version: "1.0.0"
 platforms: []

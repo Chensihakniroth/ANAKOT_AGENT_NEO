@@ -6,7 +6,7 @@ description: "Search, extract, map, crawl, and research through Tavily hosted MC
 maintainer: tavily-ai
 tier: verified
 category: web
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/tavily-ai/tavily-anakot-plugin/blob/ac556341056dc903988f63d627d595e468f1cfa9/README.md
 version: "1.0.0"
 image: https://raw.githubusercontent.com/tavily-ai/tavily-anakot-plugin/ac556341056dc903988f63d627d595e468f1cfa9/assets/tavily-catalog-card.svg

@@ -6,7 +6,7 @@ description: Search mybot.farm, plant/reinstall Anakot packs (Desktop Recruit + 
 maintainer: badkangaroo
 tier: community
 category: tools
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://mybot.farm/install/anakot
 version: "0.3.0"
 platforms: []

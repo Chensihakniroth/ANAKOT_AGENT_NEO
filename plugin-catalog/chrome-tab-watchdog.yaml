@@ -6,7 +6,7 @@ description: "Conservative Chrome tab cleanup with in-process observation and br
 maintainer: web3blind
 tier: community
 category: automation
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "2.1.1"
 docs_url: https://github.com/web3blind/anakot-chrome-tab-watchdog/blob/15b873f13df8275c59a18cbe4a9a2ec71266af50/README.md
 platforms: [linux]

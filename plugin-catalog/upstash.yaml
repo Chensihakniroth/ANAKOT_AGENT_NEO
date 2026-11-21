@@ -8,7 +8,7 @@ description: "Long-term memory and searchable chat history for Anakot on Upstash
 maintainer: Upstash
 tier: community
 category: memory
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/upstash/agentkit/tree/main/python/anakot-memory#readme
 readme: true
 platforms: []

@@ -7,7 +7,7 @@ description: "Publish a website, or share files and folders, at a live *.webly.s
 maintainer: Webly
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.14.5"
 docs_url: https://github.com/Webly-AI/webly-plugin/tree/main/anakot#readme
 platforms: []

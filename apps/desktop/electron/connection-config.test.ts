@@ -89,7 +89,7 @@ test('normalizeRemoteHeaders keeps safe proxy headers and drops transport/auth h
       Authorization: { encoding: 'plain', value: 'bearer' },
       Cookie: { encoding: 'plain', value: 'a=b' },
       Host: { encoding: 'plain', value: 'example.com' },
-      'X-Anakot-Session-Token': { encoding: 'plain', value: 'token' },
+      'X-Hermes-Session-Token': { encoding: 'plain', value: 'token' },
       'Bad Header': { encoding: 'plain', value: 'bad' },
       Empty: { encoding: 'plain', value: '' }
     }),
@@ -1256,16 +1256,16 @@ test('resolveAuthMode: ignores unknown values, defaults to token', () => {
 // --- cookiesHaveSession ---
 
 test('cookiesHaveSession detects the bare access-token cookie', () => {
-  assert.equal(cookiesHaveSession([{ name: 'anakot_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveSession([{ name: 'hermes_session_at', value: 'x' }]), true)
 })
 
 test('cookiesHaveSession detects the __Host- and __Secure- prefixed variants', () => {
-  assert.equal(cookiesHaveSession([{ name: '__Host-anakot_session_at', value: 'x' }]), true)
-  assert.equal(cookiesHaveSession([{ name: '__Secure-anakot_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveSession([{ name: '__Host-hermes_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveSession([{ name: '__Secure-hermes_session_at', value: 'x' }]), true)
 })
 
 test('cookiesHaveSession is false for an empty value', () => {
-  assert.equal(cookiesHaveSession([{ name: 'anakot_session_at', value: '' }]), false)
+  assert.equal(cookiesHaveSession([{ name: 'hermes_session_at', value: '' }]), false)
 })
 
 test('cookiesHaveSession ignores unrelated cookies (AT-only by design)', () => {
@@ -1284,22 +1284,22 @@ test('cookiesHaveSession handles non-arrays', () => {
 
 test('a gateway Webapp signs in with cookies named for its gateway, and they count as a session', () => {
   // Cookies are not scoped to a port, so the gateway's Webapp names its login cookies
-  // anakot_session_at_<gateway> and anakot_session_rt_<gateway>; the dashboard keeps the bare names.
+  // hermes_session_at_<gateway> and anakot_session_rt_<gateway>; the dashboard keeps the bare names.
   const gateway = '0123456789abcdef'
-  assert.equal(cookiesHaveSession([{ name: `anakot_session_at_${gateway}`, value: 'x' }]), true)
-  assert.equal(cookiesHaveSession([{ name: `__Host-anakot_session_at_${gateway}`, value: 'x' }]), true)
+  assert.equal(cookiesHaveSession([{ name: `hermes_session_at_${gateway}`, value: 'x' }]), true)
+  assert.equal(cookiesHaveSession([{ name: `__Host-hermes_session_at_${gateway}`, value: 'x' }]), true)
   assert.equal(cookiesHaveSession([{ name: `anakot_session_rt_${gateway}`, value: 'x' }]), false)
   assert.equal(cookiesHaveLiveSession([{ name: `__Secure-anakot_session_rt_${gateway}`, value: 'x' }]), true)
-  assert.equal(cookiesHaveSession([{ name: 'anakot_session_at_other', value: 'x' }]), false)
+  assert.equal(cookiesHaveSession([{ name: 'hermes_session_at_other', value: 'x' }]), false)
   assert.equal(cookiesHaveLiveSession([{ name: `anakot_webapp_signin_${gateway}`, value: 'x' }]), false)
 })
 
 // --- cookiesHaveLiveSession (AT or RT — the connectivity check) ---
 
 test('cookiesHaveLiveSession is true for a live access-token cookie', () => {
-  assert.equal(cookiesHaveLiveSession([{ name: 'anakot_session_at', value: 'x' }]), true)
-  assert.equal(cookiesHaveLiveSession([{ name: '__Host-anakot_session_at', value: 'x' }]), true)
-  assert.equal(cookiesHaveLiveSession([{ name: '__Secure-anakot_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveLiveSession([{ name: 'hermes_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveLiveSession([{ name: '__Host-hermes_session_at', value: 'x' }]), true)
+  assert.equal(cookiesHaveLiveSession([{ name: '__Secure-hermes_session_at', value: 'x' }]), true)
 })
 
 test('cookiesHaveLiveSession is true for an RT cookie even with NO access-token cookie', () => {
@@ -1314,7 +1314,7 @@ test('cookiesHaveLiveSession is true for an RT cookie even with NO access-token 
 test('cookiesHaveLiveSession is true when both AT and RT are present', () => {
   assert.equal(
     cookiesHaveLiveSession([
-      { name: 'anakot_session_at', value: 'a' },
+      { name: 'hermes_session_at', value: 'a' },
       { name: 'anakot_session_rt', value: 'r' }
     ]),
     true
@@ -1322,11 +1322,11 @@ test('cookiesHaveLiveSession is true when both AT and RT are present', () => {
 })
 
 test('cookiesHaveLiveSession is false for empty values', () => {
-  assert.equal(cookiesHaveLiveSession([{ name: 'anakot_session_at', value: '' }]), false)
+  assert.equal(cookiesHaveLiveSession([{ name: 'hermes_session_at', value: '' }]), false)
   assert.equal(cookiesHaveLiveSession([{ name: 'anakot_session_rt', value: '' }]), false)
   assert.equal(
     cookiesHaveLiveSession([
-      { name: 'anakot_session_at', value: '' },
+      { name: 'hermes_session_at', value: '' },
       { name: 'anakot_session_rt', value: '' }
     ]),
     false

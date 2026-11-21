@@ -6,7 +6,7 @@ description: "Twelve Egyptian gods in painted relief and gold leaf: Thoth, Ra, I
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/Adolanium/anakot-kemet#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/Adolanium/anakot-kemet/a54491cc0ecb0646e0ae75018008c87606638987/assets/catalog-banner.png

@@ -19,7 +19,7 @@ description: >-
 maintainer: blucca
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 screenshots:

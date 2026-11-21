@@ -11,7 +11,7 @@ description: 'An HD-2D pixel-art village page for Anakot Desktop: every chat is 
 maintainer: XpycT
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "1.0.0"
 docs_url: https://github.com/XpycT/anakotford
 image: https://raw.githubusercontent.com/XpycT/anakotford/cfa2555a22400edd181a0f8d1c9945d37c382ca7/assets/banner.jpg

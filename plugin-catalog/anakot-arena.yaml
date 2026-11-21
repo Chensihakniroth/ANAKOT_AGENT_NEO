@@ -8,7 +8,7 @@ description: "A pixel-art platform fighter that runs inside Anakot Desktop. Four
 maintainer: JustinPerea
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/JustinPerea/Anakot-arena/tree/main/anakot-plugin#readme
 image: https://raw.githubusercontent.com/JustinPerea/Anakot-arena/8c7ba632f82fb9ea945eede6b548981ad552d147/docs/media/banner.png
 screenshots:

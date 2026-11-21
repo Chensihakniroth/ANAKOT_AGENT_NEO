@@ -12,7 +12,7 @@ maintainer: XimilalaXiang
 tier: community
 version: "0.2.1"
 category: voice
-requires_anakot: ">=0.22.4"
+requires_hermes: ">=0.22.4"
 docs_url: https://github.com/XimilalaXiang/anakot-soniox#readme
 platforms: []
 known_issues:

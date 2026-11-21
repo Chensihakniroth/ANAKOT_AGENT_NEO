@@ -13,7 +13,7 @@ import { createGatewayConnectionsStore, GATEWAY_CONNECTIONS_FILE, readLegacyUser
 // Migration is lossless: a store and a Desktop list that each hold quarantined entries keep every
 // one of them, even past the normalizer's cap, through later writes on both sides.
 const repo = path.resolve(import.meta.dirname, '../../..')
-const python = process.env.ANAKOT_PYTHON || 'python3'
+const python = process.env.HERMES_PYTHON || 'python3'
 const dirs: string[] = []
 
 afterEach(() => {

@@ -20,7 +20,7 @@ description: >-
 maintainer: trenthalden
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/trenthalden/hindsight-curator#readme
 image: https://raw.githubusercontent.com/trenthalden/hindsight-curator/17ebcebaa24c1f4650416cdade9be6764808881d/assets/banner.png
 screenshots:

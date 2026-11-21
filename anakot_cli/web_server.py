@@ -224,7 +224,7 @@ app.include_router(_memory_oauth_router)
 # web_server_session_token sibling; it dies with the process and is injected
 # into the SPA HTML so only the web UI can use it.
 _SESSION_TOKEN = resolve_session_token()
-_SESSION_HEADER_NAME = "X-Anakot-Session-Token"
+_SESSION_HEADER_NAME = "X-Hermes-Session-Token"
 _SSH_OWNER_NONCE: Optional[str] = None
 _SSH_RUNTIME_PURELIB: Optional[tuple[str, int, int]] = None
 _SSH_RUNTIME_MARKER: Optional[str] = None
@@ -1476,6 +1476,9 @@ def _start_server_runtime(
     # The SPA bootstrap reads this so profile-less deep links (/chat?resume=<id>) inherit the
     # launcher's preselected profile instead of silently running in the launch scope (#73085).
     app.state.initial_profile = str(initial_profile or "")
+    # Before multi-profile activation can mirror a turn's profile into ANAKOT_HOME.
+    from anakot_cli.isolated_scope import record_launch_scope
+    record_launch_scope(isolated=isolated, desktop_owned=is_desktop_owned_backend())
 
     config, server = _build_uvicorn_server(host, port, ssh_isolated=bool(ssh_session_token))
 

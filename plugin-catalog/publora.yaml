@@ -6,7 +6,7 @@ description: "Draft, schedule and publish social media posts on LinkedIn, X, Ins
 maintainer: publora-team
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/publora-team/anakot-publora/blob/189b417e90bd2da81876a7594fd0a0e0b5c94b5d/README.md
 version: "1.0.0"
 platforms: []

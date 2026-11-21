@@ -3,7 +3,7 @@
 :func:`resolve_target` is the one hook the proxy calls per request: ``(base_url, headers)`` for the
 registry entry, exactly the credentials native Desktop sends for that auth mode:
 
-- token-mode remote/cloud: ``X-Anakot-Session-Token`` (``electron/main.ts`` fetchJson), plus the
+- token-mode remote/cloud: ``X-Hermes-Session-Token`` (``electron/main.ts`` fetchJson), plus the
   entry's extra headers (Cloudflare Access and the like);
 - oauth-mode remote/cloud: ``Authorization: Bearer <access token>``, refreshed through the remote's
   ``/auth/native/refresh`` when at/near expiry (:mod:`anakot_cli.gateway_connections_oauth`), plus
@@ -26,7 +26,7 @@ import httpx
 from anakot_cli import gateway_connections as store
 from anakot_cli import gateway_connections_oauth as oauth
 
-SESSION_TOKEN_HEADER = "X-Anakot-Session-Token"
+SESSION_TOKEN_HEADER = "X-Hermes-Session-Token"
 _TICKET_TIMEOUT_S = 8.0
 
 

@@ -7,7 +7,7 @@ maintainer: socraticblock
 category: automation
 docs_url: https://github.com/socraticblock/anakot-openready#readme
 version: "0.1.0"
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 platforms: [linux, macos]
 capabilities:
   provides_tools:

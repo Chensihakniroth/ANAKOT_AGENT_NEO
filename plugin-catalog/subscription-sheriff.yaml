@@ -6,7 +6,7 @@ maintainer: HATWHY4041
 tier: community
 category: tools
 docs_url: https://github.com/HATWHY4041/subscription-sheriff#readme
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "1.0.0"
 platforms: []
 capabilities: {provides_tools: [sheriff_subscriptions, sheriff_upcoming, sheriff_summary, sheriff_digest], provides_hooks: [], provides_middleware: [], requires_env: []}

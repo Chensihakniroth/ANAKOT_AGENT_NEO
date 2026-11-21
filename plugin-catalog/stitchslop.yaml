@@ -7,7 +7,7 @@ description: "Work on the embroidery design open in Stitch Slop, watch it in a p
 maintainer: mojomast
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/mojomast/anakot-stitchslop#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/mojomast/anakot-stitchslop/51c12d0fd957fb4f40f98253570eb33d791c314c/assets/banner.png

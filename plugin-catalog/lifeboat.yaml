@@ -6,7 +6,7 @@ description: "Rescue what a sweeper bot left behind in a drained EVM wallet: cla
 maintainer: superskie
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/superskie/lifeboat#readme
 platforms: []
 known_issues:

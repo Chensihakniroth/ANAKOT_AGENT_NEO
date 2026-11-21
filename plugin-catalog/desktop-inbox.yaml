@@ -7,7 +7,7 @@ description: "An Inbox pane for Anakot Desktop. Cron jobs, scripts and webhooks 
 maintainer: Nj07r
 tier: community
 category: desktop
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/Nj07r/anakot-desktop-inbox
 platforms: []
 screenshots:

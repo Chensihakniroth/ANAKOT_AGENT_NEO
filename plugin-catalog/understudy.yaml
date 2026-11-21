@@ -6,7 +6,7 @@ description: "Audition cheaper models on your real Anakot history before you swi
 maintainer: stffinfcti
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/stffinfcti/understudy#readme
 version: "1.0.0"
 image: https://raw.githubusercontent.com/stffinfcti/understudy/e0920f9e3641f0e24afe6ee01b21322c070920fd/docs/banner.png

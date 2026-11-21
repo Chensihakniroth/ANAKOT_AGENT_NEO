@@ -7,7 +7,7 @@ description: "Build, evolve and operate Agent Apps from Anakot: full application
 maintainer: CraftOS
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/CraftOS-dev/Agent-App/tree/main/harness-plugins/anakot#readme
 version: "0.1.1"
 platforms: []

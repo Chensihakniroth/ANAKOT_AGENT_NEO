@@ -6,7 +6,7 @@ description: "One 3D room that you and Anakot both edit. It tells you whether th
 maintainer: devSebb
 tier: community
 category: desktop
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 version: "0.1.0"
 platforms: [macos, linux]
 docs_url: https://github.com/devSebb/roomsmith#readme

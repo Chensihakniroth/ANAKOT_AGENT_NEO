@@ -183,7 +183,7 @@ def test_pm_observer_accepts_ready_fixture_and_leaves_failed_fixture_untouched(t
     store = tmp_path / "store"
     env = dict(os.environ, HOME=str(home), ANAKOT_HOME=str(home), ANAKOT_RUNTIME_DIR=str(store),
                PYTHONDONTWRITEBYTECODE="1", ANAKOT_DISABLE_LAZY_INSTALLS="1")
-    env.pop("ANAKOT_INSTALL_ROOT", None)
+    env.pop("HERMES_INSTALL_ROOT", None)
     path = os.pathsep.join(p for p in os.get_exec_path() if ".anakot" not in Path(p).parts)
     node = shutil.which("node", path=path)
     assert node

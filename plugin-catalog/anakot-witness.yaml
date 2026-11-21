@@ -6,7 +6,7 @@ description: "Evidence-gated learning for Anakot Agent. Grades each agent-writte
 maintainer: BenCoy09
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://witness-site-virid.vercel.app
 platforms: []
 capabilities:

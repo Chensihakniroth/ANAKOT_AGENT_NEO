@@ -21,7 +21,7 @@ description: >-
 maintainer: Autolane
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Autolane/anakot-courier-plugin/blob/65027e6025cdf51d25e2ac3223aecfd373ea7925/README.md
 version: "1.0.0"
 platforms: []

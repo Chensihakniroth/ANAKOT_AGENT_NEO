@@ -6,7 +6,7 @@ description: "A redesigned Anakot Desktop. A Desk home page (greeting and crew s
 maintainer: ASV-Labs
 tier: community
 category: desktop
-requires_anakot: ">=0.22.1"
+requires_hermes: ">=0.22.1"
 version: "1.0.5"
 docs_url: https://github.com/ASV-Labs/anakot-helm/tree/main/docs/guides
 image: https://raw.githubusercontent.com/ASV-Labs/anakot-helm/0f68da9b485870059be2bef71f284a81ad771fdd/docs/hero.png

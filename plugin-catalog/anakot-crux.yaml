@@ -6,7 +6,7 @@ description: "Explore explicit assumptions, exact affine decision thresholds, ha
 maintainer: tony-simons-aiowa
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 docs_url: https://github.com/tony-simons-aiowa/anakot-crux/blob/2249e11a820678aee446141d4c4d9e2d432b7a5f/README.md
 screenshots:

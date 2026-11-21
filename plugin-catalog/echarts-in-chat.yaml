@@ -5,7 +5,7 @@ description: "Render a chart inline in the Anakot Desktop transcript: the model 
 maintainer: Tommy00748
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Tommy00748/anakot-plugin-echarts-in-chat#readme
 version: "2.1.0"
 title: ECharts in Chat

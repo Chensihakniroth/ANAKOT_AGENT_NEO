@@ -12,7 +12,7 @@ tier: community
 category: desktop
 version: "0.1.0"
 docs_url: https://github.com/chengyimingvb/AnakotPlugins/tree/main/read-only-mode
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 readme: true
 platforms: []
 capabilities:

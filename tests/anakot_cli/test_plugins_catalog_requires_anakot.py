@@ -1,4 +1,4 @@
-"""The catalog entry's ``requires_anakot`` is enforced, not just displayed: an install by catalog name
+"""The catalog entry's ``requires_hermes`` is enforced, not just displayed: an install by catalog name
 refuses on a Anakot the spec rejects (CLI, dashboard/Desktop, TUI RPC and the left-core auto-install all
 go through one seam), and ``update`` keeps the installed pin rather than moving to one that needs a newer
 Anakot. The running version comes from the same source the plugin.yaml gate reads. Real git, file://
@@ -26,7 +26,7 @@ REFUSAL = "cat-plugin needs Anakot >=0.31; this is 0.30.0."
 
 @pytest.fixture
 def gated(request, monkeypatch):
-    """*world* whose catalog entry carries ``state["requires"]`` as its requires_anakot, on Anakot 0.30.0.
+    """*world* whose catalog entry carries ``state["requires"]`` as its requires_hermes, on Anakot 0.30.0.
     Console output is captured in ``printed``."""
     base = request.getfixturevalue("world")
     state = base["state"]
@@ -35,7 +35,7 @@ def gated(request, monkeypatch):
     def _entries():
         return [pc_cat.PluginCatalogEntry(name="cat-plugin", repo=state.get("repo_uri") or base["repo"].as_uri(),
                                           sha=state["pin"],
-                                          description="d", maintainer="t", requires_anakot=state["requires"])]
+                                          description="d", maintainer="t", requires_hermes=state["requires"])]
 
     monkeypatch.setattr(pc_cat, "load_catalog", lambda catalog_dir=None: _entries())
     state["running"] = "0.30.0"
@@ -77,7 +77,7 @@ def test_install_by_catalog_name_refused_on_every_surface_when_anakot_is_too_old
 def test_install_proceeds_when_anakot_satisfies_the_spec_or_its_version_is_unknown(gated, running, spec):
     # "unknown" is a tagless checkout: the plugin.yaml gate lets it through, so the catalog gate must too.
     gated["state"].update(running=running, requires=spec)
-    assert plugins_manifest.requires_anakot_error({"requires_anakot": spec}) is None
+    assert plugins_manifest.requires_hermes_error({"requires_hermes": spec}) is None
 
     result = pc.dashboard_install_plugin("", force=False, enable=False, catalog_name="cat-plugin")
 
@@ -111,7 +111,7 @@ def test_update_keeps_the_installed_pin_when_the_new_pin_needs_a_newer_anakot(ga
 
 
 def test_portable_catalog_entry_gets_its_anakot_floor_from_the_catalog(gated, tmp_path):
-    # A portable package (plugin.json) has no requires_anakot of its own: the catalog entry is its only floor.
+    # A portable package (plugin.json) has no requires_hermes of its own: the catalog entry is its only floor.
     from anakot_cli.agent_plugins import PLUGIN_SCHEMA_V1
     repo = tmp_path / "portable-repo"
     repo.mkdir()

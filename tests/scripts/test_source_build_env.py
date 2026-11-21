@@ -85,7 +85,7 @@ if source_build_env "$PROBE_PYTHON" -I -S -c 'raise SystemExit(23)'; then exit 9
 ''']
     elif shell == "node":
         env["ANAKOT_DESKTOP_USER_DATA_DIR"] = str(tmp_path / "user-data")
-        env["ANAKOT_PYTHON_SRC_ROOT"] = str(repo)
+        env["HERMES_PYTHON_SRC_ROOT"] = str(repo)
         command = [shell, "--input-type=module", "-e", '''
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';

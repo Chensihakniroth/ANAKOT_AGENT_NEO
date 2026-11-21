@@ -6,7 +6,7 @@ description: "A self-custodial Smart Agentic Wallet for your agent on BNB Chain 
 maintainer: gabonaut
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.0"
 docs_url: https://github.com/gabonaut/anakot-sovereign-finance#readme
 image: https://raw.githubusercontent.com/gabonaut/anakot-sovereign-finance/9ff5c773ecb0b391d8eb7ab3f0dea745a4a4d385/assets/catalog.png

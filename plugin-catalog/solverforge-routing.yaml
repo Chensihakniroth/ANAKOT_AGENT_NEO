@@ -6,7 +6,7 @@ description: "Personal multi-stop driving trips: tell Anakot where you need to g
 maintainer: blackopsrepl
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.2.2"
 docs_url: https://github.com/blackopsrepl/anakot-solverforge-routing#readme
 image: https://raw.githubusercontent.com/blackopsrepl/anakot-solverforge-routing/6f8ea8251881a30fcd86f9607509034a60848de9/docs/banner.png

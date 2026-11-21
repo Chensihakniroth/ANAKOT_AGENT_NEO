@@ -7,7 +7,7 @@ description: "Dashboard tab for a 9Router gateway configured as the `9router` cu
 maintainer: aligundogar
 tier: community
 category: models
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/aligundogar/anakot-9router#readme
 version: "0.1.0"
 platforms: []

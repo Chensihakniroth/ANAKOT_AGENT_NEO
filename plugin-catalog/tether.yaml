@@ -8,7 +8,7 @@ description: "One Anakot agent, many machines: lends a remote Anakot agent the t
 maintainer: Zek-Takai
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms: []
 image: https://raw.githubusercontent.com/Zek-Takai/anakot-tether/adc4bfdc679c0514bc6d26e4241d6975493a8f87/docs/media/tether-banner.png
 screenshots:

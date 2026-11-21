@@ -9,7 +9,7 @@ maintainer: lEWFkRAD
 tier: community
 category: tools
 docs_url: https://github.com/lEWFkRAD/anakot-plugin-tidal#readme
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 platforms: [linux, macos]
 capabilities:
   provides_tools: [tidal_playback, tidal_search, tidal_playlists, tidal_library, tidal_mixes]

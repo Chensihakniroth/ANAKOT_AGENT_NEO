@@ -272,7 +272,7 @@ def _run_check_locked(
 
     # Opt-in unattended apply: the classes `anakot plugins update` can move (catalog re-pins to the
     # reviewed sha, tracked git pulls), scan-gated by the update path itself, which also refuses a
-    # widened catalog pin or a too-new requires_anakot without a terminal. Pinned/manual/drift/pip
+    # widened catalog pin or a too-new requires_hermes without a terminal. Pinned/manual/drift/pip
     # are never auto-applied (their update_available is False/None or their class excludes it).
     if apply_updates_fn and updates and auto_apply_enabled(config_get):
         _auto_apply(updates, checked_installs, apply_updates_fn, log)

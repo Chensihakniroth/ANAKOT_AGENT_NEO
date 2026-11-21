@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url'
 import { afterEach, expect, test } from 'vitest'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const python = process.env.ANAKOT_PYTHON || 'python3'
+const python = process.env.HERMES_PYTHON || 'python3'
 const roots = []
 afterEach(() => { for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }) })
 

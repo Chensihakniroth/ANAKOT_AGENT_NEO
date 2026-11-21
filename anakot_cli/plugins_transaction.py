@@ -113,6 +113,7 @@ def update_plugin(
 
     from anakot_cli import plugins_cmd as pc
     from anakot_cli.plugins_cmd_catalog import RepinConsentRequired, refuse_if_installed_removed
+    from anakot_cli.plugins_cmd_git import _refuse_foreign_checkout
     from pm.store import tree_digest
 
     target = target.resolve()
@@ -139,7 +140,7 @@ def update_plugin(
             elif proposed not in (source, source.split("#", 1)[0]):
                 raise pc.PluginOperationError("Update feed must select a commit or the recorded Git source.")
             if feed.get("min_anakot"):
-                pc._check_manifest_version({"requires_anakot": feed["min_anakot"]}, target.name)
+                pc._check_manifest_version({"requires_hermes": feed["min_anakot"]}, target.name)
     refuse_if_installed_removed(target.name, target)
     before = tree_digest(target)
     with tempfile.TemporaryDirectory(prefix=".update-", dir=target.parent) as directory:
@@ -171,6 +172,7 @@ def update_plugin(
                 shutil.copytree(target, staged, symlinks=True, ignore=shutil.ignore_patterns("__pycache__"))
                 if feed_revision:
                     git = pc._resolve_git_executable()
+                    _refuse_foreign_checkout(git, target)
                     status = pc._git_or_raise(git, target, "status", "--porcelain", failure_prefix="Could not inspect plugin edits: ")
                     if status.stdout.strip():
                         raise pc.PluginOperationError("Pinned feed update has local changes; save them before updating.")

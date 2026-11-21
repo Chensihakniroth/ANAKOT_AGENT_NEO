@@ -9,7 +9,7 @@ category: automation
 screenshots:
   - https://raw.githubusercontent.com/kinnuworks/ci-red-to-green/83009f03e864264524b8c18bed4ec5423680ab4b/docs/assets/desktop-pane-ready.png
   - https://raw.githubusercontent.com/kinnuworks/ci-red-to-green/83009f03e864264524b8c18bed4ec5423680ab4b/docs/assets/desktop-pane-done.png
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://kinnuworks.github.io/ci-red-to-green/
 version: "0.2.5"
 image: https://raw.githubusercontent.com/kinnuworks/ci-red-to-green/83009f03e864264524b8c18bed4ec5423680ab4b/docs/assets/banner.png

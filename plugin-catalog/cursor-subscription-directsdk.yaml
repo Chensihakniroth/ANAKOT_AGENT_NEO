@@ -6,7 +6,7 @@ description: "Experimental model provider that runs Anakot turns on your Cursor 
 maintainer: arnavprabhu
 tier: community
 category: models
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/arnavprabhu/CursorProviderAnakot#readme
 version: "0.3.1"
 readme: true

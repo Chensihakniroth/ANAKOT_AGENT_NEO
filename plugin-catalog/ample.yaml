@@ -7,7 +7,7 @@ description: "Ample (ample.computer) as native tools: deploy the websites and we
 maintainer: ishanray
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/ishanray/anakot-ample#readme
 readme: true
 capabilities:

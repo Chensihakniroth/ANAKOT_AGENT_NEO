@@ -6,7 +6,7 @@ maintainer: tomekdot
 tier: community
 category: desktop
 version: "1.2.5"
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/tomekdot/anakot-my-github-plugin
 platforms: []
 capabilities:

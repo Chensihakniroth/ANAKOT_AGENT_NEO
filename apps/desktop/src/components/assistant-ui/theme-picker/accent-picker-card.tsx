@@ -13,14 +13,14 @@ import { CARD_ACTION_CLASS } from '../setup-beat/card-type'
 import { useLookPreview } from './look-preview'
 
 export interface AccentPickerCardProps {
-  /** Answers with a swatch id, `custom:#rrggbb`, or null for the live theme's own accent; true once sent. */
+  /** Answers with a swatch id, `custom:#rrggbb`, or null for the theme's own accent (Nous blue); true once sent. */
   onContinue: (accent: null | string) => boolean
 }
 
-/** The theme's own accent, the eight swatches and a custom colour well; a click previews the accent, Continue answers with it. */
+/** The eight accent swatches plus a custom colour well; a click previews the accent, Continue answers with it. */
 export function AccentPickerCard({ onContinue }: AccentPickerCardProps) {
   const { t } = useI18n()
-  const { renderedMode, theme } = useTheme()
+  const { renderedMode } = useTheme()
   const [custom, setCustom] = useState<null | string>(null)
   const look = useLookPreview('accent', renderedMode === 'dark')
   const staged = look.staged
@@ -28,24 +28,19 @@ export function AccentPickerCard({ onContinue }: AccentPickerCardProps) {
   return (
     <div className="grid gap-3">
       <div className="flex flex-wrap items-center gap-2.5 p-1" role="group">
-        {/* The reset is its own swatch. It used to be the "Nous blue" entry, which
-            only held while the default skin's accent WAS Nous blue — with EVA-01
-            the default it would have painted green from a blue chip. */}
-        <AccentSwatch
-          active={staged?.value === null}
-          hex={theme.colors.midground ?? theme.colors.primary}
-          name={t.assistant.themePicker.themeAccent}
-          onPick={() => look.stage(null)}
-        />
-        {accentsFor(renderedMode === 'dark').map(swatch => (
-          <AccentSwatch
-            active={staged?.value === swatch.id}
-            hex={swatch.hex}
-            key={swatch.id}
-            name={swatch.name}
-            onPick={() => look.stage(swatch.id)}
-          />
-        ))}
+        {accentsFor(renderedMode === 'dark').map(swatch => {
+          const value = swatch.id === 'nous' ? null : swatch.id
+
+          return (
+            <AccentSwatch
+              active={staged?.value === value}
+              hex={swatch.hex}
+              key={swatch.id}
+              name={swatch.name}
+              onPick={() => look.stage(value)}
+            />
+          )
+        })}
         <AccentSwatch
           active={custom !== null && staged?.value === `${CUSTOM_ACCENT_PREFIX}${custom}`}
           hex={custom ?? NOUS_ACCENT}

@@ -5,7 +5,7 @@ description: "LDAP / Active Directory password login for the web dashboard. Veri
 maintainer: angel12
 tier: community
 category: general
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/angel12/anakot-ldap-auth#readme
 version: "1.0.0"
 capabilities:

@@ -33,9 +33,10 @@ from anakot_constants import OPENROUTER_BASE_URL, get_anakot_home
 from agent.compression_marker import elide_middle
 from agent.retry_utils import jittered_backoff
 from anakot_cli.env_loader import load_anakot_dotenv
+from anakot_cli._startup_fast import project_root_str
 
 # Load .env from ANAKOT_HOME first, then project root as a dev fallback.
-load_anakot_dotenv(anakot_home=get_anakot_home(), project_env=Path(__file__).parent / ".env")
+load_anakot_dotenv(anakot_home=get_anakot_home(), project_env=Path(project_root_str()) / ".env")
 
 
 def _response_finish_reason(response: Any) -> str:

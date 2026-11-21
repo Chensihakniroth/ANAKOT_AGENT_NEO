@@ -8,7 +8,7 @@ maintainer: Umanitek
 tier: community
 category: tools
 version: "1.4.0"
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 docs_url: https://github.com/umanitek/agent-blackbox/tree/54081140de4a6d0df14b2be25afb3caa45aa37a0/plugins/blackbox
 image: https://raw.githubusercontent.com/umanitek/agent-blackbox/54081140de4a6d0df14b2be25afb3caa45aa37a0/docs/catalog/banner.png
 screenshots:

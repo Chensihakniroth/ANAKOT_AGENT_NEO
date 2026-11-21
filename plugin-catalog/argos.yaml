@@ -7,7 +7,7 @@ description: "Lets Anakot agents drive a live Godot 4 editor through a local MCP
 maintainer: Tormen28
 tier: community
 category: tools
-requires_anakot: ">=0.22.1"
+requires_hermes: ">=0.22.1"
 docs_url: https://github.com/Tormen28/argos#readme
 image: https://raw.githubusercontent.com/Tormen28/argos/ab194154310cf4a44cee932d7c33f7fefb42c95d/docs/screenshots/argos-scene-capture.png
 screenshots:

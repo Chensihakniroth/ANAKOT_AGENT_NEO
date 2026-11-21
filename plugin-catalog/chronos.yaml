@@ -7,7 +7,7 @@ description: "Speculative branching: try several candidate fixes in isolated git
 maintainer: Shikhyy
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/Shikhyy/anakot-agent/blob/5b2a4b4a2c43e8a9b1e7bf8d32484a651bffedf0/plugins/chronos/README.md
 version: "1.0.0"
 capabilities:

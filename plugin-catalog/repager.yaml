@@ -6,7 +6,7 @@ description: "Evidence-bound hero design lab with approved copy, local layout ex
 maintainer: clawpawtech
 tier: community
 category: web
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.3.0"
 docs_url: https://github.com/clawpawtech/anakot-repager/blob/fc354afe99ab041e096efee4d87d20190ae0d040/README.md
 readme: true

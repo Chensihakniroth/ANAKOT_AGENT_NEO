@@ -5,7 +5,7 @@ description: "Polymarket odds in Anakot: search active markets, live odds (CLOB 
 maintainer: WV629
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/WV629/anakot-oddsradar/blob/dfafcd59e6d2efeb4fd9cffa832836b1637c07c7/README.md
 version: "0.1.0"
 title: Odds Radar

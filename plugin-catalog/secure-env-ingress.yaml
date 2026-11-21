@@ -7,7 +7,7 @@ maintainer: web3blind
 tier: community
 category: tools
 version: "0.8.7"
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/web3blind/anakot-secure-env-plugin/blob/8874c96fb85bd09aae680ae88c9b3c16c22ee5ae/README.md
 platforms: [linux]
 known_issues:

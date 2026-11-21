@@ -51,7 +51,7 @@ handler does; `client-local (cli_only)` commands are terminal/UI features of a c
 | `/copy` | refused | AnakotCLI._handle_copy_command | local | unavailable: terminal | slash.exec: refused | client-local (cli_only) |
 | `/cron` | read (bare / `list`; add/edit/pause/resume/run/remove control, from the classic CLI's own command socket only) | AnakotCLI._handle_cron_command | slash.exec | unavailable: terminal | slash.exec | client-local (cli_only) |
 | `/curator` | control | AnakotCLI._handle_curator_command | slash.exec | unavailable: advanced | slash.exec |  |
-| `/debug` | control | AnakotCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | uploads logs to a public paste |
+| `/debug` | control | AnakotCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | `/debug upload` uploads a summary to a public paste (bare `/debug` is the privacy notice) |
 | `/deny` | control | messaging-only: unknown command | slash.exec | slash.exec | slash.exec | messaging-only |
 | `/diff` | read | AnakotCLI._handle_diff_command | slash.exec | slash.exec | slash.exec |  |
 | `/discard` | refused | AnakotCLI._handle_discard_command | slash.exec: refused | slash.exec: refused | prompt.resolve_unknown |  |

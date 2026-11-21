@@ -27,16 +27,16 @@ def _branches(repo):
 
 @pytest.mark.parametrize('case', ['clean', 'clean_with_history', 'dirty', 'pending_turn'])
 def test_tui_worktree_quit_removes_only_a_clean_idle_tree(tmp_path, monkeypatch, case):
-    from anakot_cli import main_tui_launch
+    from anakot_cli import main_tui_launch, session_worktree
     from anakot_cli.worktree_ops import _setup_worktree
     from anakot_constants import get_anakot_home
     from anakot_state import SessionDB
 
     repo = _repo(tmp_path)
     monkeypatch.chdir(repo)
-    monkeypatch.setenv('ANAKOT_PYTHON', sys.executable)
+    monkeypatch.setenv('HERMES_PYTHON', sys.executable)
     wt_info = _setup_worktree(str(repo), sync_base=False, retain_db=get_anakot_home() / 'state.db')
-    monkeypatch.setattr(main_tui_launch, '_setup_tui_worktree', lambda: wt_info)
+    monkeypatch.setattr(session_worktree, 'create', lambda: wt_info)
     monkeypatch.setattr(main_tui_launch, '_make_tui_argv', lambda *_: (['node'], Path('.')))
     monkeypatch.setattr(main_tui_launch, '_print_tui_exit_summary', lambda *_: None)
 
@@ -81,16 +81,16 @@ def test_tui_worktree_quit_removes_only_a_clean_idle_tree(tmp_path, monkeypatch,
 
 def _quit_with(tmp_path, monkeypatch, prepare):
     """Run ``anakot --tui -w`` whose Ink session ``prepare(db, cwd)`` shapes, then quit; the tree."""
-    from anakot_cli import main_tui_launch
+    from anakot_cli import main_tui_launch, session_worktree
     from anakot_cli.worktree_ops import _setup_worktree
     from anakot_constants import get_anakot_home
     from anakot_state import SessionDB
 
     repo = _repo(tmp_path)
     monkeypatch.chdir(repo)
-    monkeypatch.setenv('ANAKOT_PYTHON', sys.executable)
+    monkeypatch.setenv('HERMES_PYTHON', sys.executable)
     wt_info = _setup_worktree(str(repo), sync_base=False, retain_db=get_anakot_home() / 'state.db')
-    monkeypatch.setattr(main_tui_launch, '_setup_tui_worktree', lambda: wt_info)
+    monkeypatch.setattr(session_worktree, 'create', lambda: wt_info)
     monkeypatch.setattr(main_tui_launch, '_make_tui_argv', lambda *_: (['node'], Path('.')))
     monkeypatch.setattr(main_tui_launch, '_print_tui_exit_summary', lambda *_: None)
 

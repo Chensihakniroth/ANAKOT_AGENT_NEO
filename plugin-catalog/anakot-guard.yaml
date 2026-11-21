@@ -10,7 +10,7 @@ description: >-
 maintainer: elianjuan-g
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/elianjuan-g/anakot-guard
 known_issues:
   - "Quarantine release is manual re-send; there is no one-click release. release/delete are owner-only slash commands (/guard-release, /guard-delete); the model tool cannot call them."

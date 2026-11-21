@@ -8,7 +8,7 @@ description: "Dense semantic memory for Anakot, stored in a Qdrant collection yo
 maintainer: kuehnberger
 tier: community
 category: memory
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/kuehnberger/anakot-qdrant-memory#readme
 known_issues:
 - "Windows on ARM is unsupported: grpcio, pulled in by qdrant-client, has no win_arm64 wheel. Linux and macOS on x86_64/arm64 and Windows x86_64 are supported."

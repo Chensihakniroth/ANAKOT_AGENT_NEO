@@ -47,7 +47,7 @@ def generate(tmp_path_factory):
             env = {**os.environ, "ANAKOT_HOME": str(root / "home"),
                    "ANAKOT_RUNTIME_DIR": str(root / "tools"),
                    "ANAKOT_PAYLOAD_TAG": tag, "ANAKOT_BUILD_COMMIT": commit,
-                   "ANAKOT_PYTHON": str(python), "PYTHONPATH": str(root / "foreign-site"),
+                   "HERMES_PYTHON": str(python), "PYTHONPATH": str(root / "foreign-site"),
                    "PYTHONHOME": str(root / "foreign-python"), "ANAKOT_DISABLE_LAZY_INSTALLS": "1"}
             command = [node, str(ROOT / "scripts/generate-icons.mjs"),
                        "--source", str(source), "--out", str(out)]

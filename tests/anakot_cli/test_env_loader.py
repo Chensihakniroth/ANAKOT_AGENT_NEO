@@ -1,6 +1,8 @@
 import codecs
 import os
 
+import pytest
+
 from anakot_cli.env_loader import load_anakot_dotenv
 
 
@@ -622,3 +624,211 @@ def test_dotenv_published_dashboard_session_token_still_reloads(tmp_path, monkey
     (home / ".env").write_text("ANAKOT_DASHBOARD_SESSION_TOKEN=second\n", encoding="utf-8")
     load_anakot_dotenv(anakot_home=home)
     assert os.environ["ANAKOT_DASHBOARD_SESSION_TOKEN"] == "second"
+
+
+# ---------------------------------------------------------------------------
+# Launch-only env keys: ANAKOT_MANAGED_DIR is a deployment bootstrap knob (#135200)
+# ---------------------------------------------------------------------------
+
+
+def test_user_env_cannot_repoint_managed_dir_with_launch_value(tmp_path, monkeypatch):
+    """A user ``.env`` naming another directory must not override the launch value.
+
+    The launch environment (service unit, container image) bakes the administrator's
+    managed dir in; the user's own ``.env`` is a user-writable layer and must never
+    repoint managed scope at a directory the user controls.
+    """
+    home = tmp_path / "anakot"
+    home.mkdir()
+    admin_dir = tmp_path / "admin"
+    admin_dir.mkdir()
+    untrusted_dir = tmp_path / "untrusted"
+    untrusted_dir.mkdir()
+    (admin_dir / ".env").write_text("SLACK_ALLOWED_USERS=admin-only\n", encoding="utf-8")
+    (untrusted_dir / ".env").write_text("SLACK_ALLOWED_USERS=*\n", encoding="utf-8")
+    (home / ".env").write_text(f"ANAKOT_MANAGED_DIR={untrusted_dir}\n", encoding="utf-8")
+
+    monkeypatch.setenv("ANAKOT_MANAGED_DIR", str(admin_dir))
+
+    load_anakot_dotenv(anakot_home=home)
+
+    from anakot_cli import managed_scope
+    managed_scope.invalidate_managed_cache()
+    assert os.environ["ANAKOT_MANAGED_DIR"] == str(admin_dir)
+    assert managed_scope.load_managed_env() == {"SLACK_ALLOWED_USERS": "admin-only"}
+    # Not recorded as launch dotenv residue either: a routed child keeps the launch value.
+    from anakot_cli.env_loader import launch_dotenv_keys
+    assert "ANAKOT_MANAGED_DIR" not in launch_dotenv_keys()
+
+
+def test_user_env_cannot_set_managed_dir_without_launch_value(tmp_path, monkeypatch):
+    """No launch value: a user ``.env`` entry still must not set the managed dir."""
+    home = tmp_path / "anakot"
+    home.mkdir()
+    (home / ".env").write_text("ANAKOT_MANAGED_DIR=/nonexistent/user-choice\n", encoding="utf-8")
+
+    monkeypatch.delenv("ANAKOT_MANAGED_DIR", raising=False)
+
+    load_anakot_dotenv(anakot_home=home)
+
+    assert "ANAKOT_MANAGED_DIR" not in os.environ
+
+
+def test_reload_env_skips_launch_only_keys(tmp_path, monkeypatch):
+    """``reload_env()`` (CLI ``/reload``, TUI ``reload.env``) must not repoint the managed
+    scope either — a user ``.env`` key is not a launch-environment value."""
+    home = tmp_path / "anakot"
+    home.mkdir()
+    untrusted_dir = tmp_path / "untrusted"
+    untrusted_dir.mkdir()
+    (home / ".env").write_text(
+        f"ANAKOT_MANAGED_DIR={untrusted_dir}\nRELOAD_TEST_KEY=reloaded\n", encoding="utf-8"
+    )
+
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_MANAGED_DIR", "/launch/admin-dir")
+    monkeypatch.delenv("RELOAD_TEST_KEY", raising=False)
+
+    from anakot_cli import config as cfg
+    cfg.invalidate_env_cache()
+    try:
+        changed = cfg.reload_env()
+    finally:
+        cfg.invalidate_env_cache()
+
+    assert os.environ["ANAKOT_MANAGED_DIR"] == "/launch/admin-dir"
+    assert os.environ["RELOAD_TEST_KEY"] == "reloaded"  # control: other keys still reload
+    assert changed == 1
+
+
+# ---------------------------------------------------------------------------
+# ANAKOT_HOME is launch-only too (#144685): a single write to ~/.anakot/.env
+# must not relocate identity and policy wholesale on the next start.
+# ---------------------------------------------------------------------------
+
+
+def test_user_env_cannot_repoint_anakot_home_with_launch_value(tmp_path, monkeypatch):
+    """#144685 repro, end to end: with the launch environment pinning ``ANAKOT_HOME`` at
+    directory *a*, a ``ANAKOT_HOME=b`` line in *a*'s own ``.env`` must be ignored — both
+    ``os.environ`` and ``get_anakot_home()`` (SOUL.md, config.yaml, plugins, skills, cron
+    all resolve from it) must keep answering *a*."""
+    home_a = tmp_path / "a"
+    home_b = tmp_path / "b"
+    home_a.mkdir()
+    home_b.mkdir()
+    (home_a / ".env").write_text(f"ANAKOT_HOME={home_b}\n", encoding="utf-8")
+
+    monkeypatch.setenv("ANAKOT_HOME", str(home_a))
+
+    load_anakot_dotenv(load_external_secrets=False)
+
+    from anakot_constants import get_anakot_home
+    assert os.environ["ANAKOT_HOME"] == str(home_a)
+    assert get_anakot_home() == home_a.resolve()
+
+
+def test_user_env_cannot_set_anakot_home_without_launch_value(tmp_path, monkeypatch):
+    """Same refusal when the launch environment never set the key: the ``.env`` must not
+    introduce it either, or a fresh install's first write would pin the home."""
+    home = tmp_path / "anakot"
+    home.mkdir()
+    (home / ".env").write_text(f"ANAKOT_HOME={tmp_path / 'planted'}\n", encoding="utf-8")
+    monkeypatch.delenv("ANAKOT_HOME", raising=False)
+
+    load_anakot_dotenv(anakot_home=home, load_external_secrets=False)
+
+    assert "ANAKOT_HOME" not in os.environ
+
+
+def test_lowercase_launch_only_keys_in_user_env_are_ignored(tmp_path, monkeypatch, caplog):
+    """Windows env names are case-insensitive: ``anakot_managed_dir=`` / ``anakot_home=`` would
+    set the real keys there, so the loader refuses every letter case (on POSIX the lowercase
+    name is a distinct variable, and refusing it is harmless)."""
+    home = tmp_path / "anakot"
+    home.mkdir()
+    (home / ".env").write_text(
+        f"anakot_managed_dir={tmp_path}/untrusted\nAnakot_Home={tmp_path}/b\n", encoding="utf-8")
+    # Clear the lowercase names BEFORE setting ANAKOT_HOME: on Windows they fold onto the real keys.
+    monkeypatch.delenv("anakot_managed_dir", raising=False)
+    monkeypatch.delenv("Anakot_Home", raising=False)
+    monkeypatch.delenv("ANAKOT_MANAGED_DIR", raising=False)
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
+
+    with caplog.at_level("WARNING", logger="anakot_cli.env_loader"):
+        load_anakot_dotenv(load_external_secrets=False)
+
+    # POSIX: the lowercase names stay unset. Windows (keys upper-cased): the real keys keep their values.
+    assert {"anakot_managed_dir", "Anakot_Home"}.isdisjoint(set(os.environ))  # iterate: `in` folds case
+    assert "ANAKOT_MANAGED_DIR" not in os.environ
+    assert os.environ["ANAKOT_HOME"] == str(home)
+    assert "anakot_managed_dir" in caplog.text  # the operator sees why the line had no effect
+
+
+def test_launch_only_warning_is_logged_once_per_profile_home(tmp_path, monkeypatch, caplog):
+    """The gateway reloads .env on every turn: a leftover line warns once per home, not per turn,
+    and a second profile home with the same line still gets its own warning."""
+    homes = []
+    for name in ("a", "b"):
+        home = tmp_path / name
+        home.mkdir()
+        (home / ".env").write_text(f"ANAKOT_MANAGED_DIR={tmp_path}/untrusted\n", encoding="utf-8")
+        homes.append(home)
+    monkeypatch.delenv("ANAKOT_MANAGED_DIR", raising=False)
+
+    with caplog.at_level("WARNING", logger="anakot_cli.env_loader"):
+        for home in homes:
+            monkeypatch.setenv("ANAKOT_HOME", str(home))
+            for _ in range(3):
+                load_anakot_dotenv(load_external_secrets=False)
+
+    assert "ANAKOT_MANAGED_DIR" not in os.environ
+    assert caplog.text.count("launch-only key ANAKOT_MANAGED_DIR") == 2
+
+
+def test_config_yaml_launch_only_warning_is_keyed_by_profile_home(tmp_path, monkeypatch, caplog):
+    """The ``config.yaml`` source label is the same string for every home, so only the home part
+    of the once-only key gives a second profile its own warning."""
+    from anakot_cli.env_loader import bridge_config_scalars
+
+    with caplog.at_level("WARNING", logger="anakot_cli.env_loader"):
+        for name in ("a", "b"):
+            home = tmp_path / name
+            home.mkdir()
+            monkeypatch.setenv("ANAKOT_HOME", str(home))
+            for _ in range(3):
+                target: dict[str, str] = {}
+                bridge_config_scalars({"ANAKOT_MANAGED_DIR": f"{tmp_path}/untrusted"}, target)
+                assert target == {}
+
+    assert caplog.text.count("config.yaml: ignoring launch-only key ANAKOT_MANAGED_DIR") == 2
+
+
+def test_reload_env_skips_lowercase_launch_only_key(tmp_path, monkeypatch):
+    home = tmp_path / "anakot"
+    home.mkdir()
+    (home / ".env").write_text("anakot_managed_dir=/user/controlled\n", encoding="utf-8")
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
+    monkeypatch.delenv("anakot_managed_dir", raising=False)
+
+    from anakot_cli import config as cfg
+    cfg.invalidate_env_cache()
+    try:
+        cfg.reload_env()
+    finally:
+        cfg.invalidate_env_cache()
+
+    assert "anakot_managed_dir" not in os.environ
+
+
+@pytest.mark.platforms("windows")
+def test_lowercase_managed_dir_line_cannot_repoint_launch_value_on_windows(tmp_path, monkeypatch):
+    """Native Windows fold: ``anakot_managed_dir=`` would overwrite ``ANAKOT_MANAGED_DIR``."""
+    home = tmp_path / "anakot"
+    home.mkdir()
+    (home / ".env").write_text(f"anakot_managed_dir={tmp_path / 'untrusted'}\n", encoding="utf-8")
+    monkeypatch.setenv("ANAKOT_HOME", str(home))
+    monkeypatch.setenv("ANAKOT_MANAGED_DIR", str(tmp_path / "admin"))
+
+    load_anakot_dotenv(load_external_secrets=False)
+
+    assert os.environ["ANAKOT_MANAGED_DIR"] == str(tmp_path / "admin")

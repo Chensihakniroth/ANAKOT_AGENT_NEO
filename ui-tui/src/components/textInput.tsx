@@ -488,7 +488,7 @@ export function killToLineEnd(value: string, cursor: number): { value: string; c
  * boundary rather than delete a single word.
  *
  * Only the *super* bit qualifies. It is tempting to reuse `isActionMod`,
- * but that accepts `key.meta` on macOS — and anakot-ink reports Option as
+ * but that accepts `key.meta` on macOS — and hermes-ink reports Option as
  * `meta`, so Option+Backspace (delete-word, the macOS standard) would be
  * swallowed. On Linux/Windows `isActionMod` is `key.ctrl`, and
  * Ctrl+Backspace is delete-word there too. `super` is set only by kitty
@@ -1595,7 +1595,7 @@ export function TextInput({
         c = wordRight(v, c)
       } else if (wordMod && inp === 'd') {
         // meta+d (readline kill-word). The web dashboard maps Ctrl+Delete to
-        // ESC d, which anakot-ink decodes as meta+'d'; without this branch it
+        // ESC d, which hermes-ink decodes as meta+'d'; without this branch it
         // fell through to the printable path and typed a literal "d".
         if (range) {
           v = v.slice(0, range.start) + v.slice(range.end)

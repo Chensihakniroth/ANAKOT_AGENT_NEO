@@ -186,7 +186,7 @@ foreach ($asset in @(@('Square44x44Logo.png',44,44), @('Square150x150Logo.png',1
       const publisher = attribute(roundtrip, 'Identity', 'Publisher')
       const selfUri = `https://example.invalid/fixture/${facts.identity.channel}.appinstaller`
       const artifactUri = `https://example.invalid/fixture/${facts.app.name}-${version}-win.msixbundle`
-      checked(process.env.ANAKOT_PYTHON || 'python', [
+      checked(process.env.HERMES_PYTHON || 'python', [
         '-m', 'scripts.bundles.release_artifacts', 'appinstaller', '--root', root, '--out', descriptor,
         '--identity', name, '--publisher', publisher, '--version', version,
         '--self-uri', selfUri, '--artifact-uri', artifactUri,

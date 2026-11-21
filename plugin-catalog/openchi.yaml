@@ -6,7 +6,7 @@ description: 'Guided desk stretches and breathing breaks for Anakot Desktop. Whe
 maintainer: imkieransmith
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 version: "0.1.0"
 docs_url: https://github.com/imkieransmith/openchi
 image: https://raw.githubusercontent.com/imkieransmith/openchi/bdc7926455e7aadfcda43f4e4f7eb4b726fffc8d/assets/screenshots/catalog.png

@@ -133,9 +133,9 @@ async def across_sign_out(runner, origin, ask):
         async with httpx.AsyncClient(base_url=origin, timeout=20, cookies=stolen) as replay:
             report["replayed_cookies_after"] = _refusal(await replay.get("/api/sessions"))
         # The provider tokens those cookies held, presented on their own as a native app would.
-        # The Webapp's listener names its cookies for the gateway (``anakot_session_at_<gateway>``).
+        # The Webapp's listener names its cookies for the gateway (``hermes_session_at_<gateway>``).
         access, refresh = (next(value for key, value in stolen.items() if key.startswith(f"{name}_")).strip('"')
-                           for name in ("anakot_session_at", "anakot_session_rt"))
+                           for name in ("hermes_session_at", "anakot_session_rt"))
         async with httpx.AsyncClient(base_url=origin, timeout=20) as thief:
             report["stolen_access_token_after"] = _refusal(
                 await thief.get("/api/sessions", headers={"Authorization": "Bearer " + access}))

@@ -6,7 +6,7 @@ description: "Read and manage a Mayar (mayar.id, Indonesian payments platform) a
 maintainer: Mayar
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/mayarid/mayar-agent-plugin/blob/19eb8005683c04045765c16897fb2c7e9490de21/README.md
 version: "1.0.0"
 platforms: []

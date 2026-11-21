@@ -8,7 +8,7 @@ tier: community
 category: desktop
 docs_url: https://github.com/NyllRE/project-command-center#readme
 version: "0.4.2"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 image: https://raw.githubusercontent.com/NyllRE/project-command-center/eaa3e2d3a046eb677f4c67aae98b78f1dcec4043/docs/covers/cover-final.png
 screenshots:
   - https://raw.githubusercontent.com/NyllRE/project-command-center/eaa3e2d3a046eb677f4c67aae98b78f1dcec4043/docs/screenshots/board.png

@@ -7,7 +7,7 @@ maintainer: noprijbi99-dotcom
 tier: community
 category: general
 version: "0.1.4"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/noprijbi99-dotcom/moment#readme
 image: https://raw.githubusercontent.com/noprijbi99-dotcom/moment/1af58dda54a9ad9310acb4cad928a6db63f8403b/assets/banner.png
 capabilities:

@@ -228,7 +228,7 @@ function launcherVersionProbe(launcher: string, root?: string): LauncherVersionP
       timeout: 15000,
       windowsHide: true,
       windowsVerbatimArguments: viaCmd,
-      env: root ? { ...process.env, ANAKOT_INSTALL_ROOT: root } : process.env
+      env: root ? { ...process.env, HERMES_INSTALL_ROOT: root } : process.env
     }
   }
 }

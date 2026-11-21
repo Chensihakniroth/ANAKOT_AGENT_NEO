@@ -7,7 +7,7 @@ maintainer: dmkjr
 tier: community
 category: desktop
 version: "1.0.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/dmkjr/anakot-everything-nothing#readme
 platforms: [macos, linux, windows]
 screenshots:

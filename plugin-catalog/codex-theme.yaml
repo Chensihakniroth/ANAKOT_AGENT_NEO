@@ -5,7 +5,7 @@ description: "Codex × ChatGPT inspired theme for the Anakot Desktop chat: dual 
 maintainer: hey-yx
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "1.2.0"
 title: "Codex Theme"
 image: https://raw.githubusercontent.com/hey-yx/anakot-codex-theme/5d0e94aa5a80e02f755b1ab5783f727df7bb1ecd/assets/cover.png

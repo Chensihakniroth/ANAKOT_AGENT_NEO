@@ -6,7 +6,7 @@ description: "The Kimchi coding harness (kimchi.dev) as a Anakot model provider 
 maintainer: getkimchi
 tier: community
 category: models
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/getkimchi/kimchi-anakot#readme
 version: "1.0.0"
 platforms: []

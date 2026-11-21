@@ -10,7 +10,7 @@ import { listWindowsRemoteProfiles, readWindowsRemoteInstallId } from './windows
 import { atomicWindowsSpawn, atomicWindowsSpawnCommand, compressedPowerShellCommand, decodePowerShellCommand, encodedPowerShell, probeWindowsFiles, probeWindowsRemote } from './windows-remote-lifecycle'
 import { WINDOWS_NO_REPARSE_PS } from './windows-runtime-command'
 
-const python = process.env.ANAKOT_TEST_PYTHON || process.env.ANAKOT_PYTHON || 'python'
+const python = process.env.ANAKOT_TEST_PYTHON || process.env.HERMES_PYTHON || 'python'
 const runtime = { os: 'Windows', arch: 'AMD64', anakotHome: 'C:\\anakot', anakotPath: 'C:\\anakot\\bin\\anakot.exe', python: 'C:\\runtime\\python.exe' }
 const bootstrap = "import os, sys, runpy; runpy.run_module('anakot_cli.main', run_name='__main__', alter_sys=True)"
 

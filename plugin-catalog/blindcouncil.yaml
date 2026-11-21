@@ -5,7 +5,7 @@ description: "Private human decisions in Anakot with authenticated responses, de
 maintainer: sopskistar
 tier: community
 category: automation
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 version: "0.1.0"
 title: BlindCouncil
 readme: true

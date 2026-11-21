@@ -5,7 +5,7 @@ description: "Jev-powered routing for misspelled, shortened, and meaning-based s
 maintainer: raitoxlol
 tier: community
 category: desktop
-requires_anakot: ">=0.21.2"
+requires_hermes: ">=0.21.2"
 docs_url: https://github.com/raitoxlol/anakot-slash-router#readme
 version: "0.3.1"
 platforms: []

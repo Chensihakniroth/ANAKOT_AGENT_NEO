@@ -7,7 +7,7 @@ description: "SearchApi (searchapi.io) as a backend for the built-in web_search 
 maintainer: christofilojohn
 tier: community
 category: web
-requires_anakot: ">=0.18.1"
+requires_hermes: ">=0.18.1"
 version: "0.1.0"
 docs_url: https://github.com/christofilojohn/anakot-searchapi#readme
 readme: true

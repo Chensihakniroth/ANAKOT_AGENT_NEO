@@ -5,7 +5,7 @@ description: "Answers an allowlisted direct message on your Meshtastic® radio. 
 maintainer: TakeshiTGAL
 tier: community
 category: platform
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-radio-dm-gateway#readme
 version: "0.1.0"
 platforms: []

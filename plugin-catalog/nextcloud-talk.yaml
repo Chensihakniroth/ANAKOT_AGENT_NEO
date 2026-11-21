@@ -20,4 +20,4 @@ known_issues:
   - Text only; attachments, reactions and inbound reply-context reconstruction are not implemented.
   - Dedupe is in-memory and does not survive restart; uncertain sends are not automatically retried.
   - Valid empty OCS acknowledgements confirm delivery without returning a message ID.
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"

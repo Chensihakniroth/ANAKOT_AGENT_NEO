@@ -7,7 +7,7 @@ description: "Read, search and reply to Zalo chats, personal Zalo accounts and Z
 maintainer: ZaloDesk
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/zalodesk/zalodesk-mcp#readme
 readme: true
 platforms: []

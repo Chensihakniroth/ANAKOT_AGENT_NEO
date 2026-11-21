@@ -8,7 +8,7 @@ maintainer: davidmosiah
 tier: community
 category: tools
 version: "0.8.0"
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/davidmosiah/apple-health-mcp/blob/94c31b8545e0d82a2d2e0eb1cb43da0e470b6d1f/agent-plugin/README.md
 image: https://raw.githubusercontent.com/davidmosiah/apple-health-mcp/94c31b8545e0d82a2d2e0eb1cb43da0e470b6d1f/assets/banner.png
 platforms: []

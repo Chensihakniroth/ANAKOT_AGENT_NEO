@@ -8,7 +8,7 @@ maintainer: ockentap
 tier: community
 category: tools
 version: "1.5.1"
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/ockentap/anakot-dynamic-memory#readme
 readme: true
 platforms: [linux, macos]

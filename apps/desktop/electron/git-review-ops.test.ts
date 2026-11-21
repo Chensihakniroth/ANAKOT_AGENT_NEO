@@ -179,7 +179,7 @@ test.skipIf(process.platform === 'win32')(
 )
 
 const HOST_PYTHON =
-  process.env.ANAKOT_PYTHON || process.env.UV_PYTHON || (process.platform === 'win32' ? 'python' : 'python3')
+  process.env.HERMES_PYTHON || process.env.UV_PYTHON || (process.platform === 'win32' ? 'python' : 'python3')
 
 test.skipIf(process.platform === 'win32')(
   "gitFor's Windows host-tuple path forwards GIT_SSH_COMMAND and does not throw on inherited guarded variables",

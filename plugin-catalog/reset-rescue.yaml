@@ -5,7 +5,7 @@ description: "Redeems expiring OpenAI Codex rate-limit reset credits across ever
 maintainer: bwoliveira
 tier: community
 category: automation
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/bwoliveira/anakot-reset-rescue#readme
 version: "0.1.0"
 readme: true

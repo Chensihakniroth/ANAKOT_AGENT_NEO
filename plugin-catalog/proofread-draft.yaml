@@ -6,7 +6,7 @@ description: "Proofread Anakot Desktop drafts with your configured model and rev
 maintainer: Icarus-B4
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.1.4"
 known_issues:
   - "Native live spellchecking is not available; proofreading runs only when explicitly requested."

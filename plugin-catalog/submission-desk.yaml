@@ -19,7 +19,7 @@ description: >-
 maintainer: alfredbirkelund
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/alfredbirkelund/anakot-submission-desk#readme
 screenshots:
   - https://raw.githubusercontent.com/alfredbirkelund/anakot-submission-desk/fde18934d5cf4798c312b8a631a22c050addb984/docs/screenshots/readiness-stale-review.png

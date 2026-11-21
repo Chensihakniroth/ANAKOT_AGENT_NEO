@@ -7,7 +7,7 @@ description: "Markdown-first long-term memory shared across your coding agents: 
 maintainer: memtomem
 tier: community
 category: general
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/memtomem/memtomem/tree/b440f108ad42e349a1518c0dcf67bb23f0240936/packages/memtomem-anakot-plugin
 capabilities:
   provides_tools: []

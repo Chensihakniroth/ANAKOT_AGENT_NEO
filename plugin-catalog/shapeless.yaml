@@ -22,7 +22,7 @@ description: >-
 maintainer: ShapelessAI
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://shapelessai.com/connect/anakot
 version: "1.0.4"
 readme: false

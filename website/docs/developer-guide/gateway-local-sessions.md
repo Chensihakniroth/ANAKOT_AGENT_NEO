@@ -72,7 +72,7 @@ The server issues `session:operator` only at these existing trusted boundaries:
   Webapp login is bound to that token by the `anakot_webapp_signin_<gateway>` cookie (HMAC-SHA256 of
   `webapp-sign-in` keyed with the token), so replacing it ends those logins too; sign-out closes
   every socket the token or a bound login opened, Bot Desktop viewers included. The Webapp's listener
-  names every sign-in cookie it sets that way (`anakot_session_at_<gateway>` and the rest; `<gateway>`
+  names every sign-in cookie it sets that way (`hermes_session_at_<gateway>` and the rest; `<gateway>`
   comes from a digest of the gateway home), so two gateways' Webapps on one hostname keep their own
   logins, whatever their sign-in providers, and leave the standalone dashboard's cookies alone. The provider tokens
   such a login keeps in its cookies never work there on their own: the Webapp's listener accepts a
@@ -151,6 +151,23 @@ listener keeps working.
   there), `last_reply` (its newest reply, shortened as `preview` is; a pure compaction handoff is no
   reply, a carrier shows the reply it wraps), `git_branch`, `last_active_at` and `pinned`. Off by
   default, so the 1.5 s live-list poll pays nothing; on, a page is one batched store read.
+  The stored scope also pages and searches (`gateway/session_listing.py`); runtimes that serve this
+  advertise `session-list-cursor-v1` in `runtime.describe.capabilities`:
+  - `query`: only conversations whose title or id contains this text (case-insensitive; a title
+    also matches with `-`, `_`, `.` and spaces removed, and every segment of a compression chain
+    counts). The same rule as `anakot sessions list --search`. It must be 1 to 200 characters and
+    not only spaces.
+  - Each stored result carries `next_cursor`: an opaque string when more rows may follow, `null` when
+    the listing is exhausted. A last page may be empty. Send it back as `cursor` to read the next
+    page. The live scope is not paged: its result carries no `next_cursor`.
+  - A cursor is valid only with the `workspace`, `query` and `include_hidden` of the call that
+    returned it; `limit` and `picker` may change between pages. Any other cursor, a cursor this
+    method did not issue, or `query` / `cursor` with the live scope or with `title` answers
+    `invalid_params`.
+  - On an unchanged store, following `next_cursor` to `null` lists every conversation once, in the
+    order one unpaged read would. The store can change between calls (a conversation with a new
+    message moves to the front), so a later page may repeat a row an earlier page listed: key rows
+    by `session_id`. The 200 row cap per call stays.
 - `session.transcript({session_id, subagent_id?, cursor?, limit?, order?, inline_images?})` reads a
   conversation without attaching to it (`gateway/session_stored_reads.py`). It is authorized as
   `session.resume`'s read (`SessionAuthority.authorize`, `session:read`: profile, owner or operator).

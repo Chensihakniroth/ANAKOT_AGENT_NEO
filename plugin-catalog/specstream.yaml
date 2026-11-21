@@ -8,7 +8,7 @@ title: SpecStream
 version: "1.2.0"
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://specstream.ai/docs/mcp
 platforms: []
 capabilities:

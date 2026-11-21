@@ -5,7 +5,7 @@ description: "Proton Mail, Calendar, Contacts and Drive for a Anakot Agent, thro
 maintainer: Maytrella007
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Maytrella007/anakot-proton#readme
 version: "0.28.0"
 image: https://raw.githubusercontent.com/Maytrella007/anakot-proton/3e0612848cf20116294f9ff58e74aadf34bc858e/assets/banner.jpg

@@ -5,7 +5,7 @@ description: "Preserve source skills, create writable derivatives, and review th
 maintainer: asimons81
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/asimons81/anakot-skill-layers/blob/4ae841ab0c6a4b3506b561ed328ecc998774361c/README.md
 version: "0.1.0"
 platforms:

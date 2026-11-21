@@ -6,7 +6,7 @@ description: "A Today page in Anakot Desktop, plus anakot day show and check, bu
 maintainer: brunosouzas
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/brunosouzas/anakot-day-panel#readme
 version: "0.1.0"
 readme: true

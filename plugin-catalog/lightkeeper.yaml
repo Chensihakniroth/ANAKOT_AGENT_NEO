@@ -5,7 +5,7 @@ description: "An Obsidian-compatible map of how your codebase works (modules, fl
 maintainer: Light5566
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Light5566/claude-lightkeeper#anakot-agent
 version: "2.4.4"
 title: Lightkeeper

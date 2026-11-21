@@ -6,7 +6,7 @@ description: "Local push-to-talk speech bridge — your words on screen and spok
 maintainer: thebangarang
 tier: community
 category: voice
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/thebangarang/clearvoice-anakot-plugin/blob/d4bc366ec72d4f2af1a1772b3a94f48bd0e0b156/README.md
 version: "0.7.2"
 title: ClearVoice Anakot Plugin

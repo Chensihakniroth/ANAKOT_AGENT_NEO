@@ -7,7 +7,7 @@ tier: community
 category: tools
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-index-search#readme
 version: "0.1.4"
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://raw.githubusercontent.com/TakeshiTGAL/anakot-plugin-index-search/a8d522160c78ad13f3c887905c67f40f3cb984a1/assets/catalog-banner.png
 platforms: []
 capabilities:

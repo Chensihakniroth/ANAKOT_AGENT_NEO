@@ -5,7 +5,7 @@ description: "Read-only Paystack transaction inspection and reconciliation for A
 maintainer: BigWave45
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/BigWave45/payops-anakot-/blob/7712f084392769356bdb294c4b48bf99bf7faadb/README.md
 version: "0.2.1"
 readme: true

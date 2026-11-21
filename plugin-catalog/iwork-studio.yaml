@@ -9,7 +9,7 @@ maintainer: Arkanji
 tier: community
 category: tools
 docs_url: https://github.com/Arkanji/iwork-studio/tree/551107ae937960c785d3bf8b180c573515b6d359/anakot
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 readme: true
 platforms: [macos]
 screenshots:

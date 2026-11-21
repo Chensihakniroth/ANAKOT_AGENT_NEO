@@ -5,7 +5,7 @@ description: "Local long-term memory for Anakot agents: facts and preferences st
 maintainer: dyiapanis
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/dyiapanis/limbic#readme
 version: "0.9.5"
 image: https://raw.githubusercontent.com/dyiapanis/limbic/03ae74f6e1a1f323e65d8aed1c6f12cdcc8b3300/assets/banner.png

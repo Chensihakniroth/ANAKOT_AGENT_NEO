@@ -6,7 +6,7 @@ description: "Stateful interactive tools with laptop-to-phone camera handoff and
 maintainer: ochikov
 tier: community
 category: tools
-requires_anakot: ">=0.20.5"
+requires_hermes: ">=0.20.5"
 version: "0.3.0"
 docs_url: https://github.com/ochikov/anakot-portals/blob/e336ce862a3f5c4ef7ddffd2590ff7c79a3a246c/README.md
 readme: true

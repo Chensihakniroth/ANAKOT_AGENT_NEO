@@ -6,7 +6,7 @@ description: "Power-cut guard for the machine Anakot runs on. When mains power d
 maintainer: Osiyomeoh
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/Osiyomeoh/brownout/blob/22b2102c6b451ed5aeed5790623029b98ccae9e4/README.md
 version: "0.1.1"
 platforms: [linux, macos]

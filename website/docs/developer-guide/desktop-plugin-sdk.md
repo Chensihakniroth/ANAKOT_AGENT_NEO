@@ -24,7 +24,7 @@ and hot-reloads every save.
 "Plugin" means several unrelated things across Anakot. This page is the **native
 desktop app** (`anakot desktop`) SDK — the `@anakot/plugin-sdk` module and
 `$ANAKOT_HOME/desktop-plugins/`. The **web dashboard** (`anakot dashboard`) has
-its own, unrelated plugin system on `window.__ANAKOT_PLUGIN_SDK__` with a
+its own, unrelated plugin system on `window.__HERMES_PLUGIN_SDK__` with a
 `manifest.json` — documented at
 [Extending the Dashboard](../user-guide/features/extending-the-dashboard.md). Python
 CLI/gateway plugins are documented at [Build a Anakot Plugin](./plugins/index.md).
@@ -2510,9 +2510,7 @@ export `id`. Run ⌘K → **Reload desktop plugins**. Check the app for an error
 toast naming the failure, and tail `anakot logs gui -f`.
 
 **"unsupported import" on load.** A disk plugin may only import
-`@anakot/plugin-sdk`, `react`, and `react/jsx-runtime`. The old
-`@hermes/plugin-sdk` name is accepted as an alias so Hermes-era plugins load
-unmodified; every other import is removed/refused.
+`@anakot/plugin-sdk`, `react`, and `react/jsx-runtime`. Remove any other import.
 
 **A `jsx` element renders nothing / throws `ReferenceError`.** An identifier used
 in a `jsx()` call isn't imported. Add it to the import line.

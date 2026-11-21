@@ -5,7 +5,7 @@ description: "Find streamable movies and manage a FilmEase watchlist, ratings, p
 maintainer: Filmease
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/Filmease/filmease-anakot-plugin#readme
 version: "0.1.2"
 title: FilmEase

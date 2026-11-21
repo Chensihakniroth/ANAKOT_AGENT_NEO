@@ -7,7 +7,7 @@ description: "A spend policy firewall and local ledger for Anakot agents that ca
 maintainer: matrixneoaiagent
 tier: community
 category: tools
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/matrixneoaiagent/spendwarden#readme
 image: https://raw.githubusercontent.com/matrixneoaiagent/spendwarden/fe23b59ab2eca7d1b183bfbde3f47841b0603788/docs/banner.png
 screenshots:

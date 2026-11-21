@@ -7,7 +7,7 @@ description: "GMI Cloud text-to-speech as a tts provider (tts.provider: gmi-spee
 maintainer: zkasuran
 tier: community
 category: voice
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/zkasuran/anakot-gmi-media/tree/main/gmi-speech#readme
 version: "0.1.0"
 readme: true

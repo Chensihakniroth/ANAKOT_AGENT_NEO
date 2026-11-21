@@ -7,7 +7,7 @@ description: "Anakot Plugin Dev: build Anakot plugins with Anakot. A plugin-deve
 maintainer: mojomast
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/mojomast/anakot-plugin-dev#readme
 version: "0.3.1"
 image: https://raw.githubusercontent.com/mojomast/anakot-plugin-dev/796a35e4d893b985f1b61d8e11b5ae7e4118bf6f/assets/banner-v3.jpg

@@ -5,7 +5,7 @@ description: "Google Gemini image (Nano Banana) and video (Gemini Omni) generati
 maintainer: bytecakelake
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/bytecakelake/anakot-gemini-media-generation#readme
 version: "0.1.2"
 known_issues:

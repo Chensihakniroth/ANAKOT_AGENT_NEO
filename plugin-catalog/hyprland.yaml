@@ -6,7 +6,7 @@ description: "Hyprland-native computer use for Anakot: grim capture, wlr-virtual
 maintainer: mddragon18
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/mddragon18/hyprland-computer-use/blob/eef766e18200338b772b14c20dbf03d603c84982/plugin/hyprland/README.md
 version: "0.3.0"
 title: "Hyprland Computer Use"

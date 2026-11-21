@@ -12,7 +12,7 @@ export interface BrowserBootstrap {
   token: string
 }
 
-const SESSION_HEADER = 'X-Anakot-Session-Token'
+const SESSION_HEADER = 'X-Hermes-Session-Token'
 const DEFAULT_TIMEOUT_MS = 30_000
 const REAUTH_EVENT = 'anakot:browser-reauth-required'
 

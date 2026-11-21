@@ -6,7 +6,7 @@ description: "One OpenRouter key for Anakot web search and fetch, image and vide
 maintainer: dadhalfdev
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 version: "1.0.0"
 docs_url: https://github.com/dadhalfdev/openrouter-everything#readme
 image: https://raw.githubusercontent.com/dadhalfdev/openrouter-everything/ec6974a96f9965e59d23bf1d5c5e4f2eb7333338/assets/openrouter-everything-banner.jpg

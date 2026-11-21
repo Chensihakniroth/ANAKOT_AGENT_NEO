@@ -13,7 +13,7 @@ description: >-
 maintainer: kshitijk4poor
 tier: community
 category: tools
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://github.com/kshitijk4poor/anakot-rex-plugin#readme
 platforms: [macos]
 capabilities:

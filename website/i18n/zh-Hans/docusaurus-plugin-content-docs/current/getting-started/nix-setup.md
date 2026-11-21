@@ -730,13 +730,13 @@ services.anakot-agent.settings.plugins.enabled = [
 ### 开发 Shell
 
 该 flake 提供包含 `dev` 依赖组的可编辑 Python 环境，解释器主/次版本来自 PM 锁文件。
-`ANAKOT_PYTHON` 指向该解释器，不会把 Python 依赖安装到仓库内的 `.venv`。
+`HERMES_PYTHON` 指向该解释器，不会把 Python 依赖安装到仓库内的 `.venv`。
 shell 还提供 Node.js 和运行时工具。pnpm hook 根据输入变更刷新 JS workspaces。
 
 ```bash
 cd anakot-agent
 nix develop
-"$ANAKOT_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
+"$HERMES_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
 anakot setup
 anakot chat
 ```

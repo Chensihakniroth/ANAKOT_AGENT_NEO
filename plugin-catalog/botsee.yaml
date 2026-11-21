@@ -9,7 +9,7 @@ maintainer: sidekickjanet
 tier: community
 category: tools
 docs_url: https://github.com/sidekickjanet/anakot-product-plugins/tree/f79c213703b600a48a1d4f949bbd82c113d117f0/plugins/botsee
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 image: https://raw.githubusercontent.com/sidekickjanet/anakot-product-plugins/f79c213703b600a48a1d4f949bbd82c113d117f0/plugins/botsee/assets/catalog-banner.svg
 readme: true
 platforms: []

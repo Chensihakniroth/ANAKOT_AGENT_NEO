@@ -7,7 +7,7 @@ description: "Nigerian and Kenyan fund data from the regulators (SEC Nigeria wee
 maintainer: Risingtell
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Risingtell/anakot-afriradar#readme
 image: https://raw.githubusercontent.com/Risingtell/anakot-afriradar/425fadf6e5dd5696e03a9876727b619a722c8176/docs/banner.png
 screenshots:

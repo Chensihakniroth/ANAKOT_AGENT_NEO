@@ -7,7 +7,7 @@ description: "Email and chat-message drafts as reviewable cards in the Anakot De
 maintainer: arsiktech
 tier: community
 category: desktop
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/arsiktech/anakot-draft-cards/blob/6e6ca659ece59b0ce1c28b3b188393491ee5a415/README.md
 platforms: []
 screenshots:

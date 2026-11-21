@@ -6,7 +6,7 @@ description: "Local Kokoro-82M text-to-speech on Apple Silicon (MLX) and Linux (
 maintainer: brunosouzas
 tier: community
 category: voice
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 docs_url: https://github.com/brunosouzas/anakot-kokoro-tts#readme
 version: "0.4.0"
 readme: true

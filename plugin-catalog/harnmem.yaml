@@ -18,7 +18,7 @@ description: >-
 maintainer: ys118
 tier: community
 category: memory
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/ys118/harnmem/blob/20c644ef4276284494519ed96305bb371ff05dc3/docs/design/13-anakot-adapter.md
 readme: true
 capabilities:

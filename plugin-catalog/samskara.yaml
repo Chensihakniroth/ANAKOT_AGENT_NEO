@@ -28,7 +28,7 @@ description: >-
   SAMSKARA_LLM_BASE_URL and SAMSKARA_LLM_API_KEY. No telemetry. Credentials
   (SAMSKARA_PASSWORD) are read through agent.secret_scope.get_secret.
 maintainer: SebaWag
-requires_anakot: ">=0.19.0"
+requires_hermes: ">=0.19.0"
 tier: community
 category: memory
 docs_url: https://github.com/SebaWag/anakot-samskara/blob/d807e875da3176301db9955e0352c9c8adb6cb01/README.md

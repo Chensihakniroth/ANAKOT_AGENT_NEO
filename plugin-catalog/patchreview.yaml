@@ -6,7 +6,7 @@ description: "Routes recognized file-writing tool calls through Anakot' native h
 maintainer: Bilalsnz
 tier: community
 category: tools
-requires_anakot: ">=0.20"
+requires_hermes: ">=0.20"
 docs_url: https://github.com/Bilalsnz/plugin/blob/d579c1c71a0681182fee22cc1820bb7bb13280d7/README.md
 version: "1.0.0"
 platforms: []

@@ -5,7 +5,7 @@ description: "Operating skill for Anakot cron: lifecycle rules (pause vs disable
 maintainer: itpartypattaya
 tier: community
 category: automation
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/itpartypattaya/anakot-cron/blob/6d03e7838f4f09794be1b6cd9556f1ae08e00172/README.md
 version: "1.5.4"
 image: "https://raw.githubusercontent.com/itpartypattaya/anakot-cron/6d03e7838f4f09794be1b6cd9556f1ae08e00172/docs/banner.png"

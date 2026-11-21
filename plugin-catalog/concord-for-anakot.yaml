@@ -7,7 +7,7 @@ description: "Coordinates allowlisted GitHub existing-file writes with revision 
 maintainer: Null007Void
 tier: community
 category: tools
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 version: "0.1.0"
 docs_url: https://github.com/Null007Void/concord-for-anakot/blob/d0b0e4c1ca46d09952dc76f217b00efb4853ccc2/README.md
 readme: false

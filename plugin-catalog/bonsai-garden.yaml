@@ -13,7 +13,7 @@ description: "A live isometric bonsai garden for Anakot Desktop: every profile o
 maintainer: thehangingforest
 tier: community
 category: desktop
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 version: "0.6.3"
 platforms: [linux]
 docs_url: "https://github.com/thehangingforest/bonsai-garden#readme"

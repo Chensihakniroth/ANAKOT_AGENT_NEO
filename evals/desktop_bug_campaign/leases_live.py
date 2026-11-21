@@ -148,7 +148,7 @@ memory:
         results['checks'].append({'name': name, 'pass': bool(ok), 'detail': detail})
         print(json.dumps(results['checks'][-1]), flush=True)
     def control(port, action, sid):
-        req = urllib.request.Request(f'http://127.0.0.1:{port}/lease-probe/{action}/{sid}', data=b'', method='POST', headers={'X-Anakot-Session-Token': 'lease-probe'})
+        req = urllib.request.Request(f'http://127.0.0.1:{port}/lease-probe/{action}/{sid}', data=b'', method='POST', headers={'X-Hermes-Session-Token': 'lease-probe'})
         return json.load(urllib.request.urlopen(req, timeout=30))
     def wait_idle(port, sid):
         deadline = time.monotonic() + 90

@@ -7,7 +7,7 @@ maintainer: axAilotl
 tier: community
 category: voice
 version: "0.1.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/axAilotl/anakot-audio-api#readme
 platforms: [linux, macos, windows]
 known_issues:

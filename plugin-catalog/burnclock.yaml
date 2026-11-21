@@ -7,7 +7,7 @@ maintainer: jersilb
 tier: community
 category: desktop
 version: "0.3.0"
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 platforms: [macos]
 docs_url: https://github.com/jersilb/burnclock-anakot
 image: https://raw.githubusercontent.com/jersilb/burnclock-anakot/4cd48583b11d29adc95f5a0a855b48ccfb83962e/docs/banner.png

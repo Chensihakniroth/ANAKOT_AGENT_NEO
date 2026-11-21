@@ -186,7 +186,7 @@ function tuiSource(source) {
   put(source, 'package.json', '{"private":true}')
   put(source, 'ui-tui/package.json', '{"type":"module"}')
   put(source, 'ui-tui/src/entry.tsx', '#!/usr/bin/env node\nimport { answer } from "@anakot/ink"; console.log(answer);')
-  put(source, 'ui-tui/packages/anakot-ink/src/entry-exports.ts', 'import devtools from "react-devtools-core"; devtools.initialize(); export const answer: string = "prepared source";')
+  put(source, 'ui-tui/packages/hermes-ink/src/entry-exports.ts', 'import devtools from "react-devtools-core"; devtools.initialize(); export const answer: string = "prepared source";')
   for (const name of ['gateway_bootstrap.py', 'clipboard_image.py']) {
     put(source, `ui-tui/scripts/${name}`, `print(${JSON.stringify(name)})\n`)
   }
@@ -202,7 +202,7 @@ import { readFileSync } from 'node:fs'
 import { answer } from '@anakot/ink'
 import { pythonHelperPath } from './pythonHelpers'
 console.log(JSON.stringify({ answer, helpers: ['gateway_bootstrap.py', 'clipboard_image.py'].map(name =>
-  readFileSync(pythonHelperPath(name, process.env.ANAKOT_PYTHON_SRC_ROOT), 'utf8')) }))`)
+  readFileSync(pythonHelperPath(name, process.env.HERMES_PYTHON_SRC_ROOT), 'utf8')) }))`)
   dependency(source, 'ui-tui', 'esbuild')
   const out = path.join(base, 'product one')
   execFileSync(process.execPath, [path.join(repo, 'scripts/build/tui.mjs'), '--source', source, '--out', out], { cwd: base })
@@ -214,7 +214,7 @@ console.log(JSON.stringify({ answer, helpers: ['gateway_bootstrap.py', 'clipboar
   const pythonRoot = path.join(base, 'site-packages')
   mkdirSync(pythonRoot)
   const result = execFileSync(process.execPath, [entry], {
-    cwd: base, encoding: 'utf8', env: { ...process.env, ANAKOT_PYTHON_SRC_ROOT: pythonRoot },
+    cwd: base, encoding: 'utf8', env: { ...process.env, HERMES_PYTHON_SRC_ROOT: pythonRoot },
   })
   expect(JSON.parse(result)).toEqual({
     answer: 'prepared source',
@@ -298,7 +298,7 @@ test('built TUI stays current after documentation, test and unrelated recipe cha
   const before = readFileSync(entry)
   for (const name of [
     'ui-tui/README.md', 'ui-tui/src/__tests__/new.test.ts', 'ui-tui/src/value.spec.ts',
-    'ui-tui/packages/anakot-ink/src/value.test.ts', 'apps/shared/src/value.test.ts',
+    'ui-tui/packages/hermes-ink/src/value.test.ts', 'apps/shared/src/value.test.ts',
     'apps/shared/README.md', 'scripts/build/web.mjs', 'scripts/build/desktop.mjs',
     'scripts/build/README.md', 'scripts/build/node-deps.mjs',
   ]) {
@@ -347,9 +347,9 @@ test('TUI freshness invalidates source, configuration and compiler inputs and da
   for (const name of [
     'ui-tui/src/value.ts', 'apps/shared/src/value.ts',
     'ui-tui/scripts/gateway_bootstrap.py', 'ui-tui/scripts/clipboard_image.py',
-    'ui-tui/packages/anakot-ink/src/entry-exports.ts',
-    'ui-tui/tsconfig.json', 'ui-tui/packages/anakot-ink/tsconfig.json', 'apps/shared/tsconfig.json',
-    'ui-tui/package.json', 'ui-tui/packages/anakot-ink/package.json', 'apps/shared/package.json',
+    'ui-tui/packages/hermes-ink/src/entry-exports.ts',
+    'ui-tui/tsconfig.json', 'ui-tui/packages/hermes-ink/tsconfig.json', 'apps/shared/tsconfig.json',
+    'ui-tui/package.json', 'ui-tui/packages/hermes-ink/package.json', 'apps/shared/package.json',
     'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.npmrc', 'pm/lock.json',
     'scripts/build/tui.mjs', 'scripts/build/frontend-common.mjs', 'scripts/build/freshness.mjs',
   ]) {
@@ -466,7 +466,7 @@ test('a Webapp rebuild keeps the previous generation for tabs that booted it, ne
     if (generation === 'gen-two') {
       // An update that could not rebuild gen-two marks it (anakot_cli/webapp.py mark_webapp_stale):
       // the marker still forces the rebuild, and must not cost gen-two's tabs their chunks.
-      writeFileSync(path.join(out, '.anakot-stale'), 'anakot update could not rebuild this bundle\n')
+      writeFileSync(path.join(out, '.hermes-stale'), 'anakot update could not rebuild this bundle\n')
       expect(productCurrent({ source, product: 'webapp', out })).toBe(false)
     }
   }
@@ -524,5 +524,19 @@ test('Webapp builds install privately and never disturb the native Desktop insta
   expect(existsSync(path.join(workspace, 'node_modules/vite/package.json'))).toBe(true)
   expect(readFileSync(path.join(source, 'node_modules/electron/dist/electron'), 'utf8')).toBe('native install')
   expect(readFileSync(path.join(source, 'apps/desktop/dist/index.html'), 'utf8')).toBe('native renderer')
-  expect(existsSync(path.join(source, 'apps/desktop/dist-webapp/anakot-build.json'))).toBe(true)
+  expect(existsSync(path.join(source, 'apps/desktop/dist-webapp/hermes-build.json'))).toBe(true)
+}, 60_000)
+
+test('a desktop bundle build compiles the Webapp in its prepared checkout, beside its other products', async () => {
+  const { productCurrent } = await import('../scripts/build/freshness.mjs')
+  const source = path.join(fixture(), 'source')
+  webappSource(source)
+  // scripts/bundles/desktop.py installed the Desktop workspace's dependencies into the checkout itself.
+  dependency(source, 'apps/desktop', 'vite')
+  const out = path.join(source, 'apps/desktop/build/products/webapp')
+  execFileSync(process.execPath, [path.join(repo, 'scripts/build/webapp.mjs'), '--source', source, '--out', out],
+    { stdio: 'pipe' })
+  expect(readFileSync(path.join(out, 'index.html'), 'utf8')).toContain('<script')
+  expect(productCurrent({ source, product: 'webapp', out })).toBe(true)
+  expect(existsSync(path.join(source, 'apps/desktop/dist-webapp'))).toBe(false)
 }, 60_000)

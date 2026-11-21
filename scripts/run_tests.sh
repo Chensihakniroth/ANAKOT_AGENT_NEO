@@ -46,10 +46,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 # a branch switch or lock edit never runs the suite against the previous
 # dependency set.
 #
-# Without an activation, an explicit ANAKOT_PYTHON that has pytest is honored:
+# Without an activation, an explicit HERMES_PYTHON that has pytest is honored:
 # the Nix devShell's editable venv and CI's minimal installer lanes provide
 # one on purpose. The import check matters: a wrapped `anakot` binary exports
-# ANAKOT_PYTHON pointing at a release venv without pytest.
+# HERMES_PYTHON pointing at a release venv without pytest.
 _has_pytest() { [ -n "$1" ] && [ -x "$1" ] && "$1" -c 'import pytest' 2>/dev/null; }
 # shellcheck source=scripts/_activation.sh
 . "$SCRIPT_DIR/_activation.sh"
@@ -101,9 +101,9 @@ if _shared="$(_account_tool_store)"; then
   echo "▶ faked HOME: using the account's tool store $ANAKOT_RUNTIME_DIR"
 fi
 unset _account _shared
-if [ -z "${__ANAKOT_ACTIVATED:-}" ] && _has_pytest "${ANAKOT_PYTHON:-}"; then
-  PYTHON="$ANAKOT_PYTHON"
-  echo "▶ not activated — using ANAKOT_PYTHON: $PYTHON"
+if [ -z "${__ANAKOT_ACTIVATED:-}" ] && _has_pytest "${HERMES_PYTHON:-}"; then
+  PYTHON="$HERMES_PYTHON"
+  echo "▶ not activated — using HERMES_PYTHON: $PYTHON"
 else
   if ! anakot_activation_current "$REPO_ROOT"; then
     if [ -n "${__ANAKOT_TESTS_REEXEC:-}" ]; then

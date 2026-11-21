@@ -338,8 +338,8 @@
       "sha256": "f878d3151ab7a4eb"
     },
     "apps/desktop/packaging/dmg-volume.icns": {
-      "bytes": 297691,
-      "sha256": "20c645556cf6ea11"
+      "bytes": 524642,
+      "sha256": "27a03b93e6e88e1c"
     },
     "apps/desktop/packaging/nous-dmg-2b.tiff": {
       "bytes": 1285534,
@@ -482,8 +482,8 @@
       "sha256": "3cc68cc2df276ebf"
     },
     "assets/dmg-volume.png": {
-      "bytes": 151920,
-      "sha256": "d255c0d36eb8c2ca"
+      "bytes": 285680,
+      "sha256": "7c38a978e5d9a81b"
     },
     "assets/icon-master-dark.svg": {
       "bytes": 137768,

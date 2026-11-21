@@ -5,7 +5,7 @@ description: "Every week, Anakot helps you write a page of your life (your Book)
 maintainer: ponzgpt
 tier: community
 category: general
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ponzgpt/psychopomp
 version: "0.4.0"
 image: https://raw.githubusercontent.com/ponzgpt/psychopomp/fa86a14ee3f0924c6071b8c4887f6116963f649e/docs/screenshots/banner.png

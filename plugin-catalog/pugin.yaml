@@ -7,7 +7,7 @@ maintainer: ShawnCRMer
 tier: community
 category: desktop
 version: "4.4.2"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/ShawnCRMer/anakot-pugin#readme
 image: https://raw.githubusercontent.com/ShawnCRMer/anakot-pugin/4cb5692d424f317f5e1b9c92eae9f65cf212a16f/docs/card.png
 screenshots:

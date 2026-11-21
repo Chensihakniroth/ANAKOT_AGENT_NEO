@@ -8,7 +8,7 @@ maintainer: DevTune
 tier: community
 category: tools
 docs_url: https://docs.devtune.ai/api-reference/mcp-server
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 readme: true
 platforms: []
 capabilities:

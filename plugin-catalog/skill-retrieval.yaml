@@ -6,7 +6,7 @@ description: "BM25-based skill retrieval for large skill libraries. An llm_reque
 maintainer: moonlight-lupin
 tier: community
 category: tools
-requires_anakot: ">=0.21.1"
+requires_hermes: ">=0.21.1"
 version: "0.8.0"
 capabilities:
   provides_tools: []

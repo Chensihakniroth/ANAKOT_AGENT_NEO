@@ -96,7 +96,7 @@ BASE_URL_ONLY = {
 
 # Values that legitimately differ per run or per release; everything else compares exactly.
 _VOLATILE = (
-    (re.compile(r"client=anakot-client-v[^\"]*"), "client=anakot-client-v<VERSION>"),
+    (re.compile(r"client=hermes-client-v[^\"]*"), "client=hermes-client-v<VERSION>"),
     (re.compile(r'"promptId": "[0-9a-f-]{36}"'), '"promptId": "<UUID>"'),
 )
 

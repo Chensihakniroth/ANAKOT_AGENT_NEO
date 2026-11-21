@@ -5,7 +5,7 @@ description: "Anakot knows what it can reach before it says it can't. Scans sign
 maintainer: MindSproutStudios
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/MindSproutStudios/anakot-reachmap#readme
 version: "0.2.1"
 image: https://raw.githubusercontent.com/MindSproutStudios/anakot-reachmap/f927ac96a63ecff6d7e614250d7a80b226f9a4b9/docs/banner.png

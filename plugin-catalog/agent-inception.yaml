@@ -9,7 +9,7 @@ category: desktop
 version: "0.2.1"
 screenshots:
   - https://raw.githubusercontent.com/ethanwiegert/agent-inception/4143348e3b5180a95ec76d23fe6443c1a106ec1e/docs/media/screenshot-island.webp
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 capabilities:
   provides_tools: []
   provides_hooks: []

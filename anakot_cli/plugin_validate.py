@@ -29,6 +29,7 @@ from anakot_cli.plugin_validate_desktop import check_desktop_surface
 from anakot_cli.plugin_validate_private_imports import check_private_imports
 from anakot_cli.plugin_validate_locales import check_language_packs
 from anakot_cli.plugins_manifest import _CONFIG_SCHEMA_TYPES
+from anakot_cli._startup_fast import project_root_str
 
 _UPPER_SNAKE_RE = re.compile(r"^[A-Z][A-Z0-9_]*$")
 # Admission accepts exactly the ``config_schema`` types the loader type-checks at load time (and the
@@ -79,8 +80,8 @@ class ValidationReport:
 # ─── Static checks ───────────────────────────────────────────────────────────
 
 
-def _requires_anakot_spec_valid(spec: str) -> bool:
-    """Strictly validate a ``requires_anakot`` spec.
+def _requires_hermes_spec_valid(spec: str) -> bool:
+    """Strictly validate a ``requires_hermes`` spec.
 
     Unlike :func:`anakot_cli.plugins_manifest.version_satisfies` (permissive at load
     time), validation REJECTS clauses whose version segment doesn't parse —
@@ -113,18 +114,18 @@ def _check_manifest_fields(report: ValidationReport, manifest: dict) -> None:
         report.add("manifest fields", True, "name, version, description present")
 
 
-def _check_requires_anakot(report: ValidationReport, manifest: dict) -> None:
-    spec = str(manifest.get("requires_anakot") or "").strip()
+def _check_requires_hermes(report: ValidationReport, manifest: dict) -> None:
+    spec = str(manifest.get("requires_hermes") or "").strip()
     if not spec:
-        report.add("requires_anakot", True, "not declared")
+        report.add("requires_hermes", True, "not declared")
         return
-    if _requires_anakot_spec_valid(spec):
-        report.add("requires_anakot", True, f"spec {spec!r} parses")
+    if _requires_hermes_spec_valid(spec):
+        report.add("requires_hermes", True, f"spec {spec!r} parses")
     else:
         report.add(
-            "requires_anakot",
+            "requires_hermes",
             False,
-            f"requires_anakot spec {spec!r} does not parse "
+            f"requires_hermes spec {spec!r} does not parse "
             "(expected e.g. \">=0.19\" or \">=0.19, <1.0\")",
         )
 
@@ -206,13 +207,17 @@ def _check_oauth(report: ValidationReport, manifest: dict, plugin_dir: Path) -> 
 # module using the same file-location mechanics PluginManager uses, calls
 # register() against a recording stub ctx, and prints a sentinel-prefixed
 # JSON line of what was actually registered. Deliberately imports NOTHING
-# from anakot so a hostile plugin only sees a bare interpreter — the one
-# exception is `providers` for `kind: model-provider`, whose contract IS
-# calling providers.register_provider at import.
+# from anakot so a hostile plugin only sees a bare interpreter — the exceptions are the
+# stdlib-only compat finder (old module names keep resolving) and `providers` for
+# `kind: model-provider`, whose contract IS calling providers.register_provider at import.
 _PROBE_SCRIPT = r"""
 import importlib.util
 import json
 import sys
+
+from anakot_agent.compat import install
+
+install()
 
 plugin_dir = sys.argv[1]
 sentinel = sys.argv[2]
@@ -394,7 +399,7 @@ def _run_capability_probe(
         env = dict(probe[1] if probe else os.environ)
         env["ANAKOT_HOME"] = scratch
         # The probe imports this tree's ``providers``; name the tree instead of relying on the cwd.
-        repo_root = str(Path(__file__).resolve().parents[1])
+        repo_root = project_root_str()
         env["PYTHONPATH"] = os.pathsep.join(p for p in (repo_root, env.get("PYTHONPATH", "")) if p)
         python, *options = probe[0] if probe else [sys.executable]
         try:
@@ -584,7 +589,7 @@ def validate_plugin_dir(
     report.add("manifest", True, "plugin.yaml parses")
 
     _check_manifest_fields(report, manifest)
-    _check_requires_anakot(report, manifest)
+    _check_requires_hermes(report, manifest)
     _check_config_spec(report, manifest)
     _check_requires_env(report, manifest)
     _check_oauth(report, manifest, plugin_dir)

@@ -6,7 +6,7 @@ maintainer: sagarmainkar
 tier: community
 category: desktop
 title: Anakot GenUI
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/sagarmainkar/anakot-genui#readme
 version: "0.2.0"
 image: https://raw.githubusercontent.com/sagarmainkar/anakot-genui/43de4cdba042ebb087e44ccd6e0ba4f87769b67b/assets/catalog-card.png

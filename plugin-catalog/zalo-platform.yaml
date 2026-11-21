@@ -5,7 +5,7 @@ description: "Zalo Bot Platform gateway adapter for Anakot Agent — relays mess
 maintainer: moken627-hub
 tier: community
 category: platform
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/moken627-hub/anakot-plugin-zalo#readme
 version: "2.1.3"
 platforms: []

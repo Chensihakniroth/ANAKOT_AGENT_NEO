@@ -98,7 +98,7 @@ def test_cold_cli_builds_own_runtime_discovers_plugins_and_repairs_app(tmp_path,
     source = Path(__file__).resolve().parents[2]
     repo = tmp_path / "source"
     repo.mkdir()
-    for name in ("pm", "anakot_cli"):
+    for name in ("pm", "anakot_cli", "anakot_agent"):
         shutil.copytree(source / name, repo / name,
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     for name in ("utils.py", "anakot_constants.py", "anakot_yaml.py",

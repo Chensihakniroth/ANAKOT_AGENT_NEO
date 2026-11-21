@@ -13,7 +13,7 @@ description: 'Reverse engineer programs with REA (rea.tools): native binaries, .
 maintainer: NousResearch
 tier: official
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/NousResearch/anakot-official-plugins/tree/main/rea
 image: https://raw.githubusercontent.com/NousResearch/anakot-official-plugins/1690b63a4790cb821fb6a319ba524815d4e09411/assets/rea.jpg
 platforms: []

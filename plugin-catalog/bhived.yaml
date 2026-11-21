@@ -6,7 +6,7 @@ description: "Shared lessons for AI agents over MCP: before a task, the agent ca
 maintainer: ArtKeyAi
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://bhived.ai/docs/quickstart
 version: "1.4.2"
 readme: true

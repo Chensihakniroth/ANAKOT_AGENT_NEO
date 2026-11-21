@@ -25,7 +25,7 @@ def export_commands(path: Path) -> None:
         alias.symlink_to(prepared.python)
         directories.insert(0, str(commands))
     file_commands("GITHUB_ENV", {
-        "ANAKOT_PYTHON": prepared.python,
+        "HERMES_PYTHON": prepared.python,
         "ANAKOT_NODE": prepared.node,
         "ANAKOT_HOME": prepared.request.work / "anakot-home",
         "ANAKOT_RUNTIME_DIR": prepared.request.cache / "tools",

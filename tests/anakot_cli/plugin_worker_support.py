@@ -164,7 +164,7 @@ def plugin_world(tmp_path, monkeypatch, isolated_python):
     world = PluginWorld(tmp_path)
     uv = shutil.which("uv")
     assert uv, "real uv is required for the plugin lifecycle"
-    for key in ("ANAKOT_MANAGED_MODE", "ANAKOT_INSTALL_ROOT", "VIRTUAL_ENV"):
+    for key in ("ANAKOT_MANAGED_MODE", "HERMES_INSTALL_ROOT", "VIRTUAL_ENV"):
         monkeypatch.delenv(key, raising=False)
     for key, value in {"HOME": tmp_path, "USERPROFILE": tmp_path, "ANAKOT_HOME": world.home,
                        "ANAKOT_RUNTIME_DIR": tmp_path / "store", "UV_CACHE_DIR": tmp_path / "cache",

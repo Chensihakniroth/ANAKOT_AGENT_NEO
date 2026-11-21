@@ -102,6 +102,31 @@ _HEADLESS_MSG = (
 )
 
 
+def _bundle_unavailable(request: Request, message: str, status_code: int) -> Response:
+    """Why the SPA cannot be served: a readable page for a browser, the JSON error for API clients.
+
+    The Webapp is served to the internet behind a funnel, where the person who signed in may
+    never have seen a terminal; a raw JSON body is all a browser would show them.
+    """
+    if "text/html" not in request.headers.get("accept", ""):
+        return JSONResponse({"error": message}, status_code=status_code, headers=_NO_STORE)
+    from html import escape
+    from anakot_cli.webapp_page_policy import page_headers
+    html = (
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        "<title>Anakot is unavailable</title><style>"
+        "body{font-family:system-ui,sans-serif;max-width:36rem;margin:15vh auto;padding:0 1rem;"
+        "line-height:1.5;color:#1c1c1c;background:#fafafa}"
+        "@media (prefers-color-scheme:dark){body{color:#e8e8e8;background:#141414}}"
+        "</style></head><body><h1>Anakot is unavailable</h1>"
+        f"<p>{escape(message)}</p>"
+        "<p>Ask whoever runs this Anakot host to run that command, then reload this page.</p>"
+        "</body></html>"
+    )
+    return HTMLResponse(html, status_code=status_code, headers=page_headers(request, html, _NO_STORE))
+
+
 def mount_spa(application: FastAPI):
     """Mount the built SPA; unmatched paths fall back to index.html for client-side routing.
 
@@ -129,7 +154,7 @@ def mount_spa(application: FastAPI):
         @application.get("/{full_path:path}")
         async def no_frontend(full_path: str):
             # Desktop token handshake: the Electron shell boots by fetching `/` and reading
-            # ``window.__ANAKOT_SESSION_TOKEN__`` for /api/ws auth. When headless 404'd every
+            # ``window.__HERMES_SESSION_TOKEN__`` for /api/ws auth. When headless 404'd every
             # path, a renderer whose spawn token no longer matched (e.g. after `anakot update`)
             # white-screened. Serve a token-only page at the exact root, but ONLY when the auth
             # gate is off: on a gated serve the token must never be readable without auth.
@@ -139,7 +164,7 @@ def mount_spa(application: FastAPI):
             if full_path == "" and not withheld:
                 return HTMLResponse(
                     "<!doctype html><html><head><script>"
-                    f"window.__ANAKOT_SESSION_TOKEN__={json.dumps(_server()._SESSION_TOKEN)};"
+                    f"window.__HERMES_SESSION_TOKEN__={json.dumps(_server()._SESSION_TOKEN)};"
                     "window.__ANAKOT_AUTH_REQUIRED__=false;"
                     f"</script></head><body>{_HEADLESS_MSG}</body></html>",
                     headers=_NO_STORE,
@@ -174,14 +199,14 @@ def mount_spa(application: FastAPI):
             webapp = getattr(application.state, "ui_surface", "dashboard") == "webapp"
             missing = ("The Webapp is not built. Run: anakot webapp" if webapp
                        else "Frontend not built. Run: pnpm --dir web run build")
-            return JSONResponse({"error": missing}, status_code=404)
+            return _bundle_unavailable(request, missing, 404)
         if getattr(application.state, "ui_surface", "dashboard") == "webapp":
             # A bundle `anakot update` could not rebuild was built for the code before the update:
             # refuse it until `anakot webapp` rebuilds it.
             from gateway.webapp_listener import bundle_stale_reason
             stale = bundle_stale_reason(web_dist())
             if stale:
-                return JSONResponse({"error": stale}, status_code=503, headers=_NO_STORE)
+                return _bundle_unavailable(request, stale, 503)
         chat_js = "true" if _DASHBOARD_EMBEDDED_CHAT_ENABLED else "false"
         gated = bool(getattr(application.state, "auth_required", False))
         # Only a host that records its surface (the gateway's Webapp) names it to the page.
@@ -193,7 +218,7 @@ def mount_spa(application: FastAPI):
         # local clients use tickets.
         withheld = (gated or bool(getattr(_server().app.state, "withhold_session_token", False))
                     or not policy(application.state).html_token)
-        token_js = "" if withheld else f'window.__ANAKOT_SESSION_TOKEN__="{_server()._SESSION_TOKEN}";'
+        token_js = "" if withheld else f'window.__HERMES_SESSION_TOKEN__="{_server()._SESSION_TOKEN}";'
         # Launcher-preselected profile (``--open-profile``): the SPA's fallback scope when the URL
         # omits ``?profile=`` (#73085). ``</`` escaped so a hostile name cannot close the script tag.
         initial_profile_js = json.dumps(str(getattr(application.state, "initial_profile", "") or "")).replace("</", "<\\/")

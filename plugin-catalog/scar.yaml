@@ -5,7 +5,7 @@ description: 'scar keeps the tool-call shape you denied on a Anakot approval car
 maintainer: TakeshiTGAL
 tier: community
 category: tools
-requires_anakot: '>=0.21.6'
+requires_hermes: '>=0.21.6'
 docs_url: https://github.com/TakeshiTGAL/anakot-plugin-scar#readme
 version: '0.2.4'
 platforms: []

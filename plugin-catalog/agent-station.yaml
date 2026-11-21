@@ -7,7 +7,7 @@ title: "Agent Station"
 maintainer: thealps01-netizen
 tier: community
 category: desktop
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 version: "3.1.0"
 docs_url: https://github.com/thealps01-netizen/agent-station#readme
 screenshots:

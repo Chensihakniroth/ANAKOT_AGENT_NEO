@@ -7,7 +7,7 @@ description: "Creative strategy and marketing engineering on live ad-library dat
 maintainer: Proxy
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/proxy-intell/proxy-agent-plugins/tree/main/anakot#readme
 version: "1.0.1"
 readme: true

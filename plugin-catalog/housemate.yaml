@@ -7,7 +7,7 @@ description: "Hands-free Anakot in every room: old phones, tablets and laptops b
 maintainer: RaYYeR220
 tier: community
 category: platform
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/RaYYeR220/housemate/blob/09c1a1d0a88bfa8762cee6b3ccf94271b0f172c5/README.md
 image: https://raw.githubusercontent.com/RaYYeR220/housemate/09c1a1d0a88bfa8762cee6b3ccf94271b0f172c5/docs/screens/banner.png
 screenshots:

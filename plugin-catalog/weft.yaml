@@ -7,7 +7,7 @@ description: "Catch conflicts between coding agents while they edit, before Git 
 maintainer: celador
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.4.0"
 platforms: [linux, macos]
 readme: true

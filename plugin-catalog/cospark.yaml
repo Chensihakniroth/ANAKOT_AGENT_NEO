@@ -13,7 +13,7 @@ maintainer: Cospark
 tier: community
 category: tools
 docs_url: https://github.com/corift/cospark-ai/tree/535535a8006b5b6b44c6a3acefa6273cf9d26a0c/plugins/cospark
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 capabilities:

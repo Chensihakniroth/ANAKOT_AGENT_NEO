@@ -16,7 +16,7 @@ screenshots:
   - https://raw.githubusercontent.com/Grizaceo/anakot-dike/cbd8322317de2d42162385de7646d4b7f7a3c2bd/docs/media/screenshots/04-brief-chat.png
   - https://raw.githubusercontent.com/Grizaceo/anakot-dike/cbd8322317de2d42162385de7646d4b7f7a3c2bd/docs/media/screenshots/05-corpus-graph.png
   - https://raw.githubusercontent.com/Grizaceo/anakot-dike/cbd8322317de2d42162385de7646d4b7f7a3c2bd/docs/media/screenshots/06-article-node.png
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 platforms: [linux]
 capabilities:
   provides_tools:

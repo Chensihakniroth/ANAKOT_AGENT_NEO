@@ -9,7 +9,7 @@ maintainer: lEWFkRAD
 tier: community
 category: tools
 docs_url: https://github.com/lEWFkRAD/anakot-plugin-wireguard#readme
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 platforms: [windows]
 capabilities:
   provides_tools: [vpn_status, vpn_peers]

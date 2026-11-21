@@ -37,6 +37,9 @@ ACCEPT = [
     # a profile literally NAMED "gateway"
     "anakot -p gateway gateway run",
     "python -m anakot_cli.main --profile gateway gateway run",
+    # gateway-level flags before the action (`anakot gateway --accept-hooks run` parses)
+    "anakot gateway --accept-hooks run --no-supervise",
+    "anakot gateway --accept-hooks",
     # quoted Windows paths with spaces (shlex-aware tokenization)
     r'"C:\Program Files\Anakot\anakot-gateway.exe"',
     r'"C:\Program Files\Anakot\gateway\run.py" run',
@@ -48,6 +51,8 @@ REJECT = [
     "python -m anakot_cli.main gateway status",           # other subcommand
     "python -m anakot_cli.main gateway restart",
     "python -m anakot_cli.main gateway stop",
+    "anakot gateway --accept-hooks status",
+    "anakot gateway --help",                               # prints help, runs nothing
     "python -m anakot_cli.main --profile x dashboard",    # non-gateway subcommand
     "some random python -m mygateway thing",
     "",

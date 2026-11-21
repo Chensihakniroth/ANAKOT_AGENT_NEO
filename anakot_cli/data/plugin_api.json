@@ -106,6 +106,7 @@
         "tools.clarify_gateway:SKIPPED",
         "tools.url_safety:is_safe_url",
         "tools.url_safety:create_ssrf_safe_async_client",
+        "tools.url_safety:create_ssrf_safe_client",
         "gateway.platforms._http_client_limits:platform_httpx_limits",
         "anakot_cli.gateway_setup_wizard:print_setup_header",
         "anakot_cli.gateway_setup_wizard:confirm_reconfigure",
@@ -153,6 +154,34 @@
       "source": "user-guide/features/plugins.md § Plugin code inside the gateway: which client created the session",
       "entries": [
         "anakot_cli.plugin_session:session_client"
+      ]
+    },
+    {
+      "source": "plugins/index.md § Check file paths and read YAML with Anakot's own helpers",
+      "entries": [
+        "agent.file_safety:get_read_block_error",
+        "agent.file_safety:raise_if_read_blocked",
+        "agent.file_safety:is_write_denied",
+        "agent.file_safety:get_write_denied_error",
+        "anakot_yaml:safe_load",
+        "anakot_yaml:safe_dump"
+      ]
+    },
+    {
+      "source": "plugins/index.md § Send a credentialed HTTP request without leaking it on redirect",
+      "entries": [
+        "anakot_cli.urllib_security:open_credentialed_url"
+      ]
+    },
+    {
+      "source": "user-guide/features/plugins.md § A plugin with its own chat client",
+      "entries": [
+        "anakot_cli.chat_launch:anakot_command",
+        "anakot_cli.chat_launch:print_exit_summary",
+        "anakot_cli.gateway_chat:shell_client_env",
+        "anakot_cli.session_worktree:create",
+        "anakot_cli.session_worktree:restore",
+        "anakot_cli.session_worktree:finish"
       ]
     }
   ]

@@ -6,7 +6,7 @@ maintainer: a7madgamal
 tier: community
 category: tools
 title: STMP Phone Bridge
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/a7madgamal/anakot-stmp#readme
 version: "0.1.1"
 platforms: []

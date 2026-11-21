@@ -7,7 +7,7 @@ description: "Computer-use backend that drives any machine reachable over VNC (R
 maintainer: YAN-XBT
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/YAN-XBT/anakot-vnc
 platforms:
   - linux

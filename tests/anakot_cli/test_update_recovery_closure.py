@@ -27,6 +27,8 @@ from anakot_cli import _launchers
 SOURCE = Path(__file__).resolve().parents[2]
 # What a minted launcher imports before the application entry.
 BOOT = ("anakot_bootstrap.py", "anakot_constants.py", "anakot_cli/__init__.py", "anakot_cli/_launchers.py",
+        "anakot_agent/__init__.py", "anakot_agent/compat/__init__.py", "anakot_agent/compat/finder.py",
+        "anakot_agent/compat/moves.py",
         "anakot_cli/_early_recovery.py", "anakot_cli/_parser.py", "anakot_cli/runtime_state.py",
         "anakot_cli/venv_sync.py", "anakot_cli/steward.py", "anakot_cli/stderr_timestamp.py",
         "anakot_cli/update_lock.py", "anakot_cli/update_custody.py", "pm/environments.py",

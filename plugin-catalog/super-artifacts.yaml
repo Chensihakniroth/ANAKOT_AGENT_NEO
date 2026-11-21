@@ -7,7 +7,7 @@ description: "Publish pages, forms, trackers and proofs as live URLs that open o
 maintainer: Super-Artifacts
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.141.0"
 docs_url: https://github.com/Super-Artifacts/plugins/tree/dce02981a179a09dad6509fe58a3a7b8cf020735/anakot#readme
 readme: true

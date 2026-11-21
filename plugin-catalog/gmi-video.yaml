@@ -7,7 +7,7 @@ description: "GMI Cloud text-to-video and image-to-video as a video_gen provider
 maintainer: zkasuran
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/zkasuran/anakot-gmi-media/tree/main/gmi-video#readme
 version: "0.1.0"
 readme: true

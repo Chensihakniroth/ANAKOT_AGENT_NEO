@@ -223,7 +223,7 @@ def install(args) -> None:
         path.insert(0, str(python.parent))
         outputs["python-path"] = str(python)
         exported.update({
-            "ANAKOT_PYTHON": python,
+            "HERMES_PYTHON": python,
         })
         outputs["uv-cache-path"] = str(uv_cache_dir())
     if "npm" in names:
@@ -279,7 +279,7 @@ def dependencies(args) -> None:
     python = bindir / ("python.exe" if os.name == "nt" else "python")
     python3_alias(python)
     file_commands("GITHUB_ENV", {
-        "ANAKOT_PYTHON": python,
+        "HERMES_PYTHON": python,
         "VIRTUAL_ENV": venv,
         "PYTHONPATH": project,
     })

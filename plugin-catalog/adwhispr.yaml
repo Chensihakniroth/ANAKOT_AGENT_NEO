@@ -5,7 +5,7 @@ description: "Research competitor ads, clone the winners, and run campaigns thro
 maintainer: AdWhispr
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/adwhispr/adwhispr-anakot-plugin#readme
 version: 1.0.1
 image: https://raw.githubusercontent.com/adwhispr/adwhispr-anakot-plugin/80fd0e8fd93fe6207e6e9dd288811be9fe695bc2/assets/icon.png

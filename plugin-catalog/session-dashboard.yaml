@@ -6,7 +6,7 @@ description: 'Session Analyzer — per-session analytics for the Anakot desktop 
 maintainer: tommulkins
 tier: community
 category: desktop
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 docs_url: https://github.com/tommulkins/anakot-plugin-session-analyzer
 platforms: []
 capabilities:

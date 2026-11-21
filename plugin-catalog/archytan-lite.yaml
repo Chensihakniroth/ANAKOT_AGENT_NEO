@@ -8,7 +8,7 @@ description: "Every tool call is decided by Archytan Lite, an authorization gate
 maintainer: High-ArchyTech-Solutions
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/High-ArchyTech-Solutions/anakot-archytan-lite/blob/38748165b089f776acf9d6119eaeafdb76eed83e/README.md
 image: https://raw.githubusercontent.com/High-ArchyTech-Solutions/anakot-archytan-lite/38748165b089f776acf9d6119eaeafdb76eed83e/docs/banner.png
 readme: true

@@ -6,7 +6,7 @@ description: "Translucent glass surfaces for Anakot Desktop in light and dark, t
 maintainer: mykeura
 tier: community
 category: desktop
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 docs_url: https://github.com/mykeura/glass-theme-for-anakot#readme
 version: "0.2.0"
 image: https://raw.githubusercontent.com/mykeura/glass-theme-for-anakot/c55c64af8c8742e12b55d384b5bd4a4674137fc8/images/glass-theme-banner.png

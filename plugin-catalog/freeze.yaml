@@ -7,7 +7,7 @@ description: "Let Anakot do a task once, then replay it without the model: /free
 maintainer: mauricemohr88-debug
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/mauricemohr88-debug/anakot-freeze/tree/3e0d9a83857ab53937ce7b91aa7b3e10c1aae392#readme
 readme: true
 platforms: []

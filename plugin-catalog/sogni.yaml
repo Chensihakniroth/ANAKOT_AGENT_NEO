@@ -6,7 +6,7 @@ description: "Sogni AI image generation backend for image_generate: text-to-imag
 maintainer: RichardChua1234
 tier: community
 category: tools
-requires_anakot: ">=0.20.2"
+requires_hermes: ">=0.20.2"
 docs_url: https://github.com/RichardChua1234/anakot-plugin-sogni#readme
 version: "1.0.0"
 title: "Sogni AI Images"

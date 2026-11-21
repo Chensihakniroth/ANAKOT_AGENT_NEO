@@ -6,7 +6,7 @@ description: "Share Anakot Desktop conversations as long PNG screenshots, self-c
 maintainer: smallmj
 tier: community
 category: desktop
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/smallmj/anakot-chat-share#readme
 version: "1.1.8"
 image: https://raw.githubusercontent.com/smallmj/anakot-chat-share/v1.1.8/docs/banner.png

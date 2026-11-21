@@ -6,7 +6,7 @@ description: "Durable local memory for Anakot agents: SQLite FTS5 facts with cit
 maintainer: Ufonik88
 tier: community
 category: memory
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Ufonik88/EntropicMem/blob/12ca8ae06ca4b9da0271a49d7cf7ce40d019befd/docs/SELF_INSTALL.md
 version: "3.0.2"
 image: https://raw.githubusercontent.com/Ufonik88/EntropicMem/12ca8ae06ca4b9da0271a49d7cf7ce40d019befd/docs/assets/banner.png

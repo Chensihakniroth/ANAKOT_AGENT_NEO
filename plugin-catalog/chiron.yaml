@@ -7,7 +7,7 @@ description: "An advisor who is also a friend. Chiron reads how much you know ab
 maintainer: percyhendrux123-prog
 tier: community
 category: general
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/percyhendrux123-prog/anakot-chiron/blob/d6ccea67b10e7d4ee4cf69fa78896409e5f9645e/README.md
 image: https://raw.githubusercontent.com/percyhendrux123-prog/anakot-chiron/d18ea7187ffd63e7f5229a853bb092f23354f5c5/docs/media/banner.png
 readme: true

@@ -36,7 +36,7 @@ def source(tmp_path, monkeypatch):
     home.mkdir()
     origin.mkdir()
     monkeypatch.setenv("ANAKOT_HOME", str(home))
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(checkout))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(checkout))
     monkeypatch.delenv("ANAKOT_MANAGED", raising=False)
     git(origin, "init", "-b", "main")
     git(origin, "config", "user.name", "Channel Fixture")

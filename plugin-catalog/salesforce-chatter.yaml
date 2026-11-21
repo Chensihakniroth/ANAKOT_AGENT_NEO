@@ -9,7 +9,7 @@ tier: community
 category: platform
 docs_url: https://github.com/zenplace-system/anakot-plugin-salesforce-chatter#readme
 version: "0.2.1"
-requires_anakot: ">=0.21.3"
+requires_hermes: ">=0.21.3"
 platforms: []
 capabilities:
   provides_tools: []

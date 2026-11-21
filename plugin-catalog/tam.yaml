@@ -7,7 +7,7 @@ description: "Local-first long-term memory backed by total-agent-memory (TAM) ov
 maintainer: vbcherepanov
 tier: community
 category: memory
-requires_anakot: ">=0.21.4"
+requires_hermes: ">=0.21.4"
 docs_url: https://github.com/vbcherepanov/anakot-tam-memory#readme
 readme: true
 platforms: [linux, macos]

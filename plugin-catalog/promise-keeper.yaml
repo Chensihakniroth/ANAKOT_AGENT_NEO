@@ -7,7 +7,7 @@ maintainer: MokiMeow
 tier: community
 category: tools
 version: "0.1.0"
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/MokiMeow/promise-keeper#readme
 platforms: []
 image: https://raw.githubusercontent.com/MokiMeow/promise-keeper/ab91fee21f607d5515a8e007cf615fc285718dd0/docs/banner.png

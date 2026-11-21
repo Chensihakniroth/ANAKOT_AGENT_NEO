@@ -5,7 +5,7 @@ description: "Measure how long a product is on screen in a video: every can, bot
 maintainer: aldot311
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/aldot311/anakot-screentime#readme
 version: "0.1.0"
 capabilities:

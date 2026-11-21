@@ -5,7 +5,7 @@ description: "Feishu platform override with per-chat Tier-0/Tier-1 context, stan
 maintainer: DanielLi202
 tier: community
 category: platform
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/DanielLi202/anakot-tag#readme
 version: "0.5.0"
 capabilities:

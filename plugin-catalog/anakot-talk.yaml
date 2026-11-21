@@ -5,7 +5,7 @@ description: "Realtime voice for Anakot through terminal, Discord, dashboard and
 maintainer: TheSmokeDev
 tier: community
 category: voice
-requires_anakot: ">=0.21.7"
+requires_hermes: ">=0.21.7"
 version: "0.22.1"
 docs_url: https://github.com/TheSmokeDev/anakot-talk/blob/790f6d283d4720302eda21f9086d4fc01be3ec0a/README.md
 capabilities:

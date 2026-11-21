@@ -440,7 +440,7 @@ def harden_import_path(src_root: str | None = None) -> None:
     absolute path (venv activation, PYTHONPATH), so both are handled: relative forms are
     dropped and the Anakot root is *relocated* to the front, not merely inserted when
     absent. ``src_root`` defaults to this module's directory (the repo root for every
-    shipped entry point), never an inherited ``ANAKOT_PYTHON_SRC_ROOT``: a checkout's dev
+    shipped entry point), never an inherited ``HERMES_PYTHON_SRC_ROOT``: a checkout's dev
     shell exports that, and an install started from it would import the checkout's code.
     """
     root = src_root or os.path.dirname(os.path.abspath(__file__))
@@ -541,6 +541,11 @@ def _settle_interrupted_update() -> None:
 
 
 _settle_interrupted_update()
+
+# After the repair above: a merge killed while writing anakot_agent/ must not keep the repair from running.
+from anakot_agent.compat import install as _install_compat
+
+_install_compat()
 
 
 def _pin_launcher_home() -> None:

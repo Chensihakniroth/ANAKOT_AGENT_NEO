@@ -7,7 +7,7 @@ description: "Escalate a task to another established agent through an always-on 
 maintainer: nerdcakes
 tier: community
 category: automation
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/nerdcakes/anakot-dome-relay#readme
 version: "0.1.0"
 readme: true

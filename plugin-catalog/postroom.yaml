@@ -6,7 +6,7 @@ description: "Prepare social previews, schedule explicitly approved posts and in
 maintainer: notacompanynameyet
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/notacompanynameyet/postroom-agent-plugin/blob/56e23c3102df0b7d43b360bd7832844ea0d6f2ab/README.md
 version: "0.1.0"
 platforms: []

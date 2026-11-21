@@ -6,7 +6,7 @@ description: "Describe a piece of music and Anakot writes it as sheet music in A
 maintainer: Adolanium
 tier: community
 category: desktop
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/Adolanium/anakot-stave#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Adolanium/anakot-stave/433bcf90d5317b692733d5bf74e63b98650b471b/docs/images/catalog-banner.png

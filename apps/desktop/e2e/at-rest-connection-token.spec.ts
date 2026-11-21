@@ -26,7 +26,7 @@
  * satisfied by a "fix" that drops the token on the floor; (2) alone is
  * satisfied by the bug itself. So (2) is verified through the app's own
  * connection test against a fake gateway that records the
- * `X-Anakot-Session-Token` header it receives — a dropped or mangled token
+ * `X-Hermes-Session-Token` header it receives — a dropped or mangled token
  * cannot produce that header.
  *
  * (3) is orthogonal to (1) and invisible to it: safeStorage keeps the token
@@ -105,7 +105,7 @@ const STABLE_APP_NAME = 'AnakotE2EAtRestStorage'
 
 interface FakeGateway {
   url: string
-  /** Every `X-Anakot-Session-Token` value the app has sent us. */
+  /** Every `X-Hermes-Session-Token` value the app has sent us. */
   sessionTokens: string[]
   close: () => Promise<void>
 }
@@ -124,7 +124,7 @@ async function startFakeGateway(): Promise<FakeGateway> {
   const sessionTokens: string[] = []
 
   const server = http.createServer((req, res) => {
-    const token = req.headers['x-anakot-session-token']
+    const token = req.headers['x-hermes-session-token']
 
     if (typeof token === 'string' && token) {
       sessionTokens.push(token)

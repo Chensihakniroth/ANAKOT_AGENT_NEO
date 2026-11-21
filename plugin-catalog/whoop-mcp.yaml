@@ -8,7 +8,7 @@ maintainer: davidmosiah
 tier: community
 category: tools
 version: "0.7.0"
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/davidmosiah/whoop-mcp/blob/d15516fa2671e9749d43531fe0f1f447d5632686/agent-plugin/README.md
 image: https://raw.githubusercontent.com/davidmosiah/whoop-mcp/d15516fa2671e9749d43531fe0f1f447d5632686/assets/banner.png
 platforms: []

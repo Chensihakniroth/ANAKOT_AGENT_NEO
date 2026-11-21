@@ -5,7 +5,7 @@ description: "Anakot Agent OpenTelemetry traces and dashboard logs, with local-m
 maintainer: Mandark-droid
 tier: community
 category: general
-requires_anakot: ">=0.19"
+requires_hermes: ">=0.19"
 docs_url: https://github.com/Mandark-droid/anakot-otel-plugin/blob/main/README.md
 version: "2.0.1"
 screenshots:

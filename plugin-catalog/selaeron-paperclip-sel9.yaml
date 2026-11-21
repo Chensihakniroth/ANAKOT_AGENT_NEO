@@ -7,7 +7,7 @@ description: "Posts one approved, comment-only writeback on a Paperclip issue, b
 maintainer: nebout2011-debug
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/nebout2011-debug/selaeron-paperclip-plugin/blob/e1fd695eb65dd3bed1797af07c4c85d103cf9e32/README.md
 readme: true
 platforms: []

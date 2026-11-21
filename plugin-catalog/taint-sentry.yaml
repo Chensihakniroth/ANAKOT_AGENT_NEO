@@ -34,7 +34,7 @@ description: >-
 maintainer: YAN-XBT
 tier: community
 category: general
-requires_anakot: ">=0.22"
+requires_hermes: ">=0.22"
 docs_url: https://github.com/YAN-XBT/anakot-sentry
 platforms: [windows, macos, linux]
 capabilities:

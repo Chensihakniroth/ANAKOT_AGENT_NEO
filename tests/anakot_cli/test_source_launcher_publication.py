@@ -17,6 +17,8 @@ from pm.environments import install_state_dir, site_packages
 ROOT = Path(__file__).resolve().parents[2]
 BOOT_FILES = (
     "anakot_bootstrap.py", "anakot_constants.py", "anakot_cli/__init__.py", "anakot_cli/_launchers.py",
+    "anakot_agent/__init__.py", "anakot_agent/compat/__init__.py", "anakot_agent/compat/finder.py",
+    "anakot_agent/compat/moves.py",
     "pm/environments.py", "pm/filesystem.py", "pm/paths.py", "anakot_cli/runtime_state.py",
     "anakot_cli/_early_recovery.py", "anakot_cli/_parser.py",
     "anakot_cli/venv_sync.py", "anakot_cli/steward.py",
@@ -147,7 +149,7 @@ def test_profile_publication_preserves_shared_launcher_default_home(tmp_path, mo
 
     repo, home, interpreter = fixture_tree(tmp_path, monkeypatch)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(repo))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(repo))
     profile = home / "profiles" / "coder"
     profile.mkdir(parents=True)
     (home / "active_profile").write_text("default\n", encoding="utf-8")
@@ -250,7 +252,7 @@ def test_materializer_cli_refuses_missing_store_without_publishing(tmp_path, mon
 def test_boot_migrates_legacy_conveniences_to_selected_runtime(tmp_path, monkeypatch, legacy_anakot):
     repo, home, interpreter = fixture_tree(tmp_path, monkeypatch)
     monkeypatch.setattr(Path, "home", lambda: home)
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(repo))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(repo))
     select_generation(repo, 'current', 'migrated')
     out = home / ".local" / "bin"
     out.mkdir(parents=True)

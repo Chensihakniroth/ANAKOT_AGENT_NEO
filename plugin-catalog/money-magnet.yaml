@@ -7,7 +7,7 @@ maintainer: Whydiriki700
 tier: community
 category: tools
 version: "1.0.1"
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Whydiriki700/money-magnet
 platforms: []
 capabilities:

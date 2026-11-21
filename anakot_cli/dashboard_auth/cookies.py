@@ -1,6 +1,6 @@
 """Cookie helpers for dashboard auth.
 
-All HttpOnly, ``SameSite=Lax`` unless noted, Path = proxy prefix or /: ``anakot_session_at``
+All HttpOnly, ``SameSite=Lax`` unless noted, Path = proxy prefix or /: ``hermes_session_at``
 (access token; Max-Age = token TTL), ``anakot_session_rt`` (rotating refresh token; written only
 when the provider returned one, always cleared on logout/expiry), ``anakot_session_provider``
 (non-secret routing hint so an RT is not handed to the wrong provider), ``anakot_session_pkce``
@@ -10,7 +10,7 @@ cookies set on such a 302, crbug 40508226), ``anakot_sso_attempt`` (auto-SSO loo
 ``anakot_webapp_signin`` (the gateway Webapp's sign-in binding, ``anakot_cli.webapp_sign_in``; set only
 by a login on the Webapp, Max-Age as the refresh token's).
 Cookies are not scoped to a port, so on the gateway's Webapp every one of these names is followed by
-``_<gateway>`` (``anakot_session_at_<gateway>``, ``<gateway>`` from a digest of the gateway's home,
+``_<gateway>`` (``hermes_session_at_<gateway>``, ``<gateway>`` from a digest of the gateway's home,
 ``webapp_sign_in.cookie_gateway``): two gateways' Webapps on one hostname keep their own logins, and
 neither reads or clears the names the standalone dashboard uses.
 ``Secure`` only when ``request.url.scheme`` is https. Cookie-prefix hardening per
@@ -31,7 +31,9 @@ from urllib.parse import unquote
 from fastapi import Request
 from fastapi.responses import Response
 
-SESSION_AT_COOKIE = "anakot_session_at"
+from anakot_cli.dashboard_auth.prefix import prefix_from_request
+
+SESSION_AT_COOKIE = "hermes_session_at"
 SESSION_RT_COOKIE = "anakot_session_rt"
 SESSION_PROVIDER_COOKIE = "anakot_session_provider"
 PKCE_COOKIE = "anakot_session_pkce"
@@ -167,7 +169,14 @@ def clear_pkce_cookie(response: Response, *, use_https: bool, prefix: str = "", 
 
 
 def _read_with_fallback(request: Request, bare_name: str) -> Optional[str]:
-    """Try every prefix variant (the reading request may not match the setting request's shape)."""
+    """Over HTTPS read only the name the setter writes for this request shape (``__Host-``, or
+    ``__Secure-`` behind a proxy prefix): any other variant there can only have been planted, e.g.
+    by a sibling subdomain setting ``Domain=<parent>`` — ``__Secure-`` does not forbid that, so
+    behind a proxy prefix the Domain-plantability is inherent to the only prefix ``Path`` allows.
+    Plain HTTP tries every variant (the reading request may not match the setting one's shape)."""
+    if detect_https(request):
+        return request.cookies.get(
+            _resolved_name(bare_name, use_https=True, prefix=prefix_from_request(request)))
     return next((v for v in (request.cookies.get(f"{p}{bare_name}") for p in _NAME_VARIANTS)
                  if v is not None), None)
 

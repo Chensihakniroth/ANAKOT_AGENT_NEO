@@ -5,7 +5,7 @@ description: "Stage Anakot write_file and patch calls in a scratch copy. Origina
 maintainer: adindamochamad
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/adindamochamad/stage#readme
 version: "0.2.6"
 capabilities:

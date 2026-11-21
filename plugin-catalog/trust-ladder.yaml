@@ -17,7 +17,7 @@ description: >-
 maintainer: merdoks
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/merdoks/trust-ladder#readme
 version: "0.1.2"
 platforms: []

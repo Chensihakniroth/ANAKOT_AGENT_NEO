@@ -73,13 +73,13 @@ async function resolveImagePath(raw: string, base: string): Promise<{ path: stri
 }
 
 async function extractClipboardImage(path: string): Promise<boolean> {
-  const root = process.env.ANAKOT_PYTHON_SRC_ROOT ?? resolve(import.meta.dirname, '../../..')
+  const root = process.env.HERMES_PYTHON_SRC_ROOT ?? resolve(import.meta.dirname, '../../..')
 
-  const python = process.env.ANAKOT_PYTHON?.trim() || process.env.PYTHON?.trim() ||
+  const python = process.env.HERMES_PYTHON?.trim() || process.env.PYTHON?.trim() ||
     (process.platform === 'win32' ? 'python' : 'python3')
 
   const { stdout } = await promisify(execFile)(python, [pythonHelperPath('clipboard_image.py', root), path],
-    { cwd: root, env: { ...process.env, PYTHONPATH: root, ANAKOT_PYTHON_SRC_ROOT: root }, timeout: 15_000, windowsHide: true })
+    { cwd: root, env: { ...process.env, PYTHONPATH: root, HERMES_PYTHON_SRC_ROOT: root }, timeout: 15_000, windowsHide: true })
 
   return stdout.trim() === 'true'
 }

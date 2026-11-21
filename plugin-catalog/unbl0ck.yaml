@@ -7,7 +7,7 @@ description: "One queue of everything blocked on you: live agent prompts, pairin
 maintainer: KyaniteLabs
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/KyaniteLabs/unbl0ck/blob/cea69470241cd57aee35eaa970325104c555e8bc/README.md
 image: https://raw.githubusercontent.com/KyaniteLabs/unbl0ck/cea69470241cd57aee35eaa970325104c555e8bc/assets/banner.png
 screenshots: []

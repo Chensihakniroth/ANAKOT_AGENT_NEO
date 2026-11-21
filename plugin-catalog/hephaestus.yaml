@@ -6,7 +6,7 @@ description: "Ask for a plugin and your own agent writes it, checked by the offi
 maintainer: madebylegion
 tier: community
 category: tools
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/madebylegion/anakot-plugin-hephaestus#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/madebylegion/anakot-plugin-hephaestus/9805692032681b1376496ce89a404c1ab1edce07/docs/social-preview.png

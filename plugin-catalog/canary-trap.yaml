@@ -6,7 +6,7 @@ description: "Catch prompt injection by the secret it tries to steal. Every turn
 maintainer: Tarekkharsa
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Tarekkharsa/anakot-canary-trap/tree/cbef2f98aee69cfacf59402e3d4fe98427d10b84#readme
 version: "0.1.0"
 title: "canary-trap — prompt-injection tripwire"

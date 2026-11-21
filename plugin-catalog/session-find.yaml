@@ -5,7 +5,7 @@ description: "A search window over your Anakot session history, opened with Cmd+
 maintainer: djmango
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/djmango/session-find#readme
 version: "1.0.0"
 readme: true

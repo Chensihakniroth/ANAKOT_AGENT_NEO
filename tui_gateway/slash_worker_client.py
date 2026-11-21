@@ -22,6 +22,7 @@ from anakot_cli.process_identity import release_process_group_once_empty, spawn_
 from anakot_constants import get_anakot_home
 
 from .method_ctx import bind_module
+from anakot_cli._startup_fast import project_root_str
 
 
 def _prepend_tool_paths(env: dict[str, str]) -> dict[str, str]:
@@ -77,7 +78,7 @@ class _SlashWorker:
             target_home=profile_home or (_anakot_home if is_multiplex_active() else None),
             inherit_credentials=True))
         # Internal slash workers must import the same checkout as their parent; -P keeps their cwd off sys.path.
-        module_root = str(Path(__file__).resolve().parent.parent)
+        module_root = project_root_str()
         env["PYTHONPATH"] = os.pathsep.join(
             part for part in (module_root, env.get("PYTHONPATH", "")) if part
         )

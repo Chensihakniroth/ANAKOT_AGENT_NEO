@@ -7,7 +7,7 @@ description: "A read-only plan for tidying a crowded cron list: groups jobs whos
 maintainer: Moodtuner997
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/Moodtuner997/anakot-cron-consolidator#readme
 readme: true
 platforms: [linux, windows]

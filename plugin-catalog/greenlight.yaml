@@ -6,7 +6,7 @@ description: "Greenlight is a Anakot Agent plugin that puts you in control of xS
 maintainer: Datwebguy
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Datwebguy/greenlight#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Datwebguy/greenlight/4b843d14af767b5c6d6d5552d6affa87eae93e25/assets/banner.png

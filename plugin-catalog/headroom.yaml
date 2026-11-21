@@ -9,7 +9,7 @@ screenshots:
 maintainer: seongj-un
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/seongj-un/anakot-headroom#readme
 version: "0.1.2"
 platforms: [linux]

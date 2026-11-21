@@ -15,7 +15,7 @@ description: "A live map you and Anakot share, docked beside the chat. Anakot pl
 maintainer: tuancookiez-hub
 tier: community
 category: desktop
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/tuancookiez-hub/anakot-maps/tree/48a8ec745036d0c9e4c8343ef4e64130d43367ae
 capabilities:
   provides_tools:

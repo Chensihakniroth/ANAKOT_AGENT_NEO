@@ -8,7 +8,7 @@ maintainer: GSC Wizard
 tier: community
 category: tools
 docs_url: https://github.com/gscwizard/anakot-plugin#readme
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

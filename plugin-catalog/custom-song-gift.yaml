@@ -6,7 +6,7 @@ description: "Explore 12 gift occasions, compare 16 studio-quality musical genre
 maintainer: GptsApp
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 version: "1.0.0"
 docs_url: https://customsonggift.org
 platforms: []

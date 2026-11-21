@@ -19,7 +19,7 @@ description: >-
 maintainer: kailashrajh
 tier: community
 category: memory
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/kailashrajh/anakot-mdvault#readme
 readme: true
 platforms: [linux, macos, windows]

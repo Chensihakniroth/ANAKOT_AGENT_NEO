@@ -11,7 +11,7 @@
  *
  * Background on the two auth models a remote gateway can use:
  *   - 'token': legacy static dashboard session token. REST uses an
- *     `X-Anakot-Session-Token` header; WS uses `?token=`.
+ *     `X-Hermes-Session-Token` header; WS uses `?token=`.
  *   - 'oauth': hosted gateways gate behind an OAuth provider. REST is authed
  *     by an HttpOnly session cookie; WS upgrades require a single-use
  *     `?ticket=` minted at POST /api/auth/ws-ticket. The gateway advertises
@@ -24,7 +24,7 @@
 // anakot_cli/dashboard_auth/cookies.py.
 //
 // Two cookies are in play (see that module):
-//   - anakot_session_at: the OAuth access token. Short-lived (~15 min); its
+//   - hermes_session_at: the OAuth access token. Short-lived (~15 min); its
 //     Max-Age tracks the access-token TTL, so the cookie jar drops it the
 //     instant the AT expires.
 //   - anakot_session_rt: the OAuth refresh token. Long-lived (24h rotating,
@@ -38,9 +38,9 @@ import { readStatusCode } from './api-transport'
 import { sharesHostBackend } from './host-backend-singleton'
 import { profileCollectionRoute, profileRouteSuffix } from './profile-routes'
 
-const AT_COOKIE_VARIANTS = ['__Host-anakot_session_at', '__Secure-anakot_session_at', 'anakot_session_at']
+const AT_COOKIE_VARIANTS = ['__Host-hermes_session_at', '__Secure-hermes_session_at', 'hermes_session_at']
 const RT_COOKIE_VARIANTS = ['__Host-anakot_session_rt', '__Secure-anakot_session_rt', 'anakot_session_rt']
-// A gateway's Webapp follows each name with its gateway (`anakot_session_at_<16 hex digits>`), since
+// A gateway's Webapp follows each name with its gateway (`hermes_session_at_<16 hex digits>`), since
 // cookies are not scoped to a port; the dashboard keeps the bare names.
 const GATEWAY_COOKIE_SUFFIX = /_[0-9a-f]{16}$/
 
@@ -350,7 +350,7 @@ const FORBIDDEN_REMOTE_HEADER_NAMES = new Set([
   'trailer',
   'transfer-encoding',
   'upgrade',
-  'x-anakot-session-token'
+  'x-hermes-session-token'
 ])
 
 /**

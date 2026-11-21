@@ -234,10 +234,10 @@ that disposable environment first. PM does not delete an existing destination.
 Do not run raw pip or uv commands to change a PM-built environment.
 
 To keep the test environment outside the checkout, replace `.venv` with a fresh absolute
-path. Set `ANAKOT_PYTHON` to that environment's interpreter:
+path. Set `HERMES_PYTHON` to that environment's interpreter:
 
-- POSIX: `export ANAKOT_PYTHON="/absolute/path/to/anakot-dev/bin/python"`
-- PowerShell: `$env:ANAKOT_PYTHON = 'C:\absolute\path\to\anakot-dev\Scripts\python.exe'`
+- POSIX: `export HERMES_PYTHON="/absolute/path/to/anakot-dev/bin/python"`
+- PowerShell: `$env:HERMES_PYTHON = 'C:\absolute\path\to\anakot-dev\Scripts\python.exe'`
 
 The canonical runner discovers repository `.venv` automatically. It clears
 `PYTHONPATH`, so pytest must be installed in the interpreter's own environment.
@@ -287,7 +287,7 @@ Native desktop dependencies can also require the platform build toolchain.
 
 Logos and icons are generated from `assets/nous-girl-*.svg` and
 `assets/backgrounds/`. `node scripts/generate-icons.mjs` (`just icons`) renders them with the
-Anakot runtime Python (`ANAKOT_PYTHON`, else `python` on PATH): Pillow and
+Anakot runtime Python (`HERMES_PYTHON`, else `python` on PATH): Pillow and
 resvg-py are core dependencies. Do not commit generated PNG/ICO/ICNS outputs.
 
 ### Run tests
@@ -303,7 +303,7 @@ Both recipes call `scripts/run_tests.sh`; `just test` refuses to start
 without a path, and `just test-all` runs the full suite.
 
 On Windows, run the script through Bash. When no local `.venv` or `venv`
-contains pytest, the runner accepts the explicit `ANAKOT_PYTHON` above. It
+contains pytest, the runner accepts the explicit `HERMES_PYTHON` above. It
 clears credentials, isolates `ANAKOT_HOME`, and runs each test file in a separate
 subprocess through `scripts/run_tests_parallel.py`. It does not use xdist.
 When `tests/conftest.py` redirects a production `ANAKOT_HOME` to a temporary

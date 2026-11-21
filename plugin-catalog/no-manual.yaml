@@ -6,7 +6,7 @@ description: "Furniture with no instructions? Send photos and Anakot finds the o
 maintainer: cheedli
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/cheedli/no-manual#readme
 version: "0.1.0"
 capabilities:

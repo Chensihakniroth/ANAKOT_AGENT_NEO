@@ -7,7 +7,7 @@ description: "Run Stripe-based affiliate programs, per-content links, referrals 
 maintainer: MelMayssonOwen
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/MelMayssonOwen/anakot-plugins/blob/f203c3f897784d731ef48bc0974104a4d08cf5f8/ambassly/README.md
 version: "1.0.0"
 platforms: []

@@ -9,7 +9,7 @@ maintainer: Rabbithole-llc
 tier: community
 category: tools
 docs_url: https://github.com/Rabbithole-llc/postkey-mcp/blob/fed6c7335405cdf97e524ec77946dd9dadeed346/anakot/README.md
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

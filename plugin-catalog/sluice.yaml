@@ -8,7 +8,7 @@ description: "An airlock for agent changes. A terminal backend that runs the age
 maintainer: orjinameh
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/orjinameh/airlock#readme
 platforms:
   - linux

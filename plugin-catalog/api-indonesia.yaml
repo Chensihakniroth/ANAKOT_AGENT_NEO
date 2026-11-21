@@ -8,7 +8,7 @@ maintainer: khmuhtadin
 tier: community
 category: tools
 docs_url: https://github.com/khmuhtadin/api-indonesia-examples#install-in-anakot-agent
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://raw.githubusercontent.com/khmuhtadin/api-indonesia-examples/5f165d4d2707adccf4939f802c696253488ac9ef/assets/banner.png
 readme: true
 platforms: []

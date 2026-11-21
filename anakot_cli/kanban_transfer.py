@@ -40,7 +40,7 @@ from anakot_cli.archive_safe import (
     safe_extract_targz,
 )
 
-ARCHIVE_FORMAT = "anakot-kanban-board"
+ARCHIVE_FORMAT = "hermes-kanban-board"
 ARCHIVE_FORMAT_VERSION = 1
 
 # Statuses from which the dispatcher can still act on a task. A task whose

@@ -7,7 +7,7 @@ description: "Load Anakot secrets from macOS Keychain, with interactive setup, s
 maintainer: robbiemu
 tier: community
 category: general
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.1.1"
 platforms:
   - macos

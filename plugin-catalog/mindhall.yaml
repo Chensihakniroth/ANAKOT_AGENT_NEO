@@ -6,7 +6,7 @@ maintainer: jai-srinivas
 tier: community
 category: tools
 title: Mindhall
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "0.3.0"
 capabilities:
   provides_tools:

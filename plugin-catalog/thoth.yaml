@@ -7,7 +7,7 @@ description: "Agents working as one team, each with its own harness: Claude Code
 maintainer: cayden970207
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.9.1"
 docs_url: https://github.com/cayden970207/thoth#readme
 image: https://raw.githubusercontent.com/cayden970207/thoth/289372a7019d8ade5617b1829b7b782bfb304c74/docs/banner.png

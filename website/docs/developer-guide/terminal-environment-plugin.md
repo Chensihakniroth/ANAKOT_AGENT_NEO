@@ -185,7 +185,7 @@ class AcmeJailEnvironment(LocalEnvironment):
 
 Leave it unset on backends that don't subclass `LocalEnvironment`; the default
 is `False`. Anakot v0.22.5 and earlier ignore the attribute and use the host
-fast path for every `LocalEnvironment` subclass, so pin `requires_anakot` past
+fast path for every `LocalEnvironment` subclass, so pin `requires_hermes` past
 that.
 
 ## Images

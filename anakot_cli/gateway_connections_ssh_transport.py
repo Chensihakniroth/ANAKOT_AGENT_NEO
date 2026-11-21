@@ -56,7 +56,7 @@ class SshReachError(RuntimeError):
 
 _REDACTIONS = (
     (re.compile(r"(ANAKOT_DASHBOARD_SESSION_TOKEN=)(\S+)"), r"\1<redacted>"),
-    (re.compile(r"""(X-Anakot-Session-Token["']?\s*[:=]\s*["']?)([^\s"'&]+)""", re.IGNORECASE), r"\1<redacted>"),
+    (re.compile(r"""(X-Hermes-Session-Token["']?\s*[:=]\s*["']?)([^\s"'&]+)""", re.IGNORECASE), r"\1<redacted>"),
     (re.compile(r"""(Authorization["']?\s*:\s*Bearer\s+)(\S+)""", re.IGNORECASE), r"\1<redacted>"),
     (re.compile(r"""([?&](?:token|ticket)=)([^\s&"']+)""", re.IGNORECASE), r"\1<redacted>"),
     # A mistyped password in the host field (user@host:SECRET) must never reach logs verbatim.

@@ -6,7 +6,7 @@ description: "Find LEGO sets, compare regional retailer offers and inspect recor
 maintainer: brickfact-com
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 version: "1.0.0"
 docs_url: https://github.com/brickfact-com/agent-skills
 readme: true

@@ -61,7 +61,7 @@ def test_zip_swap_keeps_every_nested_build_output_and_the_guard_admits_them(tmp_
     # The dirty-tree guard sees these outputs as ``!!`` lines; they must not refuse the swap.
     for line in ("!! apps/desktop/release/", "!! apps/desktop/dist/", "!! apps/desktop/node_modules/",
                  "!! apps/desktop/build/", "!! anakot_cli/web_dist/", "!! anakot_cli/__pycache__/",
-                 "!! __pycache__/", "!! ui-tui/dist/", "!! ui-tui/packages/anakot-ink/dist/",
+                 "!! __pycache__/", "!! ui-tui/dist/", "!! ui-tui/packages/hermes-ink/dist/",
                  "!! scripts/whatsapp-bridge/node_modules/", "!! web/node_modules/", "!! tests-js/node_modules/"):
         assert _is_zip_preserved_entry_status_line(line), line
     # ...while other gitignored data, untracked files and renames into those dirs still block.
@@ -97,7 +97,7 @@ def test_guard_admits_a_real_installs_ignored_set_and_blocks_only_what_the_swap_
                     "apps/desktop/release/win-unpacked/Anakot.exe", "apps/desktop/dist/index.html",
                     "apps/desktop/build/icon.ico", "apps/desktop/node_modules/electron/index.js",
                     "anakot_cli/web_dist/index.html", "ui-tui/dist/entry.js", "ui-tui/node_modules/x/index.js",
-                    "ui-tui/packages/anakot-ink/dist/index.js", "web/node_modules/x/index.js",
+                    "ui-tui/packages/hermes-ink/dist/index.js", "web/node_modules/x/index.js",
                     "tests-js/node_modules/x/index.js", "scripts/whatsapp-bridge/node_modules/x/index.js",
                     "venv/lib.py", "node_modules/x/index.js", ".env"):
         (root / ignored).parent.mkdir(parents=True, exist_ok=True)

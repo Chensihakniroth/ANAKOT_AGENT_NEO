@@ -6,7 +6,7 @@ description: "Durable memory and context compression for Anakot Agent with local
 maintainer: Nacho Labs LLC
 tier: community
 category: memory
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Nacho-Labs-LLC/anakot-plugin-nachos#readme
 platforms: []
 capabilities:

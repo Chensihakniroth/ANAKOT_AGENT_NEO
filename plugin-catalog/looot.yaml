@@ -5,7 +5,7 @@ description: "looot gives Anakot one sign-in and one prepaid balance for 2,500+ 
 maintainer: looot
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/loootai/anakot-looot#readme
 version: "0.1.0"
 platforms: []

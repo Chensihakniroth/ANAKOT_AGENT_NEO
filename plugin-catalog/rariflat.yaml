@@ -7,7 +7,7 @@ version: "2.0.0"
 maintainer: wadezigh96
 tier: community
 category: desktop
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/wadezigh96/rariflat-anakot#readme
 capabilities:
   provides_tools:

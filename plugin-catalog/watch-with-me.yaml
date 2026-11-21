@@ -7,7 +7,7 @@ description: "Follows Plex playback and publishes sourced, spoiler-safe notes ab
 maintainer: jcrabapple
 tier: community
 category: tools
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: "https://github.com/jcrabapple/watch-with-me#readme"
 platforms: []
 capabilities:

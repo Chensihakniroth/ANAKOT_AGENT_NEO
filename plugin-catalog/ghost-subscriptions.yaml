@@ -13,7 +13,7 @@ screenshots:
   - https://raw.githubusercontent.com/Max35j/ghost-subscriptions/e31a8f6832e8c594a9cc3daa1e15229459eb82e2/assets/screenshot-audit.png
   - https://raw.githubusercontent.com/Max35j/ghost-subscriptions/e31a8f6832e8c594a9cc3daa1e15229459eb82e2/assets/screenshot-cancel-pack.png
   - https://raw.githubusercontent.com/Max35j/ghost-subscriptions/e31a8f6832e8c594a9cc3daa1e15229459eb82e2/assets/screenshot-subs-letter.png
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 platforms: []
 capabilities:
   provides_tools:

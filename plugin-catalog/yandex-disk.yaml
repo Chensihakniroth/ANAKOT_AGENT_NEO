@@ -1,6 +1,6 @@
 name: yandex-disk
 repo: https://github.com/akinfold/anakot-yandex-disk
-sha: 90a8215668c726a0bae98236da1d3c79d0699bdb
+sha: 60f876f14a610ddae245c356a86cbc6dc941c76f
 subdir: anakot_yandex_disk
 title: "Yandex Disk"
 image: https://raw.githubusercontent.com/akinfold/anakot-yandex-disk/90a8215668c726a0bae98236da1d3c79d0699bdb/docs/banner.png
@@ -8,7 +8,7 @@ description: "Browse, search and manage files on Yandex Disk. Read and write fil
 maintainer: akinfold
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.6.2"
 docs_url: https://github.com/akinfold/anakot-yandex-disk#readme
 readme: true

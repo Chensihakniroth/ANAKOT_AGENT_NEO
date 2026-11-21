@@ -333,7 +333,7 @@ def test_running_revision_is_not_applied_to_an_explicit_target(installation, mon
     from anakot_cli.source_check import check_for_updates
     root, linked, home, _base, head, responses, _requests, _git = installation
     monkeypatch.setenv("ANAKOT_REVISION", "e" * 40)
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(root))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(root))
     responses["/repos/fixture/fork/commits/feature%2Fgui"] = (200, head)
     assert check_for_updates(install_root=linked, home=home)["currentSha"] == head
     # Default invocation retains the Nix revision probe even without a Git checkout.
@@ -763,20 +763,19 @@ def test_runtime_lookup_has_one_deadline_with_bounded_parallel_reads(installatio
 @pytest.mark.parametrize("runtime", [True, False])
 def test_a_release_with_the_state_store_inside_the_package_is_judged_by_its_package_modules(
         installation, runtime):
-    """After the state store moves under ``src/anakot_agent/`` a root compat shell stays behind. The
+    """After the state store moves under ``anakot_agent/`` a root compat shell stays behind. The
     verdict must come from the package's modules, which a top-level tree listing does not show."""
     from anakot_cli import source_check
     from anakot_state_common import SCHEMA_SQL
 
     _root, _linked, home, _base, sha, responses, requests, _git = installation
-    shell, store = "anakot_state.py", "src/anakot_agent/anakot_state/common.py"
+    shell, store = "anakot_state.py", "anakot_agent/anakot_state/common.py"
     trees = "/repos/fixture/fork/git/trees"
     # A tree listing is one directory, as GitHub answers without ``recursive``; a release's full
     # recursive listing is several MiB, beyond what the reader takes in one response.
     responses[f"{trees}/{sha}"] = (200, {"truncated": False, "tree": [
-        {"path": shell, "type": "blob"}, {"path": "src", "type": "tree", "sha": "t-src"},
+        {"path": shell, "type": "blob"}, {"path": "anakot_agent", "type": "tree", "sha": "t-pkg"},
         {"path": "pad", "type": "blob", "size": 3 * 1024 * 1024}]})
-    responses[f"{trees}/t-src"] = (200, {"tree": [{"path": "anakot_agent", "type": "tree", "sha": "t-pkg"}]})
     responses[f"{trees}/t-pkg"] = (200, {"tree": [{"path": "anakot_state", "type": "tree", "sha": "t-state"}]})
     responses[f"{trees}/t-state"] = (200, {"tree": [{"path": "common.py", "type": "blob"}]})
     responses[f"/fixture/fork/{sha}/{shell}"] = (200, "from anakot_agent.compat import finder\n")

@@ -6,7 +6,7 @@ description: "Give Anakot a phone with nothing to set up: Sochen (sochen.dev), a
 maintainer: N-45div
 tier: community
 category: voice
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 version: "0.3.0"
 docs_url: https://sochen.dev/agents
 image: https://raw.githubusercontent.com/N-45div/sochen-plugin/b785f9176be75c4d5567cade43f926dc154ca034/assets/banner.png

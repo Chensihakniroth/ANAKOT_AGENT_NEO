@@ -23,7 +23,7 @@ maintainer: khmuhtadin
 tier: community
 category: tools
 docs_url: https://github.com/khmuhtadin/1toolring-mcp#set-up
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 image: https://raw.githubusercontent.com/khmuhtadin/1toolring-mcp/d4df0c005dd6cfd85f85f26872ffc9c82a97ec76/assets/logo-400.png
 readme: true
 platforms: []

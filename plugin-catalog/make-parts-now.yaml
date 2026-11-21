@@ -17,4 +17,4 @@ capabilities:
   requires_env: []
 known_issues:
 - "Order status needs a signed-in Make Parts Now account, which the plugin's server doesn't have; it answers with a link to makepartsnow.com/orders. To ask Anakot about orders, add a signed-in server once: anakot mcp add makepartsnow-orders --url \"https://makepartsnow.com/mcp/assistant/signin?client=anakot\" --auth oauth --connect-timeout 300"
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"

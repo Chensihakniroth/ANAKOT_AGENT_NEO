@@ -8,7 +8,7 @@ description: "Deterministic spend and risk policy for any Anakot tool call. A pr
 maintainer: tmdry4530
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/tmdry4530/anakot-guard-plugin/blob/84c44e53ec43d3bac2c1a43d6a21aea0d58d4051/README.md
 readme: true
 platforms: []

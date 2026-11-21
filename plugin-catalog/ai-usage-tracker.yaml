@@ -12,7 +12,7 @@ description: Live subscription-quota windows for every AI provider Anakot can ro
 maintainer: lvabarajithan
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 platforms: [linux, macos]
 docs_url: https://github.com/lvabarajithan/anakot-ai-usage-tracker
 capabilities:

@@ -7,7 +7,7 @@ description: "A persistent second model reviews every agent turn. After each tur
 maintainer: ljubomirj
 tier: community
 category: automation
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/ljubomirj/anakot-advisor-plugin/blob/37e55975611d38212cf082029ece504f207df656/README.md
 readme: true
 platforms: [linux, macos, windows]

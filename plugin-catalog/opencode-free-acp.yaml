@@ -3,7 +3,7 @@ title: OpenCode Free (ACP)
 repo: https://github.com/cryptobredda/anakot-opencode-free-acp
 sha: 0ef669a84c024661c03d34768c118275e93aa713
 version: "0.4.0"
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 maintainer: cryptobredda
 tier: community
 category: models

@@ -17,7 +17,7 @@ description: >-
 maintainer: lawmight
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/lawmight/anakot-nomads-planner#readme
 version: "0.1.0"
 title: "Nomads Planner"

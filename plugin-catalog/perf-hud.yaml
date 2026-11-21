@@ -7,7 +7,7 @@ description: "Live performance HUD for Anakot Desktop: a status-bar chip with co
 maintainer: g3org3yo
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/g3org3yo/anakot-perf-hud/blob/bb97f8f73175a22b75f21204cf9fd4394f18077b/README.md
 platforms: [linux, macos, windows]
 image: https://raw.githubusercontent.com/g3org3yo/anakot-perf-hud/bb97f8f73175a22b75f21204cf9fd4394f18077b/docs/screenshots/chip.png

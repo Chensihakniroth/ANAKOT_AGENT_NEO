@@ -14,7 +14,7 @@ description: >-
 maintainer: Adolanium
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Adolanium/anakot-lang-he#readme
 version: "0.1.0"
 image: https://raw.githubusercontent.com/Adolanium/anakot-lang-he/9e470ec786f5abf7c97d1939dd8898782a36d430/assets/catalog-banner.png

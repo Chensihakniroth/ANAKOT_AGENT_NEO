@@ -22,12 +22,12 @@ def test_bootstrap_environment_isolates_owned_paths_without_mutating_caller(tmp_
         "APPDATA": str(original_home / "AppData/Roaming"),
         "ANAKOT_HOME": str(original_home / "profile"),
         "ANAKOT_RUNTIME_DIR": str(original_home / "tools"),
-        "ANAKOT_INSTALL_ROOT": str(original_home / "installed"),
+        "HERMES_INSTALL_ROOT": str(original_home / "installed"),
         "ANAKOT_PAYLOAD_ROOT": str(original_home / "payload"),
         "ANAKOT_PAYLOAD_TAG": "v1.2.3", "ANAKOT_BUILD_COMMIT": "a" * 40,
         "ANAKOT_SITE": str(original_home / "site"),
-        "ANAKOT_PYTHON_SRC_ROOT": str(original_home / "repo"),
-        "ANAKOT_PYTHON": str(original_home / "python"),
+        "HERMES_PYTHON_SRC_ROOT": str(original_home / "repo"),
+        "HERMES_PYTHON": str(original_home / "python"),
         "ANAKOT_NODE": str(original_home / "node"),
         "ANAKOT_PROFILE": "live", "ANAKOT_REAL_HOME": str(original_home),
         "ANAKOT_BUNDLED_SKILLS": str(original_home / "skills"),
@@ -64,10 +64,10 @@ def test_bootstrap_environment_isolates_owned_paths_without_mutating_caller(tmp_
     assert "NPM_CONFIG_USERCONFIG" not in environment
     assert environment["npm_config_userconfig"] == os.devnull
     assert "npm_config_globalconfig" not in environment
-    assert environment["ANAKOT_PYTHON_SRC_ROOT"] == str(source)
-    for key in ("ANAKOT_INSTALL_ROOT", "ANAKOT_PAYLOAD_ROOT", "ANAKOT_PAYLOAD_TAG",
+    assert environment["HERMES_PYTHON_SRC_ROOT"] == str(source)
+    for key in ("HERMES_INSTALL_ROOT", "ANAKOT_PAYLOAD_ROOT", "ANAKOT_PAYLOAD_TAG",
                 "ANAKOT_BUILD_COMMIT", "ANAKOT_SITE", "ANAKOT_PROFILE", "ANAKOT_REAL_HOME",
-                "ANAKOT_PYTHON", "ANAKOT_NODE", "ANAKOT_BUNDLED_SKILLS", "ANAKOT_OPTIONAL_MCPS",
+                "HERMES_PYTHON", "ANAKOT_NODE", "ANAKOT_BUNDLED_SKILLS", "ANAKOT_OPTIONAL_MCPS",
                 "VIRTUAL_ENV", "PYTHONHOME", "PYTHONPATH"):
         assert key not in environment
     assert environment["SIGNING_TOKEN"] == inherited["SIGNING_TOKEN"]
@@ -136,7 +136,7 @@ def test_run_preparation_bootstraps_before_worker_in_isolated_child(tmp_path, mo
         "import os, sys\n"
         "from pathlib import Path\n"
         "assert Path(os.environ['HOME']).name == 'home'\n"
-        "assert 'ANAKOT_INSTALL_ROOT' not in os.environ\n"
+        "assert 'HERMES_INSTALL_ROOT' not in os.environ\n"
         "assert sys.flags.isolated and sys.flags.no_site\n"
         "def runtime_command(script, args, *, cache):\n"
         "    assert cache == Path(os.environ['UV_CACHE_DIR'])\n"
@@ -160,7 +160,7 @@ def test_run_preparation_bootstraps_before_worker_in_isolated_child(tmp_path, mo
     receipt = tmp_path / "worker-ran"
     request_file.write_text(json.dumps({"receipt": str(receipt), "tools": str(cache / "tools"),
                                         "exit_code": exit_code}), encoding="utf-8")
-    monkeypatch.setenv("ANAKOT_INSTALL_ROOT", str(tmp_path / "live-install"))
+    monkeypatch.setenv("HERMES_INSTALL_ROOT", str(tmp_path / "live-install"))
     before = dict(os.environ)
     assert desktop_toolchain.run_preparation(source, work, cache, request_file) == exit_code
     assert dict(os.environ) == before
@@ -239,7 +239,7 @@ def test_prepare_tools_uses_pm_native_pins_and_separate_cache(tmp_path, monkeypa
     python, node, prepared = desktop_toolchain.prepare_tools(source, work, cache, env)
     assert acquired == ["uv", "pnpm"]
     assert python == bins["python"] and node == bins["node"]
-    assert prepared["ANAKOT_PYTHON"] == str(python)
+    assert prepared["HERMES_PYTHON"] == str(python)
     assert prepared["ANAKOT_NODE"] == str(node)
     assert prepared["PATH"] == "pm-tools"
     uv_cache = Path(prepared["UV_CACHE_DIR"])

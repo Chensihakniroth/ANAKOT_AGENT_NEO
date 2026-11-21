@@ -9,7 +9,7 @@ tier: community
 category: tools
 docs_url: https://github.com/MrHydeDev/openwall-mcp-plugin
 image: https://raw.githubusercontent.com/MrHydeDev/openwall-mcp-plugin/26e25c7a0acf880cdc5bbec86a1b592318a5f885/docs/logo.png
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 readme: true
 platforms: []
 capabilities:

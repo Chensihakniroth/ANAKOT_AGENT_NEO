@@ -5,7 +5,7 @@ description: "The god of the opportune moment, now working for Anakot. It waits 
 maintainer: Gens-ai
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Gens-ai/Kairos#readme
 version: "0.7.0"
 image: https://raw.githubusercontent.com/Gens-ai/Kairos/1f2acfab7afdca26e2fb0e669072d664700439e6/assets/marketplace.png

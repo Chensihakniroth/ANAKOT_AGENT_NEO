@@ -28,7 +28,7 @@ description: "Kanban board groups and worker health in the Anakot Desktop footer
 maintainer: djmango
 tier: community
 category: desktop
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 platforms: [linux, macos]
 docs_url: https://github.com/djmango/anakot-worker-monitor
 screenshots: []

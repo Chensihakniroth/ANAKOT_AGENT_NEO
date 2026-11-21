@@ -6,7 +6,7 @@ description: "@crontab: context references that explain a cron expression for th
 maintainer: olric3015
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/olric3015/anakot-plugins/tree/main/crontab-ref
 version: "1.0.0"
 image: https://raw.githubusercontent.com/olric3015/anakot-plugins/c5a412f46ab5cc14bb82528481a46c8f8bb3fe2a/docs/crontab-ref-card.png

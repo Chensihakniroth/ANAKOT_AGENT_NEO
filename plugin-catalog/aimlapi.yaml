@@ -6,7 +6,7 @@ description: "aimlapi.com — one OpenAI-compatible API for 1000+ models; /model
 maintainer: aimlapi.com
 tier: community
 category: models
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/aimlapi/anakot-provider-aimlapi#readme
 version: "1.0.0"
 capabilities:

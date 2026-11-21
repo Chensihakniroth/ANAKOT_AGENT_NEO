@@ -7,7 +7,7 @@ tier: community
 category: general
 docs_url: https://github.com/AstrowareAI/eu-mode-anakot#readme
 version: "0.1.1"
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 screenshots:
   - https://raw.githubusercontent.com/AstrowareAI/eu-mode-anakot/80f82114ba9fc7e9412303ee4b1c87625fcf93d8/demo/eu-mode-demo.gif
 known_issues:

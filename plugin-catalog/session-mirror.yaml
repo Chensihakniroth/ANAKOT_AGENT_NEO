@@ -5,7 +5,7 @@ description: "Mirrors Anakot Desktop, CLI, TUI and ACP conversations into Discor
 maintainer: rrrrnmtsu
 tier: community
 category: platform
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/rrrrnmtsu/anakot-session-mirror
 version: "0.5.0"
 platforms: []

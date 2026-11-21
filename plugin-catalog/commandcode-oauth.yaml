@@ -5,7 +5,7 @@ description: Command Code CLI-key model provider with a live OAuth catalog prope
 maintainer: NanamiMio
 tier: community
 category: models
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/NanamiMio/anakot-commandcode-oauth#readme
 version: "0.1.4"
 readme: true

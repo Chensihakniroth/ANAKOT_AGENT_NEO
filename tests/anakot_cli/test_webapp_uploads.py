@@ -24,7 +24,7 @@ from anakot_cli.web_routers import uploads
 from anakot_constants import WEBAPP_ATTACHMENT_MAX_BYTES, mark_named_profile_deleted
 
 
-_SESSION_HEADER = "X-Anakot-Session-Token"
+_SESSION_HEADER = "X-Hermes-Session-Token"
 _BARRIER_TIMEOUT_SECONDS = 30
 
 

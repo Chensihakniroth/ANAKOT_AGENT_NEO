@@ -14,7 +14,7 @@ screenshots:
 maintainer: mister-ideas
 tier: community
 category: automation
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.5.0"
 known_issues:
   - "Multi-profile gateways: Anakot dispatches plugin slash commands in the gateway's launch profile, so `/usage-guard` can report that profile's limit and reading. The guard itself and the Desktop chip use the served profile."

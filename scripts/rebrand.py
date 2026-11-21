@@ -30,6 +30,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -95,6 +96,12 @@ SKIP_DIRS = {
 SKIP_PATHS = (
     "brand/",                      # the rebrand's own inputs (protect list, manifest, masters)
     "scripts/rebrand.py",          # this script rewrites text; never itself
+    # The porting ledger names upstream ("Hermes-specific", `hermes_*` renames) as DATA about the
+    # relationship between the two trees. Rewriting it produces "Anakot-specific" and
+    # "anakot_* -> anakot_*", i.e. it destroys the meaning it exists to record.
+    "UPSTREAM_PORTING.md",
+    # Naming both spellings is the point: its fixtures assert that hermes-* becomes anakot-*.
+    "tests/scripts/test_rebrand_lockfiles.py",
     "plugins/anakot-achievements/dashboard/dist/",
     "plugins/kanban/dashboard/dist/",
     "apps/desktop/release/",
@@ -103,25 +110,35 @@ SKIP_PATHS = (
     "web/dist/",
     "website/build/",
     "website/.docusaurus/",
-    # Gitignored build output that still sits in a working copy: the PM/uv cache and the Rust
-    # target tree are ~10.3k files of vendored sources (numpy's Hermite polynomials, Google's
-    # ``dhermes`` TODOs, the Hermes Paketklasse shipping service). Scanning them is pure cost —
-    # they were 42% of a 34,970-file walk and the reason a full --apply felt slow — and a
-    # rewrite there is discarded the moment they regenerate.
-    ".build/",
-    "apps/bootstrap-installer/src-tauri/target/",
-    # The porting ledger quotes upstream's own paths and identifiers (``hermes_cli/`` ->
-    # ``anakot_cli/``, ``scripts/hermes_sync.py``) as history. Rewriting it would falsify the
-    # record it exists to keep, so it is source-of-truth text, not a rename target.
-    "UPSTREAM_PORTING.md",
 )
 # Never rewritten even if they contain "hermes": binary-ish sources, locks.
 SKIP_FILES = {"pnpm-lock.yaml", "uv.lock", "package-lock.json", "yarn.lock"}
 # On-disk compatibility markers: existing installs and built dists use these
 # exact names (frontend-common.mjs productOwners, freshness.mjs receipts).
-SKIP_NAMES = {".hermes-product", "hermes-build.json", ".hermes-stale", ".hermes-node-deps", "hermes-ink"}
+SKIP_NAMES = {".hermes-product", "hermes-build.json", ".hermes-stale", ".hermes-node-deps"}
+# Path names a rename must keep, while their CONTENTS are still ours to rewrite.
+# The vendored ink fork keeps its upstream folder name (``build:ink`` and the lockfile's
+# ``link:packages/hermes-ink`` point at it) but its package is ``@anakot/ink``. Keeping this in
+# SKIP_NAMES instead also exempted every file inside from the text rewrite, which left
+# ``"name": "@hermes/ink"`` while the workspace depended on ``@anakot/ink``.
+KEEP_PATH_NAMES = {"hermes-ink"}
 
 SUBSTITUTIONS = (("Hermes", "Anakot"), ("HERMES", "ANAKOT"), ("hermes", "anakot"))
+REVERSE_SUBSTITUTIONS = (("Anakot", "Hermes"), ("ANAKOT", "HERMES"), ("anakot", "hermes"))
+
+# Lockfiles are generated, so the content rewrite skips them -- but their workspace *identity*
+# entries are the rebrand's business: a lock names the same packages that pyproject.toml and
+# package.json name. Left alone, `uv sync --locked` and `pnpm install --frozen-lockfile` both
+# refuse the tree. A stale pm/uv.lock is the worst of them: it surfaces only as
+# "Preparing the isolated Anakot runtime... failed", with nothing pointing at a lockfile.
+LOCKFILE_SCOPES: dict[str, tuple[tuple[str, str], ...]] = {
+    # pnpm names workspace packages by scope. `hermes-estree`/`hermes-parser` are third-party
+    # packages and `packages/hermes-ink` is a path (KEEP_PATH_NAMES), so neither is rewritten.
+    "pnpm-lock.yaml": (("@hermes/", "@anakot/"),),
+}
+# (lock, the project that owns it) -- uv records a local project by name, at `name =` and again
+# in every extras marker that references it.
+UV_LOCKS = (("uv.lock", "pyproject.toml"), ("pm/uv.lock", "pm/pyproject.toml"))
 
 
 def load_protected(path: str | None = None) -> list[tuple[str, re.Pattern]]:
@@ -187,9 +204,17 @@ def walk_files() -> list[str]:
     return out
 
 
-def rename_paths(apply: bool) -> list[tuple[str, str]]:
-    """Rename any path segment containing 'hermes', deepest first."""
+def rename_paths(apply: bool) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    """Rename any path segment containing 'hermes', deepest first.
+
+    Returns ``(changes, conflicts)``. A conflict is a rename whose target already exists — the
+    common cause is an ignored leftover (``node_modules``, ``data/``, ``.venv``) inside a directory
+    the rebrand wants to rename, because ``git clean -fd`` does not remove ignored paths. Skipping
+    those silently left BOTH trees in place (``hermes_cli/`` next to ``anakot_cli/``) and every
+    later step happily operated on a half-rebranded checkout, so the caller now aborts instead.
+    """
     changes: list[tuple[str, str]] = []
+    conflicts: list[tuple[str, str]] = []
     for dirpath, dirnames, filenames in os.walk(REPO, topdown=False):
         rel_dir = os.path.relpath(dirpath, REPO).replace("\\", "/")
         if rel_dir == ".":
@@ -201,20 +226,22 @@ def rename_paths(apply: bool) -> list[tuple[str, str]]:
             continue
         for name in filenames + dirnames:
             lower = name.lower()
-            if "hermes" not in lower or name in SKIP_FILES or name in SKIP_NAMES:
+            if "hermes" not in lower or name in SKIP_FILES or name in SKIP_NAMES or name in KEEP_PATH_NAMES:
                 continue
             new = name.replace("Hermes", "Anakot").replace("HERMES", "ANAKOT").replace("hermes", "anakot")
             if new == name:
                 continue
             src = os.path.join(dirpath, name)
             dst = os.path.join(dirpath, new)
-            changes.append((os.path.relpath(src, REPO), os.path.relpath(dst, REPO)))
+            rel_src = os.path.relpath(src, REPO)
+            rel_dst = os.path.relpath(dst, REPO)
+            if os.path.exists(dst):
+                conflicts.append((rel_src, rel_dst))
+                continue
+            changes.append((rel_src, rel_dst))
             if apply:
-                if os.path.exists(dst):
-                    print(f"  ! skip rename, target exists: {dst}")
-                    continue
                 os.rename(src, dst)
-    return changes
+    return changes, conflicts
 
 
 def restore_assets(apply: bool) -> list[str]:
@@ -336,24 +363,10 @@ def verify_assets() -> list[str]:
     return bad
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description="Re-apply the Anakot rebrand to a Hermes tree.")
-    ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
-    ap.add_argument("--check", action="store_true", help="report only (default)")
-    ap.add_argument("--verify", action="store_true", help="gate on protected strings + asset hashes")
-    ap.add_argument("--rebaseline", action="store_true", help="re-snapshot brand art + refresh manifest hashes")
-    ap.add_argument("--quiet", action="store_true")
-    args = ap.parse_args()
-
-    if args.rebaseline:
-        kept, dropped = rebaseline()
-        print(f"[REBASELINE] {kept} brand files re-snapshotted, {dropped} dropped")
-        return 0
-
-    rules = load_protected()
+def rewrite_tree(rules: list[tuple[str, re.Pattern]], apply: bool) -> tuple[list[str], int, int]:
+    """Rewrite every file's content. Returns (rewritten paths, files scanned, protected hits)."""
     files = walk_files()
-    rewritten, protected_total, path_changes = [], 0, []
-
+    rewritten, protected_total = [], 0
     for rel in files:
         full = os.path.join(REPO, rel.replace("/", os.sep))
         try:
@@ -376,32 +389,226 @@ def main() -> int:
         new_text, _ = rewrite_text(text, rules)
         if new_text != original:
             rewritten.append(rel)
-            if args.apply:
+            if apply:
                 with open(full, "w", encoding="utf-8", newline="") as fh:
                     fh.write(new_text)
+    return rewritten, len(files), protected_total
 
-    path_changes = rename_paths(apply=args.apply)
+
+def report(apply: bool, scanned: int, protected_total: int, rewritten: list[str],
+           path_changes: list[tuple[str, str]], path_conflicts: list[tuple[str, str]],
+           drifted: list[str], asset_bad: list[str]) -> None:
+    mode = "APPLY" if apply else "CHECK (dry run)"
+    print(f"[{mode}] {scanned} files scanned")
+    print(f"  protected occurrences : {protected_total}")
+    print(f"  content rewrites      : {len(rewritten)}")
+    print(f"  path renames          : {len(path_changes)}")
+    if path_conflicts:
+        print(f"  path rename CONFLICTS : {len(path_conflicts)}  (target already exists)")
+        for src, dst in path_conflicts[:8]:
+            print(f"      {src}  ->  {dst}")
+    print(f"  brand files drifted   : {len(drifted)}  ({'restored' if apply else 'would restore'})")
+    for d in drifted[:8]:
+        print(f"      {d}")
+    if asset_bad:
+        print(f"  asset manifest MISMATCH: {len(asset_bad)}")
+        for b in asset_bad[:8]:
+            print(f"      {b}")
+
+
+def verify_completeness(path_changes: list[tuple[str, str]]) -> list[str]:
+    """Index paths that are neither on disk nor on disk under their rebranded name.
+
+    The other three legs all ask "is work still pending?", so a file that was *lost* passes every
+    one of them: no rewrite is owed, no rename is owed, no asset drifted. That is not theoretical
+    -- a tree missing 570 renamed modules once reported ``VERIFY: PASS``. Only asking the index
+    catches it, so a lost file and a rename that quietly never happened both fail here.
+    """
+    pending_src = {src for src, _ in path_changes}
+    try:
+        listed = subprocess.run(
+            ["git", "ls-files", "-z"], cwd=REPO, capture_output=True, text=True,
+            check=True, timeout=120,
+        ).stdout
+    except subprocess.TimeoutExpired:
+        # Loud, not silent: "we could not check" must never read as "nothing to report".
+        return ["git ls-files timed out after 120s; completeness could not be verified"]
+    except (OSError, subprocess.CalledProcessError):
+        return []  # not a checkout (a plain tree copy): completeness is undefined, not failed
+    missing = []
+    for rel in filter(None, listed.split("\0")):
+        if rel in pending_src or os.path.exists(os.path.join(REPO, rel.replace("/", os.sep))):
+            continue
+        rebranded = "/".join(_substitute(part) for part in rel.split("/"))
+        if rebranded != rel and os.path.exists(os.path.join(REPO, rebranded.replace("/", os.sep))):
+            continue
+        missing.append(rel)
+    return missing
+
+
+def verify_failures(rewritten: list[str], path_changes: list[tuple[str, str]],
+                    drifted: list[str], asset_bad: list[str], missing: list[str],
+                    lock_bad: list[str]) -> list[str]:
+    """Every kind of pending work, as report lines. Empty means the tree is fully rebranded.
+
+    A gate that only looks at asset hashes passes a half-rebranded tree: a rename that collided
+    (``target exists``) leaves ``hermes_cli/`` standing while every brand file is intact, and the
+    next ``git add -A`` ships both trees. So any pending work fails the gate.
+    """
+    out: list[str] = []
+    for label, items in (
+        ("file(s) still need a content rewrite", rewritten),
+        ("path(s) still need a rename", [f"{s}  ->  {d}" for s, d in path_changes]),
+        ("brand file(s) still drifted", drifted),
+        ("asset manifest mismatch(es)", asset_bad),
+        ("file(s) in the index with neither the old nor the new path on disk", missing),
+        ("lockfile(s) whose workspace identity no longer matches the tree", lock_bad),
+    ):
+        if items:
+            out.append(f"  {len(items)} {label}:")
+            out.extend(f"      {item}" for item in items[:8])
+    return out
+
+
+def _substitute(text: str) -> str:
+    for src, dst in SUBSTITUTIONS:
+        text = text.replace(src, dst)
+    return text
+
+
+def _unsubstitute(text: str) -> str:
+    for src, dst in REVERSE_SUBSTITUTIONS:
+        text = text.replace(src, dst)
+    return text
+
+
+def _project_name(pyproject: str) -> str | None:
+    """The `name` a project declares. Read as one line rather than pulling in a TOML parser."""
+    try:
+        with open(os.path.join(REPO, pyproject), encoding="utf-8-sig") as fh:
+            for line in fh:
+                if line.startswith("name = "):
+                    return line.split("=", 1)[1].strip().strip("\"'")
+    except OSError:
+        return None
+    return None
+
+
+def lockfile_edits() -> dict[str, tuple[tuple[str, str], ...]]:
+    """Identity rewrites each lockfile owes the tree, keyed by lock path."""
+    edits = dict(LOCKFILE_SCOPES)
+    for lock, project in UV_LOCKS:
+        if not (os.path.isfile(os.path.join(REPO, lock))
+                and os.path.isfile(os.path.join(REPO, project))):
+            continue
+        name = _project_name(project)
+        renamed = _substitute(name) if name else None
+        if not name or not renamed or renamed == name:
+            continue
+        # Quoted, so an extras marker (`{ name = "hermes-agent", extras = [...] }`) moves too.
+        edits[lock] = edits.get(lock, ()) + ((f'"{name}"', f'"{renamed}"'),)
+    return edits
+
+
+def rewrite_lockfiles(apply: bool) -> list[str]:
+    """Apply lockfile_edits. Returns the locks that still owed a rewrite."""
+    rewritten = []
+    for rel, pairs in lockfile_edits().items():
+        full = os.path.join(REPO, rel.replace("/", os.sep))
+        try:
+            with open(full, encoding="utf-8-sig", newline="") as fh:
+                text = fh.read()
+        except OSError:
+            continue
+        new_text = text
+        for old, new in pairs:
+            new_text = new_text.replace(old, new)
+        if new_text == text:
+            continue
+        rewritten.append(rel)
+        if apply:
+            with open(full, "w", encoding="utf-8", newline="") as fh:
+                fh.write(new_text)
+    return rewritten
+
+
+def verify_lock_identity() -> list[str]:
+    """Locks whose workspace identity no longer matches the tree.
+
+    Asked on the rebranded tree, so it compares against what the projects now declare rather
+    than replaying the forward rewrite -- a forward-only check would pass vacuously on the very
+    tree that is broken.
+    """
+    bad: list[str] = []
+    pnpm = os.path.join(REPO, "pnpm-lock.yaml")
+    if os.path.isfile(pnpm):
+        with open(pnpm, encoding="utf-8-sig") as fh:
+            text = fh.read()
+        if "@hermes/" in text:
+            bad.append("pnpm-lock.yaml still names the '@hermes/' workspace scope")
+    for lock, project in UV_LOCKS:
+        if not (os.path.isfile(os.path.join(REPO, lock))
+                and os.path.isfile(os.path.join(REPO, project))):
+            continue
+        name = _project_name(project)
+        if not name:
+            continue
+        with open(os.path.join(REPO, lock), encoding="utf-8-sig") as fh:
+            text = fh.read()
+        if f'"{name}"' not in text:
+            bad.append(f"{lock} does not name the project's own package {name!r}")
+        old = _unsubstitute(name)
+        if old != name and f'"{old}"' in text:
+            bad.append(f"{lock} still names {old!r} (the project is {name!r})")
+    return bad
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Re-apply the Anakot rebrand to a Hermes tree.")
+    ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
+    ap.add_argument("--check", action="store_true", help="report only (default)")
+    ap.add_argument("--verify", action="store_true",
+                    help="gate: pending rewrites/renames, brand assets, lockfile identity")
+    ap.add_argument("--rebaseline", action="store_true", help="re-snapshot brand art + refresh manifest hashes")
+    ap.add_argument("--quiet", action="store_true")
+    args = ap.parse_args()
+
+    if args.rebaseline:
+        kept, dropped = rebaseline()
+        print(f"[REBASELINE] {kept} brand files re-snapshotted, {dropped} dropped")
+        return 0
+
+    # Lockfiles first: rewrite_tree renames the projects they record, and lockfile_edits reads
+    # the name a pyproject declares. Run after it and every lock already looks correct.
+    lock_rewrites = rewrite_lockfiles(args.apply)
+    rewritten, scanned, protected_total = rewrite_tree(load_protected(), args.apply)
+    rewritten += lock_rewrites
+    path_changes, path_conflicts = rename_paths(apply=args.apply)
     drifted = restore_assets(apply=args.apply)
     asset_bad = verify_assets()
 
     if not args.quiet:
-        mode = "APPLY" if args.apply else "CHECK (dry run)"
-        print(f"[{mode}] {len(files)} files scanned")
-        print(f"  protected occurrences : {protected_total}")
-        print(f"  content rewrites      : {len(rewritten)}")
-        print(f"  path renames          : {len(path_changes)}")
-        print(f"  brand files drifted   : {len(drifted)}  ({'restored' if args.apply else 'would restore'})")
-        for d in drifted[:8]:
-            print(f"      {d}")
-        if asset_bad:
-            print(f"  asset manifest MISMATCH: {len(asset_bad)}")
-            for b in asset_bad[:8]:
-                print(f"      {b}")
+        report(args.apply, scanned, protected_total, rewritten, path_changes, path_conflicts,
+               drifted, asset_bad)
+
+    if path_conflicts:
+        print("ABORT: a rename target already exists (an ignored leftover inside that directory).")
+        print("       Remove it and re-run; a half-renamed tree must never be committed.")
+        return 2
 
     if args.verify:
-        ok = not asset_bad
-        print("VERIFY:", "PASS" if ok else "FAIL")
-        return 0 if ok else 1
+        if args.apply:
+            # The lists above describe what THIS run wrote. Re-probe the finished tree,
+            # or --apply --verify reports its own completed work as still owed.
+            rewritten, _, _ = rewrite_tree(load_protected(), False)
+            rewritten += rewrite_lockfiles(False)
+            path_changes, _ = rename_paths(apply=False)
+            drifted = restore_assets(apply=False)
+        failures = verify_failures(rewritten, path_changes, drifted, asset_bad,
+                                  verify_completeness(path_changes), verify_lock_identity())
+        print("VERIFY:", "PASS" if not failures else "FAIL")
+        print("\n".join(failures))
+        return 0 if not failures else 1
     return 0
 
 

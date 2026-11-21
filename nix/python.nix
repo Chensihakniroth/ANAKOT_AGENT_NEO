@@ -149,11 +149,11 @@ let
   # computes relative paths via lib.path.splitRoot, which rejects the
   # filtered pythonSrc (a cleanSourceWith set, not a path).  Filtering
   # buys nothing here anyway: the editable install reads from
-  # $ANAKOT_PYTHON_SRC_ROOT at runtime.
+  # $HERMES_PYTHON_SRC_ROOT at runtime.
   workspaceRoot = ./..;
   editableWorkspace = uv2nix.lib.workspace.loadWorkspace { inherit workspaceRoot; };
   editableOverlay = editableWorkspace.mkEditablePyprojectOverlay {
-    root = "$ANAKOT_PYTHON_SRC_ROOT"; # resolved at shellHook time
+    root = "$HERMES_PYTHON_SRC_ROOT"; # resolved at shellHook time
   };
 
   editableSet = pythonSet.overrideScope (

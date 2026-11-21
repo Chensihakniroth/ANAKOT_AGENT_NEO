@@ -87,7 +87,7 @@ public static class AnakotBasicUser {
 '@
 
 # The batch starts from this process's environment. The CI driver exports its own PM home
-# (ANAKOT_HOME, ANAKOT_RUNTIME_DIR, ANAKOT_PYTHON); a CLI that inherits them builds on the
+# (ANAKOT_HOME, ANAKOT_RUNTIME_DIR, HERMES_PYTHON); a CLI that inherits them builds on the
 # driver's Python instead of the package's, and the bug never shows. Start clean, as a user does.
 function Get-UserEnvironmentReset {
     $lines = @(Get-ChildItem env: | Where-Object { $_.Name -match '^(ANAKOT_|UV_|PYTHON|VIRTUAL_ENV|CONDA)' } |

@@ -5,7 +5,7 @@ description: "A composer button for Anakot Desktop that first repairs dictation 
 maintainer: Heybinshao
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/Heybinshao/prompt-enhancer#readme
 version: "2.6.0"
 image: https://raw.githubusercontent.com/Heybinshao/prompt-enhancer/c5b34770fdc9e6ab822ffdb37737ed11193a13ef/assets/banner.png

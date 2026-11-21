@@ -7,7 +7,7 @@ description: "Swipe through what your agent made. Anakot puts a batch of options
 maintainer: Riah Studio
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/RiahStudio/riah-swipe/tree/513609d47b27a2703a2fd5bcb2fa54ce35d3d966/anakot-plugin#readme
 version: "0.1.0"
 readme: true

@@ -82,7 +82,7 @@ def _check_serve_ready(home) -> None:
         port = int(verdict["port"])
 
         req = urllib.request.Request(f"http://127.0.0.1:{port}/api/status",
-                                     headers={"X-Anakot-Session-Token": sp.token})
+                                     headers={"X-Hermes-Session-Token": sp.token})
         with urllib.request.urlopen(req, timeout=30) as resp:
             assert resp.status == 200, resp.status
             json.loads(resp.read())

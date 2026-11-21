@@ -15,7 +15,7 @@ category: desktop
 docs_url: https://github.com/AgileIndustrialComplex/anakot-gruvbox#readme
 version: "1.0.0"
 platforms: [linux, macos, windows]
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 image: https://raw.githubusercontent.com/AgileIndustrialComplex/anakot-gruvbox/bb8d6e1a23460947374d46b7059815dec63dc8cb/docs/social-preview.png
 screenshots:
   - https://raw.githubusercontent.com/AgileIndustrialComplex/anakot-gruvbox/bb8d6e1a23460947374d46b7059815dec63dc8cb/docs/screenshots/gruvbox-dark-hard.png

@@ -7,7 +7,7 @@ description: 'Breaking-news ticker for Anakot Desktop: a scrolling RSS/Atom/JSON
 maintainer: tony-simons-aiowa
 tier: community
 category: desktop
-requires_anakot: '>=0.19'
+requires_hermes: '>=0.19'
 docs_url: https://github.com/tony-simons-aiowa/anakot-newswire
 platforms: []
 capabilities:

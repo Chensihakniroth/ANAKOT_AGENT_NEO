@@ -6,7 +6,7 @@ description: "Read-only answers about your own US bank, credit card and investme
 maintainer: bankbridge-money
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/bankbridge-money/bankbridge-plugin/blob/c7fcda435eeaeee94cf4479983d646027befb467/README.md
 version: "0.5.2"
 platforms: []

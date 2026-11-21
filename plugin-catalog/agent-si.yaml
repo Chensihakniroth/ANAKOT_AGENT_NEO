@@ -6,7 +6,7 @@ description: "Anti-hallucination memory for Anakot: your agent stops inventing a
 maintainer: joelbrilliant
 tier: community
 category: memory
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/joelbrilliant/anakot-agent-si#readme
 capabilities:
   provides_tools: []

@@ -68,7 +68,7 @@ dashboard account; each must sign in again. The account tokens such a login keep
 on the Webapp only as that login (the gateway refuses them as a bearer token, on a connection's URL and
 on its token refresh), so they end with it. A native Anakot app that signed in to the gateway on its own stays signed in.
 The deployment session token (`ANAKOT_DASHBOARD_SESSION_TOKEN`, see [Deployment session-token provider](./features/web-dashboard.md#deployment-session-token-provider-token-only-deployments))
-also works there on its own, as a bearer token, in the `X-Anakot-Session-Token` header (what Desktop sends on REST) or on a connection's URL, while the session-token provider is enabled.
+also works there on its own, as a bearer token, in the `X-Hermes-Session-Token` header (what Desktop sends on REST) or on a connection's URL, while the session-token provider is enabled.
 
 For a named profile, `anakot -p work webapp` opens the Webapp on `work`. Profiles the default gateway
 serves share its Webapp; a standalone profile's own gateway serves its own when its config turns it on.
@@ -174,7 +174,7 @@ set up again.
 Each saved gateway joins the Webapp's gateway switcher and the sidebar's gateway groups. The
 browser still talks only to the gateway serving the page. That gateway sends each request and socket
 on to the saved one, with the credential saved for it, exactly as the native app would: the session
-token in the `X-Anakot-Session-Token` header, or the bearer token of a sign-in, plus any extra
+token in the `X-Hermes-Session-Token` header, or the bearer token of a sign-in, plus any extra
 headers saved with the connection. The other gateway needs no setting of its own.
 
 Anyone who can sign in to this Webapp can use every gateway saved on this machine, as whoever the

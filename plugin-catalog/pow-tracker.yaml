@@ -6,7 +6,7 @@ description: "Multi-client proof-of-work time tracking for the Anakot web dashbo
 maintainer: BigBossRabbit
 tier: community
 category: web
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 version: "0.3.1"
 platforms: []
 capabilities:

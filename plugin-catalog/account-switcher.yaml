@@ -6,7 +6,7 @@ description: "Windows desktop plugin that switches which Codex login and which C
 maintainer: SmelterLabs
 tier: community
 category: desktop
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/SmelterLabs/anakot-account-switcher#readme
 version: "1.3.2"
 platforms: [windows]

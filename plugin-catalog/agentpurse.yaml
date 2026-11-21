@@ -8,7 +8,7 @@ description: "Search, quote, and buy from an AgentPurse allowance on the PayPal 
 maintainer: maaz-bin-hassan
 tier: community
 category: tools
-requires_anakot: ">=0.22.7"
+requires_hermes: ">=0.22.7"
 docs_url: https://github.com/maaz-bin-hassan/agentpurse/blob/84a1ed7cc9dbac462a5bde8b65f6d105cc56b20b/plugins/anakot/README.md
 known_issues:
   - PayPal sandbox only. A captured payment is not a retailer order.

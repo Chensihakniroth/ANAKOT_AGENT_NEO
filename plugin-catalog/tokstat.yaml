@@ -7,7 +7,7 @@ tier: community
 category: desktop
 version: "1.0.1"
 docs_url: https://github.com/heerey525/tokstat#readme
-requires_anakot: ">=0.20.2"
+requires_hermes: ">=0.20.2"
 capabilities:
   provides_tools: []
   provides_hooks: []

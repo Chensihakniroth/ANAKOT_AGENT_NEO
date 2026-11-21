@@ -7,7 +7,7 @@ description: "Turns your own agent history into a comic (Anakot, Claude Code, Co
 maintainer: Sahil-SS9
 tier: community
 category: general
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/Sahil-SS9/agent-reel/blob/1005afe2249f76d109f55f29621278fa82a51297/README.md
 readme: true
 platforms: [linux, macos, windows]

@@ -34,8 +34,8 @@ logger = logging.getLogger(__name__)
 
 _IS_WINDOWS = sys.platform == "win32"
 _ANAKOT_EXECUTABLES = frozenset({"anakot", "anakot-agent", "anakot-acp"})
-_ANAKOT_PYTHON_MODULES = frozenset({"acp_adapter", "anakot_cli.main"})
-_ANAKOT_PYTHON_SCRIPTS = frozenset({"anakot_cli/main.py", "run_agent.py"})
+_HERMES_PYTHON_MODULES = frozenset({"acp_adapter", "anakot_cli.main"})
+_HERMES_PYTHON_SCRIPTS = frozenset({"anakot_cli/main.py", "run_agent.py"})
 _PYTHON_SHORT_OPTIONS_WITH_OPERANDS = frozenset({"Q", "W", "X"})
 _PYTHON_LONG_OPTIONS_WITH_OPERANDS = frozenset(
     {"--check-hash-based-pycs", "--jit"}
@@ -134,10 +134,10 @@ def _looks_like_anakot(argv: Sequence[str]) -> bool:
     kind, value = target
     normalized = value.lower().replace("\\", "/")
     if kind == "module":
-        return normalized in _ANAKOT_PYTHON_MODULES
+        return normalized in _HERMES_PYTHON_MODULES
     return any(
         normalized == script or normalized.endswith(f"/{script}")
-        for script in _ANAKOT_PYTHON_SCRIPTS
+        for script in _HERMES_PYTHON_SCRIPTS
     )
 
 

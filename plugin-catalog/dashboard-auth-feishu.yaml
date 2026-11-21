@@ -6,7 +6,7 @@ maintainer: xielevi
 tier: community
 category: general
 title: Feishu / Lark Dashboard Login
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/xielevi/anakot-dashboard-auth-feishu#readme
 version: "1.0.1"
 known_issues:

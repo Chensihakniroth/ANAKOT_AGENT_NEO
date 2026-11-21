@@ -10,7 +10,7 @@ category: tools
 docs_url: https://github.com/RegeneratusLabs/Soul-Finder#readme
 readme: true
 platforms: [linux, macos]
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 screenshots:
   - https://raw.githubusercontent.com/RegeneratusLabs/Soul-Finder/2d288de288f220f3a630fa41ca9bd0bc9801e992/screenshots/desktop.png
   - https://raw.githubusercontent.com/RegeneratusLabs/Soul-Finder/2d288de288f220f3a630fa41ca9bd0bc9801e992/screenshots/tui.png

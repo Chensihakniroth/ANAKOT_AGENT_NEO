@@ -5,7 +5,7 @@ description: "Makes a UI claim measurable before an agent reports success: captu
 maintainer: valenciayuna
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/valenciayuna/anakot-plugin-visual-oracle#readme
 readme: true
 platforms: []

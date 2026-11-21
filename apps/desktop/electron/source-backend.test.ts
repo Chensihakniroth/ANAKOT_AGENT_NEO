@@ -91,7 +91,7 @@ test.skipIf(process.platform === 'win32')(
       UV_CACHE_DIR: path.join(temp, 'cache'),
       UV_OFFLINE: '1'
     })
-    const python: string = process.env.ANAKOT_PYTHON || 'python3'
+    const python: string = process.env.HERMES_PYTHON || 'python3'
     const fixtureScript: string = path.join(import.meta.dirname, 'fixtures', 'source-backend.py')
     const token: string = 'desktop-pm-contract'
     env.ANAKOT_DASHBOARD_SESSION_TOKEN = token
@@ -162,7 +162,7 @@ test.skipIf(process.platform === 'win32')(
           const port: number = (await waitForDashboardPort(child, 45_000)) as number
 
           const response: Response = await fetch(`http://127.0.0.1:${port}/api/health`, {
-            headers: { 'X-Anakot-Session-Token': token }
+            headers: { 'X-Hermes-Session-Token': token }
           })
 
           assert.equal(response.status, 200, output)

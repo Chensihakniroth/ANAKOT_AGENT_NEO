@@ -6,7 +6,8 @@ maintainer: quotumorg
 tier: community
 category: models
 version: "0.3.1"
-requires_anakot: ">=0.21.5"
+image: https://raw.githubusercontent.com/qvotvm/anakot-quotum/b820ea8006056ae0be9ed3f63ca9c5646fd9b5d4/docs/catalog-1200x600.png
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/qvotvm/anakot-quotum#readme
 known_issues:
   - Requires agent.secret_scope.get_secret. Hosts without that API can load the plugin, but provider actions refuse credentials and the dashboard asks for a Anakot upgrade and restart.

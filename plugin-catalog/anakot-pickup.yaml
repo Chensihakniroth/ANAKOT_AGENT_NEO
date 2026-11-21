@@ -5,7 +5,7 @@ description: "Pick up where you left off: up to 10 cards (5 by default) of unfin
 maintainer: murenovich
 tier: community
 category: desktop
-requires_anakot: ">=0.20.0"
+requires_hermes: ">=0.20.0"
 docs_url: https://github.com/murenovich/anakot-pickup#readme
 version: "0.2.0"
 screenshots:

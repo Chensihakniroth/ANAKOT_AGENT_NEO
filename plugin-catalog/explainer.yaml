@@ -7,7 +7,7 @@ description: "Turn any link, PDF, notes or topic into a narrated explainer video
 maintainer: suhas-svg
 tier: community
 category: tools
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/suhas-svg/anakot_explainer#readme
 readme: true
 platforms: []

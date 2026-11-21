@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import NoReturn
 from anakot_cli.cli_output import line_input
 from anakot_cli.process_identity import is_desktop_owned_backend as _is_desktop_owned_backend
+from anakot_cli._startup_fast import project_root_str
 
 _PRE_BUILD_HINT = "  Pre-build first:  pnpm install --frozen-lockfile --filter web... && pnpm --dir web run build"
 
@@ -410,7 +411,7 @@ def _respawnable_command_for_current_install(argv: list[str]) -> list[str]:
     captured argv verbatim asks the old interpreter to parse a shell script (#124778). This
     checkout's own ``anakot`` entry script stays Python, so it and every other shape replay unchanged.
     """
-    root = Path(__file__).resolve().parents[1]
+    root = Path(project_root_str())
     if (len(argv) > 2 and os.path.basename(argv[0]).startswith("python")
             and os.path.basename(argv[1]) == "anakot" and Path(argv[1]) != root / "anakot"):
         from anakot_cli._launchers import runtime_command

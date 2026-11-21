@@ -6,7 +6,7 @@ description: MetaMask Agent Wallet for Anakot — chat-only setup, reads, and ap
 maintainer: akugone
 tier: community
 category: tools
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/akugone/anakot-metamask-wallet
 platforms: [macos, linux]
 capabilities:

@@ -14,4 +14,4 @@ capabilities:
   provides_hooks: [on_session_start, pre_tool_call, transform_tool_result]
   provides_middleware: []
   requires_env: []
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"

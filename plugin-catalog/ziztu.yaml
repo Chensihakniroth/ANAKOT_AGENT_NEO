@@ -8,7 +8,7 @@ maintainer: 0xnirlin
 tier: community
 category: tools
 docs_url: https://getziztu.com/docs/mcp
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 readme: true
 platforms: []
 capabilities:

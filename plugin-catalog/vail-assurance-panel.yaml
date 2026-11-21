@@ -7,7 +7,7 @@ description: "A Anakot Desktop page that assures every Anakot profile (each bot)
 maintainer: projectvail
 tier: community
 category: desktop
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/projectvail/vail-agent-assurance/tree/b987cb9c459568eca591a4cdcd130fb24ea7aa15/plugins/vail-assurance-panel#readme
 version: "0.2.0"
 screenshots:

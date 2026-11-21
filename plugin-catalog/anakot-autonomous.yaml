@@ -5,7 +5,7 @@ description: "Proactive follow-ups: reads the recent conversation, finds things 
 maintainer: xiaok
 tier: community
 category: automation
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 version: "0.7.2"
 platforms: []
 capabilities:

@@ -51,21 +51,11 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
   }, [bootstrap.status])
 
   const isUpdate = mode === 'update'
-  const isUninstall = mode === 'uninstall'
-
-  const title = isUpdate
-    ? 'Updating Anakot'
-    : isUninstall
-      ? 'Removing Anakot'
-      : bootstrap.status === 'completed'
-        ? 'Done'
-        : 'Setting up Anakot Agent'
+  const title = bootstrap.status === 'completed' ? 'Done' : isUpdate ? 'Updating Anakot' : 'Setting up Anakot Agent'
 
   const description = isUpdate
     ? 'Anakot is updating to the latest version — this only takes a moment.'
-    : isUninstall
-      ? 'Running the Anakot uninstaller. This window closes when it finishes.'
-      : 'This is a one-time setup. The Anakot installer is downloading dependencies and configuring your machine. Subsequent launches will skip this step.'
+    : 'This is a one-time setup. The Anakot installer is downloading dependencies and configuring your machine. Subsequent launches will skip this step.'
 
   const pct = Math.round(progress.fraction * 100)
 
@@ -84,18 +74,10 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
         <div className="flex-1 overflow-y-auto px-6 pt-2 pb-4">
           {/* Progress line + bar; the count shimmers while the install runs.
               pt-2 matches the log header's py-2 so the "steps complete" line and
-              the "Live output" header share a baseline.
-
-              The shimmering count carries its own brighter colour on purpose:
-              tw-shimmer paints the run with a gradient whose low stop is
-              currentColor, so inheriting text-muted-foreground put its floor at
-              ~5.3:1 and a thin glyph (the leading digit) read as missing. At
-              foreground/80 the floor measures 6.4:1 and the sweep still reads as
-              live (peak ~8:1). Not the ~7:1 a naive sRGB estimate gives: Tailwind
-              compiles the /80 to color-mix(in oklab, ...), which lands lower. */}
+              the "Live output" header share a baseline. */}
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-              <span className={clsx(bootstrap.status === 'running' && 'shimmer text-foreground/80')}>
+              <span className={clsx(bootstrap.status === 'running' && 'shimmer')}>
                 {progress.done} of {progress.total} steps complete
               </span>
               <span className="tabular-nums">{pct}%</span>
@@ -179,10 +161,7 @@ export default function ProgressScreen({ bootstrap }: ProgressProps) {
           <ChevronRight className={clsx('transition-transform', showLogs && 'rotate-90')} size={12} />
         </button>
 
-        {/* No Cancel during an uninstall: a half-removed installation is not a
-            state we can hand back to the user, and the CLI has no safe abort.
-            The window closes itself when the run finishes. */}
-        {bootstrap.status === 'running' && !isUninstall && (
+        {bootstrap.status === 'running' && (
           <Button onClick={() => void cancelInstall()} size="sm" variant="outline">
             Cancel
           </Button>

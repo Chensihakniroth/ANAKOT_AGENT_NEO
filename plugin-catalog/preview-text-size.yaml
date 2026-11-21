@@ -7,7 +7,7 @@ description: "Larger or smaller text in the Anakot Desktop file preview pane: sc
 maintainer: pandengyao
 tier: community
 category: desktop
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/pandengyao/anakot-preview-text-size/blob/258f6491424ccabcd520c2f61499e5cc26b6a51a/README.md
 image: https://raw.githubusercontent.com/pandengyao/anakot-preview-text-size/258f6491424ccabcd520c2f61499e5cc26b6a51a/docs/before-after.png
 platforms: []

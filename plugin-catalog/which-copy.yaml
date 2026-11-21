@@ -48,7 +48,7 @@ description: >-
 maintainer: Hazem-Samak
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/Hazem-Samak/anakot-which-copy#readme
 version: "1.2.3"
 title: Which Copy

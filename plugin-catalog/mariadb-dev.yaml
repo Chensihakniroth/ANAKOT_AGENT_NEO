@@ -8,7 +8,7 @@ description: "Work with MariaDB from Anakot: 85 skills on MariaDB SQL, functions
 maintainer: MariaDB
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/mariadb/ai-plugins#anakot-agent
 readme: true
 platforms: []

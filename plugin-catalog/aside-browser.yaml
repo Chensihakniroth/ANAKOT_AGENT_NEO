@@ -5,7 +5,7 @@ description: "Use the signed-in Aside browser as Anakot's browser when the Aside
 maintainer: leonphull
 tier: community
 category: tools
-requires_anakot: ">=0.21.0"
+requires_hermes: ">=0.21.0"
 docs_url: https://github.com/leonphull/anakot-aside-browser#readme
 version: "0.3.0"
 platforms: []

@@ -20,6 +20,7 @@ from anakot_cli.config import (
     redact_key,
     OPTIONAL_ENV_VARS,
 )
+from anakot_cli.config_secret_refs import provider_name_key_env
 import gateway.status as _gw_status
 import anakot_cli.config as _cfg_mod
 import anakot_cli.web_routers.chat_ws as _rt_chat_ws
@@ -66,7 +67,7 @@ def _install_example_plugin(_isolate_anakot_home):
     The user-plugin source is preferred over a transient
     ``ANAKOT_BUNDLED_PLUGINS`` override because the bundled dir is
     resolved per-call (other tests in the suite implicitly rely on the
-    real bundled plugins — kanban, anakot-achievements, model providers
+    real bundled plugins — kanban, hermes-achievements, model providers
     — being available, and globally swapping that root would yank them
     all). User plugins are first in the discovery search order, so
     laying down the fixture here is enough.
@@ -1410,13 +1411,13 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         assert model_cfg["base_url"] == "https://text.example.com/v1"
         assert model_cfg["api_key"] == "sk-secret"
 
-        # Registered in custom_providers (dedup by base_url) so the picker shows
-        # a proper ready row instead of the "needs setup" dead-end.
+        # Registered in custom_providers (dedup by base_url) so the picker shows a ready row; the
+        # key lives in .env under the row's key_env (#77471).
         custom = cfg.get("custom_providers") or []
         assert any(
             isinstance(e, dict)
             and e.get("base_url") == "https://text.example.com/v1"
-            and e.get("api_key") == "sk-secret"
+            and os.environ.get(e.get("key_env") or "") == "sk-secret"
             and e.get("model") == "gpt-oss-120b"
             for e in custom
         )
@@ -1431,7 +1432,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         authenticating to the deleted host, and the credential the operator
         just removed through the dashboard survives the delete.
         """
-        from anakot_cli.config import custom_endpoint_key_env, get_env_value, load_config
+        from anakot_cli.config import get_env_value, load_config
 
         self.client.post(
             "/api/providers/custom-endpoints",
@@ -1447,7 +1448,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
             "/api/providers/custom-endpoints/acme/activate", json={}
         ).status_code == 200
 
-        env_var = custom_endpoint_key_env("acme")
+        env_var = provider_name_key_env("acme")
         cfg = load_config()
         assert cfg["model"]["key_env"] == env_var
         assert get_env_value(env_var) == "sk-acme-secret"
@@ -1590,7 +1591,6 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         never appeared for the profile the user was actually configuring.
         """
         from anakot_cli import profiles as profiles_mod
-        from anakot_cli.config import custom_endpoint_key_env
         from anakot_constants import get_anakot_home
 
         default_home = get_anakot_home()
@@ -1613,7 +1613,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         # get_env_value(): save_env_value also mirrors the key into the shared
         # os.environ, so a reader-based check can't tell WHICH profile's store
         # actually received the write.
-        env_var = custom_endpoint_key_env("worker-proxy")
+        env_var = provider_name_key_env("worker-proxy")
 
         worker_cfg = (worker_home / "config.yaml").read_text()
         assert "worker-proxy" in worker_cfg
@@ -1655,7 +1655,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
     def test_custom_endpoint_save_keeps_the_api_key_out_of_config(self):
         """The key belongs in .env behind key_env, never in config.yaml (#69449)."""
-        from anakot_cli.config import custom_endpoint_key_env, get_env_value, load_config
+        from anakot_cli.config import get_env_value, load_config
 
         self.client.post(
             "/api/providers/custom-endpoints",
@@ -1671,7 +1671,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
         cfg = load_config()
         entry = cfg["providers"]["proxy"]
-        env_var = custom_endpoint_key_env("proxy")
+        env_var = provider_name_key_env("proxy")
         assert entry["key_env"] == env_var
         assert "api_key" not in entry
         assert "api_key" not in cfg["model"]
@@ -1828,7 +1828,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         """
         import anakot_yaml as yaml
 
-        from anakot_cli.config import custom_endpoint_key_env, get_config_path, get_env_value
+        from anakot_cli.config import get_config_path, get_env_value
 
         monkeypatch.setenv("MY_PROXY_KEY", "sk-user-managed")
         get_config_path().write_text(
@@ -1857,7 +1857,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
         raw = yaml.safe_load(get_config_path().read_text(encoding="utf-8"))
         assert raw["providers"]["proxy"]["api_key"] == "${MY_PROXY_KEY}"
-        assert not get_env_value(custom_endpoint_key_env("proxy"))
+        assert not get_env_value(provider_name_key_env("proxy"))
 
 
     def test_two_endpoints_on_one_host_keep_separate_credentials(self):
@@ -1867,7 +1867,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         and ``:8001`` onto one name, so saving the second silently overwrites
         the first's key.
         """
-        from anakot_cli.config import custom_endpoint_key_env, get_env_value
+        from anakot_cli.config import get_env_value
 
         for port, key in ((8000, "sk-first"), (8001, "sk-second")):
             self.client.post(
@@ -1881,8 +1881,8 @@ CONFIG_SCHEMA = ProviderConfigSchema(
                 },
             )
 
-        assert get_env_value(custom_endpoint_key_env("local-8000")) == "sk-first"
-        assert get_env_value(custom_endpoint_key_env("local-8001")) == "sk-second"
+        assert get_env_value(provider_name_key_env("local-8000")) == "sk-first"
+        assert get_env_value(provider_name_key_env("local-8001")) == "sk-second"
 
     def test_custom_endpoint_response_reports_a_key_held_in_env(self):
         """has_api_key must follow key_env, not just a plaintext api_key.
@@ -3180,7 +3180,7 @@ class TestDesktopHostRendezvousIsolation:
                 return False
 
         def _fake_urlopen(request, timeout=None):
-            dialed.append((request.full_url, request.get_header("X-anakot-session-token")))
+            dialed.append((request.full_url, request.get_header("X-hermes-session-token")))
             return _Reply(b'{"ok": true}')
 
         monkeypatch.setattr(urllib.request, "urlopen", _fake_urlopen)
@@ -4468,12 +4468,12 @@ class TestPluginAPIAuth:
         """Auth must be plugin-agnostic, not kanban-specific.
 
         The middleware fix is at the gate level (no per-plugin allowlist),
-        so any plugin's API surface — kanban, anakot-achievements, future
+        so any plugin's API surface — kanban, hermes-achievements, future
         plugins — must require the session token. Hit a non-kanban plugin
         path to lock that in.
         """
-        # Real plugin path (anakot-achievements is loaded by default).
-        resp = self.client.get("/api/plugins/anakot-achievements/overview")
+        # Real plugin path (hermes-achievements is loaded by default).
+        resp = self.client.get("/api/plugins/hermes-achievements/overview")
         assert resp.status_code == 401
         # Same for an arbitrary plugin namespace that doesn't even exist —
         # the middleware should 401 before routing decides 404, so an
@@ -4679,14 +4679,14 @@ class TestPtyWebSocket:
         # the venv (tmpfs /tmp vs disk home) where hard links raise EXDEV.
         shutil.copy2(sys.executable, executable)
         env = {
-            "ANAKOT_CWD": str(tmp_path), "ANAKOT_PYTHON_SRC_ROOT": str(tmp_path),
-            "ANAKOT_PYTHON": str(executable),
+            "ANAKOT_CWD": str(tmp_path), "HERMES_PYTHON_SRC_ROOT": str(tmp_path),
+            "HERMES_PYTHON": str(executable),
             "PATH": str(bin_dir),
         }
 
         main_tui_launch._apply_tui_python_env(env)
 
-        assert (env["ANAKOT_PYTHON"], env["ANAKOT_PYTHON_SRC_ROOT"]) == (sys.executable, str(_main_mod.PROJECT_ROOT))
+        assert (env["HERMES_PYTHON"], env["HERMES_PYTHON_SRC_ROOT"]) == (sys.executable, str(_main_mod.PROJECT_ROOT))
 
 
     def test_unavailable_platform_closes_with_message(self, monkeypatch):
@@ -5146,7 +5146,7 @@ class TestServeIndexMissingIndex:
         resp = client.get("/chat")
 
         assert resp.status_code == 200
-        assert 'window.__ANAKOT_SESSION_TOKEN__="after-mount"' in resp.text
+        assert 'window.__HERMES_SESSION_TOKEN__="after-mount"' in resp.text
 
 
 class TestHeadlessServeTokenPage:
@@ -5154,7 +5154,7 @@ class TestHeadlessServeTokenPage:
     at `/` when the dashboard auth gate is off (#94227).
 
     The Electron renderer boots by fetching `/` and extracting
-    ``window.__ANAKOT_SESSION_TOKEN__`` for WebSocket auth. Headless serve
+    ``window.__HERMES_SESSION_TOKEN__`` for WebSocket auth. Headless serve
     used to 404 every path, so after an update replaced the backend (and
     the spawn-token env pin no longer matched the token the new backend
     generated) the renderer was stuck with a stale token, /api/ws rejected
@@ -5184,7 +5184,7 @@ class TestHeadlessServeTokenPage:
         # Must match the desktop's extraction regex exactly
         # (apps/desktop/electron/dashboard-token.ts).
         match = re.search(
-            r'window\.__ANAKOT_SESSION_TOKEN__\s*=\s*("(?:\\.|[^"\\])*")',
+            r'window\.__HERMES_SESSION_TOKEN__\s*=\s*("(?:\\.|[^"\\])*")',
             resp.text,
         )
         assert match, resp.text
@@ -5205,7 +5205,7 @@ class TestHeadlessServeTokenPage:
         ws._apply_ssh_session_token("after-mount")
         resp = client.get("/")
         match = re.search(
-            r'window\.__ANAKOT_SESSION_TOKEN__\s*=\s*("(?:\\.|[^"\\])*")',
+            r'window\.__HERMES_SESSION_TOKEN__\s*=\s*("(?:\\.|[^"\\])*")',
             resp.text,
         )
 

@@ -6,7 +6,7 @@ description: "Local ledger of the emoji reactions people leave on messages in yo
 maintainer: olric3015
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 docs_url: https://github.com/olric3015/anakot-plugins/tree/main/reaction-ledger
 version: "1.0.0"
 image: https://raw.githubusercontent.com/olric3015/anakot-plugins/c3cf4f480a7a7ee33be542703dd00d5b90bce7cc/docs/reaction-ledger-card.png

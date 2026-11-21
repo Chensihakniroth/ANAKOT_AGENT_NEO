@@ -8,7 +8,7 @@ category: tools
 version: "1.1.0"
 docs_url: https://github.com/0xGingi/neuralwatt-anakot#readme
 image: https://raw.githubusercontent.com/0xGingi/neuralwatt-anakot/008e6147b9376527579b4446467db40d9423f8da/assets/card.jpg
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 readme: true
 platforms: []
 capabilities:

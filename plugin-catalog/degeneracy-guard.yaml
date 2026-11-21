@@ -6,7 +6,7 @@ description: Asks the user to confirm a tool call whose arguments look like a re
 maintainer: simin-yuan
 tier: community
 category: general
-requires_anakot: ">=0.22.2"
+requires_hermes: ">=0.22.2"
 capabilities:
   provides_tools: []
   provides_hooks:

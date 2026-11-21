@@ -6,7 +6,7 @@ maintainer: SuryaXyz-art
 tier: community
 category: automation
 version: "1.0.3"
-requires_anakot: ">=0.20.5"
+requires_hermes: ">=0.20.5"
 readme: true
 capabilities:
   provides_tools:

@@ -9,7 +9,7 @@ maintainer: WorkPods
 tier: community
 category: tools
 docs_url: https://workpods.ai/tools/agent-ready
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 readme: true
 platforms: []
 capabilities:

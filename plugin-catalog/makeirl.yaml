@@ -7,7 +7,7 @@ description: "Run ERC, DRC, schematic-to-PCB parity, BOM and export checks on Ki
 maintainer: MelMayssonOwen
 tier: community
 category: tools
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 docs_url: https://github.com/MelMayssonOwen/anakot-plugins/blob/f203c3f897784d731ef48bc0974104a4d08cf5f8/makeirl/README.md
 version: "1.0.0"
 platforms: []

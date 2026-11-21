@@ -7,7 +7,7 @@ description: "Give Anakot agents their own email inbox, phone number, and worksp
 maintainer: artil
 tier: community
 category: platform
-requires_anakot: ">=0.22.3"
+requires_hermes: ">=0.22.3"
 docs_url: https://docs.artil.ai/anakot
 version: "0.4.0"
 platforms: [linux, macos]

@@ -8,7 +8,7 @@ description: "Memory provider with keyed corrections you can undo. A correction 
 maintainer: DanceNitra
 tier: community
 category: memory
-requires_anakot: ">=0.21"
+requires_hermes: ">=0.21"
 docs_url: https://github.com/DanceNitra/inspeximus/blob/main/integrations/anakot-plugin-inspeximus/README.md
 readme: true
 capabilities:

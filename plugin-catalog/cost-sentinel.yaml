@@ -9,7 +9,7 @@ maintainer: SongotenU
 tier: community
 category: tools
 version: "1.0.0"
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 platforms: [linux, macos, windows]
 docs_url: https://github.com/SongotenU/anakot-cost-sentinel
 capabilities:

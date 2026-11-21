@@ -6,7 +6,7 @@ description: "Anakot phones its owner through CALL-E before a risky action, when
 maintainer: fozagtx
 tier: community
 category: voice
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.2.0"
 docs_url: https://github.com/fozagtx/anakot-call-me#readme
 platforms: []

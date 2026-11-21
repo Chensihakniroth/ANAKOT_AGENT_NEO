@@ -6,7 +6,7 @@ description: "Dashboard-only: an interactive 3D galaxy of your agent — tools, 
 maintainer: kurenn
 tier: community
 category: general
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/kurenn/agent-galaxy#readme
 version: "0.1.2"
 image: https://raw.githubusercontent.com/kurenn/agent-galaxy/877ecd17b4e5c8e6dd4f06f3cf9b20d142b68a46/docs/banner.png

@@ -20,7 +20,7 @@ import { loadNativeTokenSet, persistNativeTokenSet } from './native-token-store'
 // Desktop (this module) and the Webapp's Python server (anakot_cli/gateway_connections.py)
 // keep ONE saved-gateways list. Existing Desktop users must keep everything on the move.
 const repo = path.resolve(import.meta.dirname, '../../..')
-const python = process.env.ANAKOT_PYTHON || 'python3'
+const python = process.env.HERMES_PYTHON || 'python3'
 
 const fixture = JSON.parse(
   fs.readFileSync(path.join(repo, 'tests/fixtures/gateway_connections/normalize_cases.json'), 'utf8')

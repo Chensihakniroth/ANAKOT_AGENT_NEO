@@ -17,7 +17,7 @@ export async function downloadViaTokenToFile(url, token, ctx, finalizeGatewayDow
   const res: http.IncomingMessage = await withRetry(async () => {
     const headers = options.gatewayDescriptor
       ? await nativeGatewayHttpHeaders(options.gatewayDescriptor, url)
-      : options.bearer ? { Authorization: `Bearer ${options.bearer}` } : { 'X-Anakot-Session-Token': token }
+      : options.bearer ? { Authorization: `Bearer ${options.bearer}` } : { 'X-Hermes-Session-Token': token }
 
     return new Promise<http.IncomingMessage>((resolve, reject) => {
       const client = parsed.protocol === 'https:' ? https : http

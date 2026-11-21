@@ -7,7 +7,7 @@ description: "Get paid from a Anakot chat. One checkoutUrl for card, bank, Light
 maintainer: welliv
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 docs_url: https://github.com/welliv/anakot-zaprite
 version: "0.1.0"
 image: "https://raw.githubusercontent.com/welliv/anakot-zaprite/2422546b20ed0d4b59e931061d0017e8f9004583/docs/demo-poster.png"

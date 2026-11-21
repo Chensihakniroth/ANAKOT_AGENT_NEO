@@ -6,7 +6,7 @@ description: "Transactional SQLite WAL flight recorder, pre/post SHA-256 state f
 maintainer: Ratz00007
 tier: community
 category: tools
-requires_anakot: ">=0.21.6"
+requires_hermes: ">=0.21.6"
 version: "0.3.0"
 capabilities:
   provides_tools:

@@ -1,6 +1,6 @@
 name: yandex_calendar
 repo: https://github.com/akinfold/anakot-yandex-calendar
-sha: 7a717f0bcece2037d1a894fb19dfd2d4742ac470
+sha: e810167cecf8be7075439f18cdb7650f06974447
 subdir: anakot_yandex_calendar
 title: "Yandex Calendar"
 image: https://raw.githubusercontent.com/akinfold/anakot-yandex-calendar/7a717f0bcece2037d1a894fb19dfd2d4742ac470/docs/banner.png
@@ -8,7 +8,7 @@ description: "Manage events, invitations and RSVPs across Yandex calendars throu
 maintainer: akinfold
 tier: community
 category: tools
-requires_anakot: ">=0.21.5"
+requires_hermes: ">=0.21.5"
 version: "0.6.4"
 docs_url: https://github.com/akinfold/anakot-yandex-calendar#readme
 readme: true

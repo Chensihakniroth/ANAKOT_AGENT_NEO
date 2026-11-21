@@ -6,7 +6,7 @@ description: "Read-only ESP32 debugging: find ESP32 boards on serial ports, read
 maintainer: snakeyear
 tier: community
 category: tools
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/snakeyear/anakot-esp32-debug#readme
 version: "0.1.3"
 readme: true

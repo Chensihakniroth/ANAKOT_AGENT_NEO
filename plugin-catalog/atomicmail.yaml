@@ -7,7 +7,7 @@ description: "Gives a Anakot agent its own @atomicmail.ai address in one command
 maintainer: Atomic-Mail
 tier: community
 category: platform
-requires_anakot: ">=0.23.1"
+requires_hermes: ">=0.23.1"
 docs_url: https://github.com/Atomic-Mail/atomic-mail-agentic/tree/2b8ec2e6e91eeb121cb56bdca153f88d266895ef/integrations/anakot-plugin
 version: "0.1.0"
 readme: true

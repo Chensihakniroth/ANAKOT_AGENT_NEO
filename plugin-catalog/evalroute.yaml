@@ -5,7 +5,7 @@ description: "Route a task to the right (model, reasoning effort) arm before you
 maintainer: keppy
 tier: community
 category: tools
-requires_anakot: '>=0.21'
+requires_hermes: '>=0.21'
 version: "0.6.6"
 docs_url: https://github.com/keppy/anakot-plugin-evalroute#readme
 capabilities:

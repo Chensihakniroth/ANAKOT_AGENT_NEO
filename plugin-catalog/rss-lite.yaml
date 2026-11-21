@@ -12,7 +12,7 @@ description: "Lightweight RSS, Atom and YouTube reader page for Anakot Desktop: 
 maintainer: MrNorkum
 tier: community
 category: desktop
-requires_anakot: ">=0.22.5"
+requires_hermes: ">=0.22.5"
 docs_url: https://github.com/MrNorkum/anakot-rss-lite/tree/master/plugin
 capabilities:
   provides_tools: []

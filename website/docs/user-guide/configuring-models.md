@@ -427,30 +427,30 @@ The dashboard uses three endpoints. Useful for scripting:
 
 ```bash
 # List authenticated providers + curated model lists
-curl -H "X-Anakot-Session-Token: $TOKEN" http://localhost:PORT/api/model/options
+curl -H "X-Hermes-Session-Token: $TOKEN" http://localhost:PORT/api/model/options
 
 # Read current main + auxiliary assignments
-curl -H "X-Anakot-Session-Token: $TOKEN" http://localhost:PORT/api/model/auxiliary
+curl -H "X-Hermes-Session-Token: $TOKEN" http://localhost:PORT/api/model/auxiliary
 
 # Set the main model
-curl -X POST -H "Content-Type: application/json" -H "X-Anakot-Session-Token: $TOKEN" \
+curl -X POST -H "Content-Type: application/json" -H "X-Hermes-Session-Token: $TOKEN" \
   -d '{"scope":"main","provider":"openrouter","model":"anthropic/claude-opus-4.7"}' \
   http://localhost:PORT/api/model/set
 
 # Override a single auxiliary task
-curl -X POST -H "Content-Type: application/json" -H "X-Anakot-Session-Token: $TOKEN" \
+curl -X POST -H "Content-Type: application/json" -H "X-Hermes-Session-Token: $TOKEN" \
   -d '{"scope":"auxiliary","task":"vision","provider":"openrouter","model":"google/gemini-2.5-flash"}' \
   http://localhost:PORT/api/model/set
 
 # Assign one model to every auxiliary task
-curl -X POST -H "Content-Type: application/json" -H "X-Anakot-Session-Token: $TOKEN" \
+curl -X POST -H "Content-Type: application/json" -H "X-Hermes-Session-Token: $TOKEN" \
   -d '{"scope":"auxiliary","task":"","provider":"openrouter","model":"google/gemini-2.5-flash"}' \
   http://localhost:PORT/api/model/set
 
 # Reset all auxiliary tasks to auto
-curl -X POST -H "Content-Type: application/json" -H "X-Anakot-Session-Token: $TOKEN" \
+curl -X POST -H "Content-Type: application/json" -H "X-Hermes-Session-Token: $TOKEN" \
   -d '{"scope":"auxiliary","task":"__reset__","provider":"","model":""}' \
   http://localhost:PORT/api/model/set
 ```
 
-The session token is injected into the dashboard HTML at startup and rotates on every server restart. Grab it from the browser devtools (`window.__ANAKOT_SESSION_TOKEN__`) if you're scripting against a running dashboard.
+The session token is injected into the dashboard HTML at startup and rotates on every server restart. Grab it from the browser devtools (`window.__HERMES_SESSION_TOKEN__`) if you're scripting against a running dashboard.

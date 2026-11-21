@@ -6,7 +6,7 @@ description: "Leonardo.AI video generation backend for video_generate: Motion 2.
 maintainer: RichardChua1234
 tier: community
 category: tools
-requires_anakot: ">=0.20.2"
+requires_hermes: ">=0.20.2"
 docs_url: https://github.com/RichardChua1234/anakot-plugin-leonardo#readme
 version: "1.0.1"
 title: "Leonardo.AI Video"

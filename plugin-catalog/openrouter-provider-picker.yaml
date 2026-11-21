@@ -5,7 +5,7 @@ description: "Pick which upstream providers serve each OpenRouter model, per mod
 maintainer: PotatoWareGit
 tier: community
 category: models
-requires_anakot: ">=0.23.0"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/PotatoWareGit/anakot-openrouter-provider#readme
 version: "1.0.1"
 image: https://raw.githubusercontent.com/PotatoWareGit/anakot-openrouter-provider/afba3e648ecbfd18688f845e9f3ec7cf86315ff5/assets/banner.png

@@ -6,7 +6,7 @@ description: "Windows and Active Directory RMM for Anakot Agent and Anakot Deskt
 maintainer: kdegeek
 tier: community
 category: desktop
-requires_anakot: ">=0.22.6"
+requires_hermes: ">=0.22.6"
 docs_url: https://github.com/kdegeek/anakotsysadmin#readme
 version: "0.2.2"
 image: https://raw.githubusercontent.com/kdegeek/anakotsysadmin/bf972526ae24cd5bcb1441a2f91882e030c2cab5/assets/banner.png

@@ -11,7 +11,7 @@ category: tools
 platforms: [linux, macos]
 docs_url: https://github.com/oliver-mee/anakot-alibaba-token-plan#readme
 readme: true
-requires_anakot: ">=0.22.0"
+requires_hermes: ">=0.22.0"
 capabilities:
   provides_tools: []
   provides_hooks: []

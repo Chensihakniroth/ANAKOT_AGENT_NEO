@@ -5,7 +5,7 @@ description: "Community bot shelf for Anakot. Add bots from anakotmade.lol in on
 maintainer: Noshkoto
 tier: community
 category: desktop
-requires_anakot: ">=0.22.1"
+requires_hermes: ">=0.22.1"
 docs_url: https://anakotmade.lol/bots
 version: "1.3.0"
 title: anakotmade bots
