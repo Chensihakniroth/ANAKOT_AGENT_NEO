@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { AnakotReadDirResult } from '@/global'
 import type * as AnakotModule from '@/anakot'
+import type { AnakotReadDirResult } from '@/global'
 import { $previewScriptGrants, grantPreviewScript } from '@/store/plugin-preview-grants'
 
 import { emitGatewayEvent } from './events'
@@ -610,6 +610,33 @@ describe('specifier scanning is limited to code (strings/comments never load-blo
       expect(id).toBe('comment-import')
     } finally {
       unloadRuntimePlugin('comment-import')
+      restore()
+    }
+  })
+
+  it('loads a Hermes-era plugin that imports @hermes/plugin-sdk', async () => {
+    // The official catalogue predates the rename: plugins installed from a
+    // Hermes source still import the old package name. The alias in the SDK
+    // import map must satisfy BOTH the allowlist and the rewrite, so the plugin
+    // evaluates unmodified — no per-install hand edit.
+    const restore = withBlobReroute()
+
+    try {
+      ;(globalThis as unknown as { __hermesRegister: unknown }).__hermesRegister = vi.fn()
+
+      const id = await loadRuntimePlugin(
+        `import { host } from '@hermes/plugin-sdk'
+export default { id: 'legacy-sdk', register: globalThis.__hermesRegister }`,
+        'legacy-sdk'
+      )
+
+      expect(id).toBe('legacy-sdk')
+      expect((globalThis as unknown as { __hermesRegister: ReturnType<typeof vi.fn> }).__hermesRegister)
+        .toHaveBeenCalledTimes(1)
+      expect($pluginRecords.get()['legacy-sdk']).toMatchObject({ status: 'loaded' })
+    } finally {
+      unloadRuntimePlugin('legacy-sdk')
+      delete (globalThis as unknown as { __hermesRegister?: unknown }).__hermesRegister
       restore()
     }
   })

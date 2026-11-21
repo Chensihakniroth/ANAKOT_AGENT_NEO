@@ -2510,7 +2510,9 @@ export `id`. Run ⌘K → **Reload desktop plugins**. Check the app for an error
 toast naming the failure, and tail `anakot logs gui -f`.
 
 **"unsupported import" on load.** A disk plugin may only import
-`@anakot/plugin-sdk`, `react`, and `react/jsx-runtime`. Remove any other import.
+`@anakot/plugin-sdk`, `react`, and `react/jsx-runtime`. The old
+`@hermes/plugin-sdk` name is accepted as an alias so Hermes-era plugins load
+unmodified; every other import is removed/refused.
 
 **A `jsx` element renders nothing / throws `ReferenceError`.** An identifier used
 in a `jsx()` call isn't imported. Add it to the import line.

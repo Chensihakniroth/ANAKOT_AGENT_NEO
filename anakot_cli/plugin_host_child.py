@@ -29,12 +29,18 @@ import types
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+# Hermes-era plugins import ``hermes_constants`` / ``hermes_state`` at call
+# time. Install the aliases before any plugin module is executed so their
+# dashboard APIs resolve Anakot's home and state DB (see plugin_legacy_compat).
+from anakot_cli.plugin_legacy_compat import install as _install_legacy_plugin_names
 from anakot_cli.plugin_host_wire import (
     Channel, Opaque, PROTOCOL_VERSION, PluginHostUnsupported, bind_serving_request, declared_member, decode,
     describe_signature, encode, is_async_callable, restore_arguments, serving_request,
 )
 
 logger = logging.getLogger("anakot_cli.plugin_host_child")
+
+_install_legacy_plugin_names()
 
 _ENTRY_POINTS_GROUP = "anakot_agent.plugins"
 

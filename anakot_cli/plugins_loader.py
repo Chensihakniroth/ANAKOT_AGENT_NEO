@@ -839,6 +839,11 @@ class PluginLoaderMixin:
         module.__package__ = module_name
         module.__path__ = [str(plugin_dir)]  # type: ignore[attr-defined]
         sys.modules[module_name] = module
+        # Hermes-era plugin modules may import ``hermes_*`` names at load time;
+        # alias them to the Anakot runtime before executing third-party code.
+        from anakot_cli.plugin_legacy_compat import install as _install_legacy_plugin_names
+
+        _install_legacy_plugin_names()
         try:
             spec.loader.exec_module(module)
         except BaseException:

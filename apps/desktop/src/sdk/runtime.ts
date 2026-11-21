@@ -59,12 +59,22 @@ let cached: Record<string, string> | null = null
 
 /** Specifier -> shim URL map for the runtime loader (longest keys first). */
 export function sdkImportMap(): Record<string, string> {
-  cached ??= {
-    '@anakot/plugin-sdk': shimUrl('__ANAKOT_PLUGIN_SDK__'),
-    'react/jsx-dev-runtime': shimUrl('__ANAKOT_REACT_JSX_DEV__'),
-    'react/jsx-runtime': shimUrl('__ANAKOT_REACT_JSX__'),
-    react: shimUrl('__ANAKOT_REACT__')
-  }
+  cached ??= (() => {
+    // The official plugin catalogue predates the rename, so Hermes-era plugins
+    // (and plugins installed from a Hermes source) still import the old package
+    // name. Map it to the SAME live shim: this map is both the loader's
+    // allowlist and its rewrite table, so one entry lets those plugins load
+    // unmodified — every future install included, with no hand-editing.
+    const sdk = shimUrl('__ANAKOT_PLUGIN_SDK__')
+
+    return {
+      '@anakot/plugin-sdk': sdk,
+      '@hermes/plugin-sdk': sdk,
+      'react/jsx-dev-runtime': shimUrl('__ANAKOT_REACT_JSX_DEV__'),
+      'react/jsx-runtime': shimUrl('__ANAKOT_REACT_JSX__'),
+      react: shimUrl('__ANAKOT_REACT__')
+    }
+  })()
 
   return cached
 }

@@ -2,8 +2,9 @@
  * Runtime plugin loader — plugins as CODE, not registry edits, loaded after
  * build time. The pipeline every non-bundled plugin takes:
  *
- *   source (plain ESM js) -> import allowlist (`@anakot/plugin-sdk` / `react*`
- *   only) -> bare-specifier rewrite to live shim blobs (see sdk/runtime.ts)
+ *   source (plain ESM js) -> import allowlist (`@anakot/plugin-sdk` and its
+ *   legacy `@hermes/plugin-sdk` alias, plus `react*`) -> bare-specifier rewrite
+ *   to live shim blobs (see sdk/runtime.ts)
  *   -> blob `import()` -> validate default AnakotPlugin -> register(ctx)
  *
  * Loading the same plugin id again disposes the previous registrations first
@@ -44,7 +45,7 @@ import { notifyError } from '@/store/notifications'
 import { forgetPluginPreviewAccess } from '@/store/plugin-preview-grants'
 
 import { trackGatewayEventDisposers } from './events'
-import { createPluginContext, declaredCapabilities, type AnakotPlugin } from './plugin'
+import { type AnakotPlugin, createPluginContext, declaredCapabilities } from './plugin'
 import {
   $pluginRecords,
   dropPlugin,
@@ -330,8 +331,9 @@ function inCode(ranges: Array<[number, number]>, at: number): boolean {
   return false
 }
 
-/** Rewrite ONLY mapped import specifiers (@anakot/plugin-sdk, react*) to their
- *  live shim blob URLs — never occurrences inside strings/comments. */
+/** Rewrite ONLY mapped import specifiers (@anakot/plugin-sdk, the legacy
+ *  @hermes/plugin-sdk alias, react*) to their live shim blob URLs — never
+ *  occurrences inside strings/comments. */
 function rewriteSpecifiers(source: string): string {
   const map = sdkImportMap()
   const ranges = codeRanges(source)
@@ -342,12 +344,12 @@ function rewriteSpecifiers(source: string): string {
 }
 
 /** Import specifiers outside the SDK map. Everything that is not
- *  `@anakot/plugin-sdk` / `react*` is refused up-front: a bare package would
- *  only fail later as a cryptic native "Failed to resolve module specifier",
- *  a relative path cannot resolve against the blob: base the module is
- *  evaluated from, and a URL scheme (`import 'https://…'`) is a second stage
- *  the admission lint must never be able to wave through — the loader is the
- *  last tripwire for catalog installs. */
+ *  `@anakot/plugin-sdk` (or its legacy `@hermes/plugin-sdk` alias) / `react*` is
+ *  refused up-front: a bare package would only fail later as a cryptic native
+ *  "Failed to resolve module specifier", a relative path cannot resolve against
+ *  the blob: base the module is evaluated from, and a URL scheme
+ *  (`import 'https://…'`) is a second stage the admission lint must never be
+ *  able to wave through — the loader is the last tripwire for catalog installs. */
 function unsupportedImports(source: string): string[] {
   const map = sdkImportMap()
   const unsupported = new Set<string>()
@@ -403,7 +405,7 @@ export async function loadRuntimePlugin(
     if (unsupported.length > 0) {
       throw new Error(
         `unsupported import${unsupported.length > 1 ? 's' : ''}: ${unsupported.join(', ')} — ` +
-          `runtime plugins may only import @anakot/plugin-sdk and react`
+          `runtime plugins may only import @anakot/plugin-sdk, the legacy @hermes/plugin-sdk alias, and react`
       )
     }
 
