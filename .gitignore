@@ -383,3 +383,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Build output. `dist/` is ignored generally, but three plugin dashboards SHIP
+# their prebuilt bundle from `plugins/*/dashboard/dist` — the negations below
+# keep those (and their future hashed assets) trackable. `ui-tui/` and
+# `apps/bootstrap-installer/` carry their own nested `.gitignore`s for theirs.
+dist/
+!plugins/*/dashboard/dist/
+!plugins/*/dashboard/dist/**
+# Cross-process `web/` build dir, sibling of the `.dist-webapp-build-*` lock dir
+# above: a killed build leaves it behind and it is never committed.
+anakot_cli/.web_dist-build-*/
+
